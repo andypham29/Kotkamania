@@ -30,7 +30,7 @@ class prospect_enum(Enum):
 def getProspectFromRow(row):
     if len(row) == 7:
         row.insert(0, "")
-        
+
     return Prospect(
         rank = row[prospect_enum.final_rank.value],
         player_name = row[prospect_enum.player.value],
@@ -62,6 +62,7 @@ def getProspectsFromUrl(url):
         data.append([item for item in cols if item])
 
     return data
+
 def insertProspectToDb(prospects):
     for prospect in prospects:
         if (len(prospect) >= 7):
@@ -90,9 +91,3 @@ prospects = (
 
 ProspectDao().initProspectTable()
 insertProspectToDb(prospects)
-# for prospect in prospects:
-#     if (len(prospect) >= 7):
-#         print(getProspectFromRow(prospect))
-# ProspectDao().initProspectTable()
-# for prospect in prospects:
-    # ProspectDao().createProspect(getProspectFromRow(prospect))

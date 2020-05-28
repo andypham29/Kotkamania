@@ -11,5 +11,6 @@ post==2019.4.13
 public==2019.4.13
 query-string==2019.4.13
 request==2019.4.13
+schedule==0.6.0
 soupsieve==2.0.1
 Werkzeug==1.0.1

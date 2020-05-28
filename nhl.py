@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
+from helper.http_helper import HttpHelper
 
 from model.team import Team, Player
 from model.prospect import Prospect
 from repository.prospect_dao import ProspectDao
-from http_helper import HttpHelper
 
 import calendar, datetime
 import json
@@ -107,7 +107,7 @@ elif(sys.argv[1] in ["--schedule", "-s"]):
 elif(sys.argv[1] in ["--webScrape", "-w"]):
     if len(sys.argv) >= 3 :
         id = int(sys.argv[2])
-        # ProspectDao().initProspectTable()
+        ProspectDao().initProspectTable()
         # ProspectDao().createProspect(p)
         prospect = ProspectDao().getProspectById(id)
         print(json.dumps(prospect.__dict__))

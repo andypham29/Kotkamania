@@ -1,0 +1,16 @@
+<table cellpadding="5px" border="1">
+    <tr>
+        <th>pick</th>
+        <th>team</th>
+        <th>player</th>
+        <th>odds (%)</th>
+    </tr>
+    {% for draftpick in draftpicks %}
+    <tr>
+        <td>{{ draftpick.pick }}</td>
+        <td>{{ draftpick.team|format|safe }}</td>
+        <td>{{ draftpick.name_position|format|safe }}</td>
+        <td>{{ draftpick.odds|format|safe }}</td>
+    </tr>
+    {% endfor %}
+</table>

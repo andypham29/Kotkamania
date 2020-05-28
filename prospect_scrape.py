@@ -68,6 +68,7 @@ def insertProspectToDb(prospects):
         if (len(prospect) >= 7):
             # print(getProspectFromRow(prospect))
             ProspectDao().createProspect(getProspectFromRow(prospect))
+            print("Succesfully inserted prospects to prospect table")
 
 urlNAP1 = getProspectUrl(category.get("NA_P"), 1, 2020)
 urlNAP2 = getProspectUrl(category.get("NA_P"), 2, 2020)

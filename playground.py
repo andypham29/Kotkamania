@@ -1,13 +1,14 @@
-from mockdraft_selector import MockDraftSelector
+from server.service.mockdraft_selector_service import MockDraftSelectorService
 
-from model.prospect import ProspectElite
-from model.draftpick import DraftPick
-from repository.prospect_elite_dao import ProspectEliteDao
+
+from server.model.prospect import ProspectElite
+from server.model.draftpick import DraftPick
+from server.repository.prospect_elite_dao import ProspectEliteDao
 
 import json
 
 prospects = ProspectEliteDao().getAllProspects()
-mockdraft = MockDraftSelector(prospects)
+mockdraft = MockDraftSelectorService(prospects)
 
 list = []
 for i in range(31):

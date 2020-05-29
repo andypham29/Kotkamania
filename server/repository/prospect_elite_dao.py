@@ -1,11 +1,11 @@
 import sqlite3
-from model.prospect import ProspectElite
+from server.model.prospect import ProspectElite
 
 class ProspectEliteDao:
 
     def __init__(self, year = "2020"):
         self.tablename = f"eliteprospect{year}"
-        self.conn = sqlite3.connect('db/elite.db')
+        self.conn = sqlite3.connect('server/db/elite.db')
         self.c = self.conn.cursor()
 
     def initProspectEliteTable(self):

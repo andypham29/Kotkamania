@@ -1,15 +1,11 @@
-# test value
 import random, schedule
 
-from model.prospect import ProspectElite
-from model.draftpick import DraftPick
-from repository.prospect_elite_dao import ProspectEliteDao
-from helper.http_helper import HttpHelper
+from server.model.draftpick import DraftPick
 
-# from nhl import allDivision
-class MockDraftSelector:
-    def __init__(self, prospectlist):
+class MockDraftSelectorService:
+    def __init__(self, prospectlist, total_rounds=31):
         self.prospectlist = self.__getSortedListByAvgRank(prospectlist)
+        self.total_rounds = total_rounds
 
     def __getPlayerPoints(self,prospect):
         # 5*(32 - rank_site1) + 5*(32 - rank_site2) + ...
@@ -53,7 +49,7 @@ class MockDraftSelector:
             else:
                 count += 1
                 total += 42
-        # print("avg_rank: ", total/count)
+
         return total/count
 
     def __getPlayerRangeRank(self, prospect):
@@ -67,7 +63,6 @@ class MockDraftSelector:
 
         min_val = min(val_list)
         max_val = max(val_list)
-
 
         return int(max_val) - int(min_val)
 
@@ -87,7 +82,7 @@ class MockDraftSelector:
             for item in range(val_list.count("-")):
                 val_list.remove("-")
         if len(val_list) == 0:
-            return 45
+            return 50
 
         return int(max(val_list))
 
@@ -181,9 +176,18 @@ class MockDraftSelector:
 
         return odds/total * 100
 
+    def userPickPlayerBySelection(self, current_pick, i):
+        if current_pick == 0:
+            raise Exception("Error selecting at pick 0")
+        prospectlist = self.prospectlist
+
+        prospect_picked = DraftPick(id=prospectlist[i].id,pick=current_pick, name_position= prospectlist[i].name_position, odds=self.__getPickOdds(list, picked_ball), list_ball=list, picked_ball=picked_ball)
+        prospectlist.pop(i)
+        return prospect_picked
+
     def pickPlayerBySelection(self, current_pick):
         if current_pick == 0:
-            return
+            raise Exception("Error selecting at pick 0")
         prospectlist = self.prospectlist
         list = []
         total_balls = 0
@@ -214,9 +218,9 @@ class MockDraftSelector:
         # check list of ball
         for i in range(len(list)):
             if picked_ball <= list[i]:
-                print("pick ", current_pick, ": \t", prospectlist[i].name_position, "\t\tavg: ", prospectlist[i].avg_rank, "\thp: ", prospectlist[i].hp, "fc: ", prospectlist[i].fc, "iss: ", prospectlist[i].iss, "mh: ", prospectlist[i].mh, "elite: ", prospectlist[i].elite)
-                print("odds: ", self.__getPickOdds(list, picked_ball),"  ",list, "ball: ", picked_ball)
-                prospect_picked = DraftPick(pick=current_pick, name_position= prospectlist[i].name_position, odds=self.__getPickOdds(list, picked_ball), list_ball=list, picked_ball=picked_ball)
+                # print("pick ", current_pick, ": \t", prospectlist[i].name_position, "\t\tavg: ", prospectlist[i].avg_rank, "\thp: ", prospectlist[i].hp, "fc: ", prospectlist[i].fc, "iss: ", prospectlist[i].iss, "mh: ", prospectlist[i].mh, "elite: ", prospectlist[i].elite)
+                # print("odds: ", self.__getPickOdds(list, picked_ball),"  ",list, "ball: ", picked_ball)
+                prospect_picked = DraftPick(id=prospectlist[i].id,pick=current_pick, name_position= prospectlist[i].name_position, odds=self.__getPickOdds(list, picked_ball), list_ball=list, picked_ball=picked_ball)
                 prospectlist.pop(i)
                 return prospect_picked
                 # break
@@ -226,21 +230,3 @@ class MockDraftSelector:
         for i in range(len(list)):
             list[i].avg_rank = self.__getPlayerAvgRank(list[i])
         return sorted(list, key=lambda x: x.avg_rank, reverse=False)
-
-url = 'https://statsapi.web.nhl.com/api/v1/standings'
-#
-def getTeams():
-    json = HttpHelper.get(url)
-    return allDivision(json['records'])
-
-
-
-# prospects = ProspectEliteDao().getAllProspects()
-
-print("-------------------------------------------------------------------------------------------------------------------------------")
-# pickPlayer(getSortedListByAvgRank(prospects), 1)
-
-# print(allDivision(getTeams()))
-# list = getSortedListByAvgRank(prospects)
-# for i in range(len(list)):
-#     print(list[i])

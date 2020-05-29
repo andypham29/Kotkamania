@@ -1,10 +1,10 @@
 import sqlite3
-from model.prospect import Prospect
+from server.model.prospect import Prospect
 
 class ProspectDao:
 
     def __init__(self):
-        self.conn = sqlite3.connect('db/example.db')
+        self.conn = sqlite3.connect('server/db/example.db')
         self.c = self.conn.cursor()
 
     def initProspectTable(self):

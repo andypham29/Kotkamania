@@ -15,3 +15,4 @@ class MockDraftSelectorServiceFacade:
             draftlist.append(mockdraft.pickPlayerBySelection(i+1))
 
         return draftlist
+        # return json.dumps([draft.__dict__ for draft in draftlist])

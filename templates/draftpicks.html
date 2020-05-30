@@ -3,13 +3,25 @@
         <th>pick</th>
         <th>team</th>
         <th>player</th>
+        <th>Average Rank </th>
+        <span title="Hockey Prospect"></span><th>HP</th></span>
+        <span title="Future Considerations"></span><th>FC</th></span>
+        <span title="Hockey"></span><th>ISS</th></span>
+        <span title="Mckeen's Hockey"></span><th>MH</th></span>
+        <span title="Elite Prospect"></span><th>Elite</th></span>
         <th>odds (%)</th>
     </tr>
     {% for draftpick in draftpicks %}
     <tr>
         <td>{{ draftpick.pick }}</td>
         <td>{{ draftpick.team|format|safe }}</td>
-        <td>{{ draftpick.name_position|format|safe }}</td>
+        <td>{{ draftpick.player.name_position|format|safe }}</td>
+        <td>{{ draftpick.player.avg_rank|format|safe }}</td>
+        <td>{{ draftpick.player.hp|format|safe }}</td>
+        <td>{{ draftpick.player.fc|format|safe }}</td>
+        <td>{{ draftpick.player.iss|format|safe }}</td>
+        <td>{{ draftpick.player.mh|format|safe }}</td>
+        <td>{{ draftpick.player.elite|format|safe }}</td>
         <td>{{ draftpick.odds|format|safe }}</td>
     </tr>
     {% endfor %}

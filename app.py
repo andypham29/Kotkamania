@@ -18,7 +18,7 @@ def index():
 
 @app.route('/drafts')
 def getEntireDraftSimulation():
-    draftpicks = MockDraftSelectorServiceFacade(50).getEntireDraftSimulation()
+    draftpicks = MockDraftSelectorServiceFacade(31).getEntireDraftSimulation()
 
     # return json.dumps([draft.__dict__ for draft in draftpicks])
     return json.dumps(draftpicks, default=lambda o: o.__dict__)

@@ -1,15 +1,27 @@
 <table cellpadding="5px" border="1">
     <tr>
-        <th>pick</th>
-        <th>team</th>
-        <th>player</th>
+        <th>Pick</th>
+        <th>Team</th>
+        <th>Player</th>
+        <th>Average Rank </th>
+        <th><a title="Hockey Prospect">HP</a></th>
+        <th><a title="Future Considerations">FC</a></th>
+        <th><a title="ISS Hockey">ISS</a></th>
+        <th><a title="Mckeen's Hockey">MH</a></th>
+        <th><a title="Elite Prospect">Elite</a></th>
         <th>odds (%)</th>
     </tr>
     {% for draftpick in draftpicks %}
     <tr>
         <td>{{ draftpick.pick }}</td>
-        <td>{{ draftpick.team|format|safe }}</td>
-        <td>{{ draftpick.name_position|format|safe }}</td>
+        <td>{{ draftpick.team.name|format|safe }}</td>
+        <td>{{ draftpick.player.name_position|format|safe }}</td>
+        <td>{{ draftpick.player.avg_rank|format|safe }}</td>
+        <td>{{ draftpick.player.hp|format|safe }}</td>
+        <td>{{ draftpick.player.fc|format|safe }}</td>
+        <td>{{ draftpick.player.iss|format|safe }}</td>
+        <td>{{ draftpick.player.mh|format|safe }}</td>
+        <td>{{ draftpick.player.elite|format|safe }}</td>
         <td>{{ draftpick.odds|format|safe }}</td>
     </tr>
     {% endfor %}

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 from helper.http_helper import HttpHelper
 
-from model.team import Team, Player
-from model.prospect import Prospect
-from repository.prospect_dao import ProspectDao
+from server.model.team import Team, Player
+from server.model.prospect import Prospect
+from server.repository.prospect_dao import ProspectDao
 
 import calendar, datetime
 import json

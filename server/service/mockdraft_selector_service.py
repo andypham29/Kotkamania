@@ -7,7 +7,67 @@ class MockDraftSelectorService:
         self.prospectlist = self.__getSortedListByAvgRank(prospectlist)
         self.total_rounds = total_rounds
 
-    def __getPlayerPoints(self,prospect):
+    def userPickPlayerBySelection(self, i, current_pick):
+        # i is the index of the player in the prospectlist
+        if current_pick == 0:
+            raise Exception("Error selecting at pick 0")
+        prospectlist = self.prospectlist
+
+        prospect_picked = DraftPick(pick=current_pick, player=prospect_picked, playerodds=self.getPickOdds(list, picked_ball), list_ball=list, picked_ball=picked_ball)
+        prospectlist.pop(i)
+        return prospect_picked
+
+    def pickPlayerBySelection(self, current_pick):
+        if current_pick == 0:
+            raise Exception("Error selecting at pick 0")
+        prospectlist = self.prospectlist
+        list = []
+        total_balls = 0
+        for i in range(len(prospectlist)):
+            prospect = prospectlist[i]
+            player_balls = int(MockDraftSelectorHelper().getPlayerBalls(prospect, current_pick))
+
+            if player_balls > 0:
+                total_balls += player_balls
+                list.append(total_balls)
+
+            elif i < len(prospectlist) - 1 and player_balls <= 0:
+                next_prospect = prospectlist[i+1]
+                next_player_balls = int(MockDraftSelectorHelper().getPlayerBalls(next_prospect, current_pick))
+
+                player_rebalanced_balls = MockDraftSelectorHelper().getPlayerRebalancedBall(prospect, prospectlist[i+1], current_pick)
+                if player_rebalanced_balls <= 5 and player_balls != 0:
+                    total_balls += player_rebalanced_balls
+                    list.append(total_balls)
+
+            else:
+                break
+
+        # if total_balls == 0:
+        #     list.append(0)
+        picked_ball = MockDraftSelectorHelper().getRandomBall(total_balls)
+
+        # check list of ball
+        for i in range(len(list)):
+            if picked_ball <= list[i]:
+                prospect_picked = prospectlist[i]
+                prospectlist.pop(i)
+
+                return DraftPick(pick=current_pick, player=prospect_picked, odds=MockDraftSelectorHelper().getPickOdds(list, picked_ball), list_ball=list, picked_ball=picked_ball)
+
+
+    def __getSortedListByAvgRank(self, list):
+        for i in range(len(list)):
+            list[i].avg_rank = MockDraftSelectorHelper().getPlayerAvgRank(list[i])
+        return sorted(list, key=lambda x: x.avg_rank, reverse=False)
+
+
+class MockDraftSelectorHelper:
+
+    def __init__(self):
+        pass
+
+    def getPlayerPoints(self,prospect):
         # 5*(32 - rank_site1) + 5*(32 - rank_site2) + ...
         points = 0
         list = [prospect.hp, prospect.fc, prospect.iss, prospect.mh, prospect.elite]
@@ -22,21 +82,21 @@ class MockDraftSelectorService:
         # print("points: ", points)
         return points
 
-    def __getPlayerBestPoints(self, prospect):
+    def getPlayerBestPoints(self, prospect):
         # 5*(32 - rank_site1) + 5*(32 - rank_site2) + ...
-        points = (32 - self.__getPlayerBestRank(prospect))*100*5
+        points = (32 - self.getPlayerBestRank(prospect) - 1)*100*5
         if points < 0:
             return 500
         return points
 
-    def __getPlayerWorstPoints(self, prospect):
+    def getPlayerWorstPoints(self, prospect):
         # 5*(32 - rank_site1) + 5*(32 - rank_site2) + ...
-        points = (32 - self.__getPlayerWorstRank(prospect))*100*5
+        points = (32 - self.getPlayerWorstRank(prospect) + 1)*100*5
         if points < 0:
             return 0
         return points
 
-    def __getPlayerAvgRank(self, prospect):
+    def getPlayerAvgRank(self, prospect):
         total = 0
         count = 0
         list = [prospect.hp, prospect.fc, prospect.iss, prospect.mh, prospect.elite]
@@ -52,7 +112,7 @@ class MockDraftSelectorService:
 
         return total/count
 
-    def __getPlayerRangeRank(self, prospect):
+    def getPlayerRangeRank(self, prospect):
         val_list = [prospect.hp, prospect.fc, prospect.iss, prospect.mh, prospect.elite]
         if "-" in val_list:
             for item in range(val_list.count("-")):
@@ -66,7 +126,7 @@ class MockDraftSelectorService:
 
         return int(max_val) - int(min_val)
 
-    def __getPlayerBestRank(self, prospect):
+    def getPlayerBestRank(self, prospect):
         val_list = [prospect.hp, prospect.fc, prospect.iss, prospect.mh, prospect.elite]
         if "-" in val_list:
             for item in range(val_list.count("-")):
@@ -76,7 +136,7 @@ class MockDraftSelectorService:
 
         return int(min(val_list))
 
-    def __getPlayerWorstRank(self, prospect):
+    def getPlayerWorstRank(self, prospect):
         val_list = [prospect.hp, prospect.fc, prospect.iss, prospect.mh, prospect.elite]
         if "-" in val_list:
             for item in range(val_list.count("-")):
@@ -86,7 +146,7 @@ class MockDraftSelectorService:
 
         return int(max(val_list))
 
-    def __getPlayerMeanRank(self, prospect):
+    def getPlayerMeanRank(self, prospect):
         total = 0
         count = 0
         list = [prospect.hp, prospect.fc, prospect.iss, prospect.mh, prospect.elite]
@@ -99,15 +159,15 @@ class MockDraftSelectorService:
                 total += 45
         return total/count
 
-    def __getPlayerBalls(self, prospect, current_pick):
+    def getPlayerBalls(self, prospect, current_pick):
         # points/10^((weighted_rank/110)/current_pick)
-        avg_rank = self.__getPlayerAvgRank(prospect)
-        points = self.__getPlayerPoints(prospect)
-        best_points = self.__getPlayerBestPoints(prospect)
-        worst_points = self.__getPlayerWorstPoints(prospect)
-        range = self.__getPlayerRangeRank(prospect)
-        best_rank = self.__getPlayerBestRank(prospect)
-        worst_rank = self.__getPlayerWorstRank(prospect)
+        avg_rank = self.getPlayerAvgRank(prospect)
+        points = self.getPlayerPoints(prospect)
+        best_points = self.getPlayerBestPoints(prospect)
+        worst_points = self.getPlayerWorstPoints(prospect)
+        range = self.getPlayerRangeRank(prospect)
+        best_rank = self.getPlayerBestRank(prospect)
+        worst_rank = self.getPlayerWorstRank(prospect)
 
         # denominator to determine
         options = {
@@ -119,7 +179,7 @@ class MockDraftSelectorService:
 
         # factor to determin if player raise, drop or same odds
         factor = 20*(current_pick/(0.7*avg_rank + 0.3*worst_rank)) if current_pick > (worst_rank + 2) else 1
-        denom = options[1]
+        denom = options[random.randrange(0,3)]
 
         rand = random.randrange(0,19)
         rand2 = 10
@@ -144,22 +204,22 @@ class MockDraftSelectorService:
             return 0
         return returned_balls
 
-    def __getRandomBall(self, total_balls):
+    def getRandomBall(self, total_balls):
         if total_balls == 0 or total_balls == 1:
             return 0
         return random.randrange(0, total_balls - 1)
 
-    def __getPlayerRebalancedBall(self, prospect, next_prospect, current_pick):
-        player_balls = int(self.__getPlayerBalls(prospect, current_pick))
-        next_player_balls = int(self.__getPlayerBalls(next_prospect, current_pick))
+    def getPlayerRebalancedBall(self, prospect, next_prospect, current_pick):
+        player_balls = int(self.getPlayerBalls(prospect, current_pick))
+        next_player_balls = int(self.getPlayerBalls(next_prospect, current_pick))
 
         if (player_balls <= 5 and next_player_balls <= 20):
-            player_rebalanced_balls = int(self.__getPlayerBalls(prospect, current_pick + 1))
+            player_rebalanced_balls = int(self.getPlayerBalls(prospect, current_pick + 1))
             return player_rebalanced_balls if player_rebalanced_balls > 10 else 0
 
         return 0
 
-    def __getPickOdds(self, list_ball, picked_ball):
+    def getPickOdds(self, list_ball, picked_ball):
         odds = 0
         total = list_ball[len(list_ball) - 1]
 
@@ -174,59 +234,4 @@ class MockDraftSelectorService:
                     odds = list_ball[i] - list_ball[i-1]
                     break
 
-        return odds/total * 100
-
-    def userPickPlayerBySelection(self, current_pick, i):
-        if current_pick == 0:
-            raise Exception("Error selecting at pick 0")
-        prospectlist = self.prospectlist
-
-        prospect_picked = DraftPick(id=prospectlist[i].id,pick=current_pick, name_position= prospectlist[i].name_position, odds=self.__getPickOdds(list, picked_ball), list_ball=list, picked_ball=picked_ball)
-        prospectlist.pop(i)
-        return prospect_picked
-
-    def pickPlayerBySelection(self, current_pick):
-        if current_pick == 0:
-            raise Exception("Error selecting at pick 0")
-        prospectlist = self.prospectlist
-        list = []
-        total_balls = 0
-        for i in range(len(prospectlist)):
-            prospect = prospectlist[i]
-            player_balls = int(self.__getPlayerBalls(prospect, current_pick))
-
-            if player_balls > 0:
-                total_balls += player_balls
-                list.append(total_balls)
-
-            elif i < len(prospectlist) - 1 and player_balls <= 0:
-                next_prospect = prospectlist[i+1]
-                next_player_balls = int(self.__getPlayerBalls(next_prospect, current_pick))
-
-                player_rebalanced_balls = self.__getPlayerRebalancedBall(prospect, prospectlist[i+1], current_pick)
-                if player_rebalanced_balls <= 5 and player_balls != 0:
-                    total_balls += player_rebalanced_balls
-                    list.append(total_balls)
-
-            else:
-                break
-
-        # if total_balls == 0:
-        #     list.append(0)
-        picked_ball = self.__getRandomBall(total_balls)
-
-        # check list of ball
-        for i in range(len(list)):
-            if picked_ball <= list[i]:
-                # print("pick ", current_pick, ": \t", prospectlist[i].name_position, "\t\tavg: ", prospectlist[i].avg_rank, "\thp: ", prospectlist[i].hp, "fc: ", prospectlist[i].fc, "iss: ", prospectlist[i].iss, "mh: ", prospectlist[i].mh, "elite: ", prospectlist[i].elite)
-                # print("odds: ", self.__getPickOdds(list, picked_ball),"  ",list, "ball: ", picked_ball)
-                prospect_picked = DraftPick(id=prospectlist[i].id,pick=current_pick, name_position= prospectlist[i].name_position, odds=self.__getPickOdds(list, picked_ball), list_ball=list, picked_ball=picked_ball)
-                prospectlist.pop(i)
-                return prospect_picked
-                # break
-
-
-    def __getSortedListByAvgRank(self, list):
-        for i in range(len(list)):
-            list[i].avg_rank = self.__getPlayerAvgRank(list[i])
-        return sorted(list, key=lambda x: x.avg_rank, reverse=False)
+        return "{:.2f}".format(odds/total * 100)

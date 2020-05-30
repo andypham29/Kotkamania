@@ -15,7 +15,7 @@ class MockDraftSelectorServiceFacade:
         draftlist = []
         for i in range(self.total_round):
             draftpick = mockdraft.pickPlayerBySelection(i+1)
-            draftpick.team = reverseSortedTeams[(i+1)%31]
+            draftpick.team = reverseSortedTeams[i%len(teams)]
             draftlist.append(draftpick)
 
         return draftlist

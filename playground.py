@@ -5,6 +5,8 @@ from server.model.prospect import ProspectElite
 from server.model.draftpick import DraftPick
 from server.repository.prospect_elite_dao import ProspectEliteDao
 
+from server.service.nhl_team_service import NhlTeamService
+
 import json
 
 prospects = ProspectEliteDao().getAllProspects()
@@ -17,5 +19,7 @@ for i in range(31):
 # prospect = mockdraft.pickPlayerBySelection(1)
 
 
-for prospect in list:
-    print(prospect.__dict__)
+# for prospect in list:
+#     print(prospect.__dict__)
+
+print(NhlTeamService().getAllTeams())

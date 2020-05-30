@@ -13,7 +13,6 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     draftpicks = HttpHelper.get(request.base_url + "drafts")
-    print(draftpicks)
 
     return render_template("index.html", draftpicks=draftpicks)
 

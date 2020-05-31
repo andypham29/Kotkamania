@@ -3,19 +3,21 @@
         <th>Pick</th>
         <th>Team</th>
         <th>Player</th>
+        <th>Position</th>
         <th>Average Rank </th>
-        <th><a title="Hockey Prospect">HP</a></th>
-        <th><a title="Future Considerations">FC</a></th>
-        <th><a title="ISS Hockey">ISS</a></th>
-        <th><a title="Mckeen's Hockey">MH</a></th>
-        <th><a title="Elite Prospect">Elite</a></th>
+        <th><a href="https://www.eliteprospects.com/draft-center/2020/hockeyprospect.com" title="Hockey Prospect">HP</a></th>
+        <th><a href="https://www.eliteprospects.com/draft-center/2020/future-considerations" title="Future Considerations">FC</a></th>
+        <th><a href="https://www.eliteprospects.com/draft-center/2020/iss-hockey" title="ISS Hockey">ISS</a></th>
+        <th><a href="https://www.eliteprospects.com/draft-center/2020/mckeen-s-hockey" title="Mckeen's Hockey">MH</a></th>
+        <th><a href="https://www.eliteprospects.com/draft-center/2020/eliteprospects.com" title="Elite Prospect">Elite</a></th>
         <th>odds (%)</th>
     </tr>
     {% for draftpick in draftpicks %}
     <tr>
         <td>{{ draftpick.pick }}</td>
         <td>{{ draftpick.team.name|format|safe }}</td>
-        <td>{{ draftpick.player.name_position|format|safe }}</td>
+        <td><a href="/api/prospects?id={{ draftpick.pick }}">{{ draftpick.player.name|format|safe }}</a></td>
+        <td>{{ draftpick.player.position|format|safe }}</td>
         <td>{{ draftpick.player.avg_rank|format|safe }}</td>
         <td>{{ draftpick.player.hp|format|safe }}</td>
         <td>{{ draftpick.player.fc|format|safe }}</td>

@@ -36,7 +36,7 @@ class MockDraftSelectorService:
                 next_player_balls = int(MockDraftSelectorHelper().getPlayerBalls(next_prospect, current_pick))
 
                 player_rebalanced_balls = MockDraftSelectorHelper().getPlayerRebalancedBall(prospect, prospectlist[i+1], current_pick)
-                if player_rebalanced_balls >= 5 and player_balls != 0:
+                if player_rebalanced_balls >= 10 and player_balls != 0:
                     total_balls += player_rebalanced_balls
                     list.append(total_balls)
 

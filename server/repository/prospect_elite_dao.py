@@ -53,6 +53,26 @@ class ProspectEliteDao:
         self.conn.close()
 
         return list
+    
+    def getAllProspectsWithRanking(self):
+        self.c.execute(f'''SELECT * FROM {self.tablename} WHERE
+            hp NOT LIKE '%-%' OR
+            fc NOT LIKE '%-%' OR
+            iss NOT LIKE '%-%' OR
+            mh NOT LIKE '%-%' OR
+            elite NOT LIKE '%-%'
+        ''')
+        records = self.c.fetchall()
+
+        list = []
+        for row in records:
+            prospect = ProspectElite(id=row[0], name=row[1], position=row[2], hp=row[3], fc=row[4], iss=row[5], mh=row[6], elite=row[7], league=row[8], team=row[9], gp=row[10], g=row[11], a=row[12], p=row[13], pim=row[14])
+            list.append(prospect)
+
+        self.conn.commit()
+        self.conn.close()
+
+        return list
 
     def getProspectsAtPage(self, page=1):
         if page < 1:

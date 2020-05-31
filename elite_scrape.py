@@ -20,7 +20,9 @@ def getProspectFromRow(i, data):
     if len(data) == 9:
         p = ProspectElite()
 
-        p.name_position = data[1]
+        name_position = getNamePositionTupple(data[1])
+        p.name = name_position[0]
+        p.position = name_position[1]
         # if data[0] == "-":
         #     data[0] = 45
 
@@ -30,9 +32,21 @@ def getProspectFromRow(i, data):
         if(i == 3): p.mh = data[0]
         if(i == 4): p.elite = data[0]
 
+        p.league = data[3]
+        p.team = data[2]
+        p.gp = data[4]
+        p.g = data[5]
+        p.a = data[6]
+        p.p = data[7]
+        p.pim = data[8]
+
         # print(json.dumps(p.__dict__))
         return p
     return None
+
+def getNamePositionTupple(name_position):
+    new_name_position = name_position.split(" (")
+    return (new_name_position[0], new_name_position[1].replace(')', ''))
 
 def getProspectFromEliteUrl(url):
     source = urllib.request.urlopen(url[0]).read()
@@ -50,7 +64,7 @@ def getProspectFromEliteUrl(url):
         # list comprehension: [item.transformation for item in list] -> item.transformation becomes an element of a list
         cols = [item.text.strip() for item in cols]
         data.append([item for item in cols if item])
-
+    
     prospectList = []
     for item in data:
         p = getProspectFromRow(url[1], item)
@@ -73,10 +87,10 @@ prospects = (
     getProspectFromEliteUrl(mh_url) +
     getProspectFromEliteUrl(elite_url)
 )
-
-
+print(prospects[2].__dict__)
 ProspectEliteDao(year).initProspectEliteTable()
 insertProspectToDb(prospects)
 
 
 dataToFile(ProspectEliteDao(year).getAllProspects())
+

@@ -5,18 +5,27 @@ class ProspectEliteDao:
 
     def __init__(self, year = "2020"):
         self.tablename = f"eliteprospect{year}"
-        self.conn = sqlite3.connect('server/db/elite.db')
+        self.conn = sqlite3.connect('server/db/eliteprospect.db')
         self.c = self.conn.cursor()
 
     def initProspectEliteTable(self):
         self.c.execute(f'''CREATE TABLE IF NOT EXISTS {self.tablename}(
             id INTEGER PRIMARY KEY,
-            name_position VARCHAR NOT NULL UNIQUE,
+            name VARCHAR NOT NULL UNIQUE,
+            position VARCHAR,
             hp VARCHAR,
             fc VARCHAR,
             iss VARCHAR,
             mh VARCHAR,
-            elite VARCHAR)''')
+            elite VARCHAR,
+            league VARCHAR,
+            team VARCHAR,
+            gp VARCHAR,
+            g VARCHAR,
+            a VARCHAR,
+            p VARCHAR,
+            pim VARCHAR
+            )''')
 
         self.conn.commit()
         self.conn.close()
@@ -29,7 +38,7 @@ class ProspectEliteDao:
         #     print(row)
 
         self.conn.close()
-        return ProspectElite(id=row[0], name_position=row[1], hp=row[2], fc=row[3], iss=row[4], mh=row[5], elite=row[6])
+        return ProspectElite(id=row[0], name=row[1], position=row[2], hp=row[3], fc=row[4], iss=row[5], mh=row[6], elite=row[7], league=row[8], team=row[9], gp=row[10], g=row[11], a=row[12], p=row[13], pim=row[14])
 
     def getAllProspects(self):
         self.c.execute(f'''SELECT * FROM {self.tablename}''')
@@ -37,78 +46,74 @@ class ProspectEliteDao:
 
         list = []
         for row in records:
-            prospect = ProspectElite(id=row[0], name_position=row[1], hp=row[2], fc=row[3], iss=row[4], mh=row[5], elite=row[6])
+            prospect = ProspectElite(id=row[0], name=row[1], position=row[2], hp=row[3], fc=row[4], iss=row[5], mh=row[6], elite=row[7], league=row[8], team=row[9], gp=row[10], g=row[11], a=row[12], p=row[13], pim=row[14])
             list.append(prospect)
-
-        self.conn.close()
-
-        return list
-
-    def createProspectElite(self, prospect):
-        self.c.execute(f'''INSERT INTO {self.tablename} (name_position, hp, fc, iss, mh, elite) VALUES (?,?,?,?,?,?,?)''',
-        (prospect.name_position,
-        prospect.hp,
-        prospect.fc,
-        prospect.iss,
-        prospect.mh,
-        prospect.elite))
 
         self.conn.commit()
         self.conn.close()
 
-    def insertOrUpdateProspectElite(self, prospect):
-        self.c.execute(f'''INSERT OR IGNORE INTO {self.tablename} (name_position, hp, fc, iss, mh, elite) VALUES (?,?,?,?,?,?)''',
-            (prospect.name_position,
-            prospect.hp,
-            prospect.fc,
-            prospect.iss,
-            prospect.mh,
-            prospect.elite))
+        return list
 
-        self.c.execute(f'''UPDATE {self.tablename} SET
-            name_position = ifnull(?, name_position),
-            hp = ifnull(?, hp),
-            fc = ifnull(?, fc),
-            iss = ifnull(?, iss),
-            mh = ifnull(?, mh),
-            elite = ifnull(?, elite)  WHERE name_position = ?''',
-            (prospect.name_position,
+    def getProspectsAtPage(self, page=1):
+        if page < 1:
+            raise Exception("Error fetching prospects")
+        self.c.execute(f'''SELECT * FROM {self.tablename} LIMIT 20*{page-1},20''')
+        records = self.c.fetchall()
+
+        list = []
+        for row in records:
+            prospect = ProspectElite(id=row[0], name=row[1], position=row[2], hp=row[3], fc=row[4], iss=row[5], mh=row[6], elite=row[7], league=row[8], team=row[9], gp=row[10], g=row[11], a=row[12], p=row[13], pim=row[14])
+            list.append(prospect)
+
+        self.conn.commit()
+        self.conn.close()
+
+        return list
+
+    def insertOrUpdateProspectElite(self, prospect):
+        self.c.execute(f'''INSERT OR IGNORE INTO {self.tablename} (name, position, hp, fc, iss, mh, elite, league, team, gp, g, a, p, pim) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
+            (prospect.name,
+            prospect.position,
             prospect.hp,
             prospect.fc,
             prospect.iss,
             prospect.mh,
             prospect.elite,
-            prospect.name_position))
+            prospect.league,
+            prospect.team,
+            prospect.gp,
+            prospect.g,
+            prospect.a,
+            prospect.p,
+            prospect.pim))
 
-        self.conn.commit()
-        self.conn.close()
-
-    def updateProspectEliteHP(self, rank, name_position):
-        self.c.execute(f'''UPDATE {self.tablename} SET hp = ? WHERE name_position = ?;''', (rank, name_position))
-
-        self.conn.commit()
-        self.conn.close()
-
-    def updateProspectEliteFC(self, rank, name_position):
-        self.c.execute(f'''UPDATE {self.tablename} SET fc = ? WHERE name_position = ?;''', (rank, name_position))
-
-        self.conn.commit()
-        self.conn.close()
-
-    def updateProspectEliteISS(self, rank, name_position):
-        self.c.execute(f'''UPDATE {self.tablename} SET iss = ? WHERE name_position = ?;''', (rank, name_position))
-
-        self.conn.commit()
-        self.conn.close()
-
-    def updateProspectEliteMH(self, rank, name_position):
-        self.c.execute(f'''UPDATE {self.tablename} SET mh = ? WHERE name_position = ?;''', (rank, name_position))
-
-        self.conn.commit()
-        self.conn.close()
-
-    def updateProspectEliteElite(self, rank, name_position):
-        self.c.execute(f'''UPDATE {self.tablename} SET elite = ? WHERE name_position = ?;''', (rank, name_position))
+        self.c.execute(f'''UPDATE {self.tablename} SET
+            hp = ifnull(?, hp),
+            fc = ifnull(?, fc),
+            iss = ifnull(?, iss),
+            mh = ifnull(?, mh),
+            elite = ifnull(?, elite),
+            league = ifnull(?, league),
+            team = ifnull(?, team),
+            gp = ifnull(?, gp),
+            g = ifnull(?, g),
+            a = ifnull(?, a),
+            p = ifnull(?, p),
+            pim = ifnull(?, pim)
+            WHERE name = ?''',
+            (prospect.hp,
+            prospect.fc,
+            prospect.iss,
+            prospect.mh,
+            prospect.elite,
+            prospect.league,
+            prospect.team,
+            prospect.gp,
+            prospect.g,
+            prospect.a,
+            prospect.p,
+            prospect.pim,
+            prospect.name))
 
         self.conn.commit()
         self.conn.close()

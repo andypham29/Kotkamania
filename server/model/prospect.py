@@ -25,15 +25,23 @@ class Prospect:
 
 class ProspectElite:
 
-    def __init__(self, id="", name_position=None, hp=None, fc=None, iss=None, mh=None, elite=None, avg_rank=None):
+    def __init__(self, id="", name=None, position=None, hp=None, fc=None, iss=None, mh=None, elite=None, avg_rank=None, league=None, team=None, gp=None, g=None, a=None, p=None, pim=None):
         self.id = id
-        self.name_position = name_position
+        self.name = name
+        self.position = position
         self.hp = hp
         self.fc = fc
         self.iss = iss
         self.mh = mh
         self.elite = elite
         self.avg_rank = None
+        self.league = league
+        self.team = team
+        self.gp = gp
+        self.g = g
+        self.a = a
+        self.p = p
+        self.pim = pim
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)

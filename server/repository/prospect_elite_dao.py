@@ -34,12 +34,29 @@ class ProspectEliteDao:
         self.c.execute(f'''SELECT * FROM {self.tablename} WHERE id = ?''', (id,))
 
         row = self.c.fetchone()
-        # for row in rows:
-        #     print(row)
 
         self.conn.close()
         return ProspectElite(id=row[0], name=row[1], position=row[2], hp=row[3], fc=row[4], iss=row[5], mh=row[6], elite=row[7], league=row[8], team=row[9], gp=row[10], g=row[11], a=row[12], p=row[13], pim=row[14])
 
+    def getProspectByPosition(self, position, page):    
+        query = f'''SELECT * FROM {self.tablename} WHERE position LIKE '%{position}%' '''
+
+        if int(page) > 0:
+            query += f'LIMIT 20*{page}, 20'
+
+        print(query)
+        self.c.execute(query)
+        records = self.c.fetchall()
+        list = []
+        print("records", len(records))
+        for row in records:
+            prospect = ProspectElite(id=row[0], name=row[1], position=row[2], hp=row[3], fc=row[4], iss=row[5], mh=row[6], elite=row[7], league=row[8], team=row[9], gp=row[10], g=row[11], a=row[12], p=row[13], pim=row[14])
+            list.append(prospect)
+
+        self.conn.commit()
+        self.conn.close()
+
+        return list
     def getAllProspects(self):
         self.c.execute(f'''SELECT * FROM {self.tablename}''')
         records = self.c.fetchall()
@@ -75,9 +92,9 @@ class ProspectEliteDao:
         return list
 
     def getProspectsAtPage(self, page=1):
-        if page < 1:
+        if int(page) < 1:
             raise Exception("Error fetching prospects")
-        self.c.execute(f'''SELECT * FROM {self.tablename} LIMIT 20*{page-1},20''')
+        self.c.execute(f'''SELECT * FROM {self.tablename} LIMIT 20*{int(page)-1},20''')
         records = self.c.fetchall()
 
         list = []

@@ -13,9 +13,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    draftpicks = HttpHelper.get(request.base_url + "api/drafts")
-
-    return render_template("index.html", draftpicks=draftpicks)
+    return render_template("index.html")
 
 @app.route('/api/drafts')
 def getEntireDraftSimulation():

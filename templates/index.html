@@ -3,27 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>NHL Mock Draft 2020</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
-        table td {
-            vertical-align: top;
-        }
-
-        input {
-            width: 120px;
-        }
-
-        #id_input {
-            width: 50px;
-        }
-        input[type=submit]{
-            width: 80px;
-        }
-    </style>
+            body {
+              margin: 0;
+              font-family: Arial, Helvetica, sans-serif;
+            }
+            
+            .topnav {
+              overflow: hidden;
+              background-color: white;
+              color: black;
+            }
+            
+            .topnav a {
+              float: left;
+              color: black;
+              text-align: center;
+              padding: 14px 16px;
+              text-decoration: none;
+              font-size: 17px;
+            }
+            
+            .topnav a:hover {
+              background-color: #ddd;
+              color: 333;
+            }
+            
+            .topnav a.active {
+              background-color: black;
+              color: white;
+            }
+            </style>
 </head>
 <body>
 <div align="center">
     <h1>NHL Mock Draft 2020</h1>
-
 
 <table cellpadding="20px">
     <tr>
@@ -53,13 +68,15 @@
 <form action="/">
     <input type="submit" value="Resimulate" />
 </form>
-</div>
+
 <div>
-  <hr>
   <table cellpadding="10px" align="center">
-      <tr>
-          <td>{% include 'draftpicks.html' %}</td>
-      </tr>
+        <tr>
+            <td>{% include 'nav.html' %}</td>
+        </tr>
+        <tr>
+             <td>{% include 'draftpicks.html' %}</td>
+        </tr>
   </table>
 </div>
 </body>

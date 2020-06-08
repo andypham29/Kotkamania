@@ -7,7 +7,7 @@ class MockDraftSelectorServiceFacade:
         self.total_round = total_round
     
     def getEntireDraftSimulation(self):
-        prospects = ProspectEliteService().getAllProspects()
+        prospects = ProspectEliteService().getAllProspectsWithRanking()
         mockdraft = MockDraftSelectorService(prospects)
         teams = NhlTeamService().getAllTeams()
         reverseSortedTeams = sorted(teams, key=lambda x: x.leagueRank, reverse=True)

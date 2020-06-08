@@ -9,7 +9,7 @@ from server.service.nhl_team_service import NhlTeamService
 
 import json
 
-prospects = ProspectEliteDao().getProspectsAtPage(5)
+prospects = ProspectEliteDao().getAllProspectsWithRanking()
 # mockdraft = MockDraftSelectorService(prospects)
 
 # list = []

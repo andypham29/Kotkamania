@@ -13,9 +13,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    draftpicks = HttpHelper.get(request.base_url + "api/drafts?ranked=true")
-
-    return render_template("index.html", draftpicks=draftpicks)
+    return render_template("index.html")
 
 @app.route('/api/drafts')
 def getEntireDraftSimulation():
@@ -32,7 +30,10 @@ def getEntireDraftSimulation():
 def getProspects():
 
     response = response = ProspectEliteService().getAllProspects()
-    if request.args.get('page') is not None:
+    if request.args.get('position') is not None:
+        page = request.args.get('page') if request.args.get('page') is not None else 0
+        response = ProspectEliteService().getProspectByPosition(request.args.get('position'), page)
+    elif request.args.get('page') is not None:
         response = ProspectEliteService().getProspectsAtPage(request.args.get('page'))
     elif request.args.get('id') is not None:
         response = ProspectEliteService().getProspectById(request.args.get('id'))

@@ -84,14 +84,14 @@ class MockDraftSelectorHelper:
 
     def getPlayerBestPoints(self, prospect):
         # 5*(32 - rank_site1) + 5*(32 - rank_site2) + ...
-        points = (32 - self.getPlayerBestRank(prospect) - 1)*100*5
+        points = (32 - self.getPlayerBestRank(prospect) - 1)*110*5
         if points < 0:
             return 500
         return points
 
     def getPlayerWorstPoints(self, prospect):
         # 5*(32 - rank_site1) + 5*(32 - rank_site2) + ...
-        points = (32 - self.getPlayerWorstRank(prospect) + 1)*100*5
+        points = (32 - self.getPlayerWorstRank(prospect) + 1)*90*5
         if points < 0:
             return 0
         return points
@@ -178,11 +178,11 @@ class MockDraftSelectorHelper:
                }
 
         # factor to determin if player raise, drop or same odds
-        factor = 20*(current_pick/(0.7*avg_rank + 0.3*worst_rank)) if current_pick > (worst_rank + 2) else 1
-        denom = options[random.randrange(0,3)]
+        factor = 20*(current_pick/(0.3*avg_rank + 0.7*worst_rank)) if current_pick > (worst_rank + 2) else 1
+        denom = options[0]
 
         rand = random.randrange(0,19)
-        rand2 = 10
+        rand2 = random.randrange(0,9)
         # rand2 = random.randrange(0,19)
 
         if rand == 2:
@@ -215,7 +215,7 @@ class MockDraftSelectorHelper:
 
         if (player_balls <= 5 and next_player_balls <= 20):
             player_rebalanced_balls = int(self.getPlayerBalls(prospect, current_pick + 1))
-            return player_rebalanced_balls if player_rebalanced_balls > 10 else 0
+            return player_rebalanced_balls if player_rebalanced_balls > 24 else 0
 
         return 0
 

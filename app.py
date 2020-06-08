@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, render_template, redirect, jsonify
-from flask_api import status
 
 from server.service.facade.mockdraft_selector_service_facade import MockDraftSelectorServiceFacade
 from server.service.prospect_elite_service import ProspectEliteService

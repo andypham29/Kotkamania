@@ -14,10 +14,16 @@ app = Flask(__name__)
 def index():
     return render_template("index.html", page="index")
 
+@app.route('/prospects')
+def prospect_list():
+    pagination = request.args.get('page') if request.args.get('page') is not None else 1
+    return render_template("index.html", page="prospect_list", pagination=pagination)
+
 @app.route('/prospects/<id>')
 def prospect_page(id):
     return render_template("index.html", page="prospect", prospect_id=id)
 
+# -------- API Routing -------------
 @app.route('/api/drafts')
 def getEntireDraftSimulation():
     response = None

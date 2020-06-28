@@ -1,0 +1,84 @@
+<script>
+    // normal jinja syntax that js does not accept
+    // pagination = {{pagination}}
+
+    function getPagination(current) {
+        
+        divPagination = `<a onclick=getProspectPage(${current - 1}>&laquo;</a>`
+        if(current - 4 < 0) {
+            start = 1
+        } else {
+            start = current - 3
+        }
+        for (i = start; i <= start+6; i++) {
+            if(i == current){
+                divPagination += `<a onclick=getProspectPage(${i}) class="active">${i}</a>`
+            } else {
+                divPagination += `<a onclick=getProspectPage(${i})>${i}</a>`
+            }
+            
+        }
+
+        divPagination += `<a onclick=getProspectPage(${current + 1})>&raquo;</a>`
+        return divPagination
+    }
+    function getProspectPage(page) {
+        // pagination = pagination + page
+
+        $.ajax({
+            url: `/api/prospects?page=${ page }`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                var trHTML = "<tr>" +
+                "<th>Player</th>" +
+                "<th>Position</th>" +
+                "<th>League</th>" +
+                "<th>Team</th>" +
+                "<th>GP</th>" +
+                "<th>G</th>" +
+                "<th>A</th>" +
+                "<th>P</th>" +
+                "<th>PIM</th>" +
+                "</tr>";
+
+                $.each(response, function (i, prospect)
+                {   
+                    trHTML += "<tr>" +
+                    `<td><a href=\"/prospects/${prospect.id}\">${ prospect.name }</a></td>` +
+                    `<td>${ prospect.position }</td>` +
+                    `<td>${ prospect.league }</td>` +
+                    `<td>${ prospect.team }</td>` +
+                    `<td>${ prospect.gp }</td>` +
+                    `<td>${ prospect.g }</td>` +
+                    `<td>${ prospect.a }</td>` +
+                    `<td>${ prospect.p }</td>` +
+                    `<td>${ prospect.pim }</td>` +
+                    "</tr>"            
+                });
+                
+                divPagination = getPagination(page)
+                // `<a onclick=getProspectPage(-1)>&laquo;</a>` +
+                // `<a onclick=getProspectPage(-2)>${pagination-2}</a>` +
+                // `<a onclick=getProspectPage(-1)>${pagination-1}</a>` +
+                // `<a onclick=getProspectPage(0) class="active">${pagination}</a>` +
+                // `<a onclick=getProspectPage(1)>${pagination+1}</a>` +
+                // `<a onclick=getProspectPage(2)>${pagination+2}</a>` +
+                // `<a onclick=getProspectPage(1)>&raquo;</a>`
+
+                $('table#draft_table tbody').html(trHTML)
+                $('div.pagination').html(divPagination)
+               
+            },
+            type: 'GET'
+        });
+    }
+    $(document).ready(getProspectPage(1));
+</script>
+<table id="draft_table" cellpadding="5px" border="1">
+    <tbody></tbody>
+</table>
+<div class="pagination"></div>

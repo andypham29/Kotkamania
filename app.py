@@ -12,7 +12,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template("index.html", page="index")
+
+@app.route('/prospects/<id>')
+def prospect_page(id):
+    return render_template("index.html", page="prospect", prospect_id=id)
 
 @app.route('/api/drafts')
 def getEntireDraftSimulation():

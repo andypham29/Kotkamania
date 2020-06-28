@@ -1,0 +1,74 @@
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: '/api/prospects?id={{ prospect_id }}',
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(prospect) {
+   
+                var trName = "<tr>" +
+                `<th>name</th>` +
+                `<td colspan="5">${ prospect.name }</td>` +
+                "</tr>"            
+
+                var trPosition = "<tr>" +
+                `<th>position</th>` +
+                `<td colspan="5">${ prospect.position }</td>` +
+                "</tr>"
+
+                var trLeague = "<tr>" +
+                `<th>league</th>` +
+                `<td colspan="5">${ prospect.league }</td>` +
+                "</tr>"  
+
+                var trTeam = "<tr>" +
+                `<th>team</th>` +
+                `<td colspan="5">${ prospect.team }</td>` +
+                "</tr>"  
+
+                var trRanks = "<tr>" +
+                "<th rowspan=\"2\">ranks</th>" +
+                "<th><a href=\"https://www.eliteprospects.com/draft-center/2020/hockeyprospect.com\" title=\"Hockey Prospect\">HP</a></th>" +
+                "<th><a href=\"https://www.eliteprospects.com/draft-center/2020/future-considerations\" title=\"Future Considerations\">FC</a></th>" +
+                "<th><a href=\"https://www.eliteprospects.com/draft-center/2020/iss-hockey\" title=\"ISS Hockey\">ISS</a></th>" +
+                "<th><a href=\"https://www.eliteprospects.com/draft-center/2020/mckeen-s-hockey\" title=\"Mckeen's Hockey\">MH</a></th>" +
+                "<th><a href=\"https://www.eliteprospects.com/draft-center/2020/eliteprospects.com\" title=\"Elite Prospect\">Elite</a></th>" +
+                "</tr><tr>" +
+                `<td>${ prospect.hp }</td>` +
+                `<td>${ prospect.fc }</td>` +
+                `<td>${ prospect.iss }</td>` +
+                `<td>${ prospect.mh }</td>` +
+                `<td>${ prospect.elite }</td>` +
+                "</tr>" 
+
+                var trStats = "<tr>" +
+                "<th rowspan=\"2\">stats</th>" +
+                "<th>gp</th>" +
+                "<th>g</th>" +
+                "<th>a</th>" +
+                "<th>p</th>" +
+                "<th>pim</th>" +
+                "</tr><tr>" +
+                `<td>${ prospect.gp }</td>` +
+                `<td>${ prospect.g }</td>` +
+                `<td>${ prospect.a }</td>` +
+                `<td>${ prospect.p }</td>` +
+                `<td>${ prospect.pim }</td>` +
+                "</tr>" 
+
+                $('#prospect_table').append(trName);
+                $('#prospect_table').append(trPosition);
+                $('#prospect_table').append(trLeague);
+                $('#prospect_table').append(trTeam);
+                $('#prospect_table').append(trRanks);
+                $('#prospect_table').append(trStats);
+            },
+            type: 'GET'
+        });
+    });
+</script>
+
+<table id="prospect_table" cellpadding="5px" border="1"></table>

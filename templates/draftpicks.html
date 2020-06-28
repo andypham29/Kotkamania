@@ -39,10 +39,15 @@
                     `<td>${ draftpick.odds }</td>` +
                     "</tr>"            
                 });
-                $('#draft_table').append(trHTML);
+                $('table#draft_table tbody').html(trHTML)
+                $(".loader").remove();
             },
             type: 'GET'
         });
     });
 </script>
-<table id="draft_table" cellpadding="5px" border="1"></table>
+<div class="loader"></div>
+<table id="draft_table" cellpadding="5px" border="1">
+    <tbody>
+    </tbody>
+</table>

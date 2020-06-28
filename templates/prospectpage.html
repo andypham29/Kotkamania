@@ -65,10 +65,12 @@
                 $('#prospect_table').append(trTeam);
                 $('#prospect_table').append(trRanks);
                 $('#prospect_table').append(trStats);
+
+                $(".loader").remove();
             },
             type: 'GET'
         });
     });
 </script>
-
+<div class="loader"></div>
 <table id="prospect_table" cellpadding="5px" border="1"></table>

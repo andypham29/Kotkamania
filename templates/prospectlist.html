@@ -4,7 +4,7 @@
 
     function getPagination(current) {
         
-        divPagination = `<a onclick=getProspectPage(${current - 1}>&laquo;</a>`
+        divPagination = `<a onclick=getProspectPage(${current - 1})>&laquo;</a>`
         if(current - 4 < 0) {
             start = 1
         } else {
@@ -16,15 +16,14 @@
             } else {
                 divPagination += `<a onclick=getProspectPage(${i})>${i}</a>`
             }
-            
         }
 
         divPagination += `<a onclick=getProspectPage(${current + 1})>&raquo;</a>`
         return divPagination
     }
-    function getProspectPage(page) {
+    function getProspectPage(page,position=null) {
         // pagination = pagination + page
-
+        if(page<=0) { return null }
         $.ajax({
             url: `/api/prospects?page=${ page }`,
             crossDomain: true,
@@ -61,16 +60,11 @@
                 });
                 
                 divPagination = getPagination(page)
-                // `<a onclick=getProspectPage(-1)>&laquo;</a>` +
-                // `<a onclick=getProspectPage(-2)>${pagination-2}</a>` +
-                // `<a onclick=getProspectPage(-1)>${pagination-1}</a>` +
-                // `<a onclick=getProspectPage(0) class="active">${pagination}</a>` +
-                // `<a onclick=getProspectPage(1)>${pagination+1}</a>` +
-                // `<a onclick=getProspectPage(2)>${pagination+2}</a>` +
-                // `<a onclick=getProspectPage(1)>&raquo;</a>`
 
                 $('table#draft_table tbody').html(trHTML)
                 $('div.pagination').html(divPagination)
+
+                $(".loader").remove();
                
             },
             type: 'GET'
@@ -78,7 +72,9 @@
     }
     $(document).ready(getProspectPage(1));
 </script>
+
+<div class="loader"></div>
 <table id="draft_table" cellpadding="5px" border="1">
-    <tbody></tbody>
+    <tbody>
+    </tbody>
 </table>
-<div class="pagination"></div>

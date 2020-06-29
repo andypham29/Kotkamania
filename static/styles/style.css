@@ -1,0 +1,79 @@
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+table {
+    margin: auto;
+    z-index: 1;
+}
+.topnav {
+    overflow: hidden;
+    background-color: white;
+    color: black;
+}
+
+.topnav a {
+    float: left;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color:#333;
+}
+
+.topnav a.active {
+    background-color: black;
+    color: white;
+}
+
+.pagination {
+    justify-content: center;
+    padding-top: 16px;
+    display: flex;
+    margin: auto;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    font-size: 22px;
+}
+
+.pagination a.active {
+    background-color: #333;
+    color:white;
+    border: 1px solid #333;
+}
+
+.pagination a:hover {
+    background-color: #ddd;
+    color:#333;
+    border: 1px solid #333;
+}
+.loader {
+    justify-content: center;
+    display: flex;
+    margin: auto;
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #333; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

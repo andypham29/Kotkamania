@@ -7,7 +7,7 @@ import json
 from server.model.prospect import ProspectElite
 from server.repository.prospect_elite_dao import ProspectEliteDao
 
-year = "2020"
+year = "2020a"
 
 hp_url = [f'https://www.eliteprospects.com/draft-center/{year}/hockeyprospect.com', 0]
 fc_url = [f'https://www.eliteprospects.com/draft-center/{year}/future-considerations', 1]
@@ -77,20 +77,24 @@ def insertProspectToDb(prospects):
             ProspectEliteDao(year).insertOrUpdateProspectElite(prospect)
 
 def dataToFile(data):
-    with open('data.json', 'w', encoding='utf-8') as f:
+    with open('data1.json', 'w', encoding='utf-8') as f:
         json.dump([item.__dict__ for item in data ], f, ensure_ascii=False, indent=4)
 
-prospects = (
-    getProspectFromEliteUrl(hp_url) +
-    getProspectFromEliteUrl(fc_url) +
-    getProspectFromEliteUrl(iss_url) +
-    getProspectFromEliteUrl(mh_url) +
-    getProspectFromEliteUrl(elite_url)
-)
-print(prospects[2].__dict__)
-ProspectEliteDao(year).initProspectEliteTable()
-insertProspectToDb(prospects)
+# prospects = (
+#     getProspectFromEliteUrl(hp_url) +
+#     getProspectFromEliteUrl(fc_url) +
+#     getProspectFromEliteUrl(iss_url) +
+#     getProspectFromEliteUrl(mh_url) +
+#     getProspectFromEliteUrl(elite_url)
+# )
 
+# ProspectEliteDao(year).initProspectEliteTable()
+# insertProspectToDb(prospects)
 
-dataToFile(ProspectEliteDao(year).getAllProspects())
+allProspects = ProspectEliteDao(year).getAllProspects()
+
+for prospect in allProspects:
+    ProspectEliteDao(year).updateProspectEliteAvgRank(prospect)
+
+dataToFile(allProspects)
 

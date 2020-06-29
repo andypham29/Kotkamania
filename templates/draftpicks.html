@@ -28,7 +28,7 @@
                     trHTML += "<tr>" +
                     `<td>${ draftpick.pick }</td>` +
                     `<td>${ draftpick.team.name }</td>` +
-                    `<td><a href=\"/api/prospects?id=${draftpick.pick}\">${ draftpick.player.name }</a></td>` +
+                    `<td><a href=\"/prospects/${draftpick.player.id}\">${ draftpick.player.name }</a></td>` +
                     `<td>${ draftpick.player.position }</td>` +
                     `<td>${ draftpick.player.avg_rank }</td>` +
                     `<td>${ draftpick.player.hp }</td>` +
@@ -39,10 +39,15 @@
                     `<td>${ draftpick.odds }</td>` +
                     "</tr>"            
                 });
-                $('#draft_table').append(trHTML);
+                $('table#draft_table tbody').html(trHTML)
+                $(".loader").remove();
             },
             type: 'GET'
         });
     });
 </script>
-<table id="draft_table" cellpadding="5px" border="1"></table>
+<div class="loader"></div>
+<table id="draft_table" cellpadding="5px" border="1">
+    <tbody>
+    </tbody>
+</table>

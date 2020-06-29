@@ -33,6 +33,7 @@
             },
             success: function(response) {
                 var trHTML = "<tr>" +
+                "<th>Average Rank</th>" +
                 "<th>Player</th>" +
                 "<th>Position</th>" +
                 "<th>League</th>" +
@@ -47,6 +48,7 @@
                 $.each(response, function (i, prospect)
                 {   
                     trHTML += "<tr>" +
+                    `<td>${ prospect.avg_rank != null ?  prospect.avg_rank : "unranked"  }</td>` +
                     `<td><a href=\"/prospects/${prospect.id}\">${ prospect.name }</a></td>` +
                     `<td>${ prospect.position }</td>` +
                     `<td>${ prospect.league }</td>` +
@@ -78,3 +80,4 @@
     <tbody>
     </tbody>
 </table>
+<div class="pagination"></div>

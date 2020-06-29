@@ -43,3 +43,10 @@ class ProspectEliteService:
             return ProspectEliteDao().insertOrUpdateProspectElite(prospect)
         except:
             raise Exception("Unable to insert prospect")
+
+    def updateProspectEliteAvgRank(self, prospect):
+        try:
+            return ProspectEliteDao().updateProspectEliteAvgRank(prospect)
+        except:
+            raise Exception("Unable to update prospect")
+

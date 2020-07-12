@@ -16,10 +16,15 @@
 
 ## API
 /api/prospects	
+
 	?id={id}
+	
 	?page={page} 		// page can be combined with below search criteria
+	
 	?position={position}
+	
 	?league{league}
 
 /api/drafts
+
 	?ranked={isRanked}

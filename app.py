@@ -52,8 +52,7 @@ def getProspects():
         response = ProspectEliteService().getProspectById(request.args.get('id'))
     else:
         response = ProspectEliteService().getAllProspects()
-        
-
+    
     return json.dumps(response, default=lambda o: o.__dict__)
 
 if __name__ == '__main__':

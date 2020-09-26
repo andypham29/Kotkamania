@@ -40,7 +40,7 @@ class ProspectEliteDao:
         return ProspectElite(id=row[0], name=row[1], position=row[2], avg_rank=row[3], hp=row[4], fc=row[5], iss=row[6], mh=row[7], elite=row[8], league=row[9], team=row[10], gp=row[11], g=row[12], a=row[13], p=row[14], pim=row[15])
 
     def getProspectByPosition(self, position, page):    
-        query = f'''SELECT * FROM {self.tablename} WHERE position LIKE '%{position}% ORDER BY CAST(avg_rank AS UNSIGNED) IS NULL ASC' '''
+        query = f'''SELECT * FROM {self.tablename} WHERE position LIKE '%{position}%' ORDER BY CAST(avg_rank AS UNSIGNED) IS NULL ASC'''
 
         if int(page) > 0:
             query += f'LIMIT 20*{page}, 20'
@@ -58,6 +58,7 @@ class ProspectEliteDao:
         self.conn.close()
 
         return list
+
     def getAllProspects(self):
         self.c.execute(f'''SELECT * FROM {self.tablename}''')
         records = self.c.fetchall()

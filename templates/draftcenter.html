@@ -2,8 +2,40 @@
 <script>
     // normal jinja syntax that js does not accept
     // pagination = {{pagination}}
+
+    function addRowToTable(tableId, content = []) {
+        var table = document.getElementById(tableId)
+        var numCol = table.rows[0].cells.length
+        var numRow = table.rows.length // also index of new row
+
+        var row = table.insertRow(numRow)
+        
+        // leave last col for button
+        for(i=0; i<numCol-1; i++) {
+            if(i==0) row.insertCell(0).innerHTML = numRow
+            else row.insertCell(i).innerHTML = content[i]
+        }
+
+        var button = document.createElement('button');
+        button.innerHTML = '-';
+        button.onclick = function(){
+            removeProspectIdInCookie(numRow)
+        };
+      
+        // add button as last data
+        row.insertCell(numCol-1).appendChild(button)
+        
+    }
+    function deleteRowFromTable(tableId, rowIndex) {
+        // row 0 = header
+        document.getElementById(tableId).deleteRow(rowIndex + 1)
+    }
+
+    function changeColorOfDomById(color, id) {
+        document.getElementById(id.toString()).style.backgroundColor  = color;
+    }
  
-    function saveProspectIdInCookie(id, name, avg_rank) {
+    function saveProspectIdInCookie(id, avg_rank, name, position, league, team, gp, g, a, p, pim) {
         var cookies = getCookie('prospects')
         var json = {}
 
@@ -11,16 +43,26 @@
         inner["id"] = id
         inner["avg_rank"] = avg_rank
         inner["name"] = name
-        
+        inner["position"] = position
+        inner["league"] = league
+        inner["team"] = team
+        inner["gp"] = gp
+        inner["g"] = g
+        inner["a"] = a
+        inner["p"] = p
+        inner["pim"] = pim
+    
         var newProspects = (cookies == "") ? [] : JSON.parse(cookies).prospects
-        var position = newProspects.findIndex(obj => {
+        var index = newProspects.findIndex(obj => {
             return obj.id === id
         })
-        if ( position == -1  ) newProspects.push(inner)
+        if ( index == -1  ) newProspects.push(inner)
 
         json["prospects"] = newProspects
         setCookie("prospects", JSON.stringify(json))
-        getProspectPage()
+
+        changeColorOfDomById("#d3d3d3", id.toString())
+        addRowToTable("watch_list", [id, avg_rank, name, position, league, team, gp, g, a, p, pim])
     }
 
     function removeProspectIdInCookie(id) {
@@ -31,19 +73,35 @@
             return obj.id === id
         })
         if ( position != -1  ) newProspects.splice(position, 1)
+        else return
         
         json["prospects"] = newProspects
         setCookie("prospects", JSON.stringify(json))
-        getProspectPage()
+        changeColorOfDomById("white",id.toString())
+        deleteRowFromTable("watch_list", position)
+    }
+
+    function getProspectJsonFieldValue(field, json) {
+        var value = json[field]
+        return (value == undefined) ? "" :JSON.stringify(value).replace(/[\"]/g, "")
     }
 
     function getProspectPage(position=null) {
-        var trHTMLWatchList = "<tr>" +
+        var trHTMLWatchList =  "<tr>" +
                 "<th>Rank</th>" +
                 "<th>Average Rank</th>" +
                 "<th>Player</th>" +
+                "<th>Position</th>" +
+                "<th>League</th>" +
+                "<th>Team</th>" +
+                "<th>GP</th>" +
+                "<th>G</th>" +
+                "<th>A</th>" +
+                "<th>P</th>" +
+                "<th>PIM</th>" +
                 "<th></th>" +
                 "</tr>";
+
         prospects = getProspectsInCookie()
         if(prospects.length > 0) {
             var j = 0
@@ -51,8 +109,16 @@
             for(j=0; j < prospects.length; j++) {
                 trHTMLWatchList += "<tr>" +
                 `<td>${j+1}</td>` +
-                `<td>${ JSON.stringify(prospects[j].avg_rank).replace(/[\"]/g, "")}</td>` +
-                `<td><a href=\"/prospects/${ JSON.stringify(prospects[j].id) }\">${ JSON.stringify(prospects[j].name).replace(/[\"]/g, "") }</a></td>` +
+                `<td>${ getProspectJsonFieldValue("avg_rank", prospects[j]) }</td>` +
+                `<td><a href=\"/prospects/${ getProspectJsonFieldValue("id", prospects[j]) }\">${ getProspectJsonFieldValue("name", prospects[j])  }</a></td>` +
+                `<td>${ getProspectJsonFieldValue("position", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("league", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("team", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("gp", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("g", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("a", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("p", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("pim", prospects[j]) }</td>` +
                 `<td><button onclick=removeProspectIdInCookie(${ JSON.stringify(prospects[j].id) })>-</button></td>` +
                 "</tr>" 
             }
@@ -87,7 +153,7 @@
                 })
                 $.each(response, function (i, prospect)
                 {   
-                    trHTML += "<tr>" +
+                    trHTML += `<tr id=\'` + prospect.id + `\'>` +
                     `<td>${ ++i }</td>` +
                     `<td>${ prospect.avg_rank }</td>` +
                     `<td><a href=\"/prospects/${prospect.id}\">${ prospect.name }</a></td>` +
@@ -99,7 +165,10 @@
                     `<td>${ prospect.a }</td>` +
                     `<td>${ prospect.p }</td>` +
                     `<td>${ prospect.pim }</td>` +
-                    `<td><button onclick='saveProspectIdInCookie(${prospect.id},\"` + prospect.name + `\", \"` + prospect.avg_rank + `\")'>+</button></td>` +
+                    `<td><button onclick='saveProspectIdInCookie(${prospect.id}, \"` 
+                        + prospect.avg_rank + `\",\"` + prospect.name + `\", \"` + prospect.position + `\",
+                         \"` + prospect.league + `\",\"` + prospect.team + `\", ${prospect.gp}, 
+                         ${prospect.g}, ${prospect.a}, ${prospect.p}, ${prospect.pim})'>+</button></td>` +
                     "</tr>"       
                     
                 });
@@ -117,6 +186,7 @@
 </script>
 
 <div class="loader"></div>
+<h2>My Prospect Ranking</h2>
 <div class="draftcenter_prospect_table" style="height:200px; overflow:auto;">
     <table id="watch_list" cellpadding="5px" border="1">
         <tbody>
@@ -124,6 +194,7 @@
     </table>
 </div>
 <br/><br>
+<h2>Prospect List</h2>
 <div class="draftcenter_prospect_table" style="height:200px; overflow:auto;">
     <table id="draft_table" cellpadding="5px" border="1">
         <tbody>

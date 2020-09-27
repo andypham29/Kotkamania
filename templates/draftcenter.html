@@ -3,6 +3,14 @@
     // normal jinja syntax that js does not accept
     // pagination = {{pagination}}
 
+    function refreshFirstCell(tableId) {
+        var table = document.getElementById(tableId)
+        var numRow = table.rows.length
+
+        for(i=1; i<numRow; i++) {
+            table.rows[i].cells[0].innerHTML = i 
+        }
+    }
     function addRowToTable(tableId, content = []) {
         var table = document.getElementById(tableId)
         var numCol = table.rows[0].cells.length
@@ -29,6 +37,7 @@
     function deleteRowFromTable(tableId, rowIndex) {
         // row 0 = header
         document.getElementById(tableId).deleteRow(rowIndex + 1)
+        refreshFirstCell(tableId)
     }
 
     function changeColorOfDomById(color, id) {
@@ -56,13 +65,16 @@
         var index = newProspects.findIndex(obj => {
             return obj.id === id
         })
-        if ( index == -1  ) newProspects.push(inner)
+        if ( index == -1  ){
+            newProspects.push(inner)
 
-        json["prospects"] = newProspects
-        setCookie("prospects", JSON.stringify(json))
+            json["prospects"] = newProspects
+            setCookie("prospects", JSON.stringify(json))
+            
+            changeColorOfDomById("#d3d3d3", id.toString())
+            addRowToTable("watch_list", [id, avg_rank, name, position, league, team, gp, g, a, p, pim])
+        } 
 
-        changeColorOfDomById("#d3d3d3", id.toString())
-        addRowToTable("watch_list", [id, avg_rank, name, position, league, team, gp, g, a, p, pim])
     }
 
     function removeProspectIdInCookie(id) {
@@ -104,9 +116,9 @@
 
         prospects = getProspectsInCookie()
         if(prospects.length > 0) {
-            var j = 0
-
+            
             for(j=0; j < prospects.length; j++) {
+
                 trHTMLWatchList += "<tr>" +
                 `<td>${j+1}</td>` +
                 `<td>${ getProspectJsonFieldValue("avg_rank", prospects[j]) }</td>` +
@@ -151,9 +163,14 @@
                 response.sort(function(a, b) {
                     return (a.avg_rank===null)-(b.avg_rank===null) || +(a.avg_rank>b.avg_rank)||-(a.avg_rank<b.avg_rank);
                 })
+                
                 $.each(response, function (i, prospect)
                 {   
-                    trHTML += `<tr id=\'` + prospect.id + `\'>` +
+                    // comparing prospects in cookies versus from backend
+                    var index = prospects.findIndex(obj => { return obj.id === prospect.id })
+                    var color = ( index == -1  ) ? "white" : "#d3d3d3"
+
+                    trHTML += `<tr id=\'` + prospect.id + `\' style="background-color:${color}" >` +
                     `<td>${ ++i }</td>` +
                     `<td>${ prospect.avg_rank }</td>` +
                     `<td><a href=\"/prospects/${prospect.id}\">${ prospect.name }</a></td>` +

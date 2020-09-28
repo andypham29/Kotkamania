@@ -23,6 +23,10 @@ def prospect_list():
 def prospect_page(id):
     return render_template("index.html", page="prospect", prospect_id=id)
 
+@app.route('/draftcenter')
+def draft_center():
+    return render_template("index.html", page="draft_center")
+
 # -------- API Routing -------------
 @app.route('/api/drafts')
 def getEntireDraftSimulation():
@@ -48,8 +52,7 @@ def getProspects():
         response = ProspectEliteService().getProspectById(request.args.get('id'))
     else:
         response = ProspectEliteService().getAllProspects()
-        
-
+    
     return json.dumps(response, default=lambda o: o.__dict__)
 
 if __name__ == '__main__':

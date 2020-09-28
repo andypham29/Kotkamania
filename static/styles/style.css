@@ -77,3 +77,27 @@ table {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.search {
+    background-image: url('/static/styles/magnifying-glass.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    width: 50%;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}
+
+table#draft_table table#watch_list {
+    width: 100%;
+}
+
+select {
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    padding: 12px 20px 12px 5px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}

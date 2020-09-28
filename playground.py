@@ -9,7 +9,7 @@ from server.service.nhl_team_service import NhlTeamService
 
 import json
 
-prospects = ProspectEliteDao().getAllProspectsWithRanking()
+prospects = ProspectEliteDao().getProspectByPosition("G", 0)
 # mockdraft = MockDraftSelectorService(prospects)
 
 # list = []
@@ -19,7 +19,7 @@ prospects = ProspectEliteDao().getAllProspectsWithRanking()
 # prospect = mockdraft.pickPlayerBySelection(1)
 
 
-# for prospect in list:
-#     print(prospect.__dict__)
+for prospect in prospects:
+    print(prospect.__dict__)
 
 print([prospect.__dict__ for prospect in prospects])

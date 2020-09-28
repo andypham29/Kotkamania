@@ -1,0 +1,271 @@
+<script src="{{url_for('static', filename='cookiehandler.js')}}"></script>
+<script>
+    // normal jinja syntax that js does not accept
+    // pagination = {{pagination}}
+
+    function refreshFirstCell(tableId) {
+        var table = document.getElementById(tableId)
+        var numRow = table.rows.length
+
+        for(i=1; i<numRow; i++) {
+            table.rows[i].cells[0].innerHTML = i 
+        }
+    }
+    function addRowToTable(tableId, content = []) {
+        var table = document.getElementById(tableId)
+        var numCol = table.rows[0].cells.length
+        var numRow = table.rows.length // also index of new row
+
+        var row = table.insertRow(numRow)
+        var id = (content[0] == null) ? console.log(`Unable to delete prospect with from watch list`) : content[0]
+        
+        // leave last col for button
+        for(i=0; i<numCol-1; i++) {
+            if(i==0) row.insertCell(0).innerHTML = numRow
+            else row.insertCell(i).innerHTML = content[i]
+        }
+
+        var button = document.createElement('button');
+        button.innerHTML = '-';
+        button.onclick = function(){
+            removeProspectIdInCookie(id)
+        };
+      
+        // add button as last data
+        row.insertCell(numCol-1).appendChild(button)
+        
+    }
+
+    function deleteRowFromTable(tableId, rowIndex) {
+        // document.getElementById(tableId).deleteRow(rowIndex + 1)
+        var td = event.target.parentNode; 
+        var tr = td.parentNode; // the row to be removed
+        tr.parentNode.removeChild(tr)
+        refreshFirstCell(tableId)
+    }
+
+    function changeColorOfDomById(color, id) {
+        document.getElementById(id.toString()).style.backgroundColor  = color;
+    }
+ 
+    function saveProspectIdInCookie(id, avg_rank, name, position, league, team, gp, g, a, p, pim) {
+        var cookies = getCookie('prospects')
+        var json = {}
+
+        var inner = {}
+        inner["id"] = id
+        inner["avg_rank"] = avg_rank
+        inner["name"] = name
+        inner["position"] = position
+        inner["league"] = league
+        inner["team"] = team
+        inner["gp"] = gp
+        inner["g"] = g
+        inner["a"] = a
+        inner["p"] = p
+        inner["pim"] = pim
+    
+        var newProspects = (cookies == "") ? [] : JSON.parse(cookies).prospects
+        var index = newProspects.findIndex(obj => {
+            return obj.id === id
+        })
+        if ( index == -1  ){
+            
+            newProspects.push(inner)
+
+            json["prospects"] = newProspects
+            setCookie("prospects", JSON.stringify(json))
+            
+            changeColorOfDomById("#d3d3d3", id.toString())
+            addRowToTable("watch_list", [id, avg_rank, name, position, league, team, gp, g, a, p, pim])
+        
+        } else {
+            console.log(`[${id}:${name}] Unable to add prospect to watch list`)
+        }
+
+    }
+
+    function removeProspectIdInCookie(id) {
+        var cookies = getCookie('prospects')
+        var json = {}
+        var newProspects = (cookies == "") ? [] : JSON.parse(cookies).prospects
+        try {
+            var position = newProspects.findIndex(obj => {
+                return obj.id === id
+            })
+        
+            if ( position != -1  ) newProspects.splice(position, 1)
+            else {
+                console.log(`Unable to delete row at position: ${position} | id: ${id}`)
+                return
+            }
+            console.log(`Succesfully deleted row at position: ${position} | id: ${id}`)
+            json["prospects"] = newProspects
+            setCookie("prospects", JSON.stringify(json))
+            changeColorOfDomById("white",id.toString())
+            deleteRowFromTable("watch_list", position)
+        } catch(err) {
+            console.log(err)
+        }
+        
+    }
+
+    function getProspectJsonFieldValue(field, json) {
+        var value = json[field]
+        return (value == undefined) ? "" :JSON.stringify(value).replace(/[\"]/g, "")
+    }
+
+    function searchValueInTable(value = null) {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+
+        filter = (value == null) ? input.value.toUpperCase() : value.toUpperCase()
+        cellId = (value == null || value == "") ? 2 : 3 // name: 2, position: 3
+
+        table = document.getElementById("draft_table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[cellId];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }       
+        }
+    }
+    function getProspectPage(position=null) {
+        var trHTMLWatchList =  "<tr>" +
+                "<th>Rank</th>" +
+                "<th>Average Rank</th>" +
+                "<th>Player</th>" +
+                "<th>Position</th>" +
+                "<th>League</th>" +
+                "<th>Team</th>" +
+                "<th>GP</th>" +
+                "<th>G</th>" +
+                "<th>A</th>" +
+                "<th>P</th>" +
+                "<th>PIM</th>" +
+                "<th></th>" +
+                "</tr>";
+
+        prospects = getProspectsInCookie()
+        if(prospects.length > 0) {
+            
+            for(j=0; j < prospects.length; j++) {
+
+                trHTMLWatchList += "<tr>" +
+                `<td>${j+1}</td>` +
+                `<td>${ getProspectJsonFieldValue("avg_rank", prospects[j]) }</td>` +
+                `<td><a href=\"/prospects/${ getProspectJsonFieldValue("id", prospects[j]) }\">${ getProspectJsonFieldValue("name", prospects[j])  }</a></td>` +
+                `<td>${ getProspectJsonFieldValue("position", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("league", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("team", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("gp", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("g", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("a", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("p", prospects[j]) }</td>` +
+                `<td>${ getProspectJsonFieldValue("pim", prospects[j]) }</td>` +
+                `<td><button onclick=removeProspectIdInCookie(${ getProspectJsonFieldValue("id", prospects[j]) })>-</button></td>` +
+                "</tr>" 
+            }
+        }
+        $.ajax({
+            url: `/api/prospects`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                var trHTML = "<tr>" +
+                "<th></th>" +
+                "<th>Average Rank</th>" +
+                "<th>Player</th>" +
+                "<th>Position</th>" +
+                "<th>League</th>" +
+                "<th>Team</th>" +
+                "<th>GP</th>" +
+                "<th>G</th>" +
+                "<th>A</th>" +
+                "<th>P</th>" +
+                "<th>PIM</th>" +
+                "<th></th>" +
+                "</tr>";
+
+                var i = 0
+                // sort response by ascending avg_rank
+                response.sort(function(a, b) {
+                    return (a.avg_rank===null)-(b.avg_rank===null) || +(a.avg_rank>b.avg_rank)||-(a.avg_rank<b.avg_rank);
+                })
+                
+                $.each(response, function (i, prospect)
+                {   
+                    // comparing prospects in cookies versus from backend
+                    var index = prospects.findIndex(obj => { return obj.id === prospect.id })
+                    var color = ( index == -1  ) ? "white" : "#d3d3d3"
+
+                    trHTML += `<tr id=\'` + prospect.id + `\' style="background-color:${color}" >` +
+                    `<td>${ ++i }</td>` +
+                    `<td>${ prospect.avg_rank }</td>` +
+                    `<td><a href=\"/prospects/${prospect.id}\">${ prospect.name }</a></td>` +
+                    `<td>${ prospect.position }</td>` +
+                    `<td>${ prospect.league }</td>` +
+                    `<td>${ prospect.team }</td>` + // keep in mind that in jquery, you cannot pass ' because they are considered literal quotations and will expect you to close it
+                    `<td>${ prospect.gp }</td>` +
+                    `<td>${ prospect.g }</td>` +
+                    `<td>${ prospect.a }</td>` +
+                    `<td>${ prospect.p }</td>` +
+                    `<td>${ prospect.pim }</td>` +
+                    `<td><button onclick='saveProspectIdInCookie(${prospect.id}, \"` 
+                        + prospect.avg_rank + `\",\"` + prospect.name + `\", \"` + prospect.position + `\",
+                         \"` + prospect.league + `\",\"` + prospect.team.replace(/'/g, "&#39;") + `\", ${prospect.gp}, 
+                         ${prospect.g}, ${prospect.a}, ${prospect.p}, ${prospect.pim})'>+</button></td>` +
+                    "</tr>"       
+                    
+                });
+
+                $('table#draft_table tbody').html(trHTML)
+                $('table#watch_list tbody').html(trHTMLWatchList)
+
+                $(".loader").remove();
+               
+            },
+            type: 'GET'
+        });
+    }
+    $(document).ready(getProspectPage());
+</script>
+<div id="container">
+
+</div>
+<div class="loader"></div>
+</br>
+<h2>My Prospect Ranking</h2>
+<div class="draftcenter_prospect_table">
+    <table id="watch_list" cellpadding="5px" border="1">
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<h2>Prospect List</h2>
+<input type="text" class="search" id="myInput" onkeyup="searchValueInTable()" placeholder="Search player's name" title="Type in a name">
+<select name="cars" id="cars" onchange="if (this.selectedIndex) searchValueInTable(this.value);">
+    <option>Position</option>
+    <option value="">All</option>
+    <option value="LW">LW</option>
+    <option value="C">C</option>
+    <option value="RW">RW</option>
+    <option value="D">D</option>
+    <option value="G">G</option>
+</select>
+</br>
+<div class="draftcenter_prospect_table" style="width: 100%; height:500px; overflow:auto;">
+    <table id="draft_table" cellpadding="5px" border="1">
+        <tbody>
+        </tbody>
+    </table>
+</div>

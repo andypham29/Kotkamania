@@ -17,6 +17,7 @@
         var numRow = table.rows.length // also index of new row
 
         var row = table.insertRow(numRow)
+        var id = (content[0] == null) ? console.log(`Unable to delete prospect with from watch list`) : content[0]
         
         // leave last col for button
         for(i=0; i<numCol-1; i++) {
@@ -27,16 +28,19 @@
         var button = document.createElement('button');
         button.innerHTML = '-';
         button.onclick = function(){
-            removeProspectIdInCookie(numRow)
+            removeProspectIdInCookie(id)
         };
       
         // add button as last data
         row.insertCell(numCol-1).appendChild(button)
         
     }
+
     function deleteRowFromTable(tableId, rowIndex) {
-        // row 0 = header
-        document.getElementById(tableId).deleteRow(rowIndex + 1)
+        // document.getElementById(tableId).deleteRow(rowIndex + 1)
+        var td = event.target.parentNode; 
+        var tr = td.parentNode; // the row to be removed
+        tr.parentNode.removeChild(tr)
         refreshFirstCell(tableId)
     }
 
@@ -54,7 +58,7 @@
         inner["name"] = name
         inner["position"] = position
         inner["league"] = league
-        inner["team"] = team
+        inner["team"] = team // does not allow single quote
         inner["gp"] = gp
         inner["g"] = g
         inner["a"] = a
@@ -66,6 +70,7 @@
             return obj.id === id
         })
         if ( index == -1  ){
+            
             newProspects.push(inner)
 
             json["prospects"] = newProspects
@@ -73,7 +78,10 @@
             
             changeColorOfDomById("#d3d3d3", id.toString())
             addRowToTable("watch_list", [id, avg_rank, name, position, league, team, gp, g, a, p, pim])
-        } 
+        
+        } else {
+            console.log(`[${id}:${name}] Unable to add prospect to watch list`)
+        }
 
     }
 
@@ -81,16 +89,25 @@
         var cookies = getCookie('prospects')
         var json = {}
         var newProspects = (cookies == "") ? [] : JSON.parse(cookies).prospects
-        var position = newProspects.findIndex(obj => {
-            return obj.id === id
-        })
-        if ( position != -1  ) newProspects.splice(position, 1)
-        else return
+        try {
+            var position = newProspects.findIndex(obj => {
+                return obj.id === id
+            })
         
-        json["prospects"] = newProspects
-        setCookie("prospects", JSON.stringify(json))
-        changeColorOfDomById("white",id.toString())
-        deleteRowFromTable("watch_list", position)
+            if ( position != -1  ) newProspects.splice(position, 1)
+            else {
+                console.log(`Unable to delete row at position: ${position} | id: ${id}`)
+                return
+            }
+            console.log(`Succesfully deleted row at position: ${position} | id: ${id}`)
+            json["prospects"] = newProspects
+            setCookie("prospects", JSON.stringify(json))
+            changeColorOfDomById("white",id.toString())
+            deleteRowFromTable("watch_list", position)
+        } catch(err) {
+            console.log(err)
+        }
+        
     }
 
     function getProspectJsonFieldValue(field, json) {
@@ -131,7 +148,7 @@
                 `<td>${ getProspectJsonFieldValue("a", prospects[j]) }</td>` +
                 `<td>${ getProspectJsonFieldValue("p", prospects[j]) }</td>` +
                 `<td>${ getProspectJsonFieldValue("pim", prospects[j]) }</td>` +
-                `<td><button onclick=removeProspectIdInCookie(${ JSON.stringify(prospects[j].id) })>-</button></td>` +
+                `<td><button onclick=removeProspectIdInCookie(${ getProspectJsonFieldValue("id", prospects[j]) })>-</button></td>` +
                 "</tr>" 
             }
         }
@@ -176,7 +193,7 @@
                     `<td><a href=\"/prospects/${prospect.id}\">${ prospect.name }</a></td>` +
                     `<td>${ prospect.position }</td>` +
                     `<td>${ prospect.league }</td>` +
-                    `<td>${ prospect.team }</td>` +
+                    `<td>${ prospect.team }</td>` + // keep in mind that in jquery, you cannot pass ' because they are considered literal quotations and will expect you to close it
                     `<td>${ prospect.gp }</td>` +
                     `<td>${ prospect.g }</td>` +
                     `<td>${ prospect.a }</td>` +
@@ -184,7 +201,7 @@
                     `<td>${ prospect.pim }</td>` +
                     `<td><button onclick='saveProspectIdInCookie(${prospect.id}, \"` 
                         + prospect.avg_rank + `\",\"` + prospect.name + `\", \"` + prospect.position + `\",
-                         \"` + prospect.league + `\",\"` + prospect.team + `\", ${prospect.gp}, 
+                         \"` + prospect.league + `\",\"` + prospect.team.replace(/'/g, "&#39;") + `\", ${prospect.gp}, 
                          ${prospect.g}, ${prospect.a}, ${prospect.p}, ${prospect.pim})'>+</button></td>` +
                     "</tr>"       
                     
@@ -201,18 +218,20 @@
     }
     $(document).ready(getProspectPage());
 </script>
+<div id="container">
 
+</div>
 <div class="loader"></div>
 <h2>My Prospect Ranking</h2>
-<div class="draftcenter_prospect_table" style="height:200px; overflow:auto;">
+<div class="draftcenter_prospect_table" style="height:300px; overflow:auto;">
     <table id="watch_list" cellpadding="5px" border="1">
         <tbody>
         </tbody>
     </table>
 </div>
-<br/><br>
+<br/>
 <h2>Prospect List</h2>
-<div class="draftcenter_prospect_table" style="height:200px; overflow:auto;">
+<div class="draftcenter_prospect_table" style="height:500px; overflow:auto;">
     <table id="draft_table" cellpadding="5px" border="1">
         <tbody>
         </tbody>

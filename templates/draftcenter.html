@@ -58,7 +58,7 @@
         inner["name"] = name
         inner["position"] = position
         inner["league"] = league
-        inner["team"] = team // does not allow single quote
+        inner["team"] = team
         inner["gp"] = gp
         inner["g"] = g
         inner["a"] = a
@@ -115,6 +115,25 @@
         return (value == undefined) ? "" :JSON.stringify(value).replace(/[\"]/g, "")
     }
 
+    function myFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("draft_table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[2];
+            console.log(td)
+            if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+            }       
+        }
+    }
     function getProspectPage(position=null) {
         var trHTMLWatchList =  "<tr>" +
                 "<th>Rank</th>" +
@@ -222,20 +241,19 @@
 
 </div>
 <div class="loader"></div>
+</br>
 <h2>My Prospect Ranking</h2>
-<div class="draftcenter_prospect_table" style="height:300px; overflow:auto;">
+<div class="draftcenter_prospect_table">
     <table id="watch_list" cellpadding="5px" border="1">
         <tbody>
         </tbody>
     </table>
 </div>
-<br/>
 <h2>Prospect List</h2>
-<div class="draftcenter_prospect_table" style="height:500px; overflow:auto;">
+<input type="text" class="search" id="myInput" onkeyup="myFunction()" placeholder="Search player's name" title="Type in a name">
+<div class="draftcenter_prospect_table" style="width: 100%; height:500px; overflow:auto;">
     <table id="draft_table" cellpadding="5px" border="1">
         <tbody>
         </tbody>
     </table>
 </div>
-
-

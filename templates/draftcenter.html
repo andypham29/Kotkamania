@@ -220,10 +220,10 @@
                     `<td>${ prospect.a }</td>` +
                     `<td>${ prospect.p }</td>` +
                     `<td>${ prospect.pim }</td>` +
-                    `<td><button onclick='saveProspectIdInCookie(${prospect.id}, \"` 
+                    `<td><button onclick='saveProspectIdInCookie(\"` + prospect.id + `\", \"` 
                         + prospect.avg_rank + `\",\"` + prospect.name + `\", \"` + prospect.position + `\",
-                         \"` + prospect.league + `\",\"` + prospect.team.replace(/'/g, "&#39;") + `\", ${prospect.gp}, 
-                         ${prospect.g}, ${prospect.a}, ${prospect.p}, ${prospect.pim})'>+</button></td>` +
+                         \"` + prospect.league + `\",\"` + prospect.team.replace(/'/g, "&#39;") + `\", \"` + prospect.gp + `\", 
+                         \"` + prospect.g + `\", \"` + prospect.a + `\", \"` + prospect.p + `\", \"` + prospect.pim + `\")'>+</button></td>` +
                     "</tr>"       
                     
                 });

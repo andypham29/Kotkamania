@@ -7,9 +7,9 @@ import json
 from server.model.prospect import ProspectElite
 from server.repository.prospect_elite_dao import ProspectEliteDao
 
-year = "2020a"
+year = "2020b"
 
-hp_url = [f'https://www.eliteprospects.com/draft-center/{year}/hockeyprospect.com', 0]
+hp_url = [f'https://www.eliteprospects.com/draft-center/{year}/tsn-craig-button', 0] # hp -> tsn
 fc_url = [f'https://www.eliteprospects.com/draft-center/{year}/future-considerations', 1]
 iss_url = [f'https://www.eliteprospects.com/draft-center/{year}/iss-hockey', 2]
 mh_url = [f'https://www.eliteprospects.com/draft-center/{year}/mckeen-s-hockey', 3]
@@ -80,16 +80,16 @@ def dataToFile(data):
     with open('data1.json', 'w', encoding='utf-8') as f:
         json.dump([item.__dict__ for item in data ], f, ensure_ascii=False, indent=4)
 
-# prospects = (
-#     getProspectFromEliteUrl(hp_url) +
-#     getProspectFromEliteUrl(fc_url) +
-#     getProspectFromEliteUrl(iss_url) +
-#     getProspectFromEliteUrl(mh_url) +
-#     getProspectFromEliteUrl(elite_url)
-# )
+prospects = (
+    getProspectFromEliteUrl(hp_url) +
+    getProspectFromEliteUrl(fc_url) +
+    getProspectFromEliteUrl(iss_url) +
+    getProspectFromEliteUrl(mh_url) +
+    getProspectFromEliteUrl(elite_url)
+)
 
-# ProspectEliteDao(year).initProspectEliteTable()
-# insertProspectToDb(prospects)
+ProspectEliteDao(year).initProspectEliteTable()
+insertProspectToDb(prospects)
 
 allProspects = ProspectEliteDao(year).getAllProspects()
 

@@ -3,7 +3,7 @@ from server.model.prospect import ProspectElite
 
 class ProspectEliteDao:
 
-    def __init__(self, year = "2020a"):
+    def __init__(self, year = "2020b"):
         self.tablename = f"eliteprospect{year}"
         self.conn = sqlite3.connect('server/db/eliteprospect.db')
         self.c = self.conn.cursor()

@@ -3,6 +3,10 @@
     // normal jinja syntax that js does not accept
     // pagination = {{pagination}}
 
+    function getProspectIdsFromCookies(cookieName='prospectIds') {
+        var cookies = getCookie(cookieName)
+        return (cookies == "") ? [] : JSON.parse(cookies)
+    }
     function refreshFirstCell(tableId) {
         var table = document.getElementById(tableId)
         var numRow = table.rows.length
@@ -47,34 +51,13 @@
     function changeColorOfDomById(color, id) {
         document.getElementById(id.toString()).style.backgroundColor  = color;
     }
- 
+
     function saveProspectIdInCookie(id, avg_rank, name, position, league, team, gp, g, a, p, pim) {
-        var cookies = getCookie('prospects')
-        var json = {}
-
-        var inner = {}
-        inner["id"] = id
-        inner["avg_rank"] = avg_rank
-        inner["name"] = name
-        inner["position"] = position
-        inner["league"] = league
-        inner["team"] = team
-        inner["gp"] = gp
-        inner["g"] = g
-        inner["a"] = a
-        inner["p"] = p
-        inner["pim"] = pim
-    
-        var newProspects = (cookies == "") ? [] : JSON.parse(cookies).prospects
-        var index = newProspects.findIndex(obj => {
-            return obj.id === id
-        })
-        if ( index == -1  ){
-            
-            newProspects.push(inner)
-
-            json["prospects"] = newProspects
-            setCookie("prospects", JSON.stringify(json))
+        var newProspects = getProspectIdsFromCookies()
+        var index = newProspects.indexOf(id)
+        if (index == -1){
+            newProspects.push(id)
+            setCookie("prospectIds", JSON.stringify(newProspects))
             
             changeColorOfDomById("#d3d3d3", id.toString())
             addRowToTable("watch_list", [id, avg_rank, name, position, league, team, gp, g, a, p, pim])
@@ -82,26 +65,19 @@
         } else {
             console.log(`[${id}:${name}] Unable to add prospect to watch list`)
         }
-
     }
 
     function removeProspectIdInCookie(id) {
-        var cookies = getCookie('prospects')
-        var json = {}
-        var newProspects = (cookies == "") ? [] : JSON.parse(cookies).prospects
+        var newProspects = getProspectIdsFromCookies()
         try {
-            var position = newProspects.findIndex(obj => {
-                return obj.id === id
-            })
-        
-            if ( position != -1  ) newProspects.splice(position, 1)
+            var position = newProspects.indexOf(id)
+            if (position > -1) newProspects.splice(position, 1)
             else {
                 console.log(`Unable to delete row at position: ${position} | id: ${id}`)
                 return
             }
             console.log(`Succesfully deleted row at position: ${position} | id: ${id}`)
-            json["prospects"] = newProspects
-            setCookie("prospects", JSON.stringify(json))
+            setCookie("prospectIds", JSON.stringify(newProspects))
             changeColorOfDomById("white",id.toString())
             deleteRowFromTable("watch_list", position)
         } catch(err) {
@@ -136,7 +112,9 @@
             }       
         }
     }
-    function getProspectPage(position=null) {
+
+    function buildHTMLProspectListFromCookies(response) {
+        var prospects = response
         var trHTMLWatchList =  "<tr>" +
                 "<th>Rank</th>" +
                 "<th>Average Rank</th>" +
@@ -152,27 +130,32 @@
                 "<th></th>" +
                 "</tr>";
 
-        prospects = getProspectsInCookie()
-        if(prospects.length > 0) {
-            
-            for(j=0; j < prospects.length; j++) {
-
+        prospectList = getProspectIdsFromCookies()
+        if(prospectList.length > 0) {
+            for(j=0; j < prospectList.length; j++) {
+                var index = prospects.findIndex(obj => {
+                    return obj.id === prospectList[j]
+                })
                 trHTMLWatchList += "<tr>" +
                 `<td>${j+1}</td>` +
-                `<td>${ getProspectJsonFieldValue("avg_rank", prospects[j]) }</td>` +
-                `<td><a href=\"/prospects/${ getProspectJsonFieldValue("id", prospects[j]) }\">${ getProspectJsonFieldValue("name", prospects[j])  }</a></td>` +
-                `<td>${ getProspectJsonFieldValue("position", prospects[j]) }</td>` +
-                `<td>${ getProspectJsonFieldValue("league", prospects[j]) }</td>` +
-                `<td>${ getProspectJsonFieldValue("team", prospects[j]) }</td>` +
-                `<td>${ getProspectJsonFieldValue("gp", prospects[j]) }</td>` +
-                `<td>${ getProspectJsonFieldValue("g", prospects[j]) }</td>` +
-                `<td>${ getProspectJsonFieldValue("a", prospects[j]) }</td>` +
-                `<td>${ getProspectJsonFieldValue("p", prospects[j]) }</td>` +
-                `<td>${ getProspectJsonFieldValue("pim", prospects[j]) }</td>` +
-                `<td><button onclick=removeProspectIdInCookie(${ getProspectJsonFieldValue("id", prospects[j]) })>-</button></td>` +
+                `<td>${ prospects[index].avg_rank }</td>` +
+                `<td><a href=\"/prospects/${ prospects[index].id }\">${ prospects[index].name  }</a></td>` +
+                `<td>${ prospects[index].position }</td>` +
+                `<td>${ prospects[index].league }</td>` +
+                `<td>${ prospects[index].team }</td>` +
+                `<td>${ prospects[index].gp }</td>` +
+                `<td>${ prospects[index].g }</td>` +
+                `<td>${ prospects[index].a }</td>` +
+                `<td>${ prospects[index].p }</td>` +
+                `<td>${ prospects[index].pim }</td>` +
+                `<td><button onclick=removeProspectIdInCookie(${ prospects[index].id })>-</button></td>` +
                 "</tr>" 
             }
         }
+        return trHTMLWatchList
+    }
+
+    function getProspectPage(position=null) {
         $.ajax({
             url: `/api/prospects`,
             crossDomain: true,
@@ -202,10 +185,12 @@
                     return (a.avg_rank===null)-(b.avg_rank===null) || +(a.avg_rank>b.avg_rank)||-(a.avg_rank<b.avg_rank);
                 })
                 
+                var trHTMLWatchList = buildHTMLProspectListFromCookies(response)
+                prospects = getProspectIdsFromCookies()
                 $.each(response, function (i, prospect)
                 {   
                     // comparing prospects in cookies versus from backend
-                    var index = prospects.findIndex(obj => { return obj.id === prospect.id })
+                    var index = prospects.indexOf(prospect.id)
                     var color = ( index == -1  ) ? "white" : "#d3d3d3"
 
                     trHTML += `<tr id=\'` + prospect.id + `\' style="background-color:${color}" >` +

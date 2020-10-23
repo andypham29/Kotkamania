@@ -1,13 +1,4 @@
-from server.service.mockdraft_selector_service import MockDraftSelectorService
-
-
-from server.model.prospect import ProspectElite
-from server.model.draftpick import DraftPick
-from server.repository.prospect_elite_dao import ProspectEliteDao
-
-from server.service.nhl_team_service import NhlTeamService
-
-import json
+from server.mockdraft.repository.prospect_elite_dao import ProspectEliteDao
 
 prospects = ProspectEliteDao().getProspectByPosition("G", 0)
 # mockdraft = MockDraftSelectorService(prospects)

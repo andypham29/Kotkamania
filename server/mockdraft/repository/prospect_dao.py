@@ -1,10 +1,11 @@
 import sqlite3
-from server.model.prospect import Prospect
+from server.mockdraft.model.prospect import Prospect
+
 
 class ProspectDao:
 
     def __init__(self):
-        self.conn = sqlite3.connect('server/db/example.db')
+        self.conn = sqlite3.connect('server/mockdraft/db/example.db')
         self.c = self.conn.cursor()
 
     def initProspectTable(self):
@@ -22,14 +23,15 @@ class ProspectDao:
         self.conn.close()
 
     def createProspect(self, prospect):
-        self.c.execute('''INSERT INTO prospects (rank, player_name, height, weight, position, team, league) VALUES (?,?,?,?,?,?,?)''',
-        (prospect.rank,
-        prospect.player_name,
-        prospect.height,
-        prospect.weight,
-        prospect.position,
-        prospect.team,
-        prospect.league))
+        self.c.execute(
+            '''INSERT INTO prospects (rank, player_name, height, weight, position, team, league) VALUES (?,?,?,?,?,?,?)''',
+            (prospect.rank,
+             prospect.player_name,
+             prospect.height,
+             prospect.weight,
+             prospect.position,
+             prospect.team,
+             prospect.league))
 
         self.conn.commit()
         self.conn.close()

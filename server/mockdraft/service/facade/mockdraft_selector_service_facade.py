@@ -1,8 +1,9 @@
-from server.service.prospect_elite_service import ProspectEliteService
-from server.service.mockdraft_selector_service import MockDraftSelectorService
-from server.service.nhl_team_service import NhlTeamService
+from server.nhlapi.model.team import Team
+from server.mockdraft.service.mockdraft_selector_service import MockDraftSelectorService
+from server.nhlapi.service.nhl_team_service import NhlTeamService
+from server.mockdraft.service.prospect_elite_service import ProspectEliteService
 
-from server.model.team import Team
+
 class MockDraftSelectorServiceFacade:
 
     def __init__(self, total_round=31):
@@ -24,9 +25,8 @@ class MockDraftSelectorServiceFacade:
         draftlist = []
         for i in range(self.total_round):
             draftpick = mockdraft.pickPlayerBySelection(i+1)
-            # draftpick.team = reverseSortedTeams[i%len(teams)]
-            draftpick.team = teams2020[i%len(teams)]
+            draftpick.team = reverseSortedTeams[i % len(teams)]
+            # draftpick.team = teams2020[i%len(teams)]
             draftlist.append(draftpick)
 
         return draftlist
-        # return json.dumps([draft.__dict__ for draft in draftlist])

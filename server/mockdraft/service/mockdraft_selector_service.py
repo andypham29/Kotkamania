@@ -1,6 +1,7 @@
-import random, schedule
+import random
 
-from server.model.draftpick import DraftPick
+from server.mockdraft.model.draftpick import DraftPick
+
 
 class MockDraftSelectorService:
     def __init__(self, prospectlist, total_rounds=31):
@@ -32,10 +33,12 @@ class MockDraftSelectorService:
                 list.append(total_balls)
 
             elif i < len(prospectlist) - 1 and player_balls <= 0:
-                next_prospect = prospectlist[i+1]
+                next_prospect = prospectlist[i + 1]
                 next_player_balls = int(MockDraftSelectorHelper().getPlayerBalls(next_prospect, current_pick))
 
-                player_rebalanced_balls = MockDraftSelectorHelper().getPlayerRebalancedBall(prospect, prospectlist[i+1], current_pick)
+                player_rebalanced_balls = MockDraftSelectorHelper().getPlayerRebalancedBall(prospect,
+                                                                                            prospectlist[i + 1],
+                                                                                            current_pick)
                 if player_rebalanced_balls >= 10 and player_balls != 0:
                     total_balls += player_rebalanced_balls
                     list.append(total_balls)
@@ -53,8 +56,9 @@ class MockDraftSelectorService:
                 prospect_picked = prospectlist[i]
                 prospectlist.pop(i)
 
-                return DraftPick(pick=current_pick, player=prospect_picked, odds=MockDraftSelectorHelper().getPickOdds(list, picked_ball), list_ball=list, picked_ball=picked_ball)
-
+                return DraftPick(pick=current_pick, player=prospect_picked,
+                                 odds=MockDraftSelectorHelper().getPickOdds(list, picked_ball), list_ball=list,
+                                 picked_ball=picked_ball)
 
     def __getSortedListByAvgRank(self, list):
         for i in range(len(list)):
@@ -67,7 +71,7 @@ class MockDraftSelectorHelper:
     def __init__(self):
         pass
 
-    def getPlayerPoints(self,prospect):
+    def getPlayerPoints(self, prospect):
         # 5*(32 - rank_site1) + 5*(32 - rank_site2) + ...
         points = 0
         list = [prospect.hp, prospect.fc, prospect.iss, prospect.mh, prospect.elite]
@@ -75,7 +79,7 @@ class MockDraftSelectorHelper:
             if str.isdigit(item):
                 if int(item) < 32:
                     points += 10
-                points += (32 - int(item))*100
+                points += (32 - int(item)) * 100
             else:
                 points += 100
 
@@ -84,14 +88,14 @@ class MockDraftSelectorHelper:
 
     def getPlayerBestPoints(self, prospect):
         # 5*(32 - rank_site1) + 5*(32 - rank_site2) + ...
-        points = (32 - self.getPlayerBestRank(prospect) - 1)*110*5
+        points = (32 - self.getPlayerBestRank(prospect) - 1) * 110 * 5
         if points < 0:
             return 500
         return points
 
     def getPlayerWorstPoints(self, prospect):
         # 5*(32 - rank_site1) + 5*(32 - rank_site2) + ...
-        points = (32 - self.getPlayerWorstRank(prospect) + 1)*90*5
+        points = (32 - self.getPlayerWorstRank(prospect) + 1) * 90 * 5
         if points < 0:
             return 0
         return points
@@ -101,7 +105,7 @@ class MockDraftSelectorHelper:
         count = 0
         list = [prospect.hp, prospect.fc, prospect.iss, prospect.mh, prospect.elite]
         if list[0:4] == "-":
-            total = 45*5
+            total = 45 * 5
         for item in list:
             if str.isdigit(item):
                 count += 1
@@ -110,7 +114,7 @@ class MockDraftSelectorHelper:
                 count += 1
                 total += 42
 
-        return total/count
+        return total / count
 
     def getPlayerRangeRank(self, prospect):
         val_list = [prospect.hp, prospect.fc, prospect.iss, prospect.mh, prospect.elite]
@@ -157,7 +161,7 @@ class MockDraftSelectorHelper:
             else:
                 count += 1
                 total += 45
-        return total/count
+        return total / count
 
     def getPlayerBalls(self, prospect, current_pick):
         # points/10^((weighted_rank/110)/current_pick)
@@ -171,18 +175,18 @@ class MockDraftSelectorHelper:
 
         # denominator to determine
         options = {
-                0 : 10**((25*avg_rank + 65*best_rank + 10*worst_rank)/100/(current_pick)),
-                1 : 10**((30*avg_rank + 30*best_rank + 40*worst_rank)/100/(current_pick)),
-                2 : 10**(avg_rank/current_pick),
-                3 : 10**(worst_rank/current_pick),
-               }
+            0: 10 ** ((25 * avg_rank + 65 * best_rank + 10 * worst_rank) / 100 / (current_pick)),
+            1: 10 ** ((30 * avg_rank + 30 * best_rank + 40 * worst_rank) / 100 / (current_pick)),
+            2: 10 ** (avg_rank / current_pick),
+            3: 10 ** (worst_rank / current_pick),
+        }
 
         # factor to determin if player raise, drop or same odds
-        factor = 20*(current_pick/(0.3*avg_rank + 0.7*worst_rank)) if current_pick > (worst_rank + 2) else 1
+        factor = 20 * (current_pick / (0.3 * avg_rank + 0.7 * worst_rank)) if current_pick > (worst_rank + 2) else 1
         denom = options[0]
 
-        rand = random.randrange(0,19)
-        rand2 = random.randrange(0,9)
+        rand = random.randrange(0, 19)
+        rand2 = random.randrange(0, 9)
         # rand2 = random.randrange(0,19)
 
         if rand == 2:
@@ -197,9 +201,7 @@ class MockDraftSelectorHelper:
         if 1 <= rand2 < 9:
             denom = options[2]
 
-
-
-        returned_balls = points/denom * factor
+        returned_balls = points / denom * factor
         if avg_rank == 42:
             return 0
         return returned_balls
@@ -231,7 +233,7 @@ class MockDraftSelectorHelper:
                     odds = list_ball[i]
                     break
                 else:
-                    odds = list_ball[i] - list_ball[i-1]
+                    odds = list_ball[i] - list_ball[i - 1]
                     break
 
-        return "{:.2f}".format(odds/total * 100)
+        return "{:.2f}".format(odds / total * 100)

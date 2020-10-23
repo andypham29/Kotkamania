@@ -1,12 +1,10 @@
-from flask import Flask, request, jsonify, render_template, redirect, jsonify
+from flask import Flask, request, render_template
 
-from server.service.facade.mockdraft_selector_service_facade import MockDraftSelectorServiceFacade
-from server.service.prospect_elite_service import ProspectEliteService
-from helper.http_helper import HttpHelper
-
-from server.model.draftpick import DraftPick
+from server.mockdraft.service.facade.mockdraft_selector_service_facade import MockDraftSelectorServiceFacade
+from server.mockdraft.service.prospect_elite_service import ProspectEliteService
 
 import json
+
 
 app = Flask(__name__)
 

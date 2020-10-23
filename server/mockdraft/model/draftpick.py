@@ -1,4 +1,4 @@
-from server.model.prospect import ProspectElite
+from server.mockdraft.model.prospect import ProspectElite
 
 class DraftPick:
 

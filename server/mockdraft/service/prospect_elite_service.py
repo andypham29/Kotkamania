@@ -1,4 +1,4 @@
-from server.repository.prospect_elite_dao import ProspectEliteDao
+from server.mockdraft.repository.prospect_elite_dao import ProspectEliteDao
 
 class ProspectEliteService:
 

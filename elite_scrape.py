@@ -1,11 +1,9 @@
-import requests
-from enum import Enum
 import bs4 as bs
 import urllib.request
 import json
 
-from server.model.prospect import ProspectElite
-from server.repository.prospect_elite_dao import ProspectEliteDao
+from server.mockdraft.model.prospect import ProspectElite
+from server.mockdraft.repository.prospect_elite_dao import ProspectEliteDao
 
 year = "2020b"
 

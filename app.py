@@ -5,6 +5,8 @@ from server.mockdraft.service.prospect_elite_service import ProspectEliteService
 
 import json
 
+from server.twitterapi.service.facade.twitter_service_facade import TwitterServiceFacade
+
 app = Flask(__name__)
 
 
@@ -29,10 +31,13 @@ def draft_center():
     return render_template("index.html", page="draft_center")
 
 
+@app.route('/draftsimulator')
+def draft_simulator():
+    return render_template("index.html", page="draft_simulator")
+
 # -------- API Routing -------------
 @app.route('/api/drafts')
 def getEntireDraftSimulation():
-    response = None
     if request.args.get('ranked') is not None and request.args.get('ranked').upper() == "TRUE":
         response = ProspectEliteService().getAllProspectsWithRanking()
     else:
@@ -44,7 +49,6 @@ def getEntireDraftSimulation():
 
 @app.route('/api/prospects')
 def getProspects():
-    response = response = ProspectEliteService().getAllProspects()
     if request.args.get('position') is not None:
         page = request.args.get('page') if request.args.get('page') is not None else 0
         response = ProspectEliteService().getProspectByPosition(request.args.get('position'), page)
@@ -55,6 +59,12 @@ def getProspects():
     else:
         response = ProspectEliteService().getAllProspects()
 
+    return json.dumps(response, default=lambda o: o.__dict__)
+
+
+@app.route('/api/news')
+def getTwitterNews():
+    response = TwitterServiceFacade().get_hockey_tweets()
     return json.dumps(response, default=lambda o: o.__dict__)
 
 

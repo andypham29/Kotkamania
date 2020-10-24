@@ -56,7 +56,8 @@
   <table cellpadding="10px" align="center">
         <tr><td>{% include 'nav.html' %}</td></tr>
         <tr>
-          {% if page=="index" %}<td>{% include 'draftpicks.html' %}</td>{% endif %}
+          {% if page=="index" %}<td>{% include 'news.html' %}</td>{% endif %}
+          {% if page=="draft_simulator" %}<td>{% include 'draftsimulator.html' %}</td>{% endif %}
           {% if page=="prospect" %}<td>{% include 'prospectpage.html' %}</td>{% endif %}
           {% if page=="prospect_list" %}<td>{% include 'prospectlist.html' %}</td>{% endif %}
           {% if page=="draft_center" %}<td>{% include 'draftcenter.html' %}</td>{% endif %}

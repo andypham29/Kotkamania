@@ -1,0 +1,30 @@
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: '/api/news',
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                var trHTML = ""
+
+                $.each(response, function (i, news)
+                {
+                    trHTML += "<tr>" +
+                    `<td>${ news.text }</td>` +
+                    "</tr>"
+                });
+                $('table#draft_table tbody').html(trHTML)
+                $(".loader").remove();
+            },
+            type: 'GET'
+        });
+    });
+</script>
+<div class="loader"></div>
+<table id="draft_table" cellpadding="5px" border="1">
+    <tbody>
+    </tbody>
+</table>

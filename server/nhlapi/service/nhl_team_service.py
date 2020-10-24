@@ -1,5 +1,5 @@
 from helper.http_helper import HttpHelper
-from server.nhlapi.model.team import Team
+from server.nhlapi.model.nhl_team import Team
 
 
 class NhlTeamService:

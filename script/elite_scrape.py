@@ -5,7 +5,7 @@ import json
 from server.mockdraft.model.prospect import ProspectElite
 from server.mockdraft.repository.prospect_elite_dao import ProspectEliteDao
 
-year = "2020b"
+year = "2021"
 
 hp_url = [f'https://www.eliteprospects.com/draft-center/{year}/tsn-craig-button', 0] # hp -> tsn
 fc_url = [f'https://www.eliteprospects.com/draft-center/{year}/future-considerations', 1]
@@ -38,13 +38,14 @@ def getProspectFromRow(i, data):
         p.p = data[7]
         p.pim = data[8]
 
-        # print(json.dumps(p.__dict__))
         return p
     return None
 
+
 def getNamePositionTupple(name_position):
     new_name_position = name_position.split(" (")
-    return (new_name_position[0], new_name_position[1].replace(')', ''))
+    return new_name_position[0], new_name_position[1].replace(')', '')
+
 
 def getProspectFromEliteUrl(url):
     source = urllib.request.urlopen(url[0]).read()
@@ -75,7 +76,7 @@ def insertProspectToDb(prospects):
             ProspectEliteDao(year).insertOrUpdateProspectElite(prospect)
 
 def dataToFile(data):
-    with open('data1.json', 'w', encoding='utf-8') as f:
+    with open('../data1.json', 'w', encoding='utf-8') as f:
         json.dump([item.__dict__ for item in data ], f, ensure_ascii=False, indent=4)
 
 prospects = (

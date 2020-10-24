@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 from helper.http_helper import HttpHelper
+from server.nhlapi.model.nhl_player import Player
 
-from server.nhlapi.model.team import Team, Player
+from server.nhlapi.model.nhl_team import Team
 from server.mockdraft.repository.prospect_dao import ProspectDao
 
 import json

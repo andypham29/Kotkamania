@@ -148,7 +148,7 @@
                 `<td>${ prospects[index].a }</td>` +
                 `<td>${ prospects[index].p }</td>` +
                 `<td>${ prospects[index].pim }</td>` +
-                `<td><button onclick=removeProspectIdInCookie(${ prospects[index].id })>-</button></td>` +
+                `<td><button class="btn btn-danger" onclick=removeProspectIdInCookie(${ prospects[index].id })>-</button></td>` +
                 "</tr>" 
             }
         }
@@ -205,7 +205,7 @@
                     `<td>${ prospect.a }</td>` +
                     `<td>${ prospect.p }</td>` +
                     `<td>${ prospect.pim }</td>` +
-                    `<td><button onclick='saveProspectIdInCookie(${prospect.id}, \"` 
+                    `<td><button class="btn btn-success" onclick='saveProspectIdInCookie(${prospect.id}, \"`
                         + prospect.avg_rank + `\",\"` + prospect.name + `\", \"` + prospect.position + `\",
                          \"` + prospect.league + `\",\"` + prospect.team.replace(/'/g, "&#39;") + `\", \"` + prospect.gp + `\", 
                          \"` + prospect.g + `\", \"` + prospect.a + `\", \"` + prospect.p + `\", \"` + prospect.pim + `\")'>+</button></td>` +

@@ -77,21 +77,21 @@
     },
     {
         "id": 5,
-        "name": "Jake Sanderson",
+        "name": "Jamie Drysdale",
         "position": "D",
         "hp": "5",
-        "fc": "17",
-        "iss": "11",
-        "mh": "5",
-        "elite": "9",
-        "avg_rank": 9.4,
-        "league": "USDP",
-        "team": "U.S. National U18 Team",
-        "gp": "47",
-        "g": "7",
-        "a": "22",
-        "p": "29",
-        "pim": "12",
+        "fc": "7",
+        "iss": "3",
+        "mh": "6",
+        "elite": "5",
+        "avg_rank": 5.2,
+        "league": "OHL",
+        "team": "Erie Otters",
+        "gp": "49",
+        "g": "9",
+        "a": "38",
+        "p": "47",
+        "pim": "24",
         "grade": null
     },
     {
@@ -99,11 +99,11 @@
         "name": "Jack Quinn",
         "position": "RW",
         "hp": "6",
-        "fc": "23",
+        "fc": "20",
         "iss": "10",
         "mh": "10",
         "elite": "16",
-        "avg_rank": 13.0,
+        "avg_rank": 12.4,
         "league": "OHL",
         "team": "Ottawa 67's",
         "gp": "62",
@@ -115,52 +115,33 @@
     },
     {
         "id": 7,
-        "name": "Seth Jarvis",
-        "position": "RW",
+        "name": "Yaroslav Askarov",
+        "position": "G",
         "hp": "7",
-        "fc": "16",
-        "iss": "29",
-        "mh": "12",
-        "elite": "13",
-        "avg_rank": 15.4,
-        "league": "WHL",
-        "team": "Portland Winterhawks",
-        "gp": "58",
-        "g": "42",
-        "a": "56",
-        "p": "98",
-        "pim": "24",
+        "fc": "10",
+        "iss": "-",
+        "mh": "11",
+        "elite": "11",
+        "avg_rank": 16.2,
+        "league": "VHL",
+        "team": "SKA-Neva St. Petersburg",
+        "gp": "18",
+        "g": "2.45",
+        "a": ".920",
+        "p": "-",
+        "pim": "-",
         "grade": null
     },
     {
         "id": 8,
-        "name": "Lucas Raymond",
-        "position": "RW/LW",
-        "hp": "8",
-        "fc": "4",
-        "iss": "5",
-        "mh": "4",
-        "elite": "3",
-        "avg_rank": 4.8,
-        "league": "SHL",
-        "team": "Frölunda HC",
-        "gp": "33",
-        "g": "4",
-        "a": "6",
-        "p": "10",
-        "pim": "4",
-        "grade": null
-    },
-    {
-        "id": 9,
         "name": "Marco Rossi",
         "position": "C",
-        "hp": "9",
-        "fc": "8",
+        "hp": "8",
+        "fc": "5",
         "iss": "7",
         "mh": "9",
         "elite": "4",
-        "avg_rank": 7.4,
+        "avg_rank": 6.6,
         "league": "OHL",
         "team": "Ottawa 67's",
         "gp": "56",
@@ -171,15 +152,91 @@
         "grade": null
     },
     {
+        "id": 9,
+        "name": "Lucas Raymond",
+        "position": "RW/LW",
+        "hp": "9",
+        "fc": "4",
+        "iss": "5",
+        "mh": "4",
+        "elite": "3",
+        "avg_rank": 5.0,
+        "league": "SHL",
+        "team": "Frölunda HC",
+        "gp": "33",
+        "g": "4",
+        "a": "6",
+        "p": "10",
+        "pim": "4",
+        "grade": null
+    },
+    {
         "id": 10,
+        "name": "Hendrix Lapierre",
+        "position": "C",
+        "hp": "10",
+        "fc": "27",
+        "iss": "17",
+        "mh": "20",
+        "elite": "27",
+        "avg_rank": 20.2,
+        "league": "QMJHL",
+        "team": "Chicoutimi Saguenéens",
+        "gp": "19",
+        "g": "2",
+        "a": "15",
+        "p": "17",
+        "pim": "10",
+        "grade": null
+    },
+    {
+        "id": 11,
+        "name": "Connor Zary",
+        "position": "C",
+        "hp": "11",
+        "fc": "17",
+        "iss": "15",
+        "mh": "18",
+        "elite": "25",
+        "avg_rank": 17.2,
+        "league": "WHL",
+        "team": "Kamloops Blazers",
+        "gp": "57",
+        "g": "38",
+        "a": "48",
+        "p": "86",
+        "pim": "51",
+        "grade": null
+    },
+    {
+        "id": 12,
+        "name": "Jake Sanderson",
+        "position": "D",
+        "hp": "12",
+        "fc": "12",
+        "iss": "11",
+        "mh": "5",
+        "elite": "9",
+        "avg_rank": 9.8,
+        "league": "USDP",
+        "team": "U.S. National U18 Team",
+        "gp": "47",
+        "g": "7",
+        "a": "22",
+        "p": "29",
+        "pim": "12",
+        "grade": null
+    },
+    {
+        "id": 13,
         "name": "Alexander Holtz",
         "position": "RW",
-        "hp": "10",
-        "fc": "5",
+        "hp": "13",
+        "fc": "6",
         "iss": "9",
         "mh": "7",
         "elite": "6",
-        "avg_rank": 7.4,
+        "avg_rank": 8.2,
         "league": "SHL",
         "team": "Djurgårdens IF",
         "gp": "35",
@@ -190,144 +247,68 @@
         "grade": null
     },
     {
-        "id": 11,
-        "name": "Braden Schneider",
-        "position": "D",
-        "hp": "11",
-        "fc": "27",
-        "iss": "13",
-        "mh": "15",
-        "elite": "-",
-        "avg_rank": 21.6,
-        "league": "WHL",
-        "team": "Brandon Wheat Kings",
-        "gp": "60",
-        "g": "7",
-        "a": "35",
-        "p": "42",
-        "pim": "42",
-        "grade": null
-    },
-    {
-        "id": 12,
-        "name": "Jamie Drysdale",
-        "position": "D",
-        "hp": "12",
-        "fc": "7",
-        "iss": "3",
-        "mh": "6",
-        "elite": "5",
-        "avg_rank": 6.6,
-        "league": "OHL",
-        "team": "Erie Otters",
-        "gp": "49",
-        "g": "9",
-        "a": "38",
-        "p": "47",
-        "pim": "24",
-        "grade": null
-    },
-    {
-        "id": 13,
-        "name": "Tristen Robins",
-        "position": "C",
-        "hp": "13",
-        "fc": "-",
-        "iss": "-",
-        "mh": "-",
-        "elite": "-",
-        "avg_rank": 36.2,
-        "league": "WHL",
-        "team": "Saskatoon Blades",
-        "gp": "62",
-        "g": "33",
-        "a": "40",
-        "p": "73",
-        "pim": "28",
-        "grade": null
-    },
-    {
         "id": 14,
-        "name": "Ridly Greig",
-        "position": "LW",
+        "name": "Dylan Holloway",
+        "position": "C/LW",
         "hp": "14",
-        "fc": "-",
-        "iss": "-",
-        "mh": "24",
-        "elite": "-",
-        "avg_rank": 32.8,
-        "league": "WHL",
-        "team": "Brandon Wheat Kings",
-        "gp": "56",
-        "g": "26",
-        "a": "34",
-        "p": "60",
-        "pim": "83",
+        "fc": "15",
+        "iss": "20",
+        "mh": "26",
+        "elite": "18",
+        "avg_rank": 18.6,
+        "league": "NCAA",
+        "team": "Univ. of Wisconsin",
+        "gp": "35",
+        "g": "8",
+        "a": "9",
+        "p": "17",
+        "pim": "49",
         "grade": null
     },
     {
         "id": 15,
-        "name": "Lukas Reichel",
-        "position": "F",
+        "name": "Tyson Foerster",
+        "position": "C",
         "hp": "15",
-        "fc": "-",
-        "iss": "31",
+        "fc": "24",
+        "iss": "-",
         "mh": "-",
         "elite": "-",
-        "avg_rank": 34.4,
-        "league": "DEL",
-        "team": "Eisbären Berlin",
-        "gp": "42",
-        "g": "12",
-        "a": "12",
-        "p": "24",
-        "pim": "0",
+        "avg_rank": 33.0,
+        "league": "OHL",
+        "team": "Barrie Colts",
+        "gp": "62",
+        "g": "36",
+        "a": "44",
+        "p": "80",
+        "pim": "53",
         "grade": null
     },
     {
         "id": 16,
-        "name": "Jacob Perreault",
+        "name": "Anton Lundell",
         "position": "C",
         "hp": "16",
-        "fc": "22",
-        "iss": "27",
-        "mh": "28",
-        "elite": "23",
-        "avg_rank": 23.2,
-        "league": "OHL",
-        "team": "Sarnia Sting",
-        "gp": "57",
-        "g": "39",
-        "a": "31",
-        "p": "70",
-        "pim": "40",
+        "fc": "8",
+        "iss": "8",
+        "mh": "16",
+        "elite": "10",
+        "avg_rank": 11.6,
+        "league": "Liiga",
+        "team": "HIFK",
+        "gp": "44",
+        "g": "10",
+        "a": "18",
+        "p": "28",
+        "pim": "18",
         "grade": null
     },
     {
         "id": 17,
-        "name": "Noel Gunler",
-        "position": "RW/LW",
-        "hp": "17",
-        "fc": "14",
-        "iss": "18",
-        "mh": "19",
-        "elite": "22",
-        "avg_rank": 18.0,
-        "league": "SHL",
-        "team": "Luleå HF",
-        "gp": "45",
-        "g": "4",
-        "a": "9",
-        "p": "13",
-        "pim": "16",
-        "grade": null
-    },
-    {
-        "id": 18,
         "name": "Dawson Mercer",
         "position": "RW",
-        "hp": "18",
-        "fc": "12",
+        "hp": "17",
+        "fc": "13",
         "iss": "12",
         "mh": "13",
         "elite": "15",
@@ -342,91 +323,34 @@
         "grade": null
     },
     {
-        "id": 19,
-        "name": "Brendan Brisson",
-        "position": "C",
-        "hp": "19",
-        "fc": "-",
-        "iss": "-",
-        "mh": "21",
-        "elite": "14",
-        "avg_rank": 27.6,
-        "league": "USHL",
-        "team": "Chicago Steel",
-        "gp": "45",
-        "g": "24",
-        "a": "35",
-        "p": "59",
-        "pim": "50",
-        "grade": null
-    },
-    {
-        "id": 20,
-        "name": "Connor Zary",
-        "position": "C",
-        "hp": "20",
-        "fc": "13",
-        "iss": "15",
-        "mh": "18",
-        "elite": "25",
-        "avg_rank": 18.2,
-        "league": "WHL",
-        "team": "Kamloops Blazers",
-        "gp": "57",
-        "g": "38",
-        "a": "48",
-        "p": "86",
-        "pim": "51",
-        "grade": null
-    },
-    {
-        "id": 21,
-        "name": "Luke Evangelista",
-        "position": "RW",
-        "hp": "21",
+        "id": 18,
+        "name": "William Wallinder",
+        "position": "D",
+        "hp": "18",
         "fc": "-",
         "iss": "-",
         "mh": "-",
         "elite": "-",
-        "avg_rank": 37.8,
-        "league": "OHL",
-        "team": "London Knights",
-        "gp": "62",
-        "g": "23",
-        "a": "38",
-        "p": "61",
-        "pim": "12",
+        "avg_rank": 37.2,
+        "league": "J20 Nationell",
+        "team": "MODO Hockey J20",
+        "gp": "37",
+        "g": "5",
+        "a": "19",
+        "p": "24",
+        "pim": "16",
         "grade": null
     },
     {
-        "id": 22,
-        "name": "Kaiden Guhle",
-        "position": "D",
-        "hp": "22",
-        "fc": "28",
-        "iss": "14",
-        "mh": "14",
-        "elite": "21",
-        "avg_rank": 19.8,
-        "league": "WHL",
-        "team": "Prince Albert Raiders",
-        "gp": "64",
-        "g": "11",
-        "a": "29",
-        "p": "40",
-        "pim": "56",
-        "grade": null
-    },
-    {
-        "id": 23,
+        "id": 19,
         "name": "Rodion Amirov",
         "position": "LW",
-        "hp": "23",
-        "fc": "19",
+        "hp": "19",
+        "fc": "14",
         "iss": "16",
         "mh": "25",
         "elite": "17",
-        "avg_rank": 20.0,
+        "avg_rank": 18.2,
         "league": "KHL",
         "team": "Salavat Yulaev Ufa",
         "gp": "21",
@@ -437,91 +361,15 @@
         "grade": null
     },
     {
-        "id": 24,
-        "name": "John-Jason Peterka",
-        "position": "F",
-        "hp": "24",
-        "fc": "-",
-        "iss": "-",
-        "mh": "17",
-        "elite": "24",
-        "avg_rank": 29.8,
-        "league": "DEL",
-        "team": "EHC München",
-        "gp": "42",
-        "g": "7",
-        "a": "4",
-        "p": "11",
-        "pim": "14",
-        "grade": null
-    },
-    {
-        "id": 25,
-        "name": "Anton Lundell",
-        "position": "C",
-        "hp": "25",
-        "fc": "6",
-        "iss": "8",
-        "mh": "16",
-        "elite": "10",
-        "avg_rank": 13.0,
-        "league": "Liiga",
-        "team": "HIFK",
-        "gp": "44",
-        "g": "10",
-        "a": "18",
-        "p": "28",
-        "pim": "18",
-        "grade": null
-    },
-    {
-        "id": 26,
-        "name": "Jan Mysak",
-        "position": "LW",
-        "hp": "26",
-        "fc": "15",
-        "iss": "25",
-        "mh": "27",
-        "elite": "29",
-        "avg_rank": 24.4,
-        "league": "Czech",
-        "team": "HC Litvinov",
-        "gp": "26",
-        "g": "5",
-        "a": "4",
-        "p": "9",
-        "pim": "2",
-        "grade": null
-    },
-    {
-        "id": 27,
-        "name": "Hendrix Lapierre",
-        "position": "C",
-        "hp": "27",
-        "fc": "26",
-        "iss": "17",
-        "mh": "20",
-        "elite": "27",
-        "avg_rank": 23.4,
-        "league": "QMJHL",
-        "team": "Chicoutimi Saguenéens",
-        "gp": "19",
-        "g": "2",
-        "a": "15",
-        "p": "17",
-        "pim": "10",
-        "grade": null
-    },
-    {
-        "id": 28,
+        "id": 20,
         "name": "Mavrik Bourque",
         "position": "C",
-        "hp": "28",
-        "fc": "18",
+        "hp": "20",
+        "fc": "19",
         "iss": "28",
         "mh": "22",
         "elite": "12",
-        "avg_rank": 21.6,
+        "avg_rank": 20.2,
         "league": "QMJHL",
         "team": "Shawinigan Cataractes",
         "gp": "49",
@@ -532,46 +380,198 @@
         "grade": null
     },
     {
+        "id": 21,
+        "name": "Jérémie Poirier",
+        "position": "D",
+        "hp": "21",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "28",
+        "avg_rank": 35.0,
+        "league": "QMJHL",
+        "team": "Saint John Sea Dogs",
+        "gp": "64",
+        "g": "20",
+        "a": "33",
+        "p": "53",
+        "pim": "50",
+        "grade": null
+    },
+    {
+        "id": 22,
+        "name": "Brendan Brisson",
+        "position": "C",
+        "hp": "22",
+        "fc": "-",
+        "iss": "-",
+        "mh": "21",
+        "elite": "14",
+        "avg_rank": 28.2,
+        "league": "USHL",
+        "team": "Chicago Steel",
+        "gp": "45",
+        "g": "24",
+        "a": "35",
+        "p": "59",
+        "pim": "50",
+        "grade": null
+    },
+    {
+        "id": 23,
+        "name": "Seth Jarvis",
+        "position": "RW",
+        "hp": "23",
+        "fc": "11",
+        "iss": "29",
+        "mh": "12",
+        "elite": "13",
+        "avg_rank": 17.6,
+        "league": "WHL",
+        "team": "Portland Winterhawks",
+        "gp": "58",
+        "g": "42",
+        "a": "56",
+        "p": "98",
+        "pim": "24",
+        "grade": null
+    },
+    {
+        "id": 24,
+        "name": "Kaiden Guhle",
+        "position": "D",
+        "hp": "24",
+        "fc": "25",
+        "iss": "14",
+        "mh": "14",
+        "elite": "21",
+        "avg_rank": 19.6,
+        "league": "WHL",
+        "team": "Prince Albert Raiders",
+        "gp": "64",
+        "g": "11",
+        "a": "29",
+        "p": "40",
+        "pim": "56",
+        "grade": null
+    },
+    {
+        "id": 25,
+        "name": "Braden Schneider",
+        "position": "D",
+        "hp": "25",
+        "fc": "21",
+        "iss": "13",
+        "mh": "15",
+        "elite": "-",
+        "avg_rank": 23.2,
+        "league": "WHL",
+        "team": "Brandon Wheat Kings",
+        "gp": "60",
+        "g": "7",
+        "a": "35",
+        "p": "42",
+        "pim": "42",
+        "grade": null
+    },
+    {
+        "id": 26,
+        "name": "Justin Barron",
+        "position": "D",
+        "hp": "26",
+        "fc": "-",
+        "iss": "23",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": 35.0,
+        "league": "QMJHL",
+        "team": "Halifax Mooseheads",
+        "gp": "34",
+        "g": "4",
+        "a": "15",
+        "p": "19",
+        "pim": "6",
+        "grade": null
+    },
+    {
+        "id": 27,
+        "name": "Daniel Torgersson",
+        "position": "LW/RW",
+        "hp": "27",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "30",
+        "avg_rank": 36.6,
+        "league": "J20 Nationell",
+        "team": "Frölunda HC J20",
+        "gp": "39",
+        "g": "26",
+        "a": "18",
+        "p": "44",
+        "pim": "24",
+        "grade": null
+    },
+    {
+        "id": 28,
+        "name": "Shakir Mukhamadullin",
+        "position": "D",
+        "hp": "28",
+        "fc": "-",
+        "iss": "22",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": 35.2,
+        "league": "KHL",
+        "team": "Salavat Yulaev Ufa",
+        "gp": "27",
+        "g": "0",
+        "a": "1",
+        "p": "1",
+        "pim": "0",
+        "grade": null
+    },
+    {
         "id": 29,
-        "name": "Dylan Holloway",
-        "position": "F",
+        "name": "Ozzy Wiesblatt",
+        "position": "RW",
         "hp": "29",
-        "fc": "10",
-        "iss": "20",
-        "mh": "26",
-        "elite": "18",
-        "avg_rank": 20.6,
-        "league": "NCAA",
-        "team": "Univ. of Wisconsin",
-        "gp": "35",
-        "g": "8",
-        "a": "9",
-        "p": "17",
-        "pim": "49",
+        "fc": "-",
+        "iss": "-",
+        "mh": "29",
+        "elite": "-",
+        "avg_rank": 36.8,
+        "league": "WHL",
+        "team": "Prince Albert Raiders",
+        "gp": "64",
+        "g": "25",
+        "a": "45",
+        "p": "70",
+        "pim": "36",
         "grade": null
     },
     {
         "id": 30,
-        "name": "Tyson Foerster",
-        "position": "C",
+        "name": "Ridly Greig",
+        "position": "LW",
         "hp": "30",
         "fc": "-",
         "iss": "-",
-        "mh": "-",
+        "mh": "24",
         "elite": "-",
-        "avg_rank": 39.6,
-        "league": "OHL",
-        "team": "Barrie Colts",
-        "gp": "62",
-        "g": "36",
-        "a": "44",
-        "p": "80",
-        "pim": "53",
+        "avg_rank": 36.0,
+        "league": "WHL",
+        "team": "Brandon Wheat Kings",
+        "gp": "56",
+        "g": "26",
+        "a": "34",
+        "p": "60",
+        "pim": "83",
         "grade": null
     },
     {
         "id": 31,
-        "name": "Samuel Johannesson",
+        "name": "Eemil Viro",
         "position": "D",
         "hp": "31",
         "fc": "-",
@@ -579,13 +579,13 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": 39.8,
-        "league": "SHL",
-        "team": "Rögle BK",
-        "gp": "44",
-        "g": "1",
-        "a": "10",
-        "p": "11",
-        "pim": "2",
+        "league": "Liiga",
+        "team": "TPS",
+        "gp": "29",
+        "g": "0",
+        "a": "3",
+        "p": "3",
+        "pim": "8",
         "grade": null
     },
     {
@@ -685,25 +685,6 @@
     },
     {
         "id": 37,
-        "name": "Mason Alderson",
-        "position": "F",
-        "hp": "-",
-        "fc": "-",
-        "iss": "-",
-        "mh": "-",
-        "elite": "-",
-        "avg_rank": null,
-        "league": "USHS-Prep",
-        "team": "Berwick Academy",
-        "gp": "23",
-        "g": "12",
-        "a": "18",
-        "p": "30",
-        "pim": "-",
-        "grade": null
-    },
-    {
-        "id": 38,
         "name": "Ryan Alexander",
         "position": "C",
         "hp": "-",
@@ -722,7 +703,7 @@
         "grade": null
     },
     {
-        "id": 39,
+        "id": 38,
         "name": "Dario Allenspach",
         "position": "F",
         "hp": "-",
@@ -741,7 +722,7 @@
         "grade": null
     },
     {
-        "id": 40,
+        "id": 39,
         "name": "Colby Ambrosio",
         "position": "C",
         "hp": "-",
@@ -760,7 +741,7 @@
         "grade": null
     },
     {
-        "id": 41,
+        "id": 40,
         "name": "Linus Andersson",
         "position": "RW/LW",
         "hp": "-",
@@ -769,7 +750,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "Allsvenskan",
+        "league": "HockeyAllsvenskan",
         "team": "HC Vita Hästen",
         "gp": "48",
         "g": "22",
@@ -779,7 +760,7 @@
         "grade": null
     },
     {
-        "id": 42,
+        "id": 41,
         "name": "Noah Andersson",
         "position": "C/RW",
         "hp": "-",
@@ -788,7 +769,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Färjestad BK J20",
         "gp": "43",
         "g": "7",
@@ -798,7 +779,7 @@
         "grade": null
     },
     {
-        "id": 43,
+        "id": 42,
         "name": "Simon Andersson",
         "position": "C",
         "hp": "-",
@@ -807,7 +788,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "MODO Hockey J20",
         "gp": "41",
         "g": "6",
@@ -817,7 +798,7 @@
         "grade": null
     },
     {
-        "id": 44,
+        "id": 43,
         "name": "Emil Andrae",
         "position": "D",
         "hp": "-",
@@ -826,7 +807,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "HV71 J20",
         "gp": "40",
         "g": "11",
@@ -836,7 +817,7 @@
         "grade": null
     },
     {
-        "id": 45,
+        "id": 44,
         "name": "Raivis Ansons",
         "position": "LW",
         "hp": "-",
@@ -855,26 +836,26 @@
         "grade": null
     },
     {
-        "id": 46,
-        "name": "Yaroslav Askarov",
-        "position": "G",
+        "id": 45,
+        "name": "Danil Antropov",
+        "position": "RW",
         "hp": "-",
-        "fc": "11",
+        "fc": "-",
         "iss": "-",
-        "mh": "11",
-        "elite": "11",
-        "avg_rank": 23.4,
-        "league": "VHL",
-        "team": "SKA-Neva St. Petersburg",
-        "gp": "18",
-        "g": "2.45",
-        "a": ".920",
-        "p": "-",
-        "pim": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "OHL",
+        "team": "Oshawa Generals",
+        "gp": "23",
+        "g": "6",
+        "a": "7",
+        "p": "13",
+        "pim": "20",
         "grade": null
     },
     {
-        "id": 47,
+        "id": 46,
         "name": "Kyle Aucoin",
         "position": "D",
         "hp": "-",
@@ -893,7 +874,7 @@
         "grade": null
     },
     {
-        "id": 48,
+        "id": 47,
         "name": "Tye Austin",
         "position": "G",
         "hp": "-",
@@ -912,7 +893,7 @@
         "grade": null
     },
     {
-        "id": 49,
+        "id": 48,
         "name": "Andrei Bakanov",
         "position": "F",
         "hp": "-",
@@ -928,6 +909,25 @@
         "a": "12",
         "p": "23",
         "pim": "14",
+        "grade": null
+    },
+    {
+        "id": 49,
+        "name": "Daniel Baker",
+        "position": "D",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "WHL",
+        "team": "Medicine Hat Tigers",
+        "gp": "62",
+        "g": "13",
+        "a": "25",
+        "p": "38",
+        "pim": "33",
         "grade": null
     },
     {
@@ -970,25 +970,6 @@
     },
     {
         "id": 52,
-        "name": "Justin Barron",
-        "position": "D",
-        "hp": "-",
-        "fc": "-",
-        "iss": "23",
-        "mh": "-",
-        "elite": "-",
-        "avg_rank": 38.2,
-        "league": "QMJHL",
-        "team": "Halifax Mooseheads",
-        "gp": "34",
-        "g": "4",
-        "a": "15",
-        "p": "19",
-        "pim": "6",
-        "grade": null
-    },
-    {
-        "id": 53,
         "name": "Tyrel Bauer",
         "position": "D",
         "hp": "-",
@@ -1007,7 +988,7 @@
         "grade": null
     },
     {
-        "id": 54,
+        "id": 53,
         "name": "Benjamin Baumgartner",
         "position": "C",
         "hp": "-",
@@ -1026,7 +1007,7 @@
         "grade": null
     },
     {
-        "id": 55,
+        "id": 54,
         "name": "Charles Beaudoin",
         "position": "RW",
         "hp": "-",
@@ -1045,7 +1026,7 @@
         "grade": null
     },
     {
-        "id": 56,
+        "id": 55,
         "name": "Ryan Beck",
         "position": "C",
         "hp": "-",
@@ -1064,7 +1045,7 @@
         "grade": null
     },
     {
-        "id": 57,
+        "id": 56,
         "name": "Jan Bednar",
         "position": "G",
         "hp": "-",
@@ -1083,7 +1064,7 @@
         "grade": null
     },
     {
-        "id": 58,
+        "id": 57,
         "name": "Alec Bélanger",
         "position": "D",
         "hp": "-",
@@ -1102,7 +1083,7 @@
         "grade": null
     },
     {
-        "id": 59,
+        "id": 58,
         "name": "Owen Bennett",
         "position": "G",
         "hp": "-",
@@ -1121,7 +1102,7 @@
         "grade": null
     },
     {
-        "id": 60,
+        "id": 59,
         "name": "Michael Benning",
         "position": "D",
         "hp": "-",
@@ -1140,9 +1121,9 @@
         "grade": null
     },
     {
-        "id": 61,
+        "id": 60,
         "name": "Brett Berard",
-        "position": "F",
+        "position": "LW",
         "hp": "-",
         "fc": "-",
         "iss": "-",
@@ -1159,7 +1140,7 @@
         "grade": null
     },
     {
-        "id": 62,
+        "id": 61,
         "name": "Cameron Berg",
         "position": "C",
         "hp": "-",
@@ -1178,7 +1159,7 @@
         "grade": null
     },
     {
-        "id": 63,
+        "id": 62,
         "name": "Carl Berglund",
         "position": "C/RW",
         "hp": "-",
@@ -1197,7 +1178,7 @@
         "grade": null
     },
     {
-        "id": 64,
+        "id": 63,
         "name": "Maxim Beryozkin",
         "position": "LW/RW",
         "hp": "-",
@@ -1216,7 +1197,7 @@
         "grade": null
     },
     {
-        "id": 65,
+        "id": 64,
         "name": "Jérémie Biakabutuka",
         "position": "D",
         "hp": "-",
@@ -1235,7 +1216,7 @@
         "grade": null
     },
     {
-        "id": 66,
+        "id": 65,
         "name": "Michael Bianconi",
         "position": "D",
         "hp": "-",
@@ -1254,7 +1235,7 @@
         "grade": null
     },
     {
-        "id": 67,
+        "id": 66,
         "name": "Blake Biondi",
         "position": "F",
         "hp": "-",
@@ -1273,7 +1254,7 @@
         "grade": null
     },
     {
-        "id": 68,
+        "id": 67,
         "name": "Garin Bjorklund",
         "position": "G",
         "hp": "-",
@@ -1292,7 +1273,7 @@
         "grade": null
     },
     {
-        "id": 69,
+        "id": 68,
         "name": "Joel Blomqvist",
         "position": "G",
         "hp": "-",
@@ -1311,7 +1292,7 @@
         "grade": null
     },
     {
-        "id": 70,
+        "id": 69,
         "name": "Jake Boltmann",
         "position": "D",
         "hp": "-",
@@ -1330,15 +1311,15 @@
         "grade": null
     },
     {
-        "id": 71,
+        "id": 70,
         "name": "Thomas Bordeleau",
         "position": "C",
         "hp": "-",
-        "fc": "-",
+        "fc": "31",
         "iss": "-",
         "mh": "-",
         "elite": "20",
-        "avg_rank": 37.6,
+        "avg_rank": 35.4,
         "league": "USDP",
         "team": "U.S. National U18 Team",
         "gp": "47",
@@ -1349,7 +1330,7 @@
         "grade": null
     },
     {
-        "id": 72,
+        "id": 71,
         "name": "Ethan Bowen",
         "position": "C",
         "hp": "-",
@@ -1368,7 +1349,7 @@
         "grade": null
     },
     {
-        "id": 73,
+        "id": 72,
         "name": "Noah Boyko",
         "position": "C",
         "hp": "-",
@@ -1387,7 +1368,7 @@
         "grade": null
     },
     {
-        "id": 74,
+        "id": 73,
         "name": "Chase Bradley",
         "position": "C",
         "hp": "-",
@@ -1406,7 +1387,7 @@
         "grade": null
     },
     {
-        "id": 75,
+        "id": 74,
         "name": "Harijs Brants",
         "position": "D",
         "hp": "-",
@@ -1425,7 +1406,7 @@
         "grade": null
     },
     {
-        "id": 76,
+        "id": 75,
         "name": "Brett Brochu",
         "position": "G",
         "hp": "-",
@@ -1444,7 +1425,7 @@
         "grade": null
     },
     {
-        "id": 77,
+        "id": 76,
         "name": "Jakob Brook",
         "position": "LW",
         "hp": "-",
@@ -1463,7 +1444,7 @@
         "grade": null
     },
     {
-        "id": 78,
+        "id": 77,
         "name": "Jonas Brøndberg",
         "position": "D",
         "hp": "-",
@@ -1479,6 +1460,25 @@
         "a": "13",
         "p": "22",
         "pim": "20",
+        "grade": null
+    },
+    {
+        "id": 78,
+        "name": "Jérémie Bucheler",
+        "position": "D",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "NCAA",
+        "team": "Northeastern Univ.",
+        "gp": "29",
+        "g": "1",
+        "a": "4",
+        "p": "5",
+        "pim": "22",
         "grade": null
     },
     {
@@ -1586,8 +1586,8 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "Midget",
-        "team": "Selects Hockey Academy 18U",
+        "league": "18U AAA",
+        "team": "Selects Academy 18U AAA",
         "gp": "38",
         "g": "2.81",
         "a": ".903",
@@ -1636,7 +1636,7 @@
     {
         "id": 87,
         "name": "Seamus Campbell",
-        "position": "F",
+        "position": "LW",
         "hp": "-",
         "fc": "-",
         "iss": "-",
@@ -1806,6 +1806,25 @@
     },
     {
         "id": 96,
+        "name": "Yegor Chizhikov",
+        "position": "F",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "MHL",
+        "team": "Almaz Cherepovets",
+        "gp": "55",
+        "g": "25",
+        "a": "27",
+        "p": "52",
+        "pim": "38",
+        "grade": null
+    },
+    {
+        "id": 97,
         "name": "Tomas Chlubna",
         "position": "RW",
         "hp": "-",
@@ -1824,7 +1843,7 @@
         "grade": null
     },
     {
-        "id": 97,
+        "id": 98,
         "name": "Matt Choupani",
         "position": "C",
         "hp": "-",
@@ -1843,7 +1862,7 @@
         "grade": null
     },
     {
-        "id": 98,
+        "id": 99,
         "name": "Martin Chromiak",
         "position": "LW",
         "hp": "-",
@@ -1862,7 +1881,7 @@
         "grade": null
     },
     {
-        "id": 99,
+        "id": 100,
         "name": "Jan Cikhart",
         "position": "F",
         "hp": "-",
@@ -1881,7 +1900,7 @@
         "grade": null
     },
     {
-        "id": 100,
+        "id": 101,
         "name": "Calle Clang",
         "position": "G",
         "hp": "-",
@@ -1890,7 +1909,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Rögle BK J20",
         "gp": "34",
         "g": "2.64",
@@ -1900,7 +1919,7 @@
         "grade": null
     },
     {
-        "id": 101,
+        "id": 102,
         "name": "Brandon Coe",
         "position": "RW",
         "hp": "-",
@@ -1919,7 +1938,7 @@
         "grade": null
     },
     {
-        "id": 102,
+        "id": 103,
         "name": "Sam Colangelo",
         "position": "RW",
         "hp": "-",
@@ -1938,7 +1957,7 @@
         "grade": null
     },
     {
-        "id": 103,
+        "id": 104,
         "name": "Drew Commesso",
         "position": "G",
         "hp": "-",
@@ -1957,7 +1976,7 @@
         "grade": null
     },
     {
-        "id": 104,
+        "id": 105,
         "name": "Billy Constantinou",
         "position": "D",
         "hp": "-",
@@ -1976,7 +1995,7 @@
         "grade": null
     },
     {
-        "id": 105,
+        "id": 106,
         "name": "Cole Cormier",
         "position": "C",
         "hp": "-",
@@ -1995,15 +2014,15 @@
         "grade": null
     },
     {
-        "id": 106,
+        "id": 107,
         "name": "Lukas Cormier",
         "position": "D",
         "hp": "-",
-        "fc": "20",
+        "fc": "26",
         "iss": "-",
         "mh": "-",
         "elite": "-",
-        "avg_rank": 37.6,
+        "avg_rank": 38.8,
         "league": "QMJHL",
         "team": "Charlottetown Islanders",
         "gp": "44",
@@ -2014,7 +2033,7 @@
         "grade": null
     },
     {
-        "id": 107,
+        "id": 108,
         "name": "Matteo Costantini",
         "position": "C",
         "hp": "-",
@@ -2033,7 +2052,7 @@
         "grade": null
     },
     {
-        "id": 108,
+        "id": 109,
         "name": "Alex Cotton",
         "position": "D",
         "hp": "-",
@@ -2052,7 +2071,7 @@
         "grade": null
     },
     {
-        "id": 109,
+        "id": 110,
         "name": "Antoine Coulombe",
         "position": "G",
         "hp": "-",
@@ -2071,7 +2090,7 @@
         "grade": null
     },
     {
-        "id": 110,
+        "id": 111,
         "name": "Will Cranley",
         "position": "G",
         "hp": "-",
@@ -2090,7 +2109,7 @@
         "grade": null
     },
     {
-        "id": 111,
+        "id": 112,
         "name": "Louis Crevier",
         "position": "D",
         "hp": "-",
@@ -2109,7 +2128,7 @@
         "grade": null
     },
     {
-        "id": 112,
+        "id": 113,
         "name": "Kyle Crnkovic",
         "position": "LW",
         "hp": "-",
@@ -2128,7 +2147,7 @@
         "grade": null
     },
     {
-        "id": 113,
+        "id": 114,
         "name": "Will Cuylle",
         "position": "LW",
         "hp": "-",
@@ -2147,7 +2166,7 @@
         "grade": null
     },
     {
-        "id": 114,
+        "id": 115,
         "name": "Adam Dahlström",
         "position": "C",
         "hp": "-",
@@ -2156,7 +2175,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Brynäs IF J20",
         "gp": "40",
         "g": "7",
@@ -2166,7 +2185,7 @@
         "grade": null
     },
     {
-        "id": 115,
+        "id": 116,
         "name": "Alexandre David",
         "position": "C",
         "hp": "-",
@@ -2185,7 +2204,7 @@
         "grade": null
     },
     {
-        "id": 116,
+        "id": 117,
         "name": "Stephen Davis",
         "position": "D",
         "hp": "-",
@@ -2204,7 +2223,7 @@
         "grade": null
     },
     {
-        "id": 117,
+        "id": 118,
         "name": "Nico Daws",
         "position": "G",
         "hp": "-",
@@ -2223,7 +2242,7 @@
         "grade": null
     },
     {
-        "id": 118,
+        "id": 119,
         "name": "Aidan De La Gorgendiere",
         "position": "D",
         "hp": "-",
@@ -2242,7 +2261,7 @@
         "grade": null
     },
     {
-        "id": 119,
+        "id": 120,
         "name": "Mathieu De St. Phalle",
         "position": "F",
         "hp": "-",
@@ -2261,7 +2280,7 @@
         "grade": null
     },
     {
-        "id": 120,
+        "id": 121,
         "name": "Noah Delémont",
         "position": "D",
         "hp": "-",
@@ -2280,7 +2299,7 @@
         "grade": null
     },
     {
-        "id": 121,
+        "id": 122,
         "name": "Valentin Demchenko",
         "position": "RW",
         "hp": "-",
@@ -2299,7 +2318,7 @@
         "grade": null
     },
     {
-        "id": 122,
+        "id": 123,
         "name": "Nick DeSantis",
         "position": "F",
         "hp": "-",
@@ -2318,7 +2337,7 @@
         "grade": null
     },
     {
-        "id": 123,
+        "id": 124,
         "name": "Elliot Desnoyers",
         "position": "LW",
         "hp": "-",
@@ -2337,7 +2356,7 @@
         "grade": null
     },
     {
-        "id": 124,
+        "id": 125,
         "name": "Charlie Desroches",
         "position": "D",
         "hp": "-",
@@ -2356,7 +2375,7 @@
         "grade": null
     },
     {
-        "id": 125,
+        "id": 126,
         "name": "Tanner Dickinson",
         "position": "C",
         "hp": "-",
@@ -2375,7 +2394,7 @@
         "grade": null
     },
     {
-        "id": 126,
+        "id": 127,
         "name": "Ivan Didkovsky",
         "position": "F",
         "hp": "-",
@@ -2394,7 +2413,7 @@
         "grade": null
     },
     {
-        "id": 127,
+        "id": 128,
         "name": "Jacob Dion",
         "position": "D",
         "hp": "-",
@@ -2413,7 +2432,7 @@
         "grade": null
     },
     {
-        "id": 128,
+        "id": 129,
         "name": "Josh Doan",
         "position": "F",
         "hp": "-",
@@ -2432,7 +2451,7 @@
         "grade": null
     },
     {
-        "id": 129,
+        "id": 130,
         "name": "Jakub Dobes",
         "position": "G",
         "hp": "-",
@@ -2451,7 +2470,7 @@
         "grade": null
     },
     {
-        "id": 130,
+        "id": 131,
         "name": "Paul Doré",
         "position": "LW",
         "hp": "-",
@@ -2470,9 +2489,9 @@
         "grade": null
     },
     {
-        "id": 131,
+        "id": 132,
         "name": "Alexandre Doucet",
-        "position": "C",
+        "position": "C/W",
         "hp": "-",
         "fc": "-",
         "iss": "-",
@@ -2489,7 +2508,7 @@
         "grade": null
     },
     {
-        "id": 132,
+        "id": 133,
         "name": "Kienan Draper",
         "position": "RW",
         "hp": "-",
@@ -2508,7 +2527,7 @@
         "grade": null
     },
     {
-        "id": 133,
+        "id": 134,
         "name": "William Dufour",
         "position": "RW",
         "hp": "-",
@@ -2527,7 +2546,7 @@
         "grade": null
     },
     {
-        "id": 134,
+        "id": 135,
         "name": "Kabore Dunn",
         "position": "D",
         "hp": "-",
@@ -2546,7 +2565,7 @@
         "grade": null
     },
     {
-        "id": 135,
+        "id": 136,
         "name": "Riley Duran",
         "position": "C",
         "hp": "-",
@@ -2565,7 +2584,26 @@
         "grade": null
     },
     {
-        "id": 136,
+        "id": 137,
+        "name": "Jaydon Dureau",
+        "position": "LW",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "WHL",
+        "team": "Portland Winterhawks",
+        "gp": "61",
+        "g": "19",
+        "a": "51",
+        "p": "70",
+        "pim": "35",
+        "grade": null
+    },
+    {
+        "id": 138,
         "name": "Lucas Edmonds",
         "position": "RW/LW",
         "hp": "-",
@@ -2574,7 +2612,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Växjö Lakers HC J20",
         "gp": "44",
         "g": "22",
@@ -2584,7 +2622,7 @@
         "grade": null
     },
     {
-        "id": 137,
+        "id": 139,
         "name": "Ethan Edwards",
         "position": "D",
         "hp": "-",
@@ -2603,7 +2641,7 @@
         "grade": null
     },
     {
-        "id": 138,
+        "id": 140,
         "name": "Charles Eklund",
         "position": "RW",
         "hp": "-",
@@ -2612,7 +2650,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Mora IK J20",
         "gp": "40",
         "g": "21",
@@ -2622,7 +2660,7 @@
         "grade": null
     },
     {
-        "id": 139,
+        "id": 141,
         "name": "Elliot Ekmark",
         "position": "C",
         "hp": "-",
@@ -2631,7 +2669,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Linköping HC J20",
         "gp": "31",
         "g": "12",
@@ -2641,7 +2679,7 @@
         "grade": null
     },
     {
-        "id": 140,
+        "id": 142,
         "name": "Florian Elias",
         "position": "F",
         "hp": "-",
@@ -2660,7 +2698,7 @@
         "grade": null
     },
     {
-        "id": 141,
+        "id": 143,
         "name": "Noah Ellis",
         "position": "D",
         "hp": "-",
@@ -2679,7 +2717,7 @@
         "grade": null
     },
     {
-        "id": 142,
+        "id": 144,
         "name": "Sander Vold Engebråten",
         "position": "D",
         "hp": "-",
@@ -2688,7 +2726,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Södertälje SK J20",
         "gp": "16",
         "g": "1",
@@ -2698,7 +2736,7 @@
         "grade": null
     },
     {
-        "id": 143,
+        "id": 145,
         "name": "Eric Engstrand",
         "position": "LW/RW",
         "hp": "-",
@@ -2707,7 +2745,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Malmö Redhawks J20",
         "gp": "37",
         "g": "23",
@@ -2717,7 +2755,7 @@
         "grade": null
     },
     {
-        "id": 144,
+        "id": 146,
         "name": "Eemil Erholtz",
         "position": "RW/LW",
         "hp": "-",
@@ -2736,7 +2774,7 @@
         "grade": null
     },
     {
-        "id": 145,
+        "id": 147,
         "name": "Philip Eriksén",
         "position": "D",
         "hp": "-",
@@ -2745,7 +2783,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Luleå HF J20",
         "gp": "43",
         "g": "1",
@@ -2755,7 +2793,7 @@
         "grade": null
     },
     {
-        "id": 146,
+        "id": 148,
         "name": "Samuel Eriksson",
         "position": "LW/RW",
         "hp": "-",
@@ -2764,7 +2802,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Färjestad BK J20",
         "gp": "42",
         "g": "13",
@@ -2774,7 +2812,26 @@
         "grade": null
     },
     {
-        "id": 147,
+        "id": 149,
+        "name": "Luke Evangelista",
+        "position": "RW",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "OHL",
+        "team": "London Knights",
+        "gp": "62",
+        "g": "23",
+        "a": "38",
+        "p": "61",
+        "pim": "12",
+        "grade": null
+    },
+    {
+        "id": 150,
         "name": "Ryker Evans",
         "position": "D",
         "hp": "-",
@@ -2793,7 +2850,7 @@
         "grade": null
     },
     {
-        "id": 148,
+        "id": 151,
         "name": "Brock Faber",
         "position": "D",
         "hp": "-",
@@ -2812,7 +2869,7 @@
         "grade": null
     },
     {
-        "id": 149,
+        "id": 152,
         "name": "Davide Fadani",
         "position": "G",
         "hp": "-",
@@ -2831,7 +2888,7 @@
         "grade": null
     },
     {
-        "id": 150,
+        "id": 153,
         "name": "Roman Faith",
         "position": "LW",
         "hp": "-",
@@ -2850,9 +2907,9 @@
         "grade": null
     },
     {
-        "id": 151,
+        "id": 154,
         "name": "Sean Farrell",
-        "position": "F",
+        "position": "LW",
         "hp": "-",
         "fc": "-",
         "iss": "-",
@@ -2869,7 +2926,7 @@
         "grade": null
     },
     {
-        "id": 152,
+        "id": 155,
         "name": "Oliver Fatul",
         "position": "D",
         "hp": "-",
@@ -2888,7 +2945,7 @@
         "grade": null
     },
     {
-        "id": 153,
+        "id": 156,
         "name": "Jack Finley",
         "position": "C",
         "hp": "-",
@@ -2907,8 +2964,8 @@
         "grade": null
     },
     {
-        "id": 154,
-        "name": "Jacob Flynn",
+        "id": 157,
+        "name": "Jake Flynn",
         "position": "D",
         "hp": "-",
         "fc": "-",
@@ -2926,7 +2983,7 @@
         "grade": null
     },
     {
-        "id": 155,
+        "id": 158,
         "name": "Gunnarwolfe Fontaine",
         "position": "F",
         "hp": "-",
@@ -2945,7 +3002,7 @@
         "grade": null
     },
     {
-        "id": 156,
+        "id": 159,
         "name": "Parker Ford",
         "position": "C",
         "hp": "-",
@@ -2964,7 +3021,7 @@
         "grade": null
     },
     {
-        "id": 157,
+        "id": 160,
         "name": "Måns Forsfjäll",
         "position": "D",
         "hp": "-",
@@ -2973,7 +3030,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Skellefteå AIK J20",
         "gp": "42",
         "g": "7",
@@ -2983,15 +3040,15 @@
         "grade": null
     },
     {
-        "id": 158,
+        "id": 161,
         "name": "Jean-Luc Foudy",
         "position": "C",
         "hp": "-",
-        "fc": "31",
+        "fc": "-",
         "iss": "-",
         "mh": "-",
         "elite": "-",
-        "avg_rank": 39.8,
+        "avg_rank": null,
         "league": "OHL",
         "team": "Windsor Spitfires",
         "gp": "59",
@@ -3002,7 +3059,7 @@
         "grade": null
     },
     {
-        "id": 159,
+        "id": 162,
         "name": "Hayden Fowler",
         "position": "C",
         "hp": "-",
@@ -3021,7 +3078,7 @@
         "grade": null
     },
     {
-        "id": 160,
+        "id": 163,
         "name": "Ryan Francis",
         "position": "RW",
         "hp": "-",
@@ -3040,7 +3097,7 @@
         "grade": null
     },
     {
-        "id": 161,
+        "id": 164,
         "name": "Robbie Fromm-Delorme",
         "position": "RW",
         "hp": "-",
@@ -3059,7 +3116,7 @@
         "grade": null
     },
     {
-        "id": 162,
+        "id": 165,
         "name": "Alex Gaffney",
         "position": "C",
         "hp": "-",
@@ -3078,7 +3135,26 @@
         "grade": null
     },
     {
-        "id": 163,
+        "id": 166,
+        "name": "Danila Galenyuk",
+        "position": "D",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "KHL",
+        "team": "SKA St. Petersburg",
+        "gp": "50",
+        "g": "1",
+        "a": "9",
+        "p": "10",
+        "pim": "6",
+        "grade": null
+    },
+    {
+        "id": 167,
         "name": "Artyom Galimov",
         "position": "C",
         "hp": "-",
@@ -3097,7 +3173,7 @@
         "grade": null
     },
     {
-        "id": 164,
+        "id": 168,
         "name": "Graham Gamache",
         "position": "F",
         "hp": "-",
@@ -3116,7 +3192,7 @@
         "grade": null
     },
     {
-        "id": 165,
+        "id": 169,
         "name": "Dylan Garand",
         "position": "G",
         "hp": "-",
@@ -3135,7 +3211,7 @@
         "grade": null
     },
     {
-        "id": 166,
+        "id": 170,
         "name": "Amir Garayev",
         "position": "F",
         "hp": "-",
@@ -3154,7 +3230,7 @@
         "grade": null
     },
     {
-        "id": 167,
+        "id": 171,
         "name": "Isak Garfvé",
         "position": "C/LW",
         "hp": "-",
@@ -3163,7 +3239,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Mora IK J20",
         "gp": "36",
         "g": "12",
@@ -3173,7 +3249,7 @@
         "grade": null
     },
     {
-        "id": 168,
+        "id": 172,
         "name": "Taylor Gauthier",
         "position": "G",
         "hp": "-",
@@ -3192,7 +3268,7 @@
         "grade": null
     },
     {
-        "id": 169,
+        "id": 173,
         "name": "Michael Gildon",
         "position": "LW",
         "hp": "-",
@@ -3211,7 +3287,26 @@
         "grade": null
     },
     {
-        "id": 170,
+        "id": 174,
+        "name": "Casper Gillberg",
+        "position": "D",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "J20 Nationell",
+        "team": "Malmö Redhawks J20",
+        "gp": "42",
+        "g": "3",
+        "a": "10",
+        "p": "13",
+        "pim": "48",
+        "grade": null
+    },
+    {
+        "id": 175,
         "name": "Jackson Glassford",
         "position": "G",
         "hp": "-",
@@ -3230,7 +3325,7 @@
         "grade": null
     },
     {
-        "id": 171,
+        "id": 176,
         "name": "Matthew Gleason",
         "position": "F",
         "hp": "-",
@@ -3249,7 +3344,7 @@
         "grade": null
     },
     {
-        "id": 172,
+        "id": 177,
         "name": "Maximilian Glötzl",
         "position": "D",
         "hp": "-",
@@ -3268,7 +3363,7 @@
         "grade": null
     },
     {
-        "id": 173,
+        "id": 178,
         "name": "Pavel Gogolev",
         "position": "LW",
         "hp": "-",
@@ -3287,7 +3382,7 @@
         "grade": null
     },
     {
-        "id": 174,
+        "id": 179,
         "name": "Maxim Golod",
         "position": "LW",
         "hp": "-",
@@ -3306,7 +3401,7 @@
         "grade": null
     },
     {
-        "id": 175,
+        "id": 180,
         "name": "Gage Goncalves",
         "position": "C",
         "hp": "-",
@@ -3325,7 +3420,7 @@
         "grade": null
     },
     {
-        "id": 176,
+        "id": 181,
         "name": "Mikhail Gordeyev",
         "position": "D",
         "hp": "-",
@@ -3344,7 +3439,7 @@
         "grade": null
     },
     {
-        "id": 177,
+        "id": 182,
         "name": "Alexander Gordin",
         "position": "F",
         "hp": "-",
@@ -3363,7 +3458,7 @@
         "grade": null
     },
     {
-        "id": 178,
+        "id": 183,
         "name": "Alexei Goryachev",
         "position": "D",
         "hp": "-",
@@ -3382,7 +3477,7 @@
         "grade": null
     },
     {
-        "id": 179,
+        "id": 184,
         "name": "Brock Gould",
         "position": "G",
         "hp": "-",
@@ -3401,7 +3496,7 @@
         "grade": null
     },
     {
-        "id": 180,
+        "id": 185,
         "name": "Noah Grannan",
         "position": "G",
         "hp": "-",
@@ -3420,16 +3515,16 @@
         "grade": null
     },
     {
-        "id": 181,
+        "id": 186,
         "name": "Helge Grans",
         "position": "D",
         "hp": "-",
-        "fc": "-",
+        "fc": "28",
         "iss": "-",
         "mh": "-",
         "elite": "19",
-        "avg_rank": 37.4,
-        "league": "SuperElit",
+        "avg_rank": 34.6,
+        "league": "J20 Nationell",
         "team": "Malmö Redhawks J20",
         "gp": "27",
         "g": "4",
@@ -3439,7 +3534,7 @@
         "grade": null
     },
     {
-        "id": 182,
+        "id": 187,
         "name": "Marcus Gretz",
         "position": "D",
         "hp": "-",
@@ -3458,7 +3553,7 @@
         "grade": null
     },
     {
-        "id": 183,
+        "id": 188,
         "name": "William Grimard",
         "position": "G",
         "hp": "-",
@@ -3477,7 +3572,7 @@
         "grade": null
     },
     {
-        "id": 184,
+        "id": 189,
         "name": "Josh Groll",
         "position": "F",
         "hp": "-",
@@ -3496,7 +3591,7 @@
         "grade": null
     },
     {
-        "id": 185,
+        "id": 190,
         "name": "Maxim Groshev",
         "position": "RW/LW",
         "hp": "-",
@@ -3515,7 +3610,7 @@
         "grade": null
     },
     {
-        "id": 186,
+        "id": 191,
         "name": "Patrick Guay",
         "position": "LW/C",
         "hp": "-",
@@ -3534,7 +3629,26 @@
         "grade": null
     },
     {
-        "id": 187,
+        "id": 192,
+        "name": "Noel Gunler",
+        "position": "RW/LW",
+        "hp": "-",
+        "fc": "18",
+        "iss": "18",
+        "mh": "19",
+        "elite": "22",
+        "avg_rank": 23.8,
+        "league": "SHL",
+        "team": "Luleå HF",
+        "gp": "45",
+        "g": "4",
+        "a": "9",
+        "p": "13",
+        "pim": "16",
+        "grade": null
+    },
+    {
+        "id": 193,
         "name": "Daniil Gushchin",
         "position": "RW",
         "hp": "-",
@@ -3553,7 +3667,7 @@
         "grade": null
     },
     {
-        "id": 188,
+        "id": 194,
         "name": "Michal Gut",
         "position": "F",
         "hp": "-",
@@ -3572,7 +3686,7 @@
         "grade": null
     },
     {
-        "id": 189,
+        "id": 195,
         "name": "Daniil Gutik",
         "position": "LW",
         "hp": "-",
@@ -3591,7 +3705,7 @@
         "grade": null
     },
     {
-        "id": 190,
+        "id": 196,
         "name": "Mack Guzda",
         "position": "G",
         "hp": "-",
@@ -3610,7 +3724,7 @@
         "grade": null
     },
     {
-        "id": 191,
+        "id": 197,
         "name": "Patrick Guzzo",
         "position": "C/LW",
         "hp": "-",
@@ -3629,7 +3743,7 @@
         "grade": null
     },
     {
-        "id": 192,
+        "id": 198,
         "name": "Aleks Haatanen",
         "position": "LW",
         "hp": "-",
@@ -3648,7 +3762,7 @@
         "grade": null
     },
     {
-        "id": 193,
+        "id": 199,
         "name": "Bayard Hall",
         "position": "D",
         "hp": "-",
@@ -3667,7 +3781,7 @@
         "grade": null
     },
     {
-        "id": 194,
+        "id": 200,
         "name": "William Hallén",
         "position": "C/LW",
         "hp": "-",
@@ -3676,7 +3790,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Frölunda HC J20",
         "gp": "32",
         "g": "10",
@@ -3686,7 +3800,7 @@
         "grade": null
     },
     {
-        "id": 195,
+        "id": 201,
         "name": "Stephen Halliday",
         "position": "LW",
         "hp": "-",
@@ -3705,7 +3819,7 @@
         "grade": null
     },
     {
-        "id": 196,
+        "id": 202,
         "name": "Jan Hampl",
         "position": "D",
         "hp": "-",
@@ -3724,7 +3838,7 @@
         "grade": null
     },
     {
-        "id": 197,
+        "id": 203,
         "name": "Cross Hanas",
         "position": "LW",
         "hp": "-",
@@ -3743,7 +3857,7 @@
         "grade": null
     },
     {
-        "id": 198,
+        "id": 204,
         "name": "James Hardie",
         "position": "LW",
         "hp": "-",
@@ -3762,7 +3876,7 @@
         "grade": null
     },
     {
-        "id": 199,
+        "id": 205,
         "name": "Jonas Slettebø Haughom",
         "position": "D",
         "hp": "-",
@@ -3781,7 +3895,7 @@
         "grade": null
     },
     {
-        "id": 200,
+        "id": 206,
         "name": "Erik Hedlund",
         "position": "RW",
         "hp": "-",
@@ -3790,7 +3904,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Leksands IF J20",
         "gp": "38",
         "g": "4",
@@ -3800,7 +3914,7 @@
         "grade": null
     },
     {
-        "id": 201,
+        "id": 207,
         "name": "Emil Heineman",
         "position": "LW",
         "hp": "-",
@@ -3809,7 +3923,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Leksands IF J20",
         "gp": "29",
         "g": "26",
@@ -3819,7 +3933,7 @@
         "grade": null
     },
     {
-        "id": 202,
+        "id": 208,
         "name": "Adam Helldén",
         "position": "LW/RW",
         "hp": "-",
@@ -3828,7 +3942,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Mora IK J20",
         "gp": "37",
         "g": "8",
@@ -3838,7 +3952,7 @@
         "grade": null
     },
     {
-        "id": 203,
+        "id": 209,
         "name": "Ryan Helliwell",
         "position": "D",
         "hp": "-",
@@ -3857,7 +3971,7 @@
         "grade": null
     },
     {
-        "id": 204,
+        "id": 210,
         "name": "Louka Henault",
         "position": "D",
         "hp": "-",
@@ -3876,7 +3990,7 @@
         "grade": null
     },
     {
-        "id": 205,
+        "id": 211,
         "name": "Dennis Hildeby",
         "position": "G",
         "hp": "-",
@@ -3885,7 +3999,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Timrå IK J20",
         "gp": "27",
         "g": "2.75",
@@ -3895,7 +4009,7 @@
         "grade": null
     },
     {
-        "id": 206,
+        "id": 212,
         "name": "Mark Hillier",
         "position": "F",
         "hp": "-",
@@ -3914,15 +4028,15 @@
         "grade": null
     },
     {
-        "id": 207,
+        "id": 213,
         "name": "Roni Hirvonen",
         "position": "C",
         "hp": "-",
-        "fc": "21",
+        "fc": "22",
         "iss": "-",
         "mh": "-",
         "elite": "31",
-        "avg_rank": 35.6,
+        "avg_rank": 35.8,
         "league": "Liiga",
         "team": "Ässät",
         "gp": "52",
@@ -3933,7 +4047,7 @@
         "grade": null
     },
     {
-        "id": 208,
+        "id": 214,
         "name": "Samuel Hlavaj",
         "position": "G",
         "hp": "-",
@@ -3952,7 +4066,7 @@
         "grade": null
     },
     {
-        "id": 209,
+        "id": 215,
         "name": "Brendan Hoffman",
         "position": "RW",
         "hp": "-",
@@ -3971,7 +4085,7 @@
         "grade": null
     },
     {
-        "id": 210,
+        "id": 216,
         "name": "Ole Bjørgvik Holm",
         "position": "D",
         "hp": "-",
@@ -3990,7 +4104,7 @@
         "grade": null
     },
     {
-        "id": 211,
+        "id": 217,
         "name": "Bear Hughes",
         "position": "C",
         "hp": "-",
@@ -4009,7 +4123,7 @@
         "grade": null
     },
     {
-        "id": 212,
+        "id": 218,
         "name": "Jere Huhtamaa",
         "position": "G",
         "hp": "-",
@@ -4028,7 +4142,7 @@
         "grade": null
     },
     {
-        "id": 213,
+        "id": 219,
         "name": "Daemon Hunt",
         "position": "D",
         "hp": "-",
@@ -4047,7 +4161,7 @@
         "grade": null
     },
     {
-        "id": 214,
+        "id": 220,
         "name": "Fabio Iacobo",
         "position": "G",
         "hp": "-",
@@ -4066,7 +4180,7 @@
         "grade": null
     },
     {
-        "id": 215,
+        "id": 221,
         "name": "Ivan Ivan",
         "position": "C",
         "hp": "-",
@@ -4085,7 +4199,7 @@
         "grade": null
     },
     {
-        "id": 216,
+        "id": 222,
         "name": "Alex Jefferies",
         "position": "W",
         "hp": "-",
@@ -4104,7 +4218,7 @@
         "grade": null
     },
     {
-        "id": 217,
+        "id": 223,
         "name": "Christian Jimenez",
         "position": "D",
         "hp": "-",
@@ -4123,7 +4237,7 @@
         "grade": null
     },
     {
-        "id": 218,
+        "id": 224,
         "name": "Anton Johannesson",
         "position": "D",
         "hp": "-",
@@ -4132,7 +4246,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "HV71 J20",
         "gp": "20",
         "g": "8",
@@ -4142,7 +4256,26 @@
         "grade": null
     },
     {
-        "id": 219,
+        "id": 225,
+        "name": "Samuel Johannesson",
+        "position": "D",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "SHL",
+        "team": "Rögle BK",
+        "gp": "44",
+        "g": "1",
+        "a": "10",
+        "p": "11",
+        "pim": "2",
+        "grade": null
+    },
+    {
+        "id": 226,
         "name": "Pontus Johansson",
         "position": "D",
         "hp": "-",
@@ -4151,7 +4284,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Djurgårdens IF J20",
         "gp": "38",
         "g": "4",
@@ -4161,7 +4294,7 @@
         "grade": null
     },
     {
-        "id": 220,
+        "id": 227,
         "name": "Eric Juhlin",
         "position": "LW",
         "hp": "-",
@@ -4170,7 +4303,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Västerås IK J20",
         "gp": "36",
         "g": "17",
@@ -4180,7 +4313,7 @@
         "grade": null
     },
     {
-        "id": 221,
+        "id": 228,
         "name": "Joni Jurmo",
         "position": "D",
         "hp": "-",
@@ -4199,7 +4332,7 @@
         "grade": null
     },
     {
-        "id": 222,
+        "id": 229,
         "name": "Roby Järventie",
         "position": "LW",
         "hp": "-",
@@ -4218,7 +4351,7 @@
         "grade": null
     },
     {
-        "id": 223,
+        "id": 230,
         "name": "Wyatt Kaiser",
         "position": "D",
         "hp": "-",
@@ -4237,7 +4370,7 @@
         "grade": null
     },
     {
-        "id": 224,
+        "id": 231,
         "name": "Zakary Karpa",
         "position": "C",
         "hp": "-",
@@ -4256,7 +4389,7 @@
         "grade": null
     },
     {
-        "id": 225,
+        "id": 232,
         "name": "Tye Kartye",
         "position": "C",
         "hp": "-",
@@ -4275,16 +4408,16 @@
         "grade": null
     },
     {
-        "id": 226,
+        "id": 233,
         "name": "Matej Kaslik",
-        "position": "C/W",
+        "position": "LW/C",
         "hp": "-",
         "fc": "-",
         "iss": "-",
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Malmö Redhawks J20",
         "gp": "26",
         "g": "1",
@@ -4294,7 +4427,26 @@
         "grade": null
     },
     {
-        "id": 227,
+        "id": 234,
+        "name": "Ivan Kazakov",
+        "position": "F",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "MHL",
+        "team": "Kapitan Stupino",
+        "gp": "65",
+        "g": "20",
+        "a": "18",
+        "p": "38",
+        "pim": "120",
+        "grade": null
+    },
+    {
+        "id": 235,
         "name": "Gerard Keane",
         "position": "D",
         "hp": "-",
@@ -4313,7 +4465,7 @@
         "grade": null
     },
     {
-        "id": 228,
+        "id": 236,
         "name": "Anthony Kehrer",
         "position": "D",
         "hp": "-",
@@ -4332,7 +4484,7 @@
         "grade": null
     },
     {
-        "id": 229,
+        "id": 237,
         "name": "Connor Kelley",
         "position": "D",
         "hp": "-",
@@ -4351,7 +4503,7 @@
         "grade": null
     },
     {
-        "id": 230,
+        "id": 238,
         "name": "Hank Kempf",
         "position": "D",
         "hp": "-",
@@ -4370,7 +4522,7 @@
         "grade": null
     },
     {
-        "id": 231,
+        "id": 239,
         "name": "Brendan Kennette",
         "position": "D",
         "hp": "-",
@@ -4389,7 +4541,7 @@
         "grade": null
     },
     {
-        "id": 232,
+        "id": 240,
         "name": "Rory Kerins",
         "position": "C",
         "hp": "-",
@@ -4408,7 +4560,7 @@
         "grade": null
     },
     {
-        "id": 233,
+        "id": 241,
         "name": "Marat Khusnutdinov",
         "position": "C",
         "hp": "-",
@@ -4427,7 +4579,26 @@
         "grade": null
     },
     {
-        "id": 234,
+        "id": 242,
+        "name": "Robert Kincaid",
+        "position": "D",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "AJHL",
+        "team": "Camrose Kodiaks",
+        "gp": "50",
+        "g": "2",
+        "a": "23",
+        "p": "25",
+        "pim": "28",
+        "grade": null
+    },
+    {
+        "id": 243,
         "name": "Ben King",
         "position": "F",
         "hp": "-",
@@ -4446,7 +4617,7 @@
         "grade": null
     },
     {
-        "id": 235,
+        "id": 244,
         "name": "Ryan Kirwan",
         "position": "F",
         "hp": "-",
@@ -4465,7 +4636,7 @@
         "grade": null
     },
     {
-        "id": 236,
+        "id": 245,
         "name": "Nikita Kiryanov",
         "position": "C",
         "hp": "-",
@@ -4484,7 +4655,7 @@
         "grade": null
     },
     {
-        "id": 237,
+        "id": 246,
         "name": "Tyler Kleven",
         "position": "D",
         "hp": "-",
@@ -4503,7 +4674,7 @@
         "grade": null
     },
     {
-        "id": 238,
+        "id": 247,
         "name": "Simon Knak",
         "position": "RW",
         "hp": "-",
@@ -4522,7 +4693,7 @@
         "grade": null
     },
     {
-        "id": 239,
+        "id": 248,
         "name": "Samuel Knazko",
         "position": "D",
         "hp": "-",
@@ -4541,7 +4712,7 @@
         "grade": null
     },
     {
-        "id": 240,
+        "id": 249,
         "name": "Ignat Kokhanin",
         "position": "F",
         "hp": "-",
@@ -4560,7 +4731,7 @@
         "grade": null
     },
     {
-        "id": 241,
+        "id": 250,
         "name": "Alexei Kolosov",
         "position": "G",
         "hp": "-",
@@ -4579,7 +4750,7 @@
         "grade": null
     },
     {
-        "id": 242,
+        "id": 251,
         "name": "Kirill Kondyrev",
         "position": "F",
         "hp": "-",
@@ -4598,7 +4769,7 @@
         "grade": null
     },
     {
-        "id": 243,
+        "id": 252,
         "name": "Dmitri Konstantinov",
         "position": "F",
         "hp": "-",
@@ -4617,7 +4788,7 @@
         "grade": null
     },
     {
-        "id": 244,
+        "id": 253,
         "name": "Veeti Korkalainen",
         "position": "F",
         "hp": "-",
@@ -4636,7 +4807,7 @@
         "grade": null
     },
     {
-        "id": 245,
+        "id": 254,
         "name": "Landon Kosior",
         "position": "D",
         "hp": "-",
@@ -4655,7 +4826,7 @@
         "grade": null
     },
     {
-        "id": 246,
+        "id": 255,
         "name": "Anton Kosolapov",
         "position": "F",
         "hp": "-",
@@ -4674,7 +4845,7 @@
         "grade": null
     },
     {
-        "id": 247,
+        "id": 256,
         "name": "Kyler Kovich",
         "position": "F",
         "hp": "-",
@@ -4693,7 +4864,7 @@
         "grade": null
     },
     {
-        "id": 248,
+        "id": 257,
         "name": "Maxim Krovyakov",
         "position": "F",
         "hp": "-",
@@ -4712,7 +4883,26 @@
         "grade": null
     },
     {
-        "id": 249,
+        "id": 258,
+        "name": "Ilya Kruglov",
+        "position": "C",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "KHL",
+        "team": "Dynamo Moskva",
+        "gp": "16",
+        "g": "3",
+        "a": "0",
+        "p": "3",
+        "pim": "0",
+        "grade": null
+    },
+    {
+        "id": 259,
         "name": "Simon Kubicek",
         "position": "D",
         "hp": "-",
@@ -4731,7 +4921,7 @@
         "grade": null
     },
     {
-        "id": 250,
+        "id": 260,
         "name": "Radek Kucerik",
         "position": "D",
         "hp": "-",
@@ -4750,7 +4940,7 @@
         "grade": null
     },
     {
-        "id": 251,
+        "id": 261,
         "name": "Axel Kumlin",
         "position": "D",
         "hp": "-",
@@ -4759,7 +4949,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Frölunda HC J20",
         "gp": "36",
         "g": "5",
@@ -4769,7 +4959,7 @@
         "grade": null
     },
     {
-        "id": 252,
+        "id": 262,
         "name": "Trevor Kuntar",
         "position": "C",
         "hp": "-",
@@ -4788,7 +4978,7 @@
         "grade": null
     },
     {
-        "id": 253,
+        "id": 263,
         "name": "Jackson Kunz",
         "position": "F",
         "hp": "-",
@@ -4798,7 +4988,7 @@
         "elite": "-",
         "avg_rank": null,
         "league": "USHS-Prep",
-        "team": "Shattuck St. Mary's Midget Prep",
+        "team": "Shattuck St. Mary's 18U Prep",
         "gp": "45",
         "g": "40",
         "a": "29",
@@ -4807,7 +4997,7 @@
         "grade": null
     },
     {
-        "id": 254,
+        "id": 264,
         "name": "Saveli Kuvardin",
         "position": "F",
         "hp": "-",
@@ -4826,7 +5016,7 @@
         "grade": null
     },
     {
-        "id": 255,
+        "id": 265,
         "name": "Yegor Kuzminov",
         "position": "F",
         "hp": "-",
@@ -4845,7 +5035,7 @@
         "grade": null
     },
     {
-        "id": 256,
+        "id": 266,
         "name": "Sergei Kuznetsov",
         "position": "LW",
         "hp": "-",
@@ -4864,7 +5054,7 @@
         "grade": null
     },
     {
-        "id": 257,
+        "id": 267,
         "name": "Yan Kuznetsov",
         "position": "D",
         "hp": "-",
@@ -4883,7 +5073,7 @@
         "grade": null
     },
     {
-        "id": 258,
+        "id": 268,
         "name": "Oskar Kvist",
         "position": "LW/RW",
         "hp": "-",
@@ -4892,7 +5082,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Brynäs IF J20",
         "gp": "42",
         "g": "12",
@@ -4902,7 +5092,7 @@
         "grade": null
     },
     {
-        "id": 259,
+        "id": 269,
         "name": "Daniel Laatsch",
         "position": "D",
         "hp": "-",
@@ -4921,7 +5111,7 @@
         "grade": null
     },
     {
-        "id": 260,
+        "id": 270,
         "name": "Alex Laferriere",
         "position": "RW",
         "hp": "-",
@@ -4940,7 +5130,7 @@
         "grade": null
     },
     {
-        "id": 261,
+        "id": 271,
         "name": "Isaac Langdon",
         "position": "C",
         "hp": "-",
@@ -4959,7 +5149,7 @@
         "grade": null
     },
     {
-        "id": 262,
+        "id": 272,
         "name": "Mason Langenbrunner",
         "position": "D",
         "hp": "-",
@@ -4978,7 +5168,7 @@
         "grade": null
     },
     {
-        "id": 263,
+        "id": 273,
         "name": "Gregory Lapointe",
         "position": "F",
         "hp": "-",
@@ -4997,7 +5187,7 @@
         "grade": null
     },
     {
-        "id": 264,
+        "id": 274,
         "name": "Philippe Lapointe",
         "position": "F",
         "hp": "-",
@@ -5016,7 +5206,7 @@
         "grade": null
     },
     {
-        "id": 265,
+        "id": 275,
         "name": "Tanner Latsch",
         "position": "C",
         "hp": "-",
@@ -5035,7 +5225,7 @@
         "grade": null
     },
     {
-        "id": 266,
+        "id": 276,
         "name": "Charles-Antoine Lavallée",
         "position": "G",
         "hp": "-",
@@ -5054,7 +5244,7 @@
         "grade": null
     },
     {
-        "id": 267,
+        "id": 277,
         "name": "Oscar Lawner",
         "position": "LW/RW",
         "hp": "-",
@@ -5073,9 +5263,9 @@
         "grade": null
     },
     {
-        "id": 268,
+        "id": 278,
         "name": "Josh Lawrence",
-        "position": "C",
+        "position": "C/RW",
         "hp": "-",
         "fc": "-",
         "iss": "-",
@@ -5092,7 +5282,7 @@
         "grade": null
     },
     {
-        "id": 269,
+        "id": 279,
         "name": "Devon Levi",
         "position": "G",
         "hp": "-",
@@ -5111,7 +5301,7 @@
         "grade": null
     },
     {
-        "id": 270,
+        "id": 280,
         "name": "Yaroslav Likhachyov",
         "position": "LW/RW",
         "hp": "-",
@@ -5130,7 +5320,45 @@
         "grade": null
     },
     {
-        "id": 271,
+        "id": 281,
+        "name": "Jeremias Lindewall",
+        "position": "LW",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "J20 Nationell",
+        "team": "MODO Hockey J20",
+        "gp": "39",
+        "g": "11",
+        "a": "17",
+        "p": "28",
+        "pim": "10",
+        "grade": null
+    },
+    {
+        "id": 282,
+        "name": "Adam Liska",
+        "position": "LW",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "KHL",
+        "team": "Severstal Cherepovets",
+        "gp": "51",
+        "g": "8",
+        "a": "3",
+        "p": "11",
+        "pim": "8",
+        "grade": null
+    },
+    {
+        "id": 283,
         "name": "Alexander Ljungkrantz",
         "position": "LW",
         "hp": "-",
@@ -5139,7 +5367,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Brynäs IF J20",
         "gp": "42",
         "g": "15",
@@ -5149,7 +5377,7 @@
         "grade": null
     },
     {
-        "id": 272,
+        "id": 284,
         "name": "Daniel Ljungman",
         "position": "C",
         "hp": "-",
@@ -5158,7 +5386,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Linköping HC J20",
         "gp": "40",
         "g": "10",
@@ -5168,7 +5396,7 @@
         "grade": null
     },
     {
-        "id": 273,
+        "id": 285,
         "name": "Mason Lohrei",
         "position": "D",
         "hp": "-",
@@ -5187,7 +5415,7 @@
         "grade": null
     },
     {
-        "id": 274,
+        "id": 286,
         "name": "Carter Loney",
         "position": "F",
         "hp": "-",
@@ -5206,7 +5434,7 @@
         "grade": null
     },
     {
-        "id": 275,
+        "id": 287,
         "name": "Josh Lopina",
         "position": "F",
         "hp": "-",
@@ -5225,7 +5453,7 @@
         "grade": null
     },
     {
-        "id": 276,
+        "id": 288,
         "name": "Timothy Lovell",
         "position": "D",
         "hp": "-",
@@ -5244,7 +5472,26 @@
         "grade": null
     },
     {
-        "id": 277,
+        "id": 289,
+        "name": "Ilya Loza",
+        "position": "F",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "MHL",
+        "team": "Avto Yekaterinburg",
+        "gp": "63",
+        "g": "20",
+        "a": "30",
+        "p": "50",
+        "pim": "10",
+        "grade": null
+    },
+    {
+        "id": 290,
         "name": "Mico Luoto",
         "position": "D",
         "hp": "-",
@@ -5263,7 +5510,7 @@
         "grade": null
     },
     {
-        "id": 278,
+        "id": 291,
         "name": "Oskari Luoto",
         "position": "F",
         "hp": "-",
@@ -5282,7 +5529,7 @@
         "grade": null
     },
     {
-        "id": 279,
+        "id": 292,
         "name": "Albert Lyckåsen",
         "position": "D",
         "hp": "-",
@@ -5291,7 +5538,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Linköping HC J20",
         "gp": "43",
         "g": "14",
@@ -5301,7 +5548,7 @@
         "grade": null
     },
     {
-        "id": 280,
+        "id": 293,
         "name": "Blake Lyda",
         "position": "G",
         "hp": "-",
@@ -5320,7 +5567,7 @@
         "grade": null
     },
     {
-        "id": 281,
+        "id": 294,
         "name": "Leo Lööf",
         "position": "D",
         "hp": "-",
@@ -5329,7 +5576,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Färjestad BK J20",
         "gp": "43",
         "g": "2",
@@ -5339,7 +5586,7 @@
         "grade": null
     },
     {
-        "id": 282,
+        "id": 295,
         "name": "Linus Lööf",
         "position": "C",
         "hp": "-",
@@ -5348,7 +5595,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Färjestad BK J20",
         "gp": "3",
         "g": "1",
@@ -5358,7 +5605,7 @@
         "grade": null
     },
     {
-        "id": 283,
+        "id": 296,
         "name": "David Ma",
         "position": "D",
         "hp": "-",
@@ -5368,7 +5615,7 @@
         "elite": "-",
         "avg_rank": null,
         "league": "USHS-Prep",
-        "team": "Shattuck St. Mary's Midget Prep",
+        "team": "Shattuck St. Mary's 18U Prep",
         "gp": "36",
         "g": "4",
         "a": "29",
@@ -5377,7 +5624,7 @@
         "grade": null
     },
     {
-        "id": 284,
+        "id": 297,
         "name": "Colby MacArthur",
         "position": "RW",
         "hp": "-",
@@ -5396,7 +5643,7 @@
         "grade": null
     },
     {
-        "id": 285,
+        "id": 298,
         "name": "Koen MacInnes",
         "position": "G",
         "hp": "-",
@@ -5415,7 +5662,7 @@
         "grade": null
     },
     {
-        "id": 286,
+        "id": 299,
         "name": "Cole Mackay",
         "position": "RW",
         "hp": "-",
@@ -5434,7 +5681,7 @@
         "grade": null
     },
     {
-        "id": 287,
+        "id": 300,
         "name": "Oskar Magnusson",
         "position": "C/RW",
         "hp": "-",
@@ -5443,7 +5690,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Malmö Redhawks J20",
         "gp": "38",
         "g": "22",
@@ -5453,7 +5700,7 @@
         "grade": null
     },
     {
-        "id": 288,
+        "id": 301,
         "name": "Jakub Málek",
         "position": "G",
         "hp": "-",
@@ -5472,7 +5719,7 @@
         "grade": null
     },
     {
-        "id": 289,
+        "id": 302,
         "name": "Nick Malík",
         "position": "G",
         "hp": "-",
@@ -5491,7 +5738,7 @@
         "grade": null
     },
     {
-        "id": 290,
+        "id": 303,
         "name": "Victor Mancini",
         "position": "D",
         "hp": "-",
@@ -5500,7 +5747,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Frölunda HC J20",
         "gp": "38",
         "g": "9",
@@ -5510,7 +5757,7 @@
         "grade": null
     },
     {
-        "id": 291,
+        "id": 304,
         "name": "Juho Markkanen",
         "position": "G",
         "hp": "-",
@@ -5529,7 +5776,7 @@
         "grade": null
     },
     {
-        "id": 292,
+        "id": 305,
         "name": "Ben McCartney",
         "position": "LW",
         "hp": "-",
@@ -5548,7 +5795,7 @@
         "grade": null
     },
     {
-        "id": 293,
+        "id": 306,
         "name": "Connor McClennon",
         "position": "RW",
         "hp": "-",
@@ -5567,7 +5814,7 @@
         "grade": null
     },
     {
-        "id": 294,
+        "id": 307,
         "name": "Kyle McDonald",
         "position": "RW",
         "hp": "-",
@@ -5586,7 +5833,7 @@
         "grade": null
     },
     {
-        "id": 295,
+        "id": 308,
         "name": "Declan McDonnell",
         "position": "F",
         "hp": "-",
@@ -5605,7 +5852,7 @@
         "grade": null
     },
     {
-        "id": 296,
+        "id": 309,
         "name": "Ryan McGuire",
         "position": "C",
         "hp": "-",
@@ -5624,7 +5871,7 @@
         "grade": null
     },
     {
-        "id": 297,
+        "id": 310,
         "name": "Tucker McIntosh",
         "position": "D",
         "hp": "-",
@@ -5643,7 +5890,7 @@
         "grade": null
     },
     {
-        "id": 298,
+        "id": 311,
         "name": "Hunter McKown",
         "position": "RW",
         "hp": "-",
@@ -5662,7 +5909,7 @@
         "grade": null
     },
     {
-        "id": 299,
+        "id": 312,
         "name": "Jack McNaughton",
         "position": "G",
         "hp": "-",
@@ -5681,7 +5928,7 @@
         "grade": null
     },
     {
-        "id": 300,
+        "id": 313,
         "name": "Ben Meehan",
         "position": "D",
         "hp": "-",
@@ -5700,7 +5947,7 @@
         "grade": null
     },
     {
-        "id": 301,
+        "id": 314,
         "name": "Jonny Meiers",
         "position": "F",
         "hp": "-",
@@ -5719,7 +5966,7 @@
         "grade": null
     },
     {
-        "id": 302,
+        "id": 315,
         "name": "Lucas Mercuri",
         "position": "C",
         "hp": "-",
@@ -5738,7 +5985,7 @@
         "grade": null
     },
     {
-        "id": 303,
+        "id": 316,
         "name": "Christopher Merisier-Ortiz",
         "position": "D",
         "hp": "-",
@@ -5757,7 +6004,7 @@
         "grade": null
     },
     {
-        "id": 304,
+        "id": 317,
         "name": "Zach Michaelis",
         "position": "F",
         "hp": "-",
@@ -5776,7 +6023,7 @@
         "grade": null
     },
     {
-        "id": 305,
+        "id": 318,
         "name": "Veeti Miettinen",
         "position": "RW",
         "hp": "-",
@@ -5795,7 +6042,7 @@
         "grade": null
     },
     {
-        "id": 306,
+        "id": 319,
         "name": "Amir Miftakhov",
         "position": "G",
         "hp": "-",
@@ -5814,7 +6061,7 @@
         "grade": null
     },
     {
-        "id": 307,
+        "id": 320,
         "name": "Christian Miller",
         "position": "D",
         "hp": "-",
@@ -5833,7 +6080,7 @@
         "grade": null
     },
     {
-        "id": 308,
+        "id": 321,
         "name": "Joe Miller",
         "position": "F",
         "hp": "-",
@@ -5852,7 +6099,7 @@
         "grade": null
     },
     {
-        "id": 309,
+        "id": 322,
         "name": "Mitchell Miller",
         "position": "D",
         "hp": "-",
@@ -5871,7 +6118,7 @@
         "grade": null
     },
     {
-        "id": 310,
+        "id": 323,
         "name": "Ilya Mironov",
         "position": "D",
         "hp": "-",
@@ -5890,7 +6137,7 @@
         "grade": null
     },
     {
-        "id": 311,
+        "id": 324,
         "name": "Cody Monds",
         "position": "RW",
         "hp": "-",
@@ -5909,7 +6156,7 @@
         "grade": null
     },
     {
-        "id": 312,
+        "id": 325,
         "name": "Ian Moore",
         "position": "D",
         "hp": "-",
@@ -5928,7 +6175,7 @@
         "grade": null
     },
     {
-        "id": 313,
+        "id": 326,
         "name": "Lleyton Moore",
         "position": "D",
         "hp": "-",
@@ -5947,7 +6194,7 @@
         "grade": null
     },
     {
-        "id": 314,
+        "id": 327,
         "name": "Ilya Morozov",
         "position": "D",
         "hp": "-",
@@ -5966,7 +6213,7 @@
         "grade": null
     },
     {
-        "id": 315,
+        "id": 328,
         "name": "Logan Morrison",
         "position": "C",
         "hp": "-",
@@ -5985,7 +6232,7 @@
         "grade": null
     },
     {
-        "id": 316,
+        "id": 329,
         "name": "Payton Mount",
         "position": "F",
         "hp": "-",
@@ -6004,7 +6251,7 @@
         "grade": null
     },
     {
-        "id": 317,
+        "id": 330,
         "name": "David Mudrak",
         "position": "D",
         "hp": "-",
@@ -6023,26 +6270,7 @@
         "grade": null
     },
     {
-        "id": 318,
-        "name": "Shakir Mukhamadullin",
-        "position": "D",
-        "hp": "-",
-        "fc": "-",
-        "iss": "22",
-        "mh": "-",
-        "elite": "-",
-        "avg_rank": 38.0,
-        "league": "KHL",
-        "team": "Salavat Yulaev Ufa",
-        "gp": "27",
-        "g": "0",
-        "a": "1",
-        "p": "1",
-        "pim": "0",
-        "grade": null
-    },
-    {
-        "id": 319,
+        "id": 331,
         "name": "Jacob Murray",
         "position": "D",
         "hp": "-",
@@ -6061,7 +6289,7 @@
         "grade": null
     },
     {
-        "id": 320,
+        "id": 332,
         "name": "Maxim Musorov",
         "position": "F",
         "hp": "-",
@@ -6080,7 +6308,7 @@
         "grade": null
     },
     {
-        "id": 321,
+        "id": 333,
         "name": "Nicolas Müller",
         "position": "C/RW",
         "hp": "-",
@@ -6099,7 +6327,7 @@
         "grade": null
     },
     {
-        "id": 322,
+        "id": 334,
         "name": "Jesper Myrenberg",
         "position": "G",
         "hp": "-",
@@ -6108,7 +6336,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "Allsvenskan",
+        "league": "HockeyAllsvenskan",
         "team": "Västerås IK",
         "gp": "29",
         "g": "2.40",
@@ -6118,7 +6346,26 @@
         "grade": null
     },
     {
-        "id": 323,
+        "id": 335,
+        "name": "Jan Mysak",
+        "position": "C/LW",
+        "hp": "-",
+        "fc": "16",
+        "iss": "25",
+        "mh": "27",
+        "elite": "29",
+        "avg_rank": 27.8,
+        "league": "Czech",
+        "team": "HC Litvinov",
+        "gp": "26",
+        "g": "5",
+        "a": "4",
+        "p": "9",
+        "pim": "2",
+        "grade": null
+    },
+    {
+        "id": 336,
         "name": "Juuso Mäenpää",
         "position": "C",
         "hp": "-",
@@ -6137,7 +6384,7 @@
         "grade": null
     },
     {
-        "id": 324,
+        "id": 337,
         "name": "Joel Määttä",
         "position": "C",
         "hp": "-",
@@ -6156,7 +6403,7 @@
         "grade": null
     },
     {
-        "id": 325,
+        "id": 338,
         "name": "Rami Määttä",
         "position": "D",
         "hp": "-",
@@ -6175,7 +6422,7 @@
         "grade": null
     },
     {
-        "id": 326,
+        "id": 339,
         "name": "Jake Neighbours",
         "position": "LW",
         "hp": "-",
@@ -6194,7 +6441,7 @@
         "grade": null
     },
     {
-        "id": 327,
+        "id": 340,
         "name": "Maxim Nevolin",
         "position": "F",
         "hp": "-",
@@ -6213,7 +6460,7 @@
         "grade": null
     },
     {
-        "id": 328,
+        "id": 341,
         "name": "Thimo Nickl",
         "position": "D",
         "hp": "-",
@@ -6232,16 +6479,16 @@
         "grade": null
     },
     {
-        "id": 329,
+        "id": 342,
         "name": "Theodor Niederbach",
-        "position": "C",
+        "position": "C/RW",
         "hp": "-",
         "fc": "-",
         "iss": "-",
         "mh": "-",
         "elite": "26",
         "avg_rank": 38.8,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Frölunda HC J20",
         "gp": "40",
         "g": "15",
@@ -6251,7 +6498,7 @@
         "grade": null
     },
     {
-        "id": 330,
+        "id": 343,
         "name": "Topi Niemelä",
         "position": "D",
         "hp": "-",
@@ -6270,7 +6517,7 @@
         "grade": null
     },
     {
-        "id": 331,
+        "id": 344,
         "name": "Viljami Nieminen",
         "position": "C",
         "hp": "-",
@@ -6289,7 +6536,7 @@
         "grade": null
     },
     {
-        "id": 332,
+        "id": 345,
         "name": "Alexander Nikishin",
         "position": "D",
         "hp": "-",
@@ -6308,7 +6555,26 @@
         "grade": null
     },
     {
-        "id": 333,
+        "id": 346,
+        "name": "Dmitri Nikolayev",
+        "position": "G",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "MHL",
+        "team": "SKA-1946 St. Petersburg",
+        "gp": "35",
+        "g": "1.40",
+        "a": ".947",
+        "p": "-",
+        "pim": "-",
+        "grade": null
+    },
+    {
+        "id": 347,
         "name": "Nils Nordh",
         "position": "D",
         "hp": "-",
@@ -6317,7 +6583,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Mora IK J20",
         "gp": "39",
         "g": "1",
@@ -6327,7 +6593,7 @@
         "grade": null
     },
     {
-        "id": 334,
+        "id": 348,
         "name": "Theo Nordlund",
         "position": "D",
         "hp": "-",
@@ -6336,7 +6602,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Frölunda HC J20",
         "gp": "43",
         "g": "4",
@@ -6346,7 +6612,7 @@
         "grade": null
     },
     {
-        "id": 335,
+        "id": 349,
         "name": "Pavel Novák",
         "position": "RW/LW",
         "hp": "-",
@@ -6365,16 +6631,16 @@
         "grade": null
     },
     {
-        "id": 336,
+        "id": 350,
         "name": "Zion Nybeck",
         "position": "LW/RW",
         "hp": "-",
-        "fc": "-",
+        "fc": "30",
         "iss": "-",
         "mh": "-",
         "elite": "-",
-        "avg_rank": null,
-        "league": "SuperElit",
+        "avg_rank": 39.6,
+        "league": "J20 Nationell",
         "team": "HV71 J20",
         "gp": "42",
         "g": "27",
@@ -6384,7 +6650,7 @@
         "grade": null
     },
     {
-        "id": 337,
+        "id": 351,
         "name": "Luka Nyman",
         "position": "D/F",
         "hp": "-",
@@ -6403,7 +6669,7 @@
         "grade": null
     },
     {
-        "id": 338,
+        "id": 352,
         "name": "Cole O'Hara",
         "position": "RW",
         "hp": "-",
@@ -6422,15 +6688,15 @@
         "grade": null
     },
     {
-        "id": 339,
+        "id": 353,
         "name": "Ryan O'Rourke",
         "position": "D",
         "hp": "-",
-        "fc": "30",
+        "fc": "-",
         "iss": "-",
         "mh": "30",
         "elite": "-",
-        "avg_rank": 37.2,
+        "avg_rank": 39.6,
         "league": "OHL",
         "team": "Soo Greyhounds",
         "gp": "54",
@@ -6441,7 +6707,7 @@
         "grade": null
     },
     {
-        "id": 340,
+        "id": 354,
         "name": "Joonas Oden",
         "position": "RW/LW",
         "hp": "-",
@@ -6460,7 +6726,7 @@
         "grade": null
     },
     {
-        "id": 341,
+        "id": 355,
         "name": "Yevgeni Oksentyuk",
         "position": "RW/LW",
         "hp": "-",
@@ -6479,7 +6745,7 @@
         "grade": null
     },
     {
-        "id": 342,
+        "id": 356,
         "name": "Oliver Okuliar",
         "position": "LW",
         "hp": "-",
@@ -6498,7 +6764,7 @@
         "grade": null
     },
     {
-        "id": 343,
+        "id": 357,
         "name": "Hugo Ollas",
         "position": "G",
         "hp": "-",
@@ -6507,7 +6773,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Linköping HC J20",
         "gp": "20",
         "g": "2.43",
@@ -6517,7 +6783,7 @@
         "grade": null
     },
     {
-        "id": 344,
+        "id": 358,
         "name": "Ville Ottavainen",
         "position": "D",
         "hp": "-",
@@ -6536,7 +6802,7 @@
         "grade": null
     },
     {
-        "id": 345,
+        "id": 359,
         "name": "Dmitri Ovchinnikov",
         "position": "F",
         "hp": "-",
@@ -6555,7 +6821,26 @@
         "grade": null
     },
     {
-        "id": 346,
+        "id": 360,
+        "name": "Danila Palivko",
+        "position": "D",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "WHL",
+        "team": "Lethbridge Hurricanes",
+        "gp": "62",
+        "g": "2",
+        "a": "19",
+        "p": "21",
+        "pim": "22",
+        "grade": null
+    },
+    {
+        "id": 361,
         "name": "Kristóf Papp",
         "position": "C",
         "hp": "-",
@@ -6574,7 +6859,7 @@
         "grade": null
     },
     {
-        "id": 347,
+        "id": 362,
         "name": "Zachary Paputsakis",
         "position": "G",
         "hp": "-",
@@ -6593,7 +6878,7 @@
         "grade": null
     },
     {
-        "id": 348,
+        "id": 363,
         "name": "Alexander Pashin",
         "position": "F",
         "hp": "-",
@@ -6612,7 +6897,7 @@
         "grade": null
     },
     {
-        "id": 349,
+        "id": 364,
         "name": "Owen Pederson",
         "position": "LW",
         "hp": "-",
@@ -6631,7 +6916,7 @@
         "grade": null
     },
     {
-        "id": 350,
+        "id": 365,
         "name": "Senna Peeters",
         "position": "C",
         "hp": "-",
@@ -6650,7 +6935,7 @@
         "grade": null
     },
     {
-        "id": 351,
+        "id": 366,
         "name": "Marc-Antoine Pépin",
         "position": "D",
         "hp": "-",
@@ -6669,7 +6954,26 @@
         "grade": null
     },
     {
-        "id": 352,
+        "id": 367,
+        "name": "Jacob Perreault",
+        "position": "RW",
+        "hp": "-",
+        "fc": "23",
+        "iss": "27",
+        "mh": "28",
+        "elite": "23",
+        "avg_rank": 28.6,
+        "league": "OHL",
+        "team": "Sarnia Sting",
+        "gp": "57",
+        "g": "39",
+        "a": "31",
+        "p": "70",
+        "pim": "40",
+        "grade": null
+    },
+    {
+        "id": 368,
         "name": "Viktor Persson",
         "position": "D",
         "hp": "-",
@@ -6678,7 +6982,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Brynäs IF J20",
         "gp": "26",
         "g": "5",
@@ -6688,7 +6992,26 @@
         "grade": null
     },
     {
-        "id": 353,
+        "id": 369,
+        "name": "John-Jason Peterka",
+        "position": "LW",
+        "hp": "-",
+        "fc": "29",
+        "iss": "-",
+        "mh": "17",
+        "elite": "24",
+        "avg_rank": 30.8,
+        "league": "DEL",
+        "team": "EHC München",
+        "gp": "42",
+        "g": "7",
+        "a": "4",
+        "p": "11",
+        "pim": "14",
+        "grade": null
+    },
+    {
+        "id": 370,
         "name": "Brayden Peters",
         "position": "G",
         "hp": "-",
@@ -6707,7 +7030,7 @@
         "grade": null
     },
     {
-        "id": 354,
+        "id": 371,
         "name": "Dylan Peterson",
         "position": "C",
         "hp": "-",
@@ -6726,7 +7049,7 @@
         "grade": null
     },
     {
-        "id": 355,
+        "id": 372,
         "name": "Hugo Pettersson",
         "position": "C/LW",
         "hp": "-",
@@ -6735,7 +7058,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Södertälje SK J20",
         "gp": "42",
         "g": "14",
@@ -6745,7 +7068,7 @@
         "grade": null
     },
     {
-        "id": 356,
+        "id": 373,
         "name": "Isaak Phillips",
         "position": "D",
         "hp": "-",
@@ -6764,7 +7087,7 @@
         "grade": null
     },
     {
-        "id": 357,
+        "id": 374,
         "name": "Riley Piercey",
         "position": "RW",
         "hp": "-",
@@ -6783,7 +7106,7 @@
         "grade": null
     },
     {
-        "id": 358,
+        "id": 375,
         "name": "Josh Pillar",
         "position": "C",
         "hp": "-",
@@ -6802,7 +7125,7 @@
         "grade": null
     },
     {
-        "id": 359,
+        "id": 376,
         "name": "Vitali Pinchuk",
         "position": "C",
         "hp": "-",
@@ -6821,26 +7144,26 @@
         "grade": null
     },
     {
-        "id": 360,
-        "name": "Jérémie Poirier",
-        "position": "D",
+        "id": 377,
+        "name": "Denis Pochivalov",
+        "position": "F",
         "hp": "-",
-        "fc": "24",
+        "fc": "-",
         "iss": "-",
         "mh": "-",
-        "elite": "28",
-        "avg_rank": 35.6,
-        "league": "QMJHL",
-        "team": "Saint John Sea Dogs",
-        "gp": "64",
-        "g": "20",
-        "a": "33",
-        "p": "53",
-        "pim": "50",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "VHL",
+        "team": "Torpedo-Gorky NN",
+        "gp": "35",
+        "g": "1",
+        "a": "5",
+        "p": "6",
+        "pim": "12",
         "grade": null
     },
     {
-        "id": 361,
+        "id": 378,
         "name": "Rémi Poirier",
         "position": "G",
         "hp": "-",
@@ -6859,7 +7182,7 @@
         "grade": null
     },
     {
-        "id": 362,
+        "id": 379,
         "name": "Vasili Ponomaryov",
         "position": "C",
         "hp": "-",
@@ -6878,7 +7201,7 @@
         "grade": null
     },
     {
-        "id": 363,
+        "id": 380,
         "name": "Isak Posch",
         "position": "G",
         "hp": "-",
@@ -6887,7 +7210,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Leksands IF J20",
         "gp": "13",
         "g": "1.72",
@@ -6897,7 +7220,7 @@
         "grade": null
     },
     {
-        "id": 364,
+        "id": 381,
         "name": "Eamon Powell",
         "position": "D",
         "hp": "-",
@@ -6916,7 +7239,7 @@
         "grade": null
     },
     {
-        "id": 365,
+        "id": 382,
         "name": "Jordan Power",
         "position": "D",
         "hp": "-",
@@ -6935,7 +7258,7 @@
         "grade": null
     },
     {
-        "id": 366,
+        "id": 383,
         "name": "Luka Profaca",
         "position": "D",
         "hp": "-",
@@ -6954,7 +7277,7 @@
         "grade": null
     },
     {
-        "id": 367,
+        "id": 384,
         "name": "Luke Prokop",
         "position": "D",
         "hp": "-",
@@ -6973,7 +7296,7 @@
         "grade": null
     },
     {
-        "id": 368,
+        "id": 385,
         "name": "Aidan Prueter",
         "position": "C",
         "hp": "-",
@@ -6992,7 +7315,7 @@
         "grade": null
     },
     {
-        "id": 369,
+        "id": 386,
         "name": "Artyom Pugachyov",
         "position": "RW",
         "hp": "-",
@@ -7011,7 +7334,7 @@
         "grade": null
     },
     {
-        "id": 370,
+        "id": 387,
         "name": "Petteri Puhakka",
         "position": "F",
         "hp": "-",
@@ -7030,7 +7353,7 @@
         "grade": null
     },
     {
-        "id": 371,
+        "id": 388,
         "name": "Colin Purcell",
         "position": "G",
         "hp": "-",
@@ -7049,7 +7372,7 @@
         "grade": null
     },
     {
-        "id": 372,
+        "id": 389,
         "name": "Kasper Puutio",
         "position": "D",
         "hp": "-",
@@ -7068,7 +7391,7 @@
         "grade": null
     },
     {
-        "id": 373,
+        "id": 390,
         "name": "Daniil Pylenkov",
         "position": "D",
         "hp": "-",
@@ -7087,15 +7410,15 @@
         "grade": null
     },
     {
-        "id": 374,
+        "id": 391,
         "name": "Jaromir Pytlik",
         "position": "C",
         "hp": "-",
-        "fc": "29",
+        "fc": "-",
         "iss": "-",
         "mh": "-",
         "elite": "-",
-        "avg_rank": 39.4,
+        "avg_rank": null,
         "league": "OHL",
         "team": "Soo Greyhounds",
         "gp": "56",
@@ -7106,7 +7429,45 @@
         "grade": null
     },
     {
-        "id": 375,
+        "id": 392,
+        "name": "Mikael Pyyhtiä",
+        "position": "C",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "U20 SM-sarja",
+        "team": "TPS U20",
+        "gp": "42",
+        "g": "11",
+        "a": "30",
+        "p": "41",
+        "pim": "8",
+        "grade": null
+    },
+    {
+        "id": 393,
+        "name": "Jiri Pärssinen",
+        "position": "D",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "U20 SM-sarja",
+        "team": "TPS U20",
+        "gp": "23",
+        "g": "0",
+        "a": "1",
+        "p": "1",
+        "pim": "12",
+        "grade": null
+    },
+    {
+        "id": 394,
         "name": "Ruben Rafkin",
         "position": "D",
         "hp": "-",
@@ -7125,7 +7486,7 @@
         "grade": null
     },
     {
-        "id": 376,
+        "id": 395,
         "name": "Matias Rajaniemi",
         "position": "D",
         "hp": "-",
@@ -7144,7 +7505,7 @@
         "grade": null
     },
     {
-        "id": 377,
+        "id": 396,
         "name": "Lucas Ramberg",
         "position": "D",
         "hp": "-",
@@ -7153,7 +7514,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Luleå HF J20",
         "gp": "30",
         "g": "3",
@@ -7163,9 +7524,9 @@
         "grade": null
     },
     {
-        "id": 378,
+        "id": 397,
         "name": "Dmitri Rashevsky",
-        "position": "F",
+        "position": "RW",
         "hp": "-",
         "fc": "-",
         "iss": "-",
@@ -7182,7 +7543,7 @@
         "grade": null
     },
     {
-        "id": 379,
+        "id": 398,
         "name": "Adam Raska",
         "position": "LW/RW",
         "hp": "-",
@@ -7201,7 +7562,7 @@
         "grade": null
     },
     {
-        "id": 380,
+        "id": 399,
         "name": "Jake Ratzlaff",
         "position": "D",
         "hp": "-",
@@ -7220,7 +7581,26 @@
         "grade": null
     },
     {
-        "id": 381,
+        "id": 400,
+        "name": "Tim Rego",
+        "position": "D",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "AJHL",
+        "team": "Brooks Bandits",
+        "gp": "54",
+        "g": "24",
+        "a": "37",
+        "p": "61",
+        "pim": "52",
+        "grade": null
+    },
+    {
+        "id": 401,
         "name": "Samuel Rehak",
         "position": "C",
         "hp": "-",
@@ -7239,7 +7619,26 @@
         "grade": null
     },
     {
-        "id": 382,
+        "id": 402,
+        "name": "Lukas Reichel",
+        "position": "LW",
+        "hp": "-",
+        "fc": "-",
+        "iss": "31",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": 39.8,
+        "league": "DEL",
+        "team": "Eisbären Berlin",
+        "gp": "42",
+        "g": "12",
+        "a": "12",
+        "p": "24",
+        "pim": "0",
+        "grade": null
+    },
+    {
+        "id": 403,
         "name": "Luke Reid",
         "position": "D",
         "hp": "-",
@@ -7258,7 +7657,7 @@
         "grade": null
     },
     {
-        "id": 383,
+        "id": 404,
         "name": "Filip Reisnecker",
         "position": "RW",
         "hp": "-",
@@ -7277,7 +7676,7 @@
         "grade": null
     },
     {
-        "id": 384,
+        "id": 405,
         "name": "Michael Renwick",
         "position": "D",
         "hp": "-",
@@ -7296,7 +7695,7 @@
         "grade": null
     },
     {
-        "id": 385,
+        "id": 406,
         "name": "Rhett Rhinehart",
         "position": "D",
         "hp": "-",
@@ -7315,7 +7714,7 @@
         "grade": null
     },
     {
-        "id": 386,
+        "id": 407,
         "name": "Carsen Richels",
         "position": "F",
         "hp": "-",
@@ -7334,7 +7733,7 @@
         "grade": null
     },
     {
-        "id": 387,
+        "id": 408,
         "name": "Grant Riley",
         "position": "G",
         "hp": "-",
@@ -7353,7 +7752,7 @@
         "grade": null
     },
     {
-        "id": 388,
+        "id": 409,
         "name": "Axel Rindell",
         "position": "D",
         "hp": "-",
@@ -7372,9 +7771,28 @@
         "grade": null
     },
     {
-        "id": 389,
+        "id": 410,
+        "name": "Tristen Robins",
+        "position": "RW",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "WHL",
+        "team": "Saskatoon Blades",
+        "gp": "62",
+        "g": "33",
+        "a": "40",
+        "p": "73",
+        "pim": "28",
+        "grade": null
+    },
+    {
+        "id": 411,
         "name": "Dylan Robinson",
-        "position": "D",
+        "position": "C",
         "hp": "-",
         "fc": "-",
         "iss": "-",
@@ -7391,7 +7809,7 @@
         "grade": null
     },
     {
-        "id": 390,
+        "id": 412,
         "name": "Théo Rochette",
         "position": "C",
         "hp": "-",
@@ -7410,7 +7828,7 @@
         "grade": null
     },
     {
-        "id": 391,
+        "id": 413,
         "name": "Casey Roepke",
         "position": "D",
         "hp": "-",
@@ -7429,7 +7847,7 @@
         "grade": null
     },
     {
-        "id": 392,
+        "id": 414,
         "name": "Ryder Rolston",
         "position": "F",
         "hp": "-",
@@ -7448,7 +7866,7 @@
         "grade": null
     },
     {
-        "id": 393,
+        "id": 415,
         "name": "Ben Roode",
         "position": "D",
         "hp": "-",
@@ -7467,7 +7885,7 @@
         "grade": null
     },
     {
-        "id": 394,
+        "id": 416,
         "name": "Cameron Rowe",
         "position": "G",
         "hp": "-",
@@ -7486,7 +7904,7 @@
         "grade": null
     },
     {
-        "id": 395,
+        "id": 417,
         "name": "Pier-Olivier Roy",
         "position": "LW",
         "hp": "-",
@@ -7505,7 +7923,7 @@
         "grade": null
     },
     {
-        "id": 396,
+        "id": 418,
         "name": "Ilya Rychkov",
         "position": "F",
         "hp": "-",
@@ -7524,7 +7942,7 @@
         "grade": null
     },
     {
-        "id": 397,
+        "id": 419,
         "name": "Riku Räihä",
         "position": "G",
         "hp": "-",
@@ -7543,7 +7961,7 @@
         "grade": null
     },
     {
-        "id": 398,
+        "id": 420,
         "name": "David Sacco",
         "position": "RW",
         "hp": "-",
@@ -7562,7 +7980,7 @@
         "grade": null
     },
     {
-        "id": 399,
+        "id": 421,
         "name": "Carter Savoie",
         "position": "LW",
         "hp": "-",
@@ -7581,7 +7999,7 @@
         "grade": null
     },
     {
-        "id": 400,
+        "id": 422,
         "name": "Nicolas Savoie",
         "position": "D",
         "hp": "-",
@@ -7600,7 +8018,7 @@
         "grade": null
     },
     {
-        "id": 401,
+        "id": 423,
         "name": "Wyatt Schingoethe",
         "position": "C",
         "hp": "-",
@@ -7619,7 +8037,7 @@
         "grade": null
     },
     {
-        "id": 402,
+        "id": 424,
         "name": "Ben Schoen",
         "position": "F",
         "hp": "-",
@@ -7638,7 +8056,7 @@
         "grade": null
     },
     {
-        "id": 403,
+        "id": 425,
         "name": "Nate Schweitzer",
         "position": "D",
         "hp": "-",
@@ -7657,7 +8075,7 @@
         "grade": null
     },
     {
-        "id": 404,
+        "id": 426,
         "name": "Donovan Sebrango",
         "position": "D",
         "hp": "-",
@@ -7676,7 +8094,7 @@
         "grade": null
     },
     {
-        "id": 405,
+        "id": 427,
         "name": "Christoffer Sedoff",
         "position": "D",
         "hp": "-",
@@ -7695,7 +8113,7 @@
         "grade": null
     },
     {
-        "id": 406,
+        "id": 428,
         "name": "Nolan Seed",
         "position": "D",
         "hp": "-",
@@ -7714,7 +8132,7 @@
         "grade": null
     },
     {
-        "id": 407,
+        "id": 429,
         "name": "Ronan Seeley",
         "position": "D",
         "hp": "-",
@@ -7733,7 +8151,7 @@
         "grade": null
     },
     {
-        "id": 408,
+        "id": 430,
         "name": "Primo Self",
         "position": "F",
         "hp": "-",
@@ -7752,7 +8170,7 @@
         "grade": null
     },
     {
-        "id": 409,
+        "id": 431,
         "name": "Peetro Seppälä",
         "position": "D",
         "hp": "-",
@@ -7771,7 +8189,7 @@
         "grade": null
     },
     {
-        "id": 410,
+        "id": 432,
         "name": "Cole Shepard",
         "position": "LW",
         "hp": "-",
@@ -7790,7 +8208,7 @@
         "grade": null
     },
     {
-        "id": 411,
+        "id": 433,
         "name": "Artem Shlaine",
         "position": "C",
         "hp": "-",
@@ -7800,7 +8218,7 @@
         "elite": "-",
         "avg_rank": null,
         "league": "USHS-Prep",
-        "team": "Shattuck St. Mary's Midget Prep",
+        "team": "Shattuck St. Mary's 18U Prep",
         "gp": "46",
         "g": "26",
         "a": "52",
@@ -7809,7 +8227,7 @@
         "grade": null
     },
     {
-        "id": 412,
+        "id": 434,
         "name": "Nikita Shuidin",
         "position": "F",
         "hp": "-",
@@ -7828,7 +8246,7 @@
         "grade": null
     },
     {
-        "id": 413,
+        "id": 435,
         "name": "Xavier Simoneau",
         "position": "C",
         "hp": "-",
@@ -7847,7 +8265,7 @@
         "grade": null
     },
     {
-        "id": 414,
+        "id": 436,
         "name": "Kasper Simontaival",
         "position": "RW",
         "hp": "-",
@@ -7866,7 +8284,7 @@
         "grade": null
     },
     {
-        "id": 415,
+        "id": 437,
         "name": "Vsevolod Skotnikov",
         "position": "G",
         "hp": "-",
@@ -7885,7 +8303,7 @@
         "grade": null
     },
     {
-        "id": 416,
+        "id": 438,
         "name": "Landon Slaggert",
         "position": "C",
         "hp": "-",
@@ -7904,7 +8322,7 @@
         "grade": null
     },
     {
-        "id": 417,
+        "id": 439,
         "name": "Grant Slukynsky",
         "position": "F",
         "hp": "-",
@@ -7923,9 +8341,9 @@
         "grade": null
     },
     {
-        "id": 418,
+        "id": 440,
         "name": "Ty Smilanic",
-        "position": "F",
+        "position": "C",
         "hp": "-",
         "fc": "-",
         "iss": "19",
@@ -7942,7 +8360,7 @@
         "grade": null
     },
     {
-        "id": 419,
+        "id": 441,
         "name": "Jack Smith",
         "position": "F",
         "hp": "-",
@@ -7961,7 +8379,7 @@
         "grade": null
     },
     {
-        "id": 420,
+        "id": 442,
         "name": "Mitchell Smith",
         "position": "D",
         "hp": "-",
@@ -7980,7 +8398,7 @@
         "grade": null
     },
     {
-        "id": 421,
+        "id": 443,
         "name": "Yegor Sokolov",
         "position": "RW/LW",
         "hp": "-",
@@ -7999,7 +8417,7 @@
         "grade": null
     },
     {
-        "id": 422,
+        "id": 444,
         "name": "Ilya Solovyov",
         "position": "D",
         "hp": "-",
@@ -8018,7 +8436,7 @@
         "grade": null
     },
     {
-        "id": 423,
+        "id": 445,
         "name": "Carter Souch",
         "position": "F",
         "hp": "-",
@@ -8037,7 +8455,7 @@
         "grade": null
     },
     {
-        "id": 424,
+        "id": 446,
         "name": "Justin Sourdif",
         "position": "C",
         "hp": "-",
@@ -8056,7 +8474,7 @@
         "grade": null
     },
     {
-        "id": 425,
+        "id": 447,
         "name": "Calle Spaberg Olsen",
         "position": "LW",
         "hp": "-",
@@ -8065,7 +8483,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Rögle BK J20",
         "gp": "33",
         "g": "9",
@@ -8075,7 +8493,7 @@
         "grade": null
     },
     {
-        "id": 426,
+        "id": 448,
         "name": "Shawn Spearing",
         "position": "D",
         "hp": "-",
@@ -8094,7 +8512,7 @@
         "grade": null
     },
     {
-        "id": 427,
+        "id": 449,
         "name": "Timofei Spitserov",
         "position": "F",
         "hp": "-",
@@ -8113,7 +8531,7 @@
         "grade": null
     },
     {
-        "id": 428,
+        "id": 450,
         "name": "Marko Stacha",
         "position": "D",
         "hp": "-",
@@ -8132,7 +8550,7 @@
         "grade": null
     },
     {
-        "id": 429,
+        "id": 451,
         "name": "Åke Stakkestad",
         "position": "C",
         "hp": "-",
@@ -8141,7 +8559,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "J20 Elit",
+        "league": "J20 Region",
         "team": "BIK Karlskoga J20",
         "gp": "16",
         "g": "16",
@@ -8151,7 +8569,7 @@
         "grade": null
     },
     {
-        "id": 430,
+        "id": 452,
         "name": "Sam Stange",
         "position": "RW",
         "hp": "-",
@@ -8170,7 +8588,7 @@
         "grade": null
     },
     {
-        "id": 431,
+        "id": 453,
         "name": "Logan Stein",
         "position": "G",
         "hp": "-",
@@ -8189,7 +8607,7 @@
         "grade": null
     },
     {
-        "id": 432,
+        "id": 454,
         "name": "Kirill Steklov",
         "position": "D",
         "hp": "-",
@@ -8208,15 +8626,34 @@
         "grade": null
     },
     {
-        "id": 433,
-        "name": "Antonio Stranges",
-        "position": "C/LW",
+        "id": 455,
+        "name": "Sean Stewart",
+        "position": "D",
         "hp": "-",
-        "fc": "25",
+        "fc": "-",
         "iss": "-",
         "mh": "-",
         "elite": "-",
-        "avg_rank": 38.6,
+        "avg_rank": null,
+        "league": "QMJHL",
+        "team": "Moncton Wildcats",
+        "gp": "61",
+        "g": "2",
+        "a": "11",
+        "p": "13",
+        "pim": "58",
+        "grade": null
+    },
+    {
+        "id": 456,
+        "name": "Antonio Stranges",
+        "position": "C/LW",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
         "league": "OHL",
         "team": "London Knights",
         "gp": "61",
@@ -8227,7 +8664,7 @@
         "grade": null
     },
     {
-        "id": 434,
+        "id": 457,
         "name": "Hugo Styf",
         "position": "D",
         "hp": "-",
@@ -8236,7 +8673,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "MODO Hockey J20",
         "gp": "42",
         "g": "7",
@@ -8246,7 +8683,7 @@
         "grade": null
     },
     {
-        "id": 435,
+        "id": 458,
         "name": "Albin Sundsvik",
         "position": "C",
         "hp": "-",
@@ -8265,7 +8702,7 @@
         "grade": null
     },
     {
-        "id": 436,
+        "id": 459,
         "name": "Oliver Suni",
         "position": "F",
         "hp": "-",
@@ -8284,7 +8721,7 @@
         "grade": null
     },
     {
-        "id": 437,
+        "id": 460,
         "name": "Janis Svanenbergs",
         "position": "F",
         "hp": "-",
@@ -8303,7 +8740,7 @@
         "grade": null
     },
     {
-        "id": 438,
+        "id": 461,
         "name": "Lukas Svejkovsky",
         "position": "C/RW",
         "hp": "-",
@@ -8322,7 +8759,7 @@
         "grade": null
     },
     {
-        "id": 439,
+        "id": 462,
         "name": "Austen Swankler",
         "position": "C",
         "hp": "-",
@@ -8341,7 +8778,7 @@
         "grade": null
     },
     {
-        "id": 440,
+        "id": 463,
         "name": "Ethan Szmagaj",
         "position": "D",
         "hp": "-",
@@ -8360,7 +8797,7 @@
         "grade": null
     },
     {
-        "id": 441,
+        "id": 464,
         "name": "Mateusz Szurowski",
         "position": "C/W",
         "hp": "-",
@@ -8369,7 +8806,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Linköping HC J20",
         "gp": "36",
         "g": "8",
@@ -8379,7 +8816,7 @@
         "grade": null
     },
     {
-        "id": 442,
+        "id": 465,
         "name": "Garrett Szydlowski",
         "position": "RW",
         "hp": "-",
@@ -8398,7 +8835,7 @@
         "grade": null
     },
     {
-        "id": 443,
+        "id": 466,
         "name": "Gabriel Säll",
         "position": "LW",
         "hp": "-",
@@ -8407,7 +8844,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Skellefteå AIK J20",
         "gp": "44",
         "g": "7",
@@ -8417,7 +8854,7 @@
         "grade": null
     },
     {
-        "id": 444,
+        "id": 467,
         "name": "Anthony Tabak",
         "position": "LW",
         "hp": "-",
@@ -8436,7 +8873,7 @@
         "grade": null
     },
     {
-        "id": 445,
+        "id": 468,
         "name": "Kirill Tankov",
         "position": "F",
         "hp": "-",
@@ -8455,7 +8892,7 @@
         "grade": null
     },
     {
-        "id": 446,
+        "id": 469,
         "name": "Kristian Tanus",
         "position": "C/W",
         "hp": "-",
@@ -8474,7 +8911,7 @@
         "grade": null
     },
     {
-        "id": 447,
+        "id": 470,
         "name": "Trey Taylor",
         "position": "D",
         "hp": "-",
@@ -8493,7 +8930,7 @@
         "grade": null
     },
     {
-        "id": 448,
+        "id": 471,
         "name": "Oscar Tellström",
         "position": "RW",
         "hp": "-",
@@ -8502,7 +8939,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "Division 1",
+        "league": "HockeyEttan",
         "team": "Vännäs HC",
         "gp": "19",
         "g": "13",
@@ -8512,7 +8949,7 @@
         "grade": null
     },
     {
-        "id": 449,
+        "id": 472,
         "name": "Zack Terry",
         "position": "D",
         "hp": "-",
@@ -8531,7 +8968,7 @@
         "grade": null
     },
     {
-        "id": 450,
+        "id": 473,
         "name": "Daniil Tesanov",
         "position": "C",
         "hp": "-",
@@ -8550,7 +8987,7 @@
         "grade": null
     },
     {
-        "id": 451,
+        "id": 474,
         "name": "Aidan Thompson",
         "position": "F",
         "hp": "-",
@@ -8569,7 +9006,7 @@
         "grade": null
     },
     {
-        "id": 452,
+        "id": 475,
         "name": "Jack Thompson",
         "position": "D",
         "hp": "-",
@@ -8588,7 +9025,7 @@
         "grade": null
     },
     {
-        "id": 453,
+        "id": 476,
         "name": "Bryan Thomson",
         "position": "G",
         "hp": "-",
@@ -8607,7 +9044,26 @@
         "grade": null
     },
     {
-        "id": 454,
+        "id": 477,
+        "name": "Albin Thyni Johansson",
+        "position": "D",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "J20 Nationell",
+        "team": "Luleå HF J20",
+        "gp": "36",
+        "g": "3",
+        "a": "9",
+        "p": "12",
+        "pim": "24",
+        "grade": null
+    },
+    {
+        "id": 478,
         "name": "Cameron Tolnai",
         "position": "C",
         "hp": "-",
@@ -8626,7 +9082,7 @@
         "grade": null
     },
     {
-        "id": 455,
+        "id": 479,
         "name": "Luke Toporowski",
         "position": "LW",
         "hp": "-",
@@ -8645,26 +9101,7 @@
         "grade": null
     },
     {
-        "id": 456,
-        "name": "Daniel Torgersson",
-        "position": "LW/RW",
-        "hp": "-",
-        "fc": "-",
-        "iss": "-",
-        "mh": "-",
-        "elite": "30",
-        "avg_rank": 39.6,
-        "league": "SuperElit",
-        "team": "Frölunda HC J20",
-        "gp": "39",
-        "g": "26",
-        "a": "18",
-        "p": "44",
-        "pim": "24",
-        "grade": null
-    },
-    {
-        "id": 457,
+        "id": 480,
         "name": "Miguël Tourigny",
         "position": "D",
         "hp": "-",
@@ -8683,7 +9120,7 @@
         "grade": null
     },
     {
-        "id": 458,
+        "id": 481,
         "name": "Alexander Tracy",
         "position": "G",
         "hp": "-",
@@ -8702,7 +9139,7 @@
         "grade": null
     },
     {
-        "id": 459,
+        "id": 482,
         "name": "Travis Treloar",
         "position": "C",
         "hp": "-",
@@ -8721,7 +9158,7 @@
         "grade": null
     },
     {
-        "id": 460,
+        "id": 483,
         "name": "Philip Tresca",
         "position": "C",
         "hp": "-",
@@ -8740,7 +9177,7 @@
         "grade": null
     },
     {
-        "id": 461,
+        "id": 484,
         "name": "Bogdan Trineyev",
         "position": "F",
         "hp": "-",
@@ -8759,7 +9196,7 @@
         "grade": null
     },
     {
-        "id": 462,
+        "id": 485,
         "name": "Jacob Truscott",
         "position": "D",
         "hp": "-",
@@ -8778,7 +9215,7 @@
         "grade": null
     },
     {
-        "id": 463,
+        "id": 486,
         "name": "Alexei Tsyplakov",
         "position": "F",
         "hp": "-",
@@ -8797,7 +9234,7 @@
         "grade": null
     },
     {
-        "id": 464,
+        "id": 487,
         "name": "Luke Tuch",
         "position": "LW",
         "hp": "-",
@@ -8816,7 +9253,7 @@
         "grade": null
     },
     {
-        "id": 465,
+        "id": 488,
         "name": "Jesse Tucker",
         "position": "C",
         "hp": "-",
@@ -8835,7 +9272,7 @@
         "grade": null
     },
     {
-        "id": 466,
+        "id": 489,
         "name": "Tyler Tullio",
         "position": "C",
         "hp": "-",
@@ -8854,7 +9291,7 @@
         "grade": null
     },
     {
-        "id": 467,
+        "id": 490,
         "name": "Noah Tussey",
         "position": "F",
         "hp": "-",
@@ -8873,7 +9310,7 @@
         "grade": null
     },
     {
-        "id": 468,
+        "id": 491,
         "name": "Ryan Tverberg",
         "position": "C",
         "hp": "-",
@@ -8892,7 +9329,7 @@
         "grade": null
     },
     {
-        "id": 469,
+        "id": 492,
         "name": "Tucker Tynan",
         "position": "G",
         "hp": "-",
@@ -8911,7 +9348,7 @@
         "grade": null
     },
     {
-        "id": 470,
+        "id": 493,
         "name": "Pavel Tyutnev",
         "position": "C",
         "hp": "-",
@@ -8930,7 +9367,7 @@
         "grade": null
     },
     {
-        "id": 471,
+        "id": 494,
         "name": "Dmitri Tyuvilin",
         "position": "D",
         "hp": "-",
@@ -8949,7 +9386,7 @@
         "grade": null
     },
     {
-        "id": 472,
+        "id": 495,
         "name": "Oliver Tärnström",
         "position": "C",
         "hp": "-",
@@ -8958,7 +9395,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "AIK J20",
         "gp": "41",
         "g": "11",
@@ -8968,7 +9405,26 @@
         "grade": null
     },
     {
-        "id": 473,
+        "id": 496,
+        "name": "Eric Uba",
+        "position": "RW",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "OHL",
+        "team": "Guelph Storm",
+        "gp": "63",
+        "g": "29",
+        "a": "29",
+        "p": "58",
+        "pim": "61",
+        "grade": null
+    },
+    {
+        "id": 497,
         "name": "Jake Uberti",
         "position": "C",
         "hp": "-",
@@ -8987,7 +9443,7 @@
         "grade": null
     },
     {
-        "id": 474,
+        "id": 498,
         "name": "Artyom Udot",
         "position": "F",
         "hp": "-",
@@ -9006,7 +9462,7 @@
         "grade": null
     },
     {
-        "id": 475,
+        "id": 499,
         "name": "Zach Uens",
         "position": "D",
         "hp": "-",
@@ -9025,7 +9481,7 @@
         "grade": null
     },
     {
-        "id": 476,
+        "id": 500,
         "name": "Zach Urdahl",
         "position": "F",
         "hp": "-",
@@ -9044,7 +9500,7 @@
         "grade": null
     },
     {
-        "id": 477,
+        "id": 501,
         "name": "Ilya Usov",
         "position": "C",
         "hp": "-",
@@ -9063,7 +9519,7 @@
         "grade": null
     },
     {
-        "id": 478,
+        "id": 502,
         "name": "Reid Valade",
         "position": "RW",
         "hp": "-",
@@ -9082,7 +9538,7 @@
         "grade": null
     },
     {
-        "id": 479,
+        "id": 503,
         "name": "William Veillette",
         "position": "C",
         "hp": "-",
@@ -9101,7 +9557,7 @@
         "grade": null
     },
     {
-        "id": 480,
+        "id": 504,
         "name": "Evan Vierling",
         "position": "C",
         "hp": "-",
@@ -9120,7 +9576,7 @@
         "grade": null
     },
     {
-        "id": 481,
+        "id": 505,
         "name": "Jesper Vikman",
         "position": "G",
         "hp": "-",
@@ -9129,7 +9585,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "AIK J20",
         "gp": "24",
         "g": "3.06",
@@ -9139,7 +9595,7 @@
         "grade": null
     },
     {
-        "id": 482,
+        "id": 506,
         "name": "William Villeneuve",
         "position": "D",
         "hp": "-",
@@ -9158,26 +9614,7 @@
         "grade": null
     },
     {
-        "id": 483,
-        "name": "Eemil Viro",
-        "position": "D",
-        "hp": "-",
-        "fc": "-",
-        "iss": "-",
-        "mh": "-",
-        "elite": "-",
-        "avg_rank": null,
-        "league": "Liiga",
-        "team": "TPS",
-        "gp": "29",
-        "g": "0",
-        "a": "3",
-        "p": "3",
-        "pim": "8",
-        "grade": null
-    },
-    {
-        "id": 484,
+        "id": 507,
         "name": "Raimonds Vitolins",
         "position": "F",
         "hp": "-",
@@ -9196,7 +9633,7 @@
         "grade": null
     },
     {
-        "id": 485,
+        "id": 508,
         "name": "Janis Voris",
         "position": "G",
         "hp": "-",
@@ -9215,7 +9652,7 @@
         "grade": null
     },
     {
-        "id": 486,
+        "id": 509,
         "name": "Michael Vorlicky",
         "position": "D",
         "hp": "-",
@@ -9234,7 +9671,7 @@
         "grade": null
     },
     {
-        "id": 487,
+        "id": 510,
         "name": "Winter Wallace",
         "position": "C",
         "hp": "-",
@@ -9244,7 +9681,7 @@
         "elite": "-",
         "avg_rank": null,
         "league": "USHS-Prep",
-        "team": "Shattuck St. Mary's Midget Prep",
+        "team": "Shattuck St. Mary's 18U Prep",
         "gp": "44",
         "g": "19",
         "a": "31",
@@ -9253,26 +9690,7 @@
         "grade": null
     },
     {
-        "id": 488,
-        "name": "William Wallinder",
-        "position": "D",
-        "hp": "-",
-        "fc": "-",
-        "iss": "-",
-        "mh": "-",
-        "elite": "-",
-        "avg_rank": null,
-        "league": "SuperElit",
-        "team": "MODO Hockey J20",
-        "gp": "37",
-        "g": "5",
-        "a": "19",
-        "p": "24",
-        "pim": "16",
-        "grade": null
-    },
-    {
-        "id": 489,
+        "id": 511,
         "name": "Leon Wallner",
         "position": "LW",
         "hp": "-",
@@ -9281,7 +9699,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Södertälje SK J20",
         "gp": "35",
         "g": "6",
@@ -9291,7 +9709,7 @@
         "grade": null
     },
     {
-        "id": 490,
+        "id": 512,
         "name": "Danny Weight",
         "position": "F",
         "hp": "-",
@@ -9310,26 +9728,7 @@
         "grade": null
     },
     {
-        "id": 491,
-        "name": "Ozzy Wiesblatt",
-        "position": "RW",
-        "hp": "-",
-        "fc": "-",
-        "iss": "-",
-        "mh": "29",
-        "elite": "-",
-        "avg_rank": 39.4,
-        "league": "WHL",
-        "team": "Prince Albert Raiders",
-        "gp": "64",
-        "g": "25",
-        "a": "45",
-        "p": "70",
-        "pim": "36",
-        "grade": null
-    },
-    {
-        "id": 492,
+        "id": 513,
         "name": "Jack Williams",
         "position": "RW",
         "hp": "-",
@@ -9348,7 +9747,7 @@
         "grade": null
     },
     {
-        "id": 493,
+        "id": 514,
         "name": "Josh Williams",
         "position": "RW",
         "hp": "-",
@@ -9367,7 +9766,7 @@
         "grade": null
     },
     {
-        "id": 494,
+        "id": 515,
         "name": "Adam Wilsby",
         "position": "D",
         "hp": "-",
@@ -9376,7 +9775,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "Allsvenskan",
+        "league": "HockeyAllsvenskan",
         "team": "Södertälje SK",
         "gp": "41",
         "g": "3",
@@ -9386,7 +9785,7 @@
         "grade": null
     },
     {
-        "id": 495,
+        "id": 516,
         "name": "Avery Winslow",
         "position": "D",
         "hp": "-",
@@ -9405,7 +9804,7 @@
         "grade": null
     },
     {
-        "id": 496,
+        "id": 517,
         "name": "Zayde Wisdom",
         "position": "C",
         "hp": "-",
@@ -9424,7 +9823,26 @@
         "grade": null
     },
     {
-        "id": 497,
+        "id": 518,
+        "name": "Mitchell Wolfe",
+        "position": "D",
+        "hp": "-",
+        "fc": "-",
+        "iss": "-",
+        "mh": "-",
+        "elite": "-",
+        "avg_rank": null,
+        "league": "USHS-MN",
+        "team": "Andover Huskies",
+        "gp": "25",
+        "g": "11",
+        "a": "24",
+        "p": "35",
+        "pim": "8",
+        "grade": null
+    },
+    {
+        "id": 519,
         "name": "Nicholas Wong",
         "position": "C",
         "hp": "-",
@@ -9443,7 +9861,7 @@
         "grade": null
     },
     {
-        "id": 498,
+        "id": 520,
         "name": "Alexei Yegorov",
         "position": "D/F",
         "hp": "-",
@@ -9462,7 +9880,7 @@
         "grade": null
     },
     {
-        "id": 499,
+        "id": 521,
         "name": "Chase Yoder",
         "position": "F",
         "hp": "-",
@@ -9481,7 +9899,7 @@
         "grade": null
     },
     {
-        "id": 500,
+        "id": 522,
         "name": "Alex Young",
         "position": "C",
         "hp": "-",
@@ -9500,7 +9918,7 @@
         "grade": null
     },
     {
-        "id": 501,
+        "id": 523,
         "name": "Nicholas Zabaneh",
         "position": "F",
         "hp": "-",
@@ -9519,7 +9937,7 @@
         "grade": null
     },
     {
-        "id": 502,
+        "id": 524,
         "name": "Artyom Zhuk",
         "position": "F",
         "hp": "-",
@@ -9538,7 +9956,7 @@
         "grade": null
     },
     {
-        "id": 503,
+        "id": 525,
         "name": "Ivan Zinchenko",
         "position": "F",
         "hp": "-",
@@ -9557,7 +9975,7 @@
         "grade": null
     },
     {
-        "id": 504,
+        "id": 526,
         "name": "Ivan Zivlak",
         "position": "D",
         "hp": "-",
@@ -9566,7 +9984,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Linköping HC J20",
         "gp": "35",
         "g": "4",
@@ -9576,7 +9994,7 @@
         "grade": null
     },
     {
-        "id": 505,
+        "id": 527,
         "name": "Dmitri Zlodeyev",
         "position": "C",
         "hp": "-",
@@ -9595,7 +10013,7 @@
         "grade": null
     },
     {
-        "id": 506,
+        "id": 528,
         "name": "Ben Zloty",
         "position": "D",
         "hp": "-",
@@ -9614,7 +10032,7 @@
         "grade": null
     },
     {
-        "id": 507,
+        "id": 529,
         "name": "Filat Zotov",
         "position": "D",
         "hp": "-",
@@ -9633,7 +10051,7 @@
         "grade": null
     },
     {
-        "id": 508,
+        "id": 530,
         "name": "Nils Åman",
         "position": "C",
         "hp": "-",
@@ -9642,7 +10060,7 @@
         "mh": "-",
         "elite": "-",
         "avg_rank": null,
-        "league": "SuperElit",
+        "league": "J20 Nationell",
         "team": "Leksands IF J20",
         "gp": "30",
         "g": "14",
@@ -9652,7 +10070,7 @@
         "grade": null
     },
     {
-        "id": 509,
+        "id": 531,
         "name": "Linus Öberg",
         "position": "C/W",
         "hp": "-",
@@ -9671,7 +10089,7 @@
         "grade": null
     },
     {
-        "id": 510,
+        "id": 532,
         "name": "Victor Östman",
         "position": "G",
         "hp": "-",

@@ -2,66 +2,91 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    
+
     <title>NHL Mock Draft 2020</title>
+
+    <!--  bootstrap  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+          integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+            crossorigin="anonymous"></script>
+
+    <!--  ajax  -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
+
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179485039-1"></script>
     <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  gtag('config', 'UA-179485039-1');
-</script>
+      gtag('config', 'UA-179485039-1');
+
+
+
+
+
+
+
+    </script>
 
 </head>
 <body>
+<!--<div class="container justify-content-center align-items-center">-->
+<!--    <div class="row">-->
+<!--        <div class="col-sm">-->
+<!--            <h1>NHL Mock Draft</h1>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="row">-->
+<!--        <div class="col-sm">-->
+<!--            {% include 'logo.html' %}-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
 <div align="center">
-    <h1>NHL Mock Draft 2020</h1>
+    <div class="header bg-light py-5">
+        <h1>NHL Mock Draft 2020</h1>
 
-<table cellpadding="20px">
-    <tr>
-        <td>
-            <pre>
-                    _----_    _________       /\
-                   /      \  /         \/\ __///
-                  (        \/          / > /   \
-                   \        |      --/_>_/    /
-                     \_ ____|          \ /\ _/
-                       /               ///        __\
-                      (               // \       /  \\
-                       \      \     ///    \    /    \\
-                        (      \   //       \  /\  _  \\
-                         \   ___|///    _    \/  \/ \__)\
-                          ( / _ //\    ( \       /
-                           /_ /// /     \ \ _   /
-                           (__)  ) \_    \   --~
-                           ///--/    \____\
-                          //        __)    \
-                        ///        (________)
-             _________///          ===========
-            //|_____|///
-            </pre>
-        </td>
-</table>
-{% if page=="index" %}
-  <form action="/">
-    <input type="submit" value="Resimulate" />
-  </form>
-{% endif %}
+        <table cellpadding="20px">
+            <tr>
+                <td>
+                    {% include 'logo.html' %}
+                </td>
+        </table>
+    </div>
+    {% include 'nav.html' %}
 
-<div>
-  <table cellpadding="10px" align="center">
-        <tr><td>{% include 'nav.html' %}</td></tr>
+    <div class="container-fluid">
+        <!--        <table cellpadding="10px" align="center">-->
         <tr>
-          {% if page=="index" %}<td>{% include 'draftpicks.html' %}</td>{% endif %}
-          {% if page=="prospect" %}<td>{% include 'prospectpage.html' %}</td>{% endif %}
-          {% if page=="prospect_list" %}<td>{% include 'prospectlist.html' %}</td>{% endif %}
-          {% if page=="draft_center" %}<td>{% include 'draftcenter.html' %}</td>{% endif %}
+            {% if page=="index" %}
+            <td>{% include 'news/news.html' %}</td>
+            {% endif %}
+            {% if page=="draft_simulator" %}
+            <td>{% include 'draftsimulator/draftsimulator.html' %}</td>
+            {% endif %}
+            {% if page=="prospect" %}
+            <td>{% include 'prospectpage/prospectpage.html' %}</td>
+            {% endif %}
+            {% if page=="prospect_list" %}
+            <td>{% include 'prospectlist/prospectlist.html' %}</td>
+            {% endif %}
+            {% if page=="draft_center" %}
+            <td>{% include 'draftcenter/draftcenter.html' %}</td>
+            {% endif %}
         </tr>
-  </table>
+        <!--        </table>-->
+    </div>
+    <div class="container">copyright</div>
 </div>
 </body>
 </html>

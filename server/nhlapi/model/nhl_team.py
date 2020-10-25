@@ -1,6 +1,7 @@
 class Team:
 
-    def __init__(self, name="", points=0, leagueRank=0):
+    def __init__(self, id="", name="", points=0, leagueRank=0):
+        self.id = id
         self.name = name
         self.points = points
         self.leagueRank = leagueRank

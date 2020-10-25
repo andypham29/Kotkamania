@@ -5,6 +5,9 @@ from server.mockdraft.service.prospect_elite_service import ProspectEliteService
 
 import json
 
+from server.nhlapi.service.facade.nhl_roster_service_facade import NHLRosterServiceFacade
+from server.nhlapi.service.nhl_player_service import NHLPlayerService
+from server.nhlapi.service.nhl_team_service import NhlTeamService
 from server.twitterapi.service.facade.twitter_service_facade import TwitterServiceFacade
 
 app = Flask(__name__)
@@ -34,6 +37,13 @@ def draft_center():
 @app.route('/draftsimulator')
 def draft_simulator():
     return render_template("index.html", page="draft_simulator")
+
+
+@app.route('/nhl/roster')
+def nhl_roster():
+    teams = NhlTeamService().getAllTeams()
+    return render_template("index.html", page="nhl_roster", teams=teams)
+
 
 # -------- API Routing -------------
 @app.route('/api/drafts')
@@ -65,6 +75,18 @@ def getProspects():
 @app.route('/api/news')
 def getTwitterNews():
     response = TwitterServiceFacade().get_hockey_tweets()
+    return json.dumps(response, default=lambda o: o.__dict__)
+
+
+@app.route('/api/nhl/roster/<id>')
+def getNhlRoster(id):
+    response = NHLRosterServiceFacade().get_nhl_roster_by_team_id(id)
+    return json.dumps(response, default=lambda o: o.__dict__)
+
+
+@app.route('/api/nhl/player/<id>')
+def getNhlPlayer(id):
+    response = NHLPlayerService().get_player_by_id(id)
     return json.dumps(response, default=lambda o: o.__dict__)
 
 

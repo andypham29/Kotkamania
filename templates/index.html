@@ -66,7 +66,6 @@
     {% include 'nav.html' %}
 
     <div class="container-fluid">
-        <!--        <table cellpadding="10px" align="center">-->
         <tr>
             {% if page=="index" %}
             <td>{% include 'news/news.html' %}</td>
@@ -83,10 +82,12 @@
             {% if page=="draft_center" %}
             <td>{% include 'draftcenter/draftcenter.html' %}</td>
             {% endif %}
+             {% if page=="nhl_roster" %}
+            <td>{% include 'nhl/roster/nhlteamroster.html' %}</td>
+            {% endif %}
         </tr>
-        <!--        </table>-->
     </div>
-    <div class="container">copyright</div>
+    <div class="container" style="height: 30px"></div>
 </div>
 </body>
 </html>

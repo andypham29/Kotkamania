@@ -23,10 +23,11 @@ class NhlTeamService:
     def __getAllTeamsPerDivision(self, json):
         teams = []
         for item in json:
+            id = item['team']['id']
             name = item['team']['name']
             record = item['leagueRecord']
             leagueRank = item['leagueRank']
 
             # print("({0}) {1}: {2}".format(leagueRank, name, record))
-            teams.append(Team(name, record, int(leagueRank)))
+            teams.append(Team(id, name, record, int(leagueRank)))
         return teams

@@ -1,0 +1,69 @@
+<script>
+    function loadRosterByTeamId(id, teamName) {
+        $.ajax({
+            url: `/api/nhl/roster/${id}`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                var trHTML = "<tr>" +
+                "<th></th>" +
+                "<th>Position</th>" +
+                "<th>Player</th>" +
+                "</tr>";
+
+                i = 0
+                $.each(response, function (i, rosterplayer)
+                {
+                    trHTML += "<tr>" +
+                    `<td>${++i}</td>` +
+                    `<td>${ rosterplayer.position }</td>` +
+                    `<td><a href=\"/api/nhl/player/${rosterplayer.playerId}\">${ rosterplayer.fullName }</a></td>` +
+                    "</tr>"
+                });
+                $('table#draft_table tbody').html(trHTML)
+                $('h1#team_name a').html(teamName)
+            },
+            type: 'GET'
+        });
+    }
+    $(document).ready(function() {
+
+    });
+
+
+</script>
+
+
+<div class="container">
+    <div class="alert alert-primary" role="alert">
+        New Team Rosters Page!
+    </div>
+    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+        <button type="button" class="btn btn-outline-primary btn-block navbar-toggle collapsed"
+                data-toggle="collapse"
+                data-target="#bs-example-navbar-collapse-1">
+            NHL Teams
+        </button>
+
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                {% for team in teams %}
+                <li class="nav-item list-group-item list-group-item-action">
+                    <a class="nav-link" data-toggle="collapse" data-target=".navbar-collapse.show"
+                       onclick="loadRosterByTeamId({{team.id}},'{{team.name}}')">{{team.name}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+    <h1 id="team_name"><a></a></h1>
+    <table id="draft_table" cellpadding="5px" border="1">
+        <tbody>
+        </tbody>
+    </table>
+</div>

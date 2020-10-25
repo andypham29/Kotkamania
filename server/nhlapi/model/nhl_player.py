@@ -1,16 +1,37 @@
 class Player:
 
-    def __init__(self, rank, playerId, fullName, position, team, gamesPlayed, goals, assists, points):
+    def __init__(self, playerId, fullName, position, team, primaryNumber, birthDate, currentAge, birthCity,
+                 birthCountry, height, weight, stats=None):
         self.playerId = playerId
-        self.rank = rank
         self.fullName = fullName
         self.position = position
         self.team = team
-        self.gamesPlayed = gamesPlayed
+        self.primaryNumber = primaryNumber
+        self.birthDate = birthDate
+        self.currentAge = currentAge
+        self.birthCity = birthCity
+        self.birthCountry = birthCountry
+        self.height = height
+        self.weight = weight
+        self.stats = stats
+
+
+class PlayerStat:
+
+    def __init__(self, player_id, full_name, position, team, games_played, goals, assists, points):
+        self.player_id = player_id
+        self.full_name = full_name
+        self.position = position
+        self.team = team
+        self.games_played = games_played
         self.goals = goals
         self.assists = assists
         self.points = points
 
-    def toString(self):
-        print("(id:{0}) {1}\t{2}\t{3}\t{4}\tgp:{5} g:{6} a:{7} p:{8}"
-            .format(self.playerId, self.rank, self.fullName, self.position, self.team, self.gamesPlayed, self.goals, self.assists, self.points))
+
+class RosterPlayerInfo:
+
+    def __init__(self, playerId, fullName, position):
+        self.playerId = playerId
+        self.fullName = fullName
+        self.position = position

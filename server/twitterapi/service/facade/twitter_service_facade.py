@@ -7,7 +7,7 @@ class TwitterServiceFacade:
         self.twitter_service = TwitterService()
 
     def get_hockey_tweets(self):
-        nhl_users = ["CapFriendly", "PuckReportNHL"]
+        nhl_users = ["CapFriendly", "PuckReportNHL", "cdnsprospects"]
         tweets = []
 
         tweets += self.__get_tweet_by_users(nhl_users)
@@ -24,7 +24,7 @@ class TwitterServiceFacade:
                 raise Exception(f"Unable to retrieve tweet for hashtag \"{hashtag}\"")
         return tweets
 
-    def __get_tweet_by_users(self, users, count=30):
+    def __get_tweet_by_users(self, users, count=15):
         tweets = []
         for user in users:
             try:

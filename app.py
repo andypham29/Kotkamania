@@ -1,12 +1,11 @@
+import json
+
 from flask import Flask, request, render_template
 
 from server.mockdraft.service.facade.mockdraft_selector_service_facade import MockDraftSelectorServiceFacade
 from server.mockdraft.service.prospect_elite_service import ProspectEliteService
-
-import json
-
+from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
 from server.nhlapi.service.facade.nhl_roster_service_facade import NHLRosterServiceFacade
-from server.nhlapi.service.nhl_player_service import NHLPlayerService
 from server.nhlapi.service.nhl_team_service import NhlTeamService
 from server.twitterapi.service.facade.twitter_service_facade import TwitterServiceFacade
 
@@ -86,7 +85,7 @@ def getNhlRoster(id):
 
 @app.route('/api/nhl/player/<id>')
 def getNhlPlayer(id):
-    response = NHLPlayerService().get_player_by_id(id)
+    response = NHLPlayerServiceFacade().get_player_stats_by_playerId_and_seasons(id)
     return json.dumps(response, default=lambda o: o.__dict__)
 
 

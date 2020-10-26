@@ -3,8 +3,8 @@ from server.twitterapi.service.twitter_service import TwitterService
 
 class TwitterServiceFacade:
 
-    def __init__(self):
-        self.twitter_service = TwitterService()
+    def __init__(self, twitter_service=TwitterService()):
+        self.twitter_service = twitter_service
 
     def get_hockey_tweets(self):
         nhl_users = ["CapFriendly", "PuckReportNHL", "cdnsprospects"]

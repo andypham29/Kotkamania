@@ -1,5 +1,5 @@
 from helper.http_helper import HttpHelper
-from server.nhlapi.model.nhl_player import RosterPlayerInfo
+from server.nhlapi.model.nhl_roster_player_info import RosterPlayerInfo
 
 
 class NHLRosterService:
@@ -22,6 +22,7 @@ class NHLRosterService:
             player["person"]["id"],
             player["person"]["fullName"],
             player["position"]["code"],
+            player["jerseyNumber"]
         )
 
 

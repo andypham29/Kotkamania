@@ -14,11 +14,10 @@
                 "<th>Player</th>" +
                 "</tr>";
 
-                i = 0
                 $.each(response, function (i, rosterplayer)
                 {
                     trHTML += "<tr>" +
-                    `<td>${++i}</td>` +
+                    `<td>${ rosterplayer.jerseyNumber }</td>` +
                     `<td>${ rosterplayer.position }</td>` +
                     `<td><a href=\"/api/nhl/player/${rosterplayer.playerId}\">${ rosterplayer.fullName }</a></td>` +
                     "</tr>"

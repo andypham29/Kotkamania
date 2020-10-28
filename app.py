@@ -41,6 +41,7 @@ def draft_simulator():
 @app.route('/nhl/roster')
 def nhl_roster():
     teams = NhlTeamService().getAllTeams()
+    teams.sort(key=lambda x: x.name, reverse=False)
     return render_template("index.html", page="nhl_roster", teams=teams)
 
 

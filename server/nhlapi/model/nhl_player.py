@@ -1,7 +1,7 @@
 class Player:
 
     def __init__(self, playerId, fullName, position, team, primaryNumber, birthDate, currentAge, birthCity,
-                 birthCountry, height, weight, stats=None):
+                 birthCountry, height, weight, shootCatches, stats=None):
         self.playerId = playerId
         self.fullName = fullName
         self.position = position
@@ -13,6 +13,7 @@ class Player:
         self.birthCountry = birthCountry
         self.height = height
         self.weight = weight
+        self.shootCatches = shootCatches
         self.stats = stats
 
 

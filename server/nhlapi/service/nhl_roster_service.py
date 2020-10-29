@@ -19,10 +19,8 @@ class NHLRosterService:
     @staticmethod
     def __get_roster_player_info(player):
         return RosterPlayerInfo(
-            player["person"]["id"],
-            player["person"]["fullName"],
-            player["position"]["code"],
-            player["jerseyNumber"]
+            player.get("person", None).get("id", None),
+            player.get("person", None).get("fullName", None),
+            player.get("position", None).get("code", None),
+            player.get("jerseyNumber", None)
         )
-
-

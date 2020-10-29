@@ -36,10 +36,14 @@
                 console.log(trHTML)
                 $('table#draft_table tbody').html(trHTML)
                 $(".loader").remove();
+                $('#refresh').removeAttr('hidden')
             },
             type: 'GET'
         });
     });
+
+
+
 
 
 
@@ -55,4 +59,7 @@
         <tbody>
         </tbody>
     </table>
+    <form action="/" hidden id="refresh" style="margin: 20px">
+        <input class="btn btn-outline-primary" type="submit" value="Refresh News Feed"/>
+    </form>
 </div>

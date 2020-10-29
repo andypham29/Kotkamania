@@ -1,7 +1,7 @@
 class Player:
 
     def __init__(self, playerId, fullName, position, team, primaryNumber, birthDate, currentAge, birthCity,
-                 birthCountry, height, weight, stats=None):
+                 birthCountry, height, weight, shootCatches, stats=None):
         self.playerId = playerId
         self.fullName = fullName
         self.position = position
@@ -13,25 +13,78 @@ class Player:
         self.birthCountry = birthCountry
         self.height = height
         self.weight = weight
+        self.shootCatches = shootCatches
         self.stats = stats
+
+
+class SeasonStat:
+
+    def __init__(self, season, stat):
+        self.season = season
+        self.stat = stat
 
 
 class PlayerStat:
 
-    def __init__(self, player_id, full_name, position, team, games_played, goals, assists, points):
-        self.player_id = player_id
-        self.full_name = full_name
-        self.position = position
-        self.team = team
-        self.games_played = games_played
-        self.goals = goals
+    def __init__(self, timeOnIce, assists, goals, pim, shots, games, hits, powerPlayGoals, powerPlayPoints,
+                 powerPlayTimeOnIce, evenTimeOnIce, penaltyMinutes, faceOffPct, shotPct, gameWinningGoals,
+                 overTimeGoals, shortHandedGoals, shortHandedPoints, shortHandedTimeOnIce, blocked, plusMinus,
+                 points, shifts, timeOnIcePerGame, evenTimeOnIcePerGame, shortHandedTimeOnIcePerGame,
+                 powerPlayTimeOnIcePerGame):
+        self.timeOnIce = timeOnIce
         self.assists = assists
+        self.goals = goals
+        self.pim = pim
+        self.shots = shots
+        self.games = games
+        self.hits = hits
+        self.powerPlayGoals = powerPlayGoals
+        self.powerPlayPoints = powerPlayPoints
+        self.powerPlayTimeOnIce = powerPlayTimeOnIce
+        self.evenTimeOnIce = evenTimeOnIce
+        self.penaltyMinutes = penaltyMinutes
+        self.faceOffPct = faceOffPct
+        self.shotPct = shotPct
+        self.gameWinningGoals = gameWinningGoals
+        self.overTimeGoals = overTimeGoals
+        self.shortHandedGoals = shortHandedGoals
+        self.shortHandedPoints = shortHandedPoints
+        self.shortHandedTimeOnIce = shortHandedTimeOnIce
+        self.blocked = blocked
+        self.plusMinus = plusMinus
         self.points = points
+        self.shifts = shifts
+        self.timeOnIcePerGame = timeOnIcePerGame
+        self.evenTimeOnIcePerGame = evenTimeOnIcePerGame
+        self.shortHandedTimeOnIcePerGame = shortHandedTimeOnIcePerGame
+        self.powerPlayTimeOnIcePerGame = powerPlayTimeOnIcePerGame
 
 
-class RosterPlayerInfo:
-
-    def __init__(self, playerId, fullName, position):
-        self.playerId = playerId
-        self.fullName = fullName
-        self.position = position
+class GoalieStat:
+    def __init__(self, timeOnIce, ot, shutouts, ties, wins, losses, saves, powerPlaySaves, shortHandedSaves,
+                 evenSaves, shortHandedShots, evenShots, powerPlayShots, savePercentage, goalAgainstAverage,
+                 games, gamesStarted, shotsAgainst, goalsAgainst, timeOnIcePerGame, powerPlaySavePercentage,
+                 shortHandedSavePercentage, evenStrengthSavePercentage):
+        self.timeOnIce = timeOnIce
+        self.ot = ot
+        self.shutouts = shutouts
+        self.ties = ties
+        self.wins = wins
+        self.losses = losses
+        self.saves = saves
+        self.powerPlaySaves = powerPlaySaves
+        self.shortHandedSaves = shortHandedSaves
+        self.evenSaves = evenSaves
+        self.shortHandedShots = shortHandedShots
+        self.evenShots = evenShots
+        self.powerPlayShots = powerPlayShots
+        self.savePercentage = savePercentage
+        self.goalAgainstAverage = goalAgainstAverage
+        self.games = games
+        self.gamesStarted = gamesStarted
+        self.shotsAgainst = shotsAgainst
+        self.goalsAgainst = goalsAgainst
+        self.timeOnIcePerGame = timeOnIcePerGame
+        self.powerPlaySavePercentage = powerPlaySavePercentage
+        self.shortHandedSavePercentage = shortHandedSavePercentage
+        self.evenStrengthSavePercentage = evenStrengthSavePercentage

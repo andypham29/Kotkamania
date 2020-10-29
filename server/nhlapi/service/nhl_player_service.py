@@ -21,7 +21,8 @@ class NHLPlayerService:
                       player["birthCity"],
                       player["birthCountry"],
                       player["height"],
-                      player["weight"]
+                      player["weight"],
+                      player["shootsCatches"]
                       )
 
     @staticmethod

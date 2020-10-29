@@ -17,11 +17,13 @@ class TwitterService:
 
     def get_tweets_with_query(self, hashtag, count):
         tweepy_tweets = self.__get_tweets_with_query(hashtag, count)
-        return [self.__convert_to_tweet_object(tweepy_tweet) for tweepy_tweet in tweepy_tweets]
+        return [self.__convert_to_tweet_object(tweepy_tweet) for tweepy_tweet in tweepy_tweets if
+                self.__convert_to_tweet_object(tweepy_tweet)]
 
     def get_tweets_by_user(self, user, count):
         tweepy_tweets = self.__get_tweets_by_user(user, count)
-        return [self.__convert_to_tweet_object(tweepy_tweet) for tweepy_tweet in tweepy_tweets]
+        return [self.__convert_to_tweet_object(tweepy_tweet) for tweepy_tweet in tweepy_tweets if
+                self.__convert_to_tweet_object(tweepy_tweet)]
 
     def __get_tweets_with_query(self, search_words, count, date_since="2020-08-16"):
         return tw.Cursor(self.api.search,
@@ -42,6 +44,8 @@ class TwitterService:
 
     @staticmethod
     def __convert_to_tweet_object(tweepy_tweet):
-        text = tweepy_tweet.retweeted_status.full_text if hasattr(tweepy_tweet, "retweeted_status") else tweepy_tweet.full_text
-        return Tweet(tweepy_tweet.author.screen_name, text, tweepy_tweet.created_at.strftime("%m/%d/%Y, %H:%M:%S"))
-
+        # text = tweepy_tweet.retweeted_status.full_text if hasattr(tweepy_tweet, "retweeted_status") else tweepy_tweet.full_text
+        if hasattr(tweepy_tweet, "retweeted_status"):
+            return
+        return Tweet(tweepy_tweet.author.screen_name, tweepy_tweet.full_text,
+                     tweepy_tweet.created_at.strftime("%m/%d/%Y, %H:%M:%S"))

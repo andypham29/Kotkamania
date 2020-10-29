@@ -88,6 +88,3 @@ class NHLPlayerStatService:
             shortHandedSavePercentage=split["stat"]["shortHandedSavePercentage"],
             evenStrengthSavePercentage=split["stat"]["evenStrengthSavePercentage"]
         )
-
-
-print([p.__dict__ for p in NHLPlayerStatService().get_player_stat_by_playerId_and_seasons(8477446, ["20162017"])])

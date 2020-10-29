@@ -28,6 +28,5 @@ class NhlTeamService:
             record = item['leagueRecord']
             leagueRank = item['leagueRank']
 
-            # print("({0}) {1}: {2}".format(leagueRank, name, record))
             teams.append(Team(id, name, record, int(leagueRank)))
         return teams

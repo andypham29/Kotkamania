@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-from helper.http_helper import HttpHelper
-from server.nhlapi.model.nhl_player import Player
-
-from server.nhlapi.model.nhl_team import Team
-from server.mockdraft.repository.prospect_dao import ProspectDao
-
 import json
-import sys, schedule, time
 import random
+import sys
+import time
+
+import schedule
+
+from helper.http_helper import HttpHelper
+from server.mockdraft.repository.prospect_dao import ProspectDao
+from server.nhlapi.model.nhl_team import Team
 
 url = 'https://statsapi.web.nhl.com/api/v1/standings'
 urlPlayer = 'https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22points%22,%22direction%22:%22DESC%22%7D%5D&start=0&limit=100&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3C=20192020%20and%20seasonId%3E=20192020'
@@ -23,10 +24,12 @@ Usage: python nhl.py  [options...]
 -w, --webScrape\t Scrape Website
 -a, --append\t Append to target file when uploading"""
 
+
 # api methods
 def allDivision(json):
     for item in json:
         allTeamPerDivision(item['teamRecords'])
+
 
 def allTeamPerDivision(json):
     for item in json:
@@ -38,14 +41,16 @@ def allTeamPerDivision(json):
         team = Team(name, record, leagueRank)
         team.toString()
 
+
 # script methods
 def job():
-    player = getPlayerByRank(random.randint(0,49))
+    player = getPlayerByRank(random.randint(0, 49))
     value = json.dumps(player.__dict__)
     print(value)
 
+
 def getPlayerByRank(index):
-    json = json = HttpHelper.get(urlPlayer)['data'][index]
+    json = HttpHelper.get(urlPlayer)['data'][index]
 
     rank = index + 1
     playerId = json['playerId']
@@ -56,8 +61,9 @@ def getPlayerByRank(index):
     goals = json['goals']
     assists = json['assists']
     points = json['points']
+    return json
+    # return Player(rank, playerId, fullName, position, team, gamesPlayed, goals, assists, points)
 
-    return Player(rank, playerId, fullName, position, team, gamesPlayed, goals, assists, points)
 
 def getPlayerById(id, season):
     playerJson = HttpHelper.get(baseUrlPlayer + str(id))
@@ -72,29 +78,31 @@ def getPlayerById(id, season):
     assists = seasonJson['stats'][0]['splits'][0]['stat']['assists']
     points = seasonJson['stats'][0]['splits'][0]['stat']['points']
 
-    return Player("", playerId, fullName, position, team, gamesPlayed, goals, assists, points)
+    return playerJson
 
-if(len(sys.argv) == 1 or sys.argv[1] in ["--help", "-h"]):
+
+if (len(sys.argv) == 1 or sys.argv[1] in ["--help", "-h"]):
     print(helpMessage)
 
-elif(sys.argv[1] in ["--player", "-p"]):
+elif (sys.argv[1] in ["--player", "-p"]):
     index = int(sys.argv[2])
 
     player = getPlayerByRank(index)
-    print(json.dumps(player.__dict__))
+    print(player)
+    # print(json.dumps(player.__dict__))
 
-elif(sys.argv[1] in ["--playerId", "-P"]):
+elif (sys.argv[1] in ["--playerId", "-P"]):
     id = int(sys.argv[2])
     season = sys.argv[3]
 
     player = getPlayerById(id, season)
     print(json.dumps(player.__dict__))
 
-elif(sys.argv[1] in ["--teams", "-t"]):
+elif (sys.argv[1] in ["--teams", "-t"]):
     json = HttpHelper.get(url)
     allDivision(json['records'])
 
-elif(sys.argv[1] in ["--schedule", "-s"]):
+elif (sys.argv[1] in ["--schedule", "-s"]):
     schedule.every(1).seconds.do(job)
     while 1:
         schedule.run_pending()
@@ -103,8 +111,8 @@ elif(sys.argv[1] in ["--schedule", "-s"]):
     # schedule.every().hour.do(job)
     # schedule.every().day.at("10:30").do(job)
 
-elif(sys.argv[1] in ["--webScrape", "-w"]):
-    if len(sys.argv) >= 3 :
+elif (sys.argv[1] in ["--webScrape", "-w"]):
+    if len(sys.argv) >= 3:
         id = int(sys.argv[2])
         ProspectDao().initProspectTable()
         # ProspectDao().createProspect(p)

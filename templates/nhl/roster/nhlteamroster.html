@@ -5,7 +5,7 @@
     $('h5#player_name').html("")
     $('table#player_stat_table tbody').html("")
     $.ajax({
-            url: `/api/nhl/player/${playerId}`,
+            url: `/api/nhl/players/${playerId}`,
             crossDomain: true,
             dataType: "json",
             error: function(response) {
@@ -13,7 +13,7 @@
             },
             success: function(response) {
                 player = response
-                playerNameString = `<a href=\"/api/nhl/player/${player.playerId}\">${ player.fullName }</a>`
+                playerNameString = `<a href=\"/api/nhl/players/${player.playerId}\">${ player.fullName }</a>`
                 var trHTML = "<tr>" +
                 "<th colspan=\"2\">Team</th>" +
                 `<td colspan=\"2\">${ player.team }</td>` +
@@ -93,7 +93,7 @@
     }
     function loadRosterByTeamId(id, teamName) {
         $.ajax({
-            url: `/api/nhl/roster/${id}`,
+            url: `/api/nhl/rosters/${id}`,
             crossDomain: true,
             dataType: "json",
             error: function(response) {

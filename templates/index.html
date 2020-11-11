@@ -21,6 +21,7 @@
 
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!--
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179485039-1"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -28,15 +29,8 @@
       gtag('js', new Date());
 
       gtag('config', 'UA-179485039-1');
-
-
-
-
-
-
-
     </script>
-
+    -->
 </head>
 <body>
 <!--<div class="container justify-content-center align-items-center">-->
@@ -82,8 +76,11 @@
             {% if page=="draft_center" %}
             <td>{% include 'draftcenter/draftcenter.html' %}</td>
             {% endif %}
-             {% if page=="nhl_roster" %}
+            {% if page=="nhl_roster" %}
             <td>{% include 'nhl/roster/nhlteamroster.html' %}</td>
+            {% endif %}
+            {% if page=="nhl_stats_skater" %}
+            <td>{% include 'nhl/stats/nhlskater.html' %}</td>
             {% endif %}
         </tr>
     </div>

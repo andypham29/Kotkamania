@@ -6,6 +6,7 @@ from server.mockdraft.service.facade.mockdraft_selector_service_facade import Mo
 from server.mockdraft.service.prospect_elite_service import ProspectEliteService
 from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
 from server.nhlapi.service.facade.nhl_roster_service_facade import NHLRosterServiceFacade
+from server.nhlapi.service.nhl_stats_leader_service import NhlStatsLeaderService
 from server.nhlapi.service.nhl_team_service import NhlTeamService
 from server.twitterapi.service.facade.twitter_service_facade import TwitterServiceFacade
 
@@ -45,6 +46,11 @@ def nhl_roster():
     return render_template("index.html", page="nhl_roster", teams=teams)
 
 
+@app.route('/nhl/stats/skater')
+def nhl_stats_skater():
+    return render_template("index.html", page="nhl_stats_skater")
+
+
 # -------- API Routing -------------
 @app.route('/api/drafts')
 def getEntireDraftSimulation():
@@ -78,15 +84,26 @@ def getTwitterNews():
     return json.dumps(response, default=lambda o: o.__dict__)
 
 
-@app.route('/api/nhl/roster/<id>')
+@app.route('/api/nhl/rosters/<id>')
 def getNhlRoster(id):
     response = NHLRosterServiceFacade().get_nhl_roster_by_team_id(id)
     return json.dumps(response, default=lambda o: o.__dict__)
 
 
-@app.route('/api/nhl/player/<id>')
+@app.route('/api/nhl/players/<id>')
 def getNhlPlayer(id):
-    response = NHLPlayerServiceFacade().get_player_stats_by_playerId_and_seasons(id)
+    response = NHLPlayerServiceFacade().get_player_stats_by_playerId_and_seasons(id,
+                                                                                 ["20192020", "20182019", "20172018"])
+    return json.dumps(response, default=lambda o: o.__dict__)
+
+
+@app.route('/api/nhl/stats/skaters')
+def getNhlStatsSkater():
+    response = NhlStatsLeaderService().getAllPlayers() \
+               + NhlStatsLeaderService().getAllPlayers(start=101, end=200) \
+               + NhlStatsLeaderService().getAllPlayers(start=201, end=300) \
+               + NhlStatsLeaderService().getAllPlayers(start=301, end=400) \
+               + NhlStatsLeaderService().getAllPlayers(start=401, end=500)
     return json.dumps(response, default=lambda o: o.__dict__)
 
 

@@ -2,7 +2,7 @@ from helper.http_helper import HttpHelper
 from server.nhlapi.model.nhl_leader_player import LeaderPlayer
 
 
-class NhlStatsLeaderService:
+class NHLStatsLeaderService:
 
     def __init__(self):
         pass
@@ -11,8 +11,22 @@ class NhlStatsLeaderService:
         response = HttpHelper.get(self.__get_url_player_paging(start, end, seasonId))["data"]
         return [self.__getStatsForAllLeaderPlayers(player) for player in response]
 
-    def __get_url_player_paging(self, start, end, seasonId):
-        return f"https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22points%22,%22direction%22:%22DESC%22%7D%5D&start={start}&limit={end}&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3C={seasonId}%20and%20seasonId%3E={seasonId}"
+    def getForwards(self, start="0", end="100", seasonId="20192020"):
+        response = HttpHelper.get(self.__get_url_forward_paging(start, end, seasonId))["data"]
+        return [self.__getStatsForAllLeaderPlayers(player) for player in response]
+
+    def getDefensemen(self, start="0", end="100", seasonId="20192020"):
+        response = HttpHelper.get(self.__get_url_defense_paging(start, end, seasonId))["data"]
+        return [self.__getStatsForAllLeaderPlayers(player) for player in response]
+
+    def __get_url_player_paging(self, start, limit, seasonId):
+        return f"https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22points%22,%22direction%22:%22DESC%22%7D%5D&start={start}&limit={limit}&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20seasonId%3C={seasonId}%20and%20seasonId%3E={seasonId}"
+
+    def __get_url_forward_paging(self, start, limit, seasonId):
+        return f"https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22points%22,%22direction%22:%22DESC%22%7D%5D&start={start}&limit={limit}&factCayenneExp=gamesPlayed%3E=1&cayenneExp=(positionCode%3D%22L%22%20or%20positionCode%3D%22R%22%20or%20positionCode%3D%22C%22)%20and%20gameTypeId=2%20and%20seasonId%3C={seasonId}%20and%20seasonId%3E={seasonId}"
+
+    def __get_url_defense_paging(self, start, limit, seasonId):
+        return f"https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22points%22,%22direction%22:%22DESC%22%7D%5D&start={start}&limit={limit}&factCayenneExp=gamesPlayed%3E=1&cayenneExp=gameTypeId=2%20and%20positionCode%3D%22D%22%20and%20seasonId%3C={seasonId}%20and%20seasonId%3E={seasonId}"
 
     def __getStatsForAllLeaderPlayers(self, player_json):
         return LeaderPlayer(player_json["assists"],

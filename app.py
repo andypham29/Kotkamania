@@ -6,7 +6,7 @@ from server.mockdraft.service.facade.mockdraft_selector_service_facade import Mo
 from server.mockdraft.service.prospect_elite_service import ProspectEliteService
 from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
 from server.nhlapi.service.facade.nhl_roster_service_facade import NHLRosterServiceFacade
-from server.nhlapi.service.nhl_stats_leader_service import NhlStatsLeaderService
+from server.nhlapi.service.nhl_stats_leader_service import NHLStatsLeaderService
 from server.nhlapi.service.nhl_team_service import NhlTeamService
 from server.twitterapi.service.facade.twitter_service_facade import TwitterServiceFacade
 
@@ -99,11 +99,11 @@ def getNhlPlayer(id):
 
 @app.route('/api/nhl/stats/skaters')
 def getNhlStatsSkater():
-    response = NhlStatsLeaderService().getAllPlayers() \
-               + NhlStatsLeaderService().getAllPlayers(start=101, end=200) \
-               + NhlStatsLeaderService().getAllPlayers(start=201, end=300) \
-               + NhlStatsLeaderService().getAllPlayers(start=301, end=400) \
-               + NhlStatsLeaderService().getAllPlayers(start=401, end=500)
+    response = NHLStatsLeaderService().getAllPlayers() \
+               + NHLStatsLeaderService().getAllPlayers(start=101, end=200) \
+               + NHLStatsLeaderService().getAllPlayers(start=201, end=300) \
+               + NHLStatsLeaderService().getAllPlayers(start=301, end=400) \
+               + NHLStatsLeaderService().getAllPlayers(start=401, end=500)
     return json.dumps(response, default=lambda o: o.__dict__)
 
 

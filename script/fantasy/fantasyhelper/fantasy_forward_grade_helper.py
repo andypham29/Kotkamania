@@ -1,12 +1,12 @@
 import datetime
 
 
-class FantasyDefenseGradeHelper:
+class FantasyForwardGradeHelper:
 
     def __init__(self):
         pass
 
-    def getDefenseGrade(self, player):
+    def getForwardGrade(self, player):
         grade = 0
 
         for player_stat in player.stats:
@@ -19,7 +19,7 @@ class FantasyDefenseGradeHelper:
             grade_p = (-0.0007 * (player_stat.stat.points / player_stat.stat.games * 82 - 120) ** 2 + 10)
             grade_ppg = player_stat.stat.powerPlayGoals / player_stat.stat.games * 8
             grade_ppa = (
-                                player_stat.stat.powerPlayPoints - player_stat.stat.powerPlayGoals) / player_stat.stat.games * 6
+                                    player_stat.stat.powerPlayPoints - player_stat.stat.powerPlayGoals) / player_stat.stat.games * 6
             grade_ppp = player_stat.stat.powerPlayPoints / player_stat.stat.games * 10
             grade_shotPct = self.__calculate_grade_shotPct(player_stat)
             grade_toi = (toi.minute * 60 + toi.second) / (20 * 60)
@@ -59,7 +59,7 @@ class FantasyDefenseGradeHelper:
 
     def __calculate_grade_shotPct(self, player_stat):
         shotPct = player_stat.stat.shotPct
-        return (shotPct / 100) ** -1 * 0.1 if shotPct > 0 or not None else 0.85
+        return 1 if (shotPct <= 0.0 or None) else (shotPct / 100) ** -1 * 0.1
 
     def __calculate_grade_toi(self, player_stat):
         return None

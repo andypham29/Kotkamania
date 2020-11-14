@@ -1,6 +1,7 @@
 from script.fantasy.fantasyhelper.fantasy_forward_grade_helper import FantasyForwardGradeHelper
 from script.fantasy.model.fantasy_skater import FantasyPlayer
 from server.internaldata.repository.player_repository import InternalPlayerRepository
+from server.internaldata.repository.player_stat_repository import InternalPlayerStatRepository
 from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
 from server.nhlapi.service.nhl_stats_leader_service import NHLStatsLeaderService
 
@@ -15,7 +16,19 @@ class FantasyPlayerHelper:
         self.nhl_stats_leader_service = nhl_stats_leader_service
         self.nhl_player_service_facade = nhl_player_service_facade
 
-    def get_forward(self, amount=100):
+    def save_player_stats(self):
+        internal_players = InternalPlayerRepository().get_forwards(amount=250)
+        # internal_players += InternalPlayerRepository().get_defensemen(amount=150)
+        nhl_players = []
+        for player in internal_players:
+            print(player.__dict__)
+            nhl_players.append(self.nhl_player_service_facade \
+                               .get_player_by_playerId_and_seasons(playerId=player.playerId,
+                                                                   seasons=["20152016", "20162017", "20172018",
+                                                                            "20182019", "20192020"]))
+        InternalPlayerStatRepository().save_internal_players_stats(nhl_players[0])
+
+    def get_fantasy_forward(self, amount=100):
         # counter = 0
         # players = []
         # while counter < amount:
@@ -25,24 +38,15 @@ class FantasyPlayerHelper:
 
         # players = self.nhl_stats_leader_service.getForwards(start=0, end=0)
         # players += self.nhl_stats_leader_service.getDefensemen(start=0, end=100)
-        players = InternalPlayerRepository().get_all_forwards()
+        players = InternalPlayerRepository().get_forwards(amount)
         # players = InternalPlayerRepository().save_internal_players(players)
         # players += self.nhl_stats_leader_service.getForwards(start=201, end=300)
         # players += self.nhl_stats_leader_service.getForwards(start=301, end=400)
         # players += self.nhl_stats_leader_service.getForwards(start=401, end=500)
-        return [FantasyPlayer(player.playerId,
-                              player.skaterFullName,
-                              player.gamesPlayed,
-                              player.goals,
-                              player.assists,
-                              player.points,
-                              self.fantasy_player_grade_service.shotPctIndex(player.shootingPct * 100),
-                              self.fantasy_player_grade_service.getForwardGrade(
-                                  self.nhl_player_service_facade.get_player_stats_by_playerId_and_seasons(
-                                      player.playerId)))
-                for player in players]
 
-    def get_defensemen(self, amount=100):
+        return [self.__convert_to_fantasy_player(player) for player in players]
+
+    def get_fantasy_defensemen(self, amount=100):
         counter = 0
         players = []
         # while counter < amount:
@@ -52,15 +56,19 @@ class FantasyPlayerHelper:
         # players = self.nhl_stats_leader_service.getDefensemen(start=0, end=0)
         # players += self.nhl_stats_leader_service.getDefensemen(start=101, end=200)
         # InternalPlayerRepository().save_internal_players(players)
-        players = InternalPlayerRepository().get_all_defensemen()
-        return [FantasyPlayer(player.playerId,
-                              player.skaterFullName,
-                              player.gamesPlayed,
-                              player.goals,
-                              player.assists,
-                              player.points,
-                              self.fantasy_player_grade_service.shotPctIndex(player.shootingPct * 100),
-                              self.fantasy_player_grade_service.getForwardGrade(
-                                  self.nhl_player_service_facade.get_player_stats_by_playerId_and_seasons(
-                                      player.playerId)))
-                for player in players]
+        players = InternalPlayerRepository().get_defensemen(amount)
+        return [self.__convert_to_fantasy_player(player) for player in players]
+
+    def __convert_to_fantasy_player(self, player):
+        player_stat = InternalPlayerStatRepository().get_internal_players_stats_by_playerId_and_seasonId(
+            player.playerId, "20192020")
+        grade = self.fantasy_player_grade_service.getForwardGrade(player.skaterFullName, player_stat)
+
+        return FantasyPlayer(player.playerId,
+                             player.skaterFullName,
+                             player.gamesPlayed,
+                             player.goals,
+                             player.assists,
+                             player.points,
+                             self.fantasy_player_grade_service.shotPctIndex(player.shootingPct * 100),
+                             grade)

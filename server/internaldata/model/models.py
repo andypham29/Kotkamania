@@ -47,6 +47,45 @@ class InternalPlayer(base):
         return "<Player {}: {}>".format(self.id, self.name)
 
 
+class InternalPlayerStat(base):
+    __tablename__ = 'internal_player_stat'
+
+    id = sa.Column(sa.Integer, primary_key=True)
+    playerId = sa.Column(sa.Integer, nullable=False)
+    seasonId = sa.Column(sa.Integer, nullable=False)
+    timeOnIce = sa.Column(sa.Integer, nullable=False),
+    assists = sa.Column(sa.Integer, nullable=True)
+    goals = sa.Column(sa.Integer, nullable=True)
+    pim = sa.Column(sa.Integer, nullable=True)
+    shots = sa.Column(sa.Integer, nullable=True)
+    games = sa.Column(sa.Integer, nullable=True)
+    hits = sa.Column(sa.Integer, nullable=True)
+    powerPlayGoals = sa.Column(sa.Integer, nullable=True)
+    powerPlayPoints = sa.Column(sa.Integer, nullable=True)
+    powerPlayTimeOnIce = sa.Column(sa.Text, nullable=True)
+    evenTimeOnIce = sa.Column(sa.Text, nullable=True)
+    penaltyMinutes = sa.Column(sa.Text, nullable=True)
+    faceOffPct = sa.Column(sa.Float, nullable=True)
+    shotPct = sa.Column(sa.Float, nullable=True)
+    gameWinningGoals = sa.Column(sa.Integer, nullable=True)
+    overTimeGoals = sa.Column(sa.Integer, nullable=True)
+    shortHandedGoals = sa.Column(sa.Integer, nullable=True)
+    shortHandedPoints = sa.Column(sa.Integer, nullable=True)
+    shortHandedTimeOnIce = sa.Column(sa.Integer, nullable=True)
+    blocked = sa.Column(sa.Integer, nullable=True)
+    plusMinus = sa.Column(sa.Integer, nullable=True)
+    points = sa.Column(sa.Integer, nullable=True)
+    shifts = sa.Column(sa.Integer, nullable=True)
+    timeOnIcePerGame = sa.Column(sa.Text, nullable=True)
+    evenTimeOnIcePerGame = sa.Column(sa.Text, nullable=True)
+    shortHandedTimeOnIcePerGame = sa.Column(sa.Text, nullable=True)
+    powerPlayTimeOnIcePerGame = sa.Column(sa.Text, nullable=True)
+
+    _table_args__ = (
+        sa.UniqueConstraint(playerId, seasonId),
+    )
+
+
 #
 #
 # class FantasyPlayer(base):

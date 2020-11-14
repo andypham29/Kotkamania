@@ -48,14 +48,14 @@ class InternalPlayerRepository:
     def get_all_players(self):
         return session.query(InternalPlayer).all()
 
-    def get_all_defensemen(self):
+    def get_defensemen(self, amount=150):
         return session.query(InternalPlayer) \
                    .order_by(InternalPlayer.points.desc()) \
-                   .filter(InternalPlayer.positionCode == 'D')[:150]
+                   .filter(InternalPlayer.positionCode == 'D')[:amount]
 
-    def get_all_forwards(self):
+    def get_forwards(self, amount=300):
         return session.query(InternalPlayer) \
                    .order_by(InternalPlayer.points.desc()) \
                    .filter(or_(InternalPlayer.positionCode == 'L',
                                InternalPlayer.positionCode == 'R',
-                               InternalPlayer.positionCode == 'C'))[:300]
+                               InternalPlayer.positionCode == 'C'))[:amount]

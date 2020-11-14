@@ -8,7 +8,7 @@ class NHLPlayerServiceFacade:
         self.nhlPlayerService = nhlPlayerService
         self.nhlPlayerStatService = nhlPlayerStatService
 
-    def get_player_stats_by_playerId_and_seasons(self, playerId, seasons=[""]):
+    def get_player_by_playerId_and_seasons(self, playerId, seasons=[""]):
         # seasons = ["20152016", "20162017", "20172018"]
         player = self.nhlPlayerService.get_player_by_id(playerId)
         if player.position == "G":

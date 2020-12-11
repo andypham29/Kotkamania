@@ -20,18 +20,18 @@ class FantasyForwardGradeHelper:
         grade_pptoi = self.__calculate_grade_pptoi(player_stat)
         grade_evtoi = self.__calculate_grade_evtoi(player_stat)
 
-        shoot = self.shotPctIndex(player_stat.shotPct)
-        general = ((grade_ppg * shoot + grade_ppa + grade_ppp + grade_shotPct) + (
-                (grade_toi + grade_pptoi + grade_evtoi) * shoot / 3) * 0.8)
+        index = self.shotPctIndex(player_stat)
+        general = ((grade_ppg * index + grade_ppa + grade_ppp + grade_shotPct) + (
+                (grade_toi + grade_pptoi + grade_evtoi) * index / 3) * 0.8)
 
         print(
-            f"{skaterFullName}[{round(shoot, 2)}]: \t\tGEN:{round(general, 2)}\tPP:{round(grade_toi, 2)}\tEV:{round(grade_evtoi, 2)} {player_stat.assists / player_stat.games * 82}\t{grade_p} {player_stat.points / player_stat.games * 82}")
-        grade += (grade_g * shoot + grade_a + grade_p + general) / 42 * 100
+            f"{skaterFullName}[{round(index, 2)}]: \t\tGEN:{round(general, 2)}\tPP:{round(grade_toi, 2)}\tEV:{round(grade_evtoi, 2)} {player_stat.assists / player_stat.games * 82}\t{grade_p} {player_stat.points / player_stat.games * 82}")
+        grade += (grade_g * index + grade_a + grade_p + general) / 42 * 100
 
         return round(grade, 2)
 
-    def shotPctIndex(self, shotPct):
-        return round(-0.055 * (shotPct / 12) ** 3 + 1.05, 2)
+    def shotPctIndex(self, player_stat):
+        return round(-0.055 * (player_stat.shotPct / 12) ** 3 + 1.05, 2)
 
     def __calculate_grade_goals(self, player_stat):
         return -0.003 * (player_stat.goals / player_stat.games * 82 - 60) ** 2 + 10

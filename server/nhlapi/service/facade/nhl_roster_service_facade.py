@@ -7,5 +7,5 @@ class NHLRosterServiceFacade:
         self.nhlRosterService = nhlRosterService
 
     def get_nhl_roster_by_team_id(self, id):
-        player_ids = self.nhlRosterService.get_team_roster_by_id(id)
-        return player_ids
+        roster_players = self.nhlRosterService.get_team_roster_by_id(id)
+        return roster_players

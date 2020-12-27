@@ -1,6 +1,6 @@
 from script.fantasy.fantasyhelper.fantasy_defense_grade_helper import FantasyDefenseGradeHelper
 from script.fantasy.fantasyhelper.fantasy_forward_grade_helper import FantasyForwardGradeHelper
-from script.fantasy.model.fantasy_skater import FantasyPlayer
+from script.fantasy.model.fantasy_player import FantasyPlayer
 from server.internaldata.repository.player_repository import InternalPlayerRepository
 from server.internaldata.repository.player_stat_repository import InternalPlayerStatRepository
 from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade

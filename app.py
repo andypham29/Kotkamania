@@ -2,6 +2,7 @@ import json
 
 from flask import Flask, request, render_template
 
+from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
 from server.mockdraft.service.facade.mockdraft_selector_service_facade import MockDraftSelectorServiceFacade
 from server.mockdraft.service.prospect_elite_service import ProspectEliteService
 from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
@@ -49,6 +50,11 @@ def nhl_roster():
 @app.route('/nhl/stats/skater')
 def nhl_stats_skater():
     return render_template("index.html", page="nhl_stats_skater")
+
+
+@app.route('/nhl/fantasy')
+def nhl_fantasy():
+    return render_template("index.html", page="nhl_fantasy")
 
 
 # -------- API Routing -------------
@@ -104,6 +110,15 @@ def getNhlStatsSkater():
                + NHLStatsLeaderService().getAllPlayers(start=201, end=300) \
                + NHLStatsLeaderService().getAllPlayers(start=301, end=400) \
                + NHLStatsLeaderService().getAllPlayers(start=401, end=500)
+    return json.dumps(response, default=lambda o: o.__dict__)
+
+
+@app.route('/api/nhl/fantasy')
+def getNhlFantasyPlayers():
+    if request.args.getlist('position'):
+        response = FantasyNhlPlayerService().getAllFantasySkatersWithPositionCodes(request.args.getlist('position'))
+    else:
+        response = FantasyNhlPlayerService().getAllFantasySkaters()
     return json.dumps(response, default=lambda o: o.__dict__)
 
 

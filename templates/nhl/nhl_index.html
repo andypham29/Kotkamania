@@ -1,0 +1,11 @@
+<div class="container-fluid">
+    {% include 'nhl/nhl_nav.html' %}
+    <tr>
+        {% if page=="nhl_roster" %}
+        <td>{% include 'nhl/roster/nhlteamroster.html' %}</td>
+        {% endif %}
+        {% if page=="nhl_stats_skater" %}
+        <td>{% include 'nhl/stats/nhlskater.html' %}</td>
+        {% endif %}
+    </tr>
+</div>

@@ -5,15 +5,16 @@ from server.internaldata.model.fantasy_nhl_player import FantasyNhlPlayer
 
 class FantasyNhlPlayerDao:
 
-    def __init__(self):
-        self.conn = sqlite3.connect('../../server/internaldata/db/fantasy.db')
+    def __init__(self, uri=None):
+        uri = 'server/internaldata/db/fantasy.db' if uri is None else uri
+        self.conn = sqlite3.connect(uri)
         self.c = self.conn.cursor()
 
     def initFantasySkaterTable(self):
         self.c.execute('''CREATE TABLE IF NOT EXISTS fantasy_nhl_player(
-            id INTEGER PRIMARY KEY,
-        	name TEXT NOT NULL,
-        	position TEXT NOT NULL,
+           playerId INTEGER PRIMARY KEY,
+        	skaterFullName TEXT NOT NULL,
+        	positionCode TEXT NOT NULL,
         	teamId INTEGER NOT NULL,
         	fantasyGrade DOUBLE)''')
 
@@ -22,22 +23,20 @@ class FantasyNhlPlayerDao:
 
     def saveFantasySkater(self, fantasy_skater):
         self.c.execute(
-            '''INSERT INTO fantasy_nhl_player (id, name, position, teamId, fantasyGrade) VALUES (?,?,?,?,?)''',
-            (fantasy_skater.id,
-             fantasy_skater.name,
-             fantasy_skater.position,
+            '''INSERT INTO fantasy_nhl_player (playerId, skaterFullName, positionCode, teamId, fantasyGrade) VALUES (?,?,?,?,?)''',
+            (fantasy_skater.playerId,
+             fantasy_skater.skaterFullName,
+             fantasy_skater.positionCode,
              fantasy_skater.teamId,
              fantasy_skater.fantasyGrade))
 
         self.conn.commit()
         self.conn.close()
 
-    def getFantasySkaterById(self, id):
-        self.c.execute('''SELECT * FROM fantasy_nhl_player WHERE id = ?''', (id,))
+    def getFantasySkaterById(self, playerId):
+        self.c.execute('''SELECT * FROM fantasy_nhl_player WHERE playerId = ?''', (playerId,))
 
         row = self.c.fetchone()
-        # for row in rows:
-        #     print(row)
 
         self.conn.close()
         return FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4])
@@ -56,16 +55,32 @@ class FantasyNhlPlayerDao:
 
         return list
 
-    def deleteFantasySkaterById(self, id):
-        self.c.execute('''DELETE FROM fantasy_nhl_player WHERE id=?''', (id,))
+    def getAllFantasySkatersByPositionCodes(self, positionCodes):
+        positionCodes[:] = [value for value in positionCodes if value in ['L', 'C', 'R', 'D', 'G']]
+        filter_parameters = str(positionCodes).replace('[', '(').replace(']', ')')
+        self.c.execute(f"SELECT * FROM fantasy_nhl_player WHERE positionCode IN {filter_parameters}")
+
+        records = self.c.fetchall()
+
+        list = []
+        for row in records:
+            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4])
+            list.append(fantasy_skater)
+
+        self.conn.close()
+
+        return list
+
+    def deleteFantasySkaterById(self, playerId):
+        self.c.execute('''DELETE FROM fantasy_nhl_player WHERE playerId=?''', (playerId,))
 
         self.conn.commit()
         self.conn.close()
 
-    def updateFantasyGradeForFantasySkaterWithId(self, id, grade):
+    def updateFantasyGradeForFantasySkaterWithId(self, playerId, grade):
         self.c.execute('''UPDATE fantasy_nhl_player SET
         fantasyGrade = ?
-        WHERE id = ?''', (grade, id,))
+        WHERE playerId = ?''', (grade, playerId,))
 
         self.conn.commit()
         self.conn.close()

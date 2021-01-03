@@ -9,26 +9,33 @@ class FantasyScript:
 
     def __init__(self, fantasy_player_helper=FantasyPlayerHelper(),
                  excel_helper=ExcelHelper(),
-                 internal_player_repository=InternalPlayerRepository()):
+                 internal_player_repository=InternalPlayerRepository(),
+                 fantasy_nhl_player_service=FantasyNhlPlayerService()):
         self.fantasy_player_helper = fantasy_player_helper
         self.excel_helper = excel_helper
         self.internal_player_repository = internal_player_repository
+        self.fantasy_nhl_player_service = fantasy_nhl_player_service
 
     def save_fantasy_nhl_players(self):
-        fantasy_nhl_player_service = FantasyNhlPlayerService()
-        fantasy_nhl_player_service.initFantasySkaterTable()
+        self.fantasy_nhl_player_service.initFantasySkaterTable()
 
         nhl_roster_players = FantasyTeamHelper().get_all_players_in_teams()
         for player in nhl_roster_players:
-            print(player)
-            fantasy_nhl_player_service.saveFantasySkater(player)
+            self.fantasy_nhl_player_service.saveFantasySkater(player)
 
-    def save_player_stats_to_internal_db(self):
-        self.fantasy_player_helper.save_player_stats()
+    def save_player_grade_for_all_players_in_internal_db(self):
+        fantasy_players = self.fantasy_player_helper.get_all_fantasy_player_from_internal_db()
+        for fantasy_player in fantasy_players:
+            self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_player.id,
+                                                                                     fantasy_player.score)
 
     def process_forward(self):
         fantasy_skaters = self.fantasy_player_helper.get_fantasy_forward(amount=250)
         fantasy_skaters.sort(key=lambda x: x.score, reverse=True)
+        for fantasy_skater in fantasy_skaters:
+            self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_skater.id,
+                                                                                     fantasy_skater.score)
+
         self.excel_helper.write_players_to_excel(sheet='forward', players=fantasy_skaters)
 
         return self
@@ -36,16 +43,20 @@ class FantasyScript:
     def process_defensemen(self):
         fantasy_defensemen = self.fantasy_player_helper.get_fantasy_defensemen(amount=150)
         fantasy_defensemen.sort(key=lambda x: x.score, reverse=True)
+        for fantasy_defenseman in fantasy_defensemen:
+            self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_defenseman.id,
+                                                                                     fantasy_defenseman.score)
+
         self.excel_helper.write_players_to_excel(sheet='defense', players=fantasy_defensemen)
         return self
 
     def close(self):
-        print("done")
+        print("closing excel")
         self.excel_helper.close()
 
 
 if __name__ == '__main__':
-    FantasyScript().save_fantasy_nhl_players()
+    # FantasyScript().save_fantasy_nhl_players()
     # FantasyScript().save_player_stats_to_internal_db()
     # # InternalPlayerRepository().create_database()
 
@@ -54,6 +65,7 @@ if __name__ == '__main__':
     #     .process_defensemen() \
     #     .close()
 
+    FantasyScript().save_player_grade_for_all_players_in_internal_db()
     # stats = InternalPlayerStatRepository().get_internal_player_stats_by_playerId(8470187)
     # for stat in stats:
     #     print(stat.__dict__)

@@ -3,23 +3,26 @@ from server.internaldata.repository.fantasy_nhl_player_dao import FantasyNhlPlay
 
 class FantasyNhlPlayerService:
 
-    def __init__(self):
-        pass
+    def __init__(self, uri=None):
+        self.uri = uri
 
     def initFantasySkaterTable(self):
-        FantasyNhlPlayerDao().initFantasySkaterTable()
+        FantasyNhlPlayerDao(self.uri).initFantasySkaterTable()
 
     def saveFantasySkater(self, fantasy_skater):
-        FantasyNhlPlayerDao().saveFantasySkater(fantasy_skater)
+        FantasyNhlPlayerDao(self.uri).saveFantasySkater(fantasy_skater)
 
     def getFantasySkaterById(self, id):
-        return FantasyNhlPlayerDao().getFantasySkaterById(id)
+        return FantasyNhlPlayerDao(self.uri).getFantasySkaterById(id)
 
     def getAllFantasySkaters(self):
-        return FantasyNhlPlayerDao().getAllFantasySkaters()
+        return FantasyNhlPlayerDao(self.uri).getAllFantasySkaters()
+
+    def getAllFantasySkatersWithPositionCodes(self, positionCodes):
+        return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersByPositionCodes(positionCodes)
 
     def deleteFantasySkaterById(self, id):
-        FantasyNhlPlayerDao().deleteFantasySkaterById(id)
+        FantasyNhlPlayerDao(self.uri).deleteFantasySkaterById(id)
 
     def updateFantasyGradeForFantasySkaterWithId(self, id, grade):
-        FantasyNhlPlayerDao().updateFantasyGradeForFantasySkaterWithId(id, grade)
+        FantasyNhlPlayerDao(self.uri).updateFantasyGradeForFantasySkaterWithId(id, grade)

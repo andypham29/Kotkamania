@@ -101,3 +101,11 @@ select {
     border: 1px solid #ddd;
     margin-bottom: 12px;
 }
+
+.checkboxes {
+  text-align:center;
+}
+
+.checkboxes input{
+  margin-right: 40px;
+}

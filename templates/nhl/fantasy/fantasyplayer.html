@@ -1,0 +1,123 @@
+<script>
+    function searchValueInTable(value = null) {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+
+        filter = (value == null) ? input.value.toUpperCase() : value.toUpperCase()
+        cellId = (value == null || value == "") ? 1 : 2 // name: 1, position: 2
+
+        table = document.getElementById("draft_table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[cellId];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function buildFantasyUrlQueryParam() {
+          var positions = document.forms[0];
+          var txt = "";
+          var first = true;
+          if (positions === undefined) return ""
+          for (i = 0; i < positions.length; i++) {
+                if (positions[i].checked) {
+                    symbol = (first) ? '?' : '&'
+                    first = false
+                    txt += `${symbol}position=${positions[i].value}`;
+                }
+          }
+          return txt
+    }
+    function getFantasyPlayerPage() {
+        url = `/api/nhl/fantasy` + buildFantasyUrlQueryParam()
+        console.log(url)
+        $.ajax({
+            url: url,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                var trHTML = "<tr>" +
+                "<th></th>" +
+                "<th>Player</th>" +
+                "<th>Position</th>" +
+                "<th>Grade</th>" +
+                "</tr>";
+
+                var i = 0
+                // sort response by ascending avg_rank
+                response.sort(function(a, b) {
+                    return (a.fantasyGrade===null)-(b.fantasyGrade===null) || +(a.fantasyGrade<b.fantasyGrade)||-(a.fantasyGrade>b.fantasyGrade);
+                })
+
+                $.each(response, function (i, fantasy_player)
+                {
+                    trHTML += `<tr id=\'` + fantasy_player.playerId + `\'>` +
+                    `<td>${ ++i }</td>` +
+                    `<td><a href=\"/../api/nhl/players/${fantasy_player.playerId}\">${ fantasy_player.skaterFullName }</a></td>` +
+                    `<td>${ fantasy_player.positionCode }</td>` +
+                    `<td>${ fantasy_player.fantasyGrade }</td>` +
+                    "</tr>"
+
+                });
+
+                $('table#draft_table tbody').html(trHTML)
+                $(".loader").remove();
+
+            },
+            type: 'GET'
+        });
+    }
+    $(document).ready(getFantasyPlayerPage());
+
+
+
+
+
+</script>
+<h2>Fantasy Player List</h2>
+<input class="search" id="myInput" onkeyup="searchValueInTable()" placeholder="Search player's name"
+       title="Type in a name"
+       type="text">
+<form action="" class="form-check">
+    <div class="form-check checkboxes btn-group-toggle" data-toggle="buttons">
+        <label class="form-check-label btn btn-outline-secondary" for="L">
+            <input class="checkbox-inline" id="L" name="positions" type="checkbox" value="L">
+            LEFT WING
+        </label>
+        <label class="form-check-label btn btn-outline-secondary" for="C">
+            <input class="checkbox-inline" id="C" name="positions" type="checkbox" value="C">
+            CENTER
+        </label>
+        <label class="form-check-label btn btn-outline-secondary" for="R">
+            <input class="checkbox-inline" id="R" name="positions" type="checkbox" value="R">
+            RIGHT WING
+        </label>
+        <label class="form-check-label btn btn-outline-secondary" for="D">
+            <input class="checkbox-inline" id="D" name="positions" type="checkbox" value="D">
+            DEFENSEMAN
+        </label>
+        <label class="form-check-label btn btn-outline-secondary" for="G">
+            <input class="checkbox-inline" id="G" name="positions" type="checkbox" value="G">
+            GOALIE
+        </label>
+        <input class="btn btn-outline-primary" onclick="getFantasyPlayerPage()" type="button" value="Filter">
+    </div>
+</form>
+</br>
+<div class="loader"></div>
+<div class="draftcenter_prospect_table" style="width: 100%; height:500px; overflow:auto;">
+    <table border="1" cellpadding="5px" id="draft_table">
+        <tbody>
+        </tbody>
+    </table>
+</div>

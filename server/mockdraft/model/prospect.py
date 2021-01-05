@@ -1,15 +1,5 @@
 class Prospect:
 
-    def __init__(self, rank, player_name, height, weight, position, team, league):
-        self.id = ""
-        self.rank = rank
-        self.player_name = player_name
-        self.height = height
-        self.weight = weight
-        self.position = position
-        self.team = team
-        self.league = league
-
     def __init__(self, id, rank, player_name, height, weight, position, team, league):
         self.id = id
         self.rank = rank
@@ -23,9 +13,11 @@ class Prospect:
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
 
+
 class ProspectElite:
 
-    def __init__(self, id="", name=None, position=None, hp=None, fc=None, iss=None, mh=None, elite=None, avg_rank=None, league=None, team=None, gp=None, g=None, a=None, p=None, pim=None, grade=None):
+    def __init__(self, id="", name=None, position=None, hp=None, fc=None, iss=None, mh=None, elite=None, avg_rank=None,
+                 league=None, team=None, gp=None, g=None, a=None, p=None, pim=None, grade=None):
         self.id = id
         self.name = name
         self.position = position
@@ -56,7 +48,7 @@ class ProspectElite:
             if item is None or item == "-":
                 count += 1
                 total += 42
-            
+
             else:
                 if str.isdigit(item):
                     count += 1
@@ -64,6 +56,6 @@ class ProspectElite:
                 else:
                     count += 1
                     total += 42
-        if total/count == 42:
+        if total / count == 42:
             return None
-        return total/count
+        return total / count

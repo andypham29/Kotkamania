@@ -1,0 +1,91 @@
+import datetime
+
+
+class FantasyForwardGradeHelper:
+
+    def __init__(self):
+        pass
+
+    def getForwardGrade(self, skaterFullName, player_stat):
+        grade = 0
+
+        grade_g = self.__calculate_grade_goals(player_stat)
+        grade_a = self.__calculate_grade_assists(player_stat)
+        grade_p = self.__calculate_grade_points(player_stat)
+        grade_ppg = self.__calculate_grade_ppgoals(player_stat)
+        grade_ppa = self.__calculate_grade_ppassists(player_stat)
+        grade_ppp = self.__calculate_grade_points(player_stat)
+        grade_shotPct = self.__calculate_grade_shotPct(player_stat)
+        grade_toi = self.__calculate_grade_toi(player_stat)
+        grade_pptoi = self.__calculate_grade_pptoi(player_stat)
+        grade_evtoi = self.__calculate_grade_evtoi(player_stat)
+
+        index = self.shotPctIndex(player_stat)
+        scale = self.__scale_by_games_played(player_stat)
+
+        general = ((grade_ppg * index + grade_ppa + grade_ppp + grade_shotPct) + (
+                (grade_toi + grade_pptoi + grade_evtoi) * index / 3))
+
+        print(
+            f"{skaterFullName}[{round(index, 2)}]: \t\tGEN:{round(general, 2)}\tPP:{round(grade_toi, 2)}\tEV:{round(grade_evtoi, 2)} {player_stat.assists / player_stat.games * 82}\t{grade_p} {player_stat.points / player_stat.games * 82}")
+        grade += (grade_g * index + grade_a + grade_p + general * grade_evtoi * grade_pptoi) / 45 * 100 * scale
+
+        return round(grade, 2)
+
+    def shotPctIndex(self, player_stat):
+        return round(-0.055 * (player_stat.shotPct / 12) ** 3 + 1.05, 2)
+
+    def __scale_by_games_played(self, player_stat):
+        gp = player_stat.games
+        if gp < 10:
+            return 0.5
+        elif 10 <= gp < 20:
+            return 0.6
+        elif 20 <= gp < 35:
+            return 0.75
+        elif 35 <= gp < 50:
+            return 0.8
+        else:
+            return 1
+
+    def __calculate_grade_goals(self, player_stat):
+        return -0.003 * (player_stat.goals / player_stat.games * 82 - 60) ** 2 + 10
+
+    def __calculate_grade_assists(self, player_stat):
+        return -0.0015 * (player_stat.assists / player_stat.games * 82 - 80) ** 2 + 10
+
+    def __calculate_grade_points(self, player_stat):
+        return -0.0007 * (player_stat.points / player_stat.games * 82 - 120) ** 2 + 10
+
+    def __calculate_grade_ppgoals(self, player_stat):
+        return player_stat.powerPlayGoals / player_stat.games * 8
+
+    def __calculate_grade_ppassists(self, player_stat):
+        return (player_stat.powerPlayPoints - player_stat.powerPlayGoals) / player_stat.games * 6
+
+    def __calculate_grade_pppoints(self, player_stat):
+        return player_stat.powerPlayPoints / player_stat.games * 10
+
+    def __calculate_grade_shotPct(self, player_stat):
+        shotPct = player_stat.shotPct
+        try:
+            grade = (shotPct / 100) ** -1 * 0.1 if shotPct > 0 or not None else 0.85
+        except:
+            grade = 0
+        finally:
+            return grade
+
+    def __calculate_grade_toi(self, player_stat):
+        toi = datetime.datetime.strptime(player_stat.timeOnIcePerGame, '%M:%S')
+        grade = (toi.minute * 60 + toi.second) / (20 * 60)
+        return grade if (grade > 0.5) else 0.5
+
+    def __calculate_grade_pptoi(self, player_stat):
+        pptoi = datetime.datetime.strptime(player_stat.powerPlayTimeOnIcePerGame, '%M:%S')
+        grade = (pptoi.minute * 60 + pptoi.second) / (3 * 60)
+        return grade if (grade > 0.5) else 0.5
+
+    def __calculate_grade_evtoi(self, player_stat):
+        evtoi = datetime.datetime.strptime(player_stat.evenTimeOnIcePerGame, '%M:%S')
+        grade = (evtoi.minute * 60 + evtoi.second) / (15 * 60)
+        return grade if (grade > 0.5) else 0.5

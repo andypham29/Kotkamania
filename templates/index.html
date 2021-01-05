@@ -28,15 +28,7 @@
       gtag('js', new Date());
 
       gtag('config', 'UA-179485039-1');
-
-
-
-
-
-
-
     </script>
-
 </head>
 <body>
 <!--<div class="container justify-content-center align-items-center">-->
@@ -82,8 +74,11 @@
             {% if page=="draft_center" %}
             <td>{% include 'draftcenter/draftcenter.html' %}</td>
             {% endif %}
-             {% if page=="nhl_roster" %}
-            <td>{% include 'nhl/roster/nhlteamroster.html' %}</td>
+            {% if (page=="nhl_roster" or page=="nhl_stats_skater") %}
+            <td>{% include 'nhl/nhl_index.html' %}</td>
+            {% endif %}
+            {% if (page=="nhl_fantasy") %}
+            <td>{% include 'nhl/fantasy/fantasyplayer.html' %}</td>
             {% endif %}
         </tr>
     </div>

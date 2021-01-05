@@ -7,4 +7,4 @@ def test_when_getting_roster_then_return_roster():
         assert rosterPlayer.playerId is not None
         assert rosterPlayer.position is not None
         assert rosterPlayer.fullName is not None
-        assert rosterPlayer.jerseyNumber is not None
+        # assert rosterPlayer.jerseyNumber is not None (optional)

@@ -3,7 +3,9 @@ from script.fantasy.fantasyhelper.fantasy_forward_grade_helper import FantasyFor
 from script.fantasy.model.fantasy_player import FantasyPlayer
 from server.internaldata.repository.player_repository import InternalPlayerRepository
 from server.internaldata.repository.player_stat_repository import InternalPlayerStatRepository
+from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
 from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
+from server.nhlapi.service.nhl_player_stat_service import NHLPlayerStatService
 from server.nhlapi.service.nhl_stats_leader_service import NHLStatsLeaderService
 
 
@@ -13,11 +15,14 @@ class FantasyPlayerHelper:
                  fantasy_skater_grade_helper=FantasyForwardGradeHelper(),
                  fantasy_defense_grade_helper=FantasyDefenseGradeHelper(),
                  nhl_stats_leader_service=NHLStatsLeaderService(),
-                 nhl_player_service_facade=NHLPlayerServiceFacade()):
+                 nhl_player_service_facade=NHLPlayerServiceFacade(),
+                 fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../server/internaldata/db/fantasy.db')):
+
         self.fantasy_forward_grade_service = fantasy_skater_grade_helper
         self.fantasy_defensemen_grade_service = fantasy_defense_grade_helper
         self.nhl_stats_leader_service = nhl_stats_leader_service
         self.nhl_player_service_facade = nhl_player_service_facade
+        self.fantasy_nhl_player_service = fantasy_nhl_player_service
 
     def save_player_stats(self):
         internal_players = InternalPlayerRepository().get_forwards(amount=250)
@@ -69,11 +74,43 @@ class FantasyPlayerHelper:
 
         return [self.__convert_to_fantasy_player(player) for player in players]
 
+    def get_all_fantasy_player_from_internal_db(self):
+        players = self.fantasy_nhl_player_service.getAllFantasySkaters()
+
+        return [self.__convert_to_fantasy_player(player) for player in players]
+
     def __convert_to_fantasy_player(self, player):
         player_stat = InternalPlayerStatRepository().get_internal_players_stats_by_playerId_and_seasonId(
             player.playerId, "20192020")
 
-        if player.positionCode == 'D':
+        if player_stat is None and player.positionCode != 'G':
+            stat = NHLPlayerStatService().get_player_stat_by_playerId_and_seasons(player.playerId, ["20192020"])
+            # stat = self.nhl_player_service_facade \
+            # .get_player_by_playerId_and_seasons(player.playerId, ["20192020"])
+            p = NHLPlayerServiceFacade().get_player_by_playerId_and_seasons(player.playerId, ["20192020"])
+            if not stat:
+                return FantasyPlayer(player.playerId,
+                                     player.skaterFullName,
+                                     0,
+                                     0,
+                                     0,
+                                     0,
+                                     0,
+                                     0)
+
+            player_stat = stat[0].stat
+            InternalPlayerStatRepository().save_internal_player_stats(p)
+
+        if player.positionCode == 'G':
+            return FantasyPlayer(player.playerId,
+                                 player.skaterFullName,
+                                 0,
+                                 0,
+                                 0,
+                                 0,
+                                 0,
+                                 0)
+        elif player.positionCode == 'D':
             shotPct = self.fantasy_defensemen_grade_service.shotPctIndex(player_stat)
             grade = self.fantasy_defensemen_grade_service.getDefenseGrade(player.skaterFullName, player_stat)
         else:
@@ -81,9 +118,9 @@ class FantasyPlayerHelper:
             grade = self.fantasy_forward_grade_service.getForwardGrade(player.skaterFullName, player_stat)
         return FantasyPlayer(player.playerId,
                              player.skaterFullName,
-                             player.gamesPlayed,
-                             player.goals,
-                             player.assists,
-                             player.points,
+                             player_stat.games,
+                             player_stat.goals,
+                             player_stat.assists,
+                             player_stat.points,
                              shotPct,
                              grade)

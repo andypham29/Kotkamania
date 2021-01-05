@@ -11,7 +11,8 @@ class FantasyTeamHelper:
         teams = NhlTeamService().getAllTeams()
         for team in teams:
             roster_players += [
-                FantasyNhlPlayer(id=player.playerId, name=player.fullName, position=player.position, teamId=team.id)
+                FantasyNhlPlayer(id=player.playerId, skaterFullName=player.fullName, positionCode=player.position,
+                                 teamId=team.id)
                 for player in nhl_roster_service_facade.get_nhl_roster_by_team_id(team.id)]
 
         return roster_players

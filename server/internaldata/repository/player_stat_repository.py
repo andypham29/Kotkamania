@@ -17,7 +17,7 @@ class InternalPlayerStatRepository:
             .filter(and_(InternalPlayerStat.playerId == playerId,
                          InternalPlayerStat.seasonId == seasonId)).first()
 
-    def save_internal_players_stats(self, player):
+    def save_internal_player_stats(self, player):
         stats = []
         stats += [
             InternalPlayerStat(

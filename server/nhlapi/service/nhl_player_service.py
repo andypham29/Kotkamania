@@ -15,14 +15,14 @@ class NHLPlayerService:
                       player["fullName"],
                       player["primaryPosition"]["code"],
                       player["currentTeam"]["name"] if player.get("currentTeam") is not None else None,
-                      player["primaryNumber"],
-                      player["birthDate"],
+                      player["primaryNumber"] if player.get("primaryNumber") is not None else None,
+                      player["birthDate"] if player.get("birthDate") is not None else None,
                       player["currentAge"] if player.get("currentAge") is not None else None,
-                      player["birthCity"],
-                      player["birthCountry"],
-                      player["height"],
-                      player["weight"],
-                      player["shootsCatches"]
+                      player["birthCity"] if player.get("birthCity") is not None else None,
+                      player["birthCountry"] if player.get("birthCountry") is not None else None,
+                      player["height"] if player.get("height") is not None else None,
+                      player["weight"] if player.get("weight") is not None else None,
+                      player["shootsCatches"] if player.get("shootsCatches") is not None else None
                       )
 
     @staticmethod

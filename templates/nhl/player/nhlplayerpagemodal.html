@@ -1,0 +1,117 @@
+<script>
+    function loadPlayerModal(playerId) {
+    console.log(playerId)
+    $('table#player_info_table tbody').html("")
+    $('h5#player_name').html("")
+    $('table#player_stat_table tbody').html("")
+    $.ajax({
+            url: `/api/nhl/players/${playerId}`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                player = response
+                playerNameString = `<a href=\"/api/nhl/players/${player.playerId}\">${ player.fullName }</a>`
+                var trHTML = "<tr>" +
+                "<th colspan=\"2\">Team</th>" +
+                `<td colspan=\"2\">${ player.team }</td>` +
+                "</tr>";
+
+                trHTML += "<tr>" +
+                "<td>Date of Birth</td>" +
+                `<td>${ player.birthDate }</td>` +
+                "<td>Position</td>" +
+                `<td>${ player.position }</td>` +
+                "</tr>" +
+                "<tr>" +
+                "<td>Age</td>" +
+                `<td>${ player.currentAge }</td>` +
+                "<td>Height</td>" +
+                `<td>${ player.height }</td>` +
+                "</tr>" +
+                "<tr>" +
+                "<td>City</td>" +
+                `<td>${ player.birthCity }</td>` +
+                "<td>Weight</td>" +
+                `<td>${ player.weight }</td>` +
+                "</tr>" +
+                "<tr>" +
+                "<td>Country</td>" +
+                `<td>${ player.birthCountry }</td>` +
+                "<td>Shoots</td>" +
+                `<td>${ player.shootCatches }</td>` +
+                "</tr>"
+
+                var stats = ""
+                if(player.stats[0] !== undefined){
+                if(!(player.position).localeCompare('G')) {
+                        var goalieStats = "<tr>" +
+                        "<th></th><td>GP</td><td>GAA</td><td>SV%</td><td>WIN</td><td>LOSE</td><td>SO</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                        `<td>${player.stats[0].season}</td>` +
+                        `<td>${player.stats[0].stat.games}</td>` +
+                        `<td>${player.stats[0].stat.goalAgainstAverage}</td>` +
+                        `<td>${player.stats[0].stat.savePercentage}</td>` +
+                        `<td>${player.stats[0].stat.wins}</td>` +
+                        `<td>${player.stats[0].stat.losses}</td>` +
+                        `<td>${player.stats[0].stat.shutouts}</td>` +
+                        "</tr>"
+
+                        stats = goalieStats
+                    }
+                    else {
+                        var playerStats = "<tr>" +
+                        "<th></th><td>GP</td><td>G</td><td>A</td><td>TP</td><td>PIM</td><td>+/-</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                        `<td>${player.stats[0].season}</td>` +
+                        `<td>${player.stats[0].stat.games}</td>` +
+                        `<td>${player.stats[0].stat.goals}</td>` +
+                        `<td>${player.stats[0].stat.assists}</td>` +
+                        `<td>${player.stats[0].stat.points}</td>` +
+                        `<td>${player.stats[0].stat.pim}</td>` +
+                        `<td>${player.stats[0].stat.plusMinus}</td>` +
+                        "</tr>"
+
+                        stats = playerStats
+                    }
+                }
+
+                $('table#player_info_table tbody').html(trHTML)
+                $('h5#player_name').html(playerNameString)
+                $('table#player_stat_table tbody').html(stats)
+
+            },
+            type: 'GET'
+        });
+    }
+
+</script>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="player_name"></h5>
+            </div>
+            <div class="modal-body">
+                <table border="1" cellpadding="5px" id="player_info_table">
+                    <tbody>
+                    </tbody>
+                </table>
+                <br>
+                <table border="1" cellpadding="5px" id="player_stat_table">
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

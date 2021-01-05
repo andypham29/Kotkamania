@@ -63,7 +63,7 @@
                 {
                     trHTML += `<tr id=\'` + fantasy_player.playerId + `\'>` +
                     `<td>${ ++i }</td>` +
-                    `<td><a href=\"/../api/nhl/players/${fantasy_player.playerId}\">${ fantasy_player.skaterFullName }</a></td>` +
+                    `<td><button class="btn btn-link" data-toggle="modal" data-target="#myModal" onclick=\"loadPlayerModal(${fantasy_player.playerId})\">${ fantasy_player.skaterFullName }</button></td>` +
                     `<td>${ fantasy_player.positionCode }</td>` +
                     `<td>${ fantasy_player.fantasyGrade }</td>` +
                     "</tr>"
@@ -79,11 +79,9 @@
     }
     $(document).ready(getFantasyPlayerPage());
 
-
-
-
-
 </script>
+{% include 'nhl/player/nhlplayerpagemodal.html' %}
+
 <h2>Fantasy Player List</h2>
 <input class="search" id="myInput" onkeyup="searchValueInTable()" placeholder="Search player's name"
        title="Type in a name"

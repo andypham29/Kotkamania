@@ -53,7 +53,7 @@ class InternalPlayerStat(base):
     id = sa.Column(sa.Integer, primary_key=True)
     playerId = sa.Column(sa.Integer, nullable=False)
     seasonId = sa.Column(sa.Integer, nullable=False)
-    # timeOnIce = sa.Column(sa.Integer, nullable=False)
+    timeOnIce = sa.Column(sa.Integer, nullable=False),
     assists = sa.Column(sa.Integer, nullable=True)
     goals = sa.Column(sa.Integer, nullable=True)
     pim = sa.Column(sa.Integer, nullable=True)

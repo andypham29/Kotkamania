@@ -10,7 +10,7 @@ class FantasyScript:
     def __init__(self, fantasy_player_helper=FantasyPlayerHelper(),
                  excel_helper=ExcelHelper(),
                  internal_player_repository=InternalPlayerRepository(),
-                 fantasy_nhl_player_service=FantasyNhlPlayerService()):
+                 fantasy_nhl_player_service=FantasyNhlPlayerService('../../server/internaldata/db/fantasy.db')):
         self.fantasy_player_helper = fantasy_player_helper
         self.excel_helper = excel_helper
         self.internal_player_repository = internal_player_repository

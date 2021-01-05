@@ -29,12 +29,14 @@ class FantasyDefenseGradeHelper:
                                        grade_evtoi, grade_shotAttempt)
 
         index = self.shotPctIndex(player_stat=player_stat)
+        scale = self.__scale_by_games_played(player_stat)
+        print(skaterFullName, " evtoi: ", grade_evtoi, " scale: ", scale)
         general = ((grade_ppg * index + grade_ppa + grade_ppp * grade_shotPct) / 3 * (
                 (grade_toi + grade_pptoi * 5 + grade_evtoi * 3 + grade_shotAttempt) / 10) * 1.125)
 
         print(f"[{skaterFullName}|{round(general, 2)}|{index}]{json.dumps(grade_obj.__dict__)}")
 
-        grade += (grade_g + grade_a + grade_p + general * 1.5 * index) / 50 * 100
+        grade += (grade_g + grade_a + grade_p + general * 1.5 * index) / 50 * 100 * scale
 
         return round(grade, 2)
 
@@ -45,6 +47,19 @@ class FantasyDefenseGradeHelper:
         grade_shotAttempt = self.__calculate_grade_shotAttempt(player_stat)
 
         return round(-0.1875 * ((grade_toi + grade_pptoi + grade_evtoi + grade_shotAttempt) / 5) ** 3 + 1.2, 2)
+
+    def __scale_by_games_played(self, player_stat):
+        gp = player_stat.games
+        if gp < 10:
+            return 0.5
+        elif 10 <= gp < 20:
+            return 0.6
+        elif 20 <= gp < 30:
+            return 0.7
+        elif 30 <= gp < 40:
+            return 0.8
+        else:
+            return 1
 
     def __calculate_grade_shotAttempt(self, player_stat):
         shotPctIndex = round(-0.055 * (player_stat.shotPct / 12) ** 3 + 1.05, 2)
@@ -75,12 +90,15 @@ class FantasyDefenseGradeHelper:
 
     def __calculate_grade_toi(self, player_stat):
         toi = datetime.datetime.strptime(player_stat.timeOnIcePerGame, '%M:%S')
-        return (toi.minute * 60 + toi.second) / (20 * 60)
+        grade = (toi.minute * 60 + toi.second) / (20 * 60)
+        return grade if (grade > 0.5) else 0.5
 
     def __calculate_grade_pptoi(self, player_stat):
         pptoi = datetime.datetime.strptime(player_stat.powerPlayTimeOnIcePerGame, '%M:%S')
-        return (pptoi.minute * 60 + pptoi.second) / (2.5 * 60)
+        grade = (pptoi.minute * 60 + pptoi.second) / (2.5 * 60)
+        return grade if (grade > 0.5) else 0.5
 
     def __calculate_grade_evtoi(self, player_stat):
         evtoi = datetime.datetime.strptime(player_stat.evenTimeOnIcePerGame, '%M:%S')
-        return (evtoi.minute * 60 + evtoi.second) / (15 * 60)
+        grade = (evtoi.minute * 60 + evtoi.second) / (15 * 60)
+        return grade if (grade > 0.5) else 0.5

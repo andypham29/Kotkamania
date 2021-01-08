@@ -16,14 +16,29 @@ class FantasyNhlPlayerDao:
         	skaterFullName TEXT NOT NULL,
         	positionCode TEXT NOT NULL,
         	teamId INTEGER NOT NULL,
-        	fantasyGrade DOUBLE)''')
+        	fantasyGrade DOUBLE,
+        	yahooEligibility TEXT,
+        	avgPick DOUBLE,
+        	avgRound DOUBLE,
+        	percentDrafted TEXT
+        	)''')
 
         self.conn.commit()
         self.conn.close()
 
     def saveFantasySkater(self, fantasy_skater):
+
         self.c.execute(
-            '''INSERT INTO fantasy_nhl_player (playerId, skaterFullName, positionCode, teamId, fantasyGrade) VALUES (?,?,?,?,?)''',
+            '''INSERT INTO fantasy_nhl_player (playerId, 
+            skaterFullName, 
+            positionCode, 
+            teamId, 
+            fantasyGrade,
+            yahooEligibility,
+            avgPick,
+            avgRound,
+            percentDrafted,
+            ) VALUES (?,?,?,?,?,?,?,?,?)''',
             (fantasy_skater.playerId,
              fantasy_skater.skaterFullName,
              fantasy_skater.positionCode,
@@ -39,7 +54,7 @@ class FantasyNhlPlayerDao:
         row = self.c.fetchone()
 
         self.conn.close()
-        return FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4])
+        return FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
 
     def getAllFantasySkaters(self):
         self.c.execute('''SELECT * FROM fantasy_nhl_player''')
@@ -48,7 +63,7 @@ class FantasyNhlPlayerDao:
 
         list = []
         for row in records:
-            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4])
+            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -58,13 +73,17 @@ class FantasyNhlPlayerDao:
     def getAllFantasySkatersByPositionCodes(self, positionCodes):
         positionCodes[:] = [value for value in positionCodes if value in ['L', 'C', 'R', 'D', 'G']]
         filter_parameters = str(positionCodes).replace('[', '(').replace(']', ')')
-        self.c.execute(f"SELECT * FROM fantasy_nhl_player WHERE positionCode IN {filter_parameters}")
+        query = f'''SELECT * FROM fantasy_nhl_player 
+            WHERE positionCode IN {filter_parameters}'''
+        for position in positionCodes:
+            query += f" OR yahooEligibility LIKE '%{position}%'"
+        self.c.execute(query)
 
         records = self.c.fetchall()
 
         list = []
         for row in records:
-            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4])
+            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -81,6 +100,17 @@ class FantasyNhlPlayerDao:
         self.c.execute('''UPDATE fantasy_nhl_player SET
         fantasyGrade = ?
         WHERE playerId = ?''', (grade, playerId,))
+
+        self.conn.commit()
+        self.conn.close()
+
+    def updateFantasyYahooInfoForFantasySkater(self, yahoo_info):
+        self.c.execute('''UPDATE fantasy_nhl_player SET
+        yahooEligibility = ?,
+        avgPick = ?,
+        avgRound = ?,
+        percentDrafted = ?
+        WHERE skaterFullName = ?''', (yahoo_info[1], yahoo_info[2], yahoo_info[3], yahoo_info[4], yahoo_info[0],))
 
         self.conn.commit()
         self.conn.close()

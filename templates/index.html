@@ -21,14 +21,14 @@
 
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179485039-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+    <!--    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179485039-1"></script>-->
+    <!--    <script>-->
+    <!--      window.dataLayer = window.dataLayer || [];-->
+    <!--      function gtag(){dataLayer.push(arguments);}-->
+    <!--      gtag('js', new Date());-->
 
-      gtag('config', 'UA-179485039-1');
-    </script>
+    <!--      gtag('config', 'UA-179485039-1');-->
+    <!--    </script>-->
 </head>
 <body>
 <!--<div class="container justify-content-center align-items-center">-->
@@ -51,7 +51,9 @@
                 <td>
                     {% include 'logo.html' %}
                 </td>
-                <td><h1>NHL Mock Draft 2020</h1></td>
+                <td>
+                    {% include 'logoname.html' %}
+                </td>
             </tr>
         </table>
     </div>

@@ -49,32 +49,49 @@
                 if(!(player.position).localeCompare('G')) {
                         var goalieStats = "<tr>" +
                         "<th></th><td>GP</td><td>GAA</td><td>SV%</td><td>WIN</td><td>LOSE</td><td>SO</td>" +
-                        "</tr>" +
-                        "<tr>" +
-                        `<td>${player.stats[0].season}</td>` +
-                        `<td>${player.stats[0].stat.games}</td>` +
-                        `<td>${player.stats[0].stat.goalAgainstAverage}</td>` +
-                        `<td>${player.stats[0].stat.savePercentage}</td>` +
-                        `<td>${player.stats[0].stat.wins}</td>` +
-                        `<td>${player.stats[0].stat.losses}</td>` +
-                        `<td>${player.stats[0].stat.shutouts}</td>` +
                         "</tr>"
+
+                        player.stats.forEach(function(item){
+                            goalieStats += "<tr>" +
+                            `<td>${item.season}</td>` +
+                            `<td>${item.stat.games}</td>` +
+                            `<td>${item.stat.goalAgainstAverage}</td>` +
+                            `<td>${item.stat.savePercentage}</td>` +
+                            `<td>${item.stat.wins}</td>` +
+                            `<td>${item.stat.losses}</td>` +
+                            `<td>${item.stat.shutouts}</td>` +
+                            "</tr>"
+                        })
 
                         stats = goalieStats
                     }
                     else {
                         var playerStats = "<tr>" +
                         "<th></th><td>GP</td><td>G</td><td>A</td><td>TP</td><td>PIM</td><td>+/-</td>" +
-                        "</tr>" +
-                        "<tr>" +
-                        `<td>${player.stats[0].season}</td>` +
-                        `<td>${player.stats[0].stat.games}</td>` +
-                        `<td>${player.stats[0].stat.goals}</td>` +
-                        `<td>${player.stats[0].stat.assists}</td>` +
-                        `<td>${player.stats[0].stat.points}</td>` +
-                        `<td>${player.stats[0].stat.pim}</td>` +
-                        `<td>${player.stats[0].stat.plusMinus}</td>` +
+                        "<td>PPG</td><td>PPP</td>" +
+<!--                        "<td>shots</td><td>hits</td>" +-->
+<!--                        "<td>TOI</td><td>ETOI</td><td>SHTOI</td>" +-->
+                        "<td>PPTOI</td>" +
                         "</tr>"
+                        player.stats.forEach(function(item){
+                            playerStats += `<tr><td>${item.season}</td>` +
+                            `<td>${item.stat.games}</td>` +
+                            `<td>${item.stat.goals}</td>` +
+                            `<td>${item.stat.assists}</td>` +
+                            `<td>${item.stat.points}</td>` +
+                            `<td>${item.stat.pim}</td>` +
+                            `<td>${item.stat.plusMinus}</td>` +
+                            `<td>${item.stat.powerPlayGoals}</td>` +
+<!--                            `<td>${item.stat.powerPlayPoints - item.stat.powerPlayGoals}</td>` +-->
+                            `<td>${item.stat.powerPlayPoints}</td>` +
+<!--                            `<td>${item.stat.shots}</td>` +-->
+<!--                            `<td>${item.stat.hits}</td>` +-->
+<!--                            `<td>${item.stat.timeOnIcePerGame}</td>` +-->
+<!--                            `<td>${item.stat.evenTimeOnIcePerGame}</td>` +-->
+<!--                            `<td>${item.stat.shortHandedTimeOnIcePerGame}</td>` +-->
+                            `<td>${item.stat.powerPlayTimeOnIcePerGame}</td>` +
+                            "</tr>"
+                        })
 
                         stats = playerStats
                     }

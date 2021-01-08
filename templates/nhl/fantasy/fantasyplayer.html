@@ -51,6 +51,9 @@
                 "<th>Player</th>" +
                 "<th>Position</th>" +
                 "<th>Grade</th>" +
+                "<th>Avg Pick</th>" +
+                "<th>Avg Round</th>" +
+                "<th>Percent Drafted</th>" +
                 "</tr>";
 
                 var i = 0
@@ -61,11 +64,15 @@
 
                 $.each(response, function (i, fantasy_player)
                 {
+                    player_position_display = (fantasy_player.yahooEligibility == null) ? fantasy_player.positionCode : fantasy_player.yahooEligibility
                     trHTML += `<tr id=\'` + fantasy_player.playerId + `\'>` +
                     `<td>${ ++i }</td>` +
                     `<td><button class="btn btn-link" data-toggle="modal" data-target="#myModal" onclick=\"loadPlayerModal(${fantasy_player.playerId})\">${ fantasy_player.skaterFullName }</button></td>` +
-                    `<td>${ fantasy_player.positionCode }</td>` +
+                    `<td>${ player_position_display }</td>` +
                     `<td>${ fantasy_player.fantasyGrade }</td>` +
+                    `<td>${ fantasy_player.avgPick }</td>` +
+                    `<td>${ fantasy_player.avgRound }</td>` +
+                    `<td>${ fantasy_player.percentDrafted }</td>` +
                     "</tr>"
 
                 });
@@ -78,6 +85,7 @@
         });
     }
     $(document).ready(getFantasyPlayerPage());
+
 
 </script>
 {% include 'nhl/player/nhlplayerpagemodal.html' %}
@@ -113,9 +121,12 @@
 </form>
 </br>
 <div class="loader"></div>
-<div class="draftcenter_prospect_table" style="width: 100%; height:500px; overflow:auto;">
-    <table border="1" cellpadding="5px" id="draft_table">
-        <tbody>
-        </tbody>
-    </table>
+<div class="container-fluid">
+    <div class="draftcenter_prospect_table" style="width: 100%; overflow:auto;">
+        <table border="1" cellpadding="5px" id="draft_table">
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </div>
+

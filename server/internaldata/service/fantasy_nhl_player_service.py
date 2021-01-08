@@ -26,3 +26,6 @@ class FantasyNhlPlayerService:
 
     def updateFantasyGradeForFantasySkaterWithId(self, id, grade):
         FantasyNhlPlayerDao(self.uri).updateFantasyGradeForFantasySkaterWithId(id, grade)
+
+    def updateFantasyYahooInfoForFantasySkater(self, yahoo_info):
+        FantasyNhlPlayerDao(self.uri).updateFantasyYahooInfoForFantasySkater(yahoo_info)

@@ -1,0 +1,74 @@
+<script>
+    function getHTMLTableForwardString(forward_data) {
+        lw_list = forward_data.filter(function(o){return (JSON.parse(o)["positionCodes"] == "L")})
+        c_list = forward_data.filter(function(o){return (JSON.parse(o)["positionCodes"] == "C")})
+        rw_list = forward_data.filter(function(o){return (JSON.parse(o)["positionCodes"] == "R")})
+
+        
+        len = lw_list.length > c_list.length ? lw_list : c_list
+        len = rw_list.length > len ? rw_list.length : len
+
+        str = ""
+        for(i = 0; i <= len; i++) {
+            lw_player = lw_list[i] != null ? lw_list[i] : ""
+            c_player = c_list[i] != null ? c_list[i] : ""
+            rw_player = rw_list[i] != null ? rw_list[i] : ""
+
+            str += `<tr><td>${lw_player}</td><td>${c_player}</td><td>${rw_player}</td></tr>`
+        }
+
+        return `<tr><table border="1">${str}</table></tr>`
+    }
+
+    function getFantasyRosterByTeam(teamId) {
+        $.ajax({
+            url: `/api/nhl/fantasy?team=${teamId}`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                var trHTML = getHTMLTableForwardString(JSON.parse(response))
+                console.log(trHTML)
+                $('table#player_info_table tbody').html(trHTML)
+                $('h5#player_name').html(response[0].teamName)
+                // $('table#player_stat_table tbody').html(stats)
+
+            },
+            type: 'GET'
+        });
+    }
+    function loadTeamModal(teamId) {
+        $('table#player_info_table tbody').html("")
+        $('h5#player_name').html("")
+        $('table#player_stat_table tbody').html("")
+        getFantasyRosterByTeam(teamId)
+    }
+
+</script>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="player_name"></h5>
+            </div>
+            <div class="modal-body">
+                <table border="1" cellpadding="5px" id="player_info_table">
+                    <tbody>
+                    </tbody>
+                </table>
+                <br>
+                <table border="1" cellpadding="5px" id="player_stat_table">
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

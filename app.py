@@ -118,6 +118,9 @@ def getNhlStatsSkater():
 def getNhlFantasyPlayers():
     if request.args.getlist('position'):
         response = FantasyNhlPlayerService().getAllFantasySkatersWithPositionCodes(request.args.getlist('position'))
+    elif request.args.get('team') is not None:
+        response = FantasyNhlPlayerService().getAllFantasySkatersWithTeamId(request.args.get('team'))
+
     else:
         response = FantasyNhlPlayerService().getAllFantasySkaters()
     return json.dumps(response, default=lambda o: o.__dict__)

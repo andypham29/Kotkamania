@@ -29,7 +29,7 @@ class FantasyPlayerGrader:
         fantasy_value_20182019 = self.__convert_to_fantasy_player_by_year(player, "20182019")
         fantasy_value_20192020 = self.__convert_to_fantasy_player_by_year(player, "20192020")
 
-        grade_20192020 = fantasy_value_20192020["grade"]
+        grade_20192020 = fantasy_value_20192020["grade"] * 1.0125
         grade_20182019 = grade_20192020 if (
                 fantasy_value_20182019["grade"] <= 0 or fantasy_value_20182019["games"] < 10) else \
             fantasy_value_20182019["grade"] * 0.93

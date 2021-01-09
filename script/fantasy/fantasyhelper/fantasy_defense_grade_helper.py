@@ -41,7 +41,7 @@ class FantasyDefenseGradeHelper:
         grade += grade_g + grade_a * 2 + grade_p * 2 + grade_atp * 2 + grade_ppg + grade_ppp + grade_ppp * grade_pptoi
         print(skaterFullName, grade_g, grade_a, grade_p, grade_ppg, grade_ppp, grade_pptoi)
 
-        grade = grade * scale * 0.9575
+        grade = grade * scale * 0.9375
         return round(grade, 2)
 
     def shotPctIndex(self, player_stat=None):

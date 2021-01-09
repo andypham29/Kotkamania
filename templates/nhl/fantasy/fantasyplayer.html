@@ -112,9 +112,16 @@
 
                 var i = 0
                 // sort response by ascending avg_rank
+                if(sort == "yahoo") {
                 response.sort(function(a, b) {
-                    return (a.fantasyGrade===null)-(b.fantasyGrade===null) || +(a.fantasyGrade<b.fantasyGrade)||-(a.fantasyGrade>b.fantasyGrade);
+                    return (a.avgPick===null)-(b.avgPick===null) || +(a.avgPick>b.avgPick)||-(a.avgPick<b.avgPick);
                 })
+                }
+                else {
+                    response.sort(function(a, b) {
+                        return (a.fantasyGrade===null)-(b.fantasyGrade===null) || +(a.fantasyGrade<b.fantasyGrade)||-(a.fantasyGrade>b.fantasyGrade);
+                    })
+                }
 
                 fantasy_players_cookie = getPlayersInCookie()
                 color = "#aed0f5"

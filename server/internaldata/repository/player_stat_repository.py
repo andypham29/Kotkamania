@@ -54,9 +54,10 @@ class InternalPlayerStatRepository:
 
         for stat in stats:
             try:
-                session.insert(stat)
-            except:
-                print(f"[{player.playerId}.{stat.seasonId}] Unable to save, season already exists.")
+                session.add(stat)
+                print(f"[{player.playerId}.{stat.seasonId}] Success!")
+            except Exception as e:
+                print(f"[{player.playerId}.{stat.seasonId}] Unable to save season, {e}")
 
         session.commit()
 

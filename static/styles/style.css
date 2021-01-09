@@ -106,6 +106,10 @@ select {
   text-align:center;
 }
 
-.checkboxes input{
+.checkboxes input {
   margin-right: 40px;
+}
+
+.highlight {
+    background-color: grey;
 }

@@ -99,7 +99,8 @@ def getNhlRoster(id):
 @app.route('/api/nhl/players/<id>')
 def getNhlPlayer(id):
     response = NHLPlayerServiceFacade().get_player_by_playerId_and_seasons(id,
-                                                                           ["20192020", "20182019", "20172018"])
+                                                                           ["20152016", "20162017", "20172018",
+                                                                            "20182019", "20192020", "20202021"])
     return json.dumps(response, default=lambda o: o.__dict__)
 
 

@@ -1,23 +1,30 @@
 <script>
     function getBootstrapPlayerCard(player) {
-        if(player == "") {
+        if(player == "" || player == undefined) {
             return "-"
         }
-        return `<div><a href="/api/nhl/${player.playerId}">${ player.skaterFullName }</a></div>`
+        return `<div><a href="/api/nhl/players/${player.playerId}">${ player.skaterFullName }</a></div>`
     }
+
     function getHTMLTableForwardString(forward_data) {
-        lw_list = forward_data.filter(function(o){ return (o.positionCode == "L") })
-        c_list = forward_data.filter(function(o){ return (o.positionCode == "C") })
-        rw_list = forward_data.filter(function(o){ return (o.positionCode == "R") })
+        // lw_list = forward_data.filter(function(o){ return (o.positionCode == "L") })
+        // c_list = forward_data.filter(function(o){ return (o.positionCode == "C") })
+        // rw_list = forward_data.filter(function(o){ return (o.positionCode == "R") })
 
-        forwards = forward_data
+        forwards = forward_data.filter(function(o){ return (o.positionCode != "D" && o.positionCode != "G")})
+            
         
-
+        console.log(forwards)
         str = ""
         for(i = 0; i < 4 ; i++) {
-            lw_player = lw_list[0] != null ? lw_list.splice(0, 1)[0] : forwards.splice(0, 1)[0]
-            c_player = c_list[0] != null ? c_list.splice(0, 1)[0] : forwards.splice(0, 1)[0]
-            rw_player = rw_list[0] != null ? rw_list.splice(0, 1)[0] : forwards.splice(0, 1)[0]
+            lw = forwards.find(element => { return (element.yahooEligibility != null && element.yahooEligibility.includes("L")) || element.positionCode == "L"})
+            lw_player = lw != null ? forwards.splice(forwards.indexOf(lw), 1)[0] : forwards[0]
+
+            c = forwards.find(element => { return (element.yahooEligibility != null && element.yahooEligibility.includes("C")) || element.positionCode == "C"})
+            c_player = c != null ? forwards.splice(forwards.indexOf(c), 1)[0] : forwards[0]
+
+            rw = forwards.find(element => { return (element.yahooEligibility != null && element.yahooEligibility.includes("R")) || element.positionCode == "R"})
+            rw_player = rw!= null ? forwards.splice(forwards.indexOf(rw), 1)[0] : forwards[0]
 
             forwards.splice(forwards.indexOf(lw_player), 1)[0]
             forwards.splice(forwards.indexOf(c_player), 1)[0]
@@ -29,7 +36,7 @@
                 `<td style="text-align:center">${getBootstrapPlayerCard(rw_player)}</td>` +
                 "</tr>"
         }
-        console.log(str)
+        
         return `<tr><table>${str}</table></tr>`
     }
 

@@ -1,6 +1,41 @@
+<script src="{{url_for('static', filename='cookiehandler.js')}}"></script>
 <script>
+    function getPlayersInCookie(cookie_name) {
+        var value = getCookie(cookie_name)
+        return (value == "") ? [] : JSON.parse(value)[cookie_name]
+    }
+    function savePlayerInCookie(id, name, cookie_name) {
+        var cookies = getCookie(cookie_name)
+        var json = {}
 
-    function changeColorOfDomById(id) {
+        var inner = {}
+        inner["id"] = id
+        inner["name"] = name
+
+        var newProspects = (cookies == "") ? [] : JSON.parse(cookies)[cookie_name]
+        var position = newProspects.findIndex(obj => {
+            return obj.id === id
+        })
+        if ( position == -1  ) newProspects.push(inner)
+
+        json[cookie_name] = newProspects
+        setCookie(cookie_name, JSON.stringify(json))
+    }
+
+    function removePlayerInCookie(id, cookie_name) {
+        var cookies = getCookie(cookie_name)
+        var json = {}
+        var newProspects = (cookies == "") ? [] : JSON.parse(cookies)[cookie_name]
+        var position = newProspects.findIndex(obj => {
+            return obj.id === id
+        })
+        if ( position != -1  ) newProspects.splice(position, 1)
+
+        json[cookie_name] = newProspects
+        setCookie(cookie_name, JSON.stringify(json))
+    }
+
+    function togglePlayerRowById(id, name="") {
         color = "#aed0f5"
         rgb = document.getElementById(id.toString()).style.backgroundColor
         actual_color = rgb.substring(4, rgb.length-1)
@@ -9,9 +44,23 @@
 
         if (actual_color == (color) || actual_color != "") {
             document.getElementById(id.toString()).style.backgroundColor = "white";
+            removePlayerInCookie(id, "fantasy_players")
         }
         else{
             document.getElementById(id.toString()).style.backgroundColor = color;
+            savePlayerInCookie(id, name, "fantasy_players")
+        }
+    }
+
+    function toggleFavoritePlayerById(id) {
+        button = document.getElementById("star_button_" + id.toString())
+        if (button.classList.contains('active')) {
+            removePlayerInCookie(id, "", "fantasy_favorites")
+            button.classList.remove("active")
+        }
+        else {
+            savePlayerInCookie(id, "", "fantasy_favorites")
+            button.classList.add("active")
         }
     }
 
@@ -51,7 +100,7 @@
           }
           return txt
     }
-    function getFantasyPlayerPage() {
+    function getFantasyPlayerPage(sort="fantasy") {
         url = `/api/nhl/fantasy` + buildFantasyUrlQueryParam()
         $.ajax({
             url: url,
@@ -64,34 +113,60 @@
                 var trHTML = "<tr>" +
                 "<th></th>" +
                 "<th>Player</th>" +
+                "<th>Team</th>" +
                 "<th>Position</th>" +
                 "<th>Grade</th>" +
                 "<th>Avg Pick</th>" +
                 "<th>Avg Round</th>" +
                 "<th>Percent Drafted</th>" +
                 "<th></th>" +
+                "<th></th>" +
                 "</tr>";
 
                 var i = 0
                 // sort response by ascending avg_rank
+                if(sort == "yahoo") {
                 response.sort(function(a, b) {
-                    return (a.fantasyGrade===null)-(b.fantasyGrade===null) || +(a.fantasyGrade<b.fantasyGrade)||-(a.fantasyGrade>b.fantasyGrade);
+                    return (a.avgPick===null)-(b.avgPick===null) || +(a.avgPick>b.avgPick)||-(a.avgPick<b.avgPick);
                 })
+                }
+                else {
+                    response.sort(function(a, b) {
+                        return (a.fantasyGrade===null)-(b.fantasyGrade===null) || +(a.fantasyGrade<b.fantasyGrade)||-(a.fantasyGrade>b.fantasyGrade);
+                    })
+                }
 
+                fantasy_players_cookie = getPlayersInCookie('fantasy_players')
+                fantasy_favorites_cookie = getPlayersInCookie('fantasy_favorites')
+                color = "#aed0f5"
                 $.each(response, function (i, fantasy_player)
                 {
+                    style = ""
+                    if(fantasy_players_cookie.filter(function(e) { return e.id === fantasy_player.playerId; }).length > 0) {
+                        style = ` style="background-color: ${ color };"`
+                    }
+                    active_class = ""
+                    if(fantasy_favorites_cookie.filter(function(e) { return e.id === fantasy_player.playerId; }).length > 0) {
+                        active_class = "active"
+                    }
                     player_position_display = (fantasy_player.yahooEligibility == null) ? fantasy_player.positionCode : fantasy_player.yahooEligibility
-                    trHTML += `<tr id=\'` + fantasy_player.playerId + `\'>` +
+                    trHTML += `<tr id=\'` + fantasy_player.playerId + `\' ${ style } >` +
                     `<td>${ ++i }</td>` +
-                    `<td><button class="btn btn-link" data-toggle="modal" data-target="#myModal" onclick=\"loadPlayerModal(${fantasy_player.playerId})\">${ fantasy_player.skaterFullName }</button></td>` +
+                    `<td><button class="btn btn-link" data-toggle="modal" data-target="#player-modal" onclick=\"loadPlayerModal(${fantasy_player.playerId})\">${ fantasy_player.skaterFullName }</button></td>` +
+                    `<td><button class="btn btn-link" data-toggle="modal" data-target="#team-modal" onclick=\"loadTeamModal(${fantasy_player.teamId})\">${ fantasy_player.teamName }</button></td>` +
                     `<td>${ player_position_display }</td>` +
                     `<td>${ fantasy_player.fantasyGrade }</td>` +
                     `<td>${ fantasy_player.avgPick }</td>` +
                     `<td>${ fantasy_player.avgRound }</td>` +
                     `<td>${ fantasy_player.percentDrafted }</td>` +
-                    `<td><button class="btn btn-outline-warning" onclick=changeColorOfDomById(${ fantasy_player.playerId })>
+                    `<td><button class="btn btn-outline-primary ${active_class}" data-toggle="button" id="star_button_${ fantasy_player.playerId }" onclick=toggleFavoritePlayerById(${ fantasy_player.playerId })>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
-                      <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.523-3.356c.329-.314.158-.888-.283-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767l-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288l1.847-3.658 1.846 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.564.564 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                        <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.523-3.356c.329-.314.158-.888-.283-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767l-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288l1.847-3.658 1.846 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.564.564 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                    </svg>
+                    </button></td>` +
+                    `<td><button class="btn btn-outline-primary" onclick=togglePlayerRowById(${ fantasy_player.playerId })>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                        <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
                     </svg>
                     </button></td>` +
                     "</tr>"
@@ -109,41 +184,10 @@
 
 
 
+
 </script>
 {% include 'nhl/player/nhlplayerpagemodal.html' %}
-
-<div style="background-color: white;">
-    <h2>Fantasy Player List</h2>
-    <input class="search" id="myInput" onkeyup="searchValueInTable()" placeholder="Search player's name"
-           title="Type in a name"
-           type="text">
-    <form action="" class="form-check">
-        <div class="form-check checkboxes btn-group-toggle" data-toggle="buttons">
-            <label class="form-check-label btn btn-outline-secondary" for="L">
-                <input class="checkbox-inline" id="L" name="positions" type="checkbox" value="L">
-                LEFT WING
-            </label>
-            <label class="form-check-label btn btn-outline-secondary" for="C">
-                <input class="checkbox-inline" id="C" name="positions" type="checkbox" value="C">
-                CENTER
-            </label>
-            <label class="form-check-label btn btn-outline-secondary" for="R">
-                <input class="checkbox-inline" id="R" name="positions" type="checkbox" value="R">
-                RIGHT WING
-            </label>
-            <label class="form-check-label btn btn-outline-secondary" for="D">
-                <input class="checkbox-inline" id="D" name="positions" type="checkbox" value="D">
-                DEFENSEMAN
-            </label>
-            <label class="form-check-label btn btn-outline-secondary" for="G">
-                <input class="checkbox-inline" id="G" name="positions" type="checkbox" value="G">
-                GOALIE
-            </label>
-            <input class="btn btn-outline-primary" onclick="getFantasyPlayerPage()" type="button" value="Filter">
-        </div>
-    </form>
-    </br>
-</div>
+{% include 'nhl/fantasy/nhllineupmodal.html' %}
 <div class="loader"></div>
 <div class="container-fluid">
     <div class="draftcenter_prospect_table" style="width: 100%; overflow:auto;">

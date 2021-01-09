@@ -23,6 +23,8 @@ class FantasyScript:
         for player in nhl_roster_players:
             self.fantasy_nhl_player_service.saveFantasySkater(player)
 
+        print("done")
+
     def save_player_grade_for_forwards_to_excel(self):
         fantasy_players = self.fantasy_player_helper.get_all_fantasy_forward_from_internal_db()
         excel_helper = ExcelHelper("new_fantasy.xlsx")

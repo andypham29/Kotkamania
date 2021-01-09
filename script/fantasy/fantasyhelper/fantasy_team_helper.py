@@ -12,7 +12,7 @@ class FantasyTeamHelper:
         for team in teams:
             roster_players += [
                 FantasyNhlPlayer(id=player.playerId, skaterFullName=player.fullName, positionCode=player.position,
-                                 teamId=team.id)
+                                 teamId=team.id, teamName=team.name)
                 for player in nhl_roster_service_facade.get_nhl_roster_by_team_id(team.id)]
 
         return roster_players

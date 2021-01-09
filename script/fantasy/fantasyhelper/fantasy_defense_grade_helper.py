@@ -15,6 +15,7 @@ class FantasyDefenseGradeHelper:
         grade_g = self.__calculate_grade_goals(player_stat)
         grade_a = self.__calculate_grade_assists(player_stat)
         grade_p = self.__calculate_grade_points(player_stat)
+        grade_atp = self.__calculate_grade_actual_total_points(player_stat)
         grade_ppg = self.__calculate_grade_ppgoals(player_stat)
         grade_ppa = self.__calculate_grade_ppassists(player_stat)
         grade_ppp = self.__calculate_grade_points(player_stat)
@@ -37,10 +38,10 @@ class FantasyDefenseGradeHelper:
         print(f"[{skaterFullName}|{round(general, 2)}|{index}]{json.dumps(grade_obj.__dict__)}")
 
         # grade += (grade_g + grade_a + grade_p + general * 1.5 * index) / 50 * 100 * scale
-        grade += grade_g + grade_a * 2 + grade_p * 4 + grade_ppg + grade_ppp + grade_ppp * grade_pptoi
+        grade += grade_g + grade_a * 2 + grade_p * 2 + grade_atp * 2 + grade_ppg + grade_ppp + grade_ppp * grade_pptoi
         print(skaterFullName, grade_g, grade_a, grade_p, grade_ppg, grade_ppp, grade_pptoi)
 
-        grade = grade * scale
+        grade = grade * scale * 0.9575
         return round(grade, 2)
 
     def shotPctIndex(self, player_stat=None):
@@ -71,22 +72,20 @@ class FantasyDefenseGradeHelper:
     def __calculate_grade_goals(self, player_stat):
         # return -0.003 * (player_stat.goals / player_stat.games * 82 - 30) ** 2 + 10
         goal = player_stat.goals / player_stat.games * 82
-        if goal < 5:
-            return 8
-        elif 5 <= goal < 8:
-            return 8.3
-        elif 8 <= goal < 10:
-            return 8.5
-        elif 10 <= goal < 12:
-            return 8.8
-        elif 12 <= goal < 15:
-            return 9
+        if goal < 3:
+            return 6
+        elif 3 <= goal < 5:
+            return 7
+        elif 5 <= goal < 10:
+            return 7.5
+        elif 10 <= goal < 15:
+            return 7.7
         elif 15 <= goal < 20:
-            return 9.3
+            return 8
         elif 20 <= goal < 25:
-            return 9.5
+            return 8.5
         elif 25 <= goal < 30:
-            return 9.8
+            return 9
         else:
             return 10
 
@@ -96,21 +95,19 @@ class FantasyDefenseGradeHelper:
         if assists < 5:
             return 5
         elif 5 <= assists < 10:
-            return 7
+            return 6.5
         elif 10 <= assists < 20:
-            return 7
+            return 6
         elif 20 <= assists < 25:
-            return 8
+            return 7
         elif 25 <= assists < 30:
-            return 8.5
-        elif 30 <= assists < 35:
-            return 8.8
-        elif 35 <= assists < 40:
-            return 9.2
+            return 7.5
+        elif 30 <= assists < 40:
+            return 7.8
         elif 40 <= assists < 50:
-            return 9.5
+            return 8
         elif 50 <= assists < 60:
-            return 9.8
+            return 9
         else:
             return 10
 
@@ -122,17 +119,37 @@ class FantasyDefenseGradeHelper:
         elif 20 <= points < 30:
             return 7
         elif 30 <= points < 40:
-            return 8.5
+            return 7.5
         elif 40 <= points < 50:
-            return 8.8
+            return 7.8
         elif 50 <= points < 60:
+            return 8
+        elif 60 <= points < 65:
+            return 8.5
+        elif 65 <= points < 70:
             return 9
-        elif 60 <= points < 70:
+        else:
+            return 10
+
+    def __calculate_grade_actual_total_points(self, player_stat):
+        # return -0.0007 * (player_stat.points / player_stat.games * 82 - 100) ** 2 + 10
+        points = player_stat.points / player_stat.games
+        if points < 25:
+            return 7
+        elif 25 <= points < 35:
+            return 7.5
+        elif 35 <= points < 40:
+            return 8
+        elif 40 <= points < 45:
+            return 8.5
+        elif 45 <= points < 50:
+            return 8.8
+        elif 50 <= points < 55:
+            return 9
+        elif 55 <= points < 60:
             return 9.3
-        elif 70 <= points < 80:
+        elif 60 <= points < 65:
             return 9.5
-        elif 80 <= points < 85:
-            return 9.8
         else:
             return 10
 

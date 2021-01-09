@@ -31,13 +31,13 @@ class FantasyPlayerGrader:
 
         grade_20192020 = fantasy_value_20192020["grade"]
         grade_20182019 = grade_20192020 if (
-                    fantasy_value_20182019["grade"] <= 0 or fantasy_value_20182019["games"] < 10) else \
-        fantasy_value_20182019["grade"]
+                fantasy_value_20182019["grade"] <= 0 or fantasy_value_20182019["games"] < 10) else \
+            fantasy_value_20182019["grade"] * 0.93
         grade_20172018 = grade_20192020 if (
-                    fantasy_value_20172018["grade"] <= 0 or fantasy_value_20172018["games"] < 10) else \
-        fantasy_value_20172018["grade"]
+                fantasy_value_20172018["grade"] <= 0 or fantasy_value_20172018["games"] < 10) else \
+            fantasy_value_20172018["grade"] * 0.9
 
-        grade = (grade_20192020 * 5 + grade_20182019 * 2 + grade_20172018 * 1) / 9
+        grade = (grade_20192020 * 19 + grade_20182019 * 5 + grade_20172018 * 1) / 25
         print(f"[{player.skaterFullName}] 19-20:{grade_20192020}  18-19:{grade_20182019}  17-18:{grade_20172018} ")
         shotPct = fantasy_value_20192020["shotPct"]
 

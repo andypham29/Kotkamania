@@ -1,4 +1,20 @@
 <script>
+
+    function changeColorOfDomById(id) {
+        color = "#aed0f5"
+        rgb = document.getElementById(id.toString()).style.backgroundColor
+        actual_color = rgb.substring(4, rgb.length-1)
+         .replace(/ /g, '')
+         .split(',')[0]
+
+        if (actual_color == (color) || actual_color != "") {
+            document.getElementById(id.toString()).style.backgroundColor = "white";
+        }
+        else{
+            document.getElementById(id.toString()).style.backgroundColor = color;
+        }
+    }
+
     function searchValueInTable(value = null) {
         var input, filter, table, tr, td, i, txtValue;
         input = document.getElementById("myInput");
@@ -37,7 +53,6 @@
     }
     function getFantasyPlayerPage() {
         url = `/api/nhl/fantasy` + buildFantasyUrlQueryParam()
-        console.log(url)
         $.ajax({
             url: url,
             crossDomain: true,
@@ -54,6 +69,7 @@
                 "<th>Avg Pick</th>" +
                 "<th>Avg Round</th>" +
                 "<th>Percent Drafted</th>" +
+                "<th></th>" +
                 "</tr>";
 
                 var i = 0
@@ -73,6 +89,11 @@
                     `<td>${ fantasy_player.avgPick }</td>` +
                     `<td>${ fantasy_player.avgRound }</td>` +
                     `<td>${ fantasy_player.percentDrafted }</td>` +
+                    `<td><button class="btn btn-outline-warning" onclick=changeColorOfDomById(${ fantasy_player.playerId })>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+                      <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.523-3.356c.329-.314.158-.888-.283-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767l-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288l1.847-3.658 1.846 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.564.564 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                    </svg>
+                    </button></td>` +
                     "</tr>"
 
                 });
@@ -87,39 +108,42 @@
     $(document).ready(getFantasyPlayerPage());
 
 
+
 </script>
 {% include 'nhl/player/nhlplayerpagemodal.html' %}
 
-<h2>Fantasy Player List</h2>
-<input class="search" id="myInput" onkeyup="searchValueInTable()" placeholder="Search player's name"
-       title="Type in a name"
-       type="text">
-<form action="" class="form-check">
-    <div class="form-check checkboxes btn-group-toggle" data-toggle="buttons">
-        <label class="form-check-label btn btn-outline-secondary" for="L">
-            <input class="checkbox-inline" id="L" name="positions" type="checkbox" value="L">
-            LEFT WING
-        </label>
-        <label class="form-check-label btn btn-outline-secondary" for="C">
-            <input class="checkbox-inline" id="C" name="positions" type="checkbox" value="C">
-            CENTER
-        </label>
-        <label class="form-check-label btn btn-outline-secondary" for="R">
-            <input class="checkbox-inline" id="R" name="positions" type="checkbox" value="R">
-            RIGHT WING
-        </label>
-        <label class="form-check-label btn btn-outline-secondary" for="D">
-            <input class="checkbox-inline" id="D" name="positions" type="checkbox" value="D">
-            DEFENSEMAN
-        </label>
-        <label class="form-check-label btn btn-outline-secondary" for="G">
-            <input class="checkbox-inline" id="G" name="positions" type="checkbox" value="G">
-            GOALIE
-        </label>
-        <input class="btn btn-outline-primary" onclick="getFantasyPlayerPage()" type="button" value="Filter">
-    </div>
-</form>
-</br>
+<div style="background-color: white;">
+    <h2>Fantasy Player List</h2>
+    <input class="search" id="myInput" onkeyup="searchValueInTable()" placeholder="Search player's name"
+           title="Type in a name"
+           type="text">
+    <form action="" class="form-check">
+        <div class="form-check checkboxes btn-group-toggle" data-toggle="buttons">
+            <label class="form-check-label btn btn-outline-secondary" for="L">
+                <input class="checkbox-inline" id="L" name="positions" type="checkbox" value="L">
+                LEFT WING
+            </label>
+            <label class="form-check-label btn btn-outline-secondary" for="C">
+                <input class="checkbox-inline" id="C" name="positions" type="checkbox" value="C">
+                CENTER
+            </label>
+            <label class="form-check-label btn btn-outline-secondary" for="R">
+                <input class="checkbox-inline" id="R" name="positions" type="checkbox" value="R">
+                RIGHT WING
+            </label>
+            <label class="form-check-label btn btn-outline-secondary" for="D">
+                <input class="checkbox-inline" id="D" name="positions" type="checkbox" value="D">
+                DEFENSEMAN
+            </label>
+            <label class="form-check-label btn btn-outline-secondary" for="G">
+                <input class="checkbox-inline" id="G" name="positions" type="checkbox" value="G">
+                GOALIE
+            </label>
+            <input class="btn btn-outline-primary" onclick="getFantasyPlayerPage()" type="button" value="Filter">
+        </div>
+    </form>
+    </br>
+</div>
 <div class="loader"></div>
 <div class="container-fluid">
     <div class="draftcenter_prospect_table" style="width: 100%; overflow:auto;">

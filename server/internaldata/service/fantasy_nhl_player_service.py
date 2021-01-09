@@ -21,6 +21,9 @@ class FantasyNhlPlayerService:
     def getAllFantasySkatersWithPositionCodes(self, positionCodes):
         return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersByPositionCodes(positionCodes)
 
+    def getAllFantasySkatersWithTeamId(self, teamId):
+        return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersByTeamId(teamId)
+
     def deleteFantasySkaterById(self, id):
         FantasyNhlPlayerDao(self.uri).deleteFantasySkaterById(id)
 

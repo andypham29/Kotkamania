@@ -31,8 +31,8 @@ function setCookie(name,value,days = 365) {
         return (value == "") ? [] : JSON.parse(value).prospects
     }
 
-    function saveProspectIdInCookie(id, name) {
-        var cookies = getCookie('prospects')
+    function savePlayerInCookie(id, name, cookie_name) {
+        var cookies = getCookie(cookie_name)
         var json = {}
 
         var inner = {}
@@ -45,13 +45,12 @@ function setCookie(name,value,days = 365) {
         })
         if ( position == -1  ) newProspects.push(inner)
 
-        json["prospects"] = newProspects
-        setCookie("prospects", JSON.stringify(json))
-        getProspectPage()
+        json[cookie_name] = newProspects
+        setCookie(cookie_name, JSON.stringify(json))
     }
 
-    function removeProspectIdInCookie(id) {
-        var cookies = getCookie('prospects')
+    function removePlayerInCookie(id, cookie_name) {
+        var cookies = getCookie(cookie_name)
         var json = {}
         var newProspects = (cookies == "") ? [] : JSON.parse(cookies).prospects
         var position = newProspects.findIndex(obj => {
@@ -59,7 +58,6 @@ function setCookie(name,value,days = 365) {
         })
         if ( position != -1  ) newProspects.splice(position, 1)
         
-        json["prospects"] = newProspects
-        setCookie("prospects", JSON.stringify(json))
-        getProspectPage()
+        json[cookie_name] = newProspects
+        setCookie(cookie_name, JSON.stringify(json))
     }

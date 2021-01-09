@@ -26,7 +26,7 @@ class FantasyForwardGradeHelper:
 
         # general = ((grade_ppg * index + grade_ppa + grade_ppp + grade_shotPct) + (
         #         (grade_toi + grade_pptoi + grade_evtoi) * index / 3))
-        grade += grade_g * index * 0.25 + grade_g + grade_a + grade_p * 4.125 + grade_atp * scale + grade_ppg + grade_ppp * 0.75 * grade_pptoi + grade_ppp
+        grade += grade_g * index * 0.225 + grade_g + grade_a * 1.75 + grade_p * 4 + grade_atp * scale + grade_ppg + grade_ppp * 0.725 * grade_pptoi
         grade = grade * scale
         print(skaterFullName, grade_g, grade_a, grade_p, grade_atp, grade_ppg, grade_ppp, grade)
         # print(
@@ -116,7 +116,7 @@ class FantasyForwardGradeHelper:
 
     def __calculate_grade_actual_total_points(self, player_stat):
         # return -0.0007 * (player_stat.points / player_stat.games * 82 - 100) ** 2 + 10
-        points = player_stat.points / player_stat.games
+        points = player_stat.points
         if points < 10:
             return 5
         elif 10 <= points < 20:

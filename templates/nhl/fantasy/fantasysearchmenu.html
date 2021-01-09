@@ -1,0 +1,48 @@
+<script>
+  $(window).scroll(function() {
+        var scroll = $(window).scrollTop();
+
+        if (scroll >= 500) {
+            $(".searchbar").addClass("visible");
+        } else {
+            $(".searchbar").removeClass("visible");
+        }
+    });
+
+
+
+</script>
+<div id="searchbar" style="background-color: white">
+    <h2>Fantasy Player List</h2>
+    <input class="search" id="myInput" onkeyup="searchValueInTable()" placeholder="Search player's name"
+           title="Type in a name"
+           type="text">
+    <form action="" class="form-check">
+        <div class="form-check checkboxes btn-group-toggle" data-toggle="buttons">
+            <label class="form-check-label btn btn-outline-secondary" for="L">
+                <input class="checkbox-inline" id="L" name="positions" type="checkbox" value="L">
+                LEFT WING
+            </label>
+            <label class="form-check-label btn btn-outline-secondary" for="C">
+                <input class="checkbox-inline" id="C" name="positions" type="checkbox" value="C">
+                CENTER
+            </label>
+            <label class="form-check-label btn btn-outline-secondary" for="R">
+                <input class="checkbox-inline" id="R" name="positions" type="checkbox" value="R">
+                RIGHT WING
+            </label>
+            <label class="form-check-label btn btn-outline-secondary" for="D">
+                <input class="checkbox-inline" id="D" name="positions" type="checkbox" value="D">
+                DEFENSEMAN
+            </label>
+            <label class="form-check-label btn btn-outline-secondary" for="G">
+                <input class="checkbox-inline" id="G" name="positions" type="checkbox" value="G">
+                GOALIE
+            </label>
+            <input class="btn btn-outline-primary" onclick="getFantasyPlayerPage()" type="button" value="Filter">
+            <input class="btn btn-secondary" onclick="getFantasyPlayerPage('yahoo')" type="button"
+                   value="Sort By Yahoo">
+        </div>
+    </form>
+    </br>
+</div>

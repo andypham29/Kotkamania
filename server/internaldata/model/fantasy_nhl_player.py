@@ -8,7 +8,8 @@ class FantasyNhlPlayer:
                  yahooEligibility=None,
                  avgPick=None,
                  avgRound=None,
-                 percentDrafted=None):
+                 percentDrafted=None,
+                 teamName=""):
         self.playerId = id
         self.skaterFullName = skaterFullName
         self.positionCode = positionCode
@@ -18,3 +19,4 @@ class FantasyNhlPlayer:
         self.avgPick = avgPick
         self.avgRound = avgRound
         self.percentDrafted = percentDrafted
+        self.teamName = teamName

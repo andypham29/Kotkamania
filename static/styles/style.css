@@ -110,6 +110,9 @@ select {
   margin-right: 40px;
 }
 
-.highlight {
-    background-color: grey;
+.searchbar {
+opacity: 0;
+}
+.visible {
+opacity: 1;
 }

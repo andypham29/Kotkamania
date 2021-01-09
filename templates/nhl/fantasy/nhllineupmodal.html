@@ -1,0 +1,131 @@
+<script>
+    function getBootstrapPlayerCard(player) {
+        if(player == "") {
+            return "-"
+        }
+        return `<div><a href="/api/nhl/${player.playerId}">${ player.skaterFullName }</a></div>`
+    }
+    function getHTMLTableForwardString(forward_data) {
+        lw_list = forward_data.filter(function(o){ return (o.positionCode == "L") })
+        c_list = forward_data.filter(function(o){ return (o.positionCode == "C") })
+        rw_list = forward_data.filter(function(o){ return (o.positionCode == "R") })
+
+        forwards = forward_data
+        
+
+        str = ""
+        for(i = 0; i < 4 ; i++) {
+            lw_player = lw_list[0] != null ? lw_list.splice(0, 1)[0] : forwards.splice(0, 1)[0]
+            c_player = c_list[0] != null ? c_list.splice(0, 1)[0] : forwards.splice(0, 1)[0]
+            rw_player = rw_list[0] != null ? rw_list.splice(0, 1)[0] : forwards.splice(0, 1)[0]
+
+            forwards.splice(forwards.indexOf(lw_player), 1)[0]
+            forwards.splice(forwards.indexOf(c_player), 1)[0]
+            forwards.splice(forwards.indexOf(rw_player), 1)[0]
+
+            str += "<tr>" +
+                `<td style="text-align:center">${getBootstrapPlayerCard(lw_player)}</td>` +
+                `<td style="text-align:center">${getBootstrapPlayerCard(c_player)}</td>` +
+                `<td style="text-align:center">${getBootstrapPlayerCard(rw_player)}</td>` +
+                "</tr>"
+        }
+        console.log(str)
+        return `<tr><table>${str}</table></tr>`
+    }
+
+    function getHTMLTableDefensemenString(defense_data) {
+        d_list = defense_data.filter(function(o){ return (o.positionCode == "D") })
+
+        str = ""
+        for(i = 0; i < 6 ; i+=2) {
+            ld_player = d_list[i] != null ? d_list[i] : ""
+            rd_player = d_list[i+1] != null ? d_list[i+1] : ""
+
+            str += `<tr>
+                <td style="text-align:center">${getBootstrapPlayerCard(ld_player)}</td>
+                <td style="text-align:center">${getBootstrapPlayerCard(rd_player)}</td>
+                </tr>`
+        }
+
+        return str
+    }
+
+    function getHTMLTableGoalieString(goalie_data) {
+        d_list = goalie_data.filter(function(o){ return (o.positionCode == "G") })
+
+        str = ""
+        for(i = 0; i < 2 ; i++) {
+            g_player = d_list[i] != null ? d_list[i] : ""
+
+            str += `<tr>
+                <td style="text-align:center">${getBootstrapPlayerCard(g_player)}</td>
+                </tr>`
+        }
+
+        return str
+    }
+    function getFantasyRosterByTeam(teamId) {
+        $.ajax({
+            url: `/api/nhl/fantasy?team=${teamId}`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                response.sort(function(a, b) {
+                    return (a.fantasyGrade===null)-(b.fantasyGrade===null) || +(a.fantasyGrade<b.fantasyGrade)||-(a.fantasyGrade>b.fantasyGrade);
+                })
+                // console.log(response[0].teamName)
+                var forwards = getHTMLTableForwardString(response)
+                var defenses = getHTMLTableDefensemenString(response)
+                var goalie = getHTMLTableGoalieString(response)
+
+                $('table#forward tbody').html(forwards)
+                $('table#defense tbody').html(defenses)
+                $('table#goalie tbody').html(goalie)
+                $('h5#player_name').html(response[0].teamName)
+
+            },
+            type: 'GET'
+        });
+    }
+    function loadTeamModal(teamId) {
+        $('table#forward tbody').html("")
+        $('table#defense tbody').html("")
+        $('table#goalie tbody').html("")
+        $('h5#player_name').html("")
+        // $('table#player_stat_table tbody').html("")
+        getFantasyRosterByTeam(teamId)
+    }
+
+
+</script>
+<div class="modal fade" id="team-modal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="player_name"></h5>
+            </div>
+            <div class="modal-body">
+                <table class="table" id="forward">
+                    <tbody>
+                    </tbody>
+                </table>
+                <table class="table" id="defense">
+                    <tbody>
+                    </tbody>
+                </table>
+                <table class="table" id="goalie">
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -7,14 +7,8 @@
     }
 
     function getHTMLTableForwardString(forward_data) {
-        // lw_list = forward_data.filter(function(o){ return (o.positionCode == "L") })
-        // c_list = forward_data.filter(function(o){ return (o.positionCode == "C") })
-        // rw_list = forward_data.filter(function(o){ return (o.positionCode == "R") })
-
         forwards = forward_data.filter(function(o){ return (o.positionCode != "D" && o.positionCode != "G")})
-            
         
-        console.log(forwards)
         str = ""
         for(i = 0; i < 4 ; i++) {
             lw = forwards.find(element => { return (element.yahooEligibility != null && element.yahooEligibility.includes("L")) || element.positionCode == "L"})

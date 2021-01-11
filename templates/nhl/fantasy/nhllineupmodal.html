@@ -3,7 +3,8 @@
         if(player == "" || player == undefined) {
             return "-"
         }
-        return `<div><a href="/api/nhl/players/${player.playerId}">${ player.skaterFullName }</a></div>`
+        url = `href="/api/nhl/players/${player.playerId}"`
+        return `<div><a>${ player.skaterFullName }</a></div>`
     }
 
     function getHTMLTableForwardString(forward_data) {
@@ -101,6 +102,7 @@
     }
 
 
+
 </script>
 <div class="modal fade" id="team-modal" role="dialog">
     <div class="modal-dialog">
@@ -109,16 +111,19 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="player_name"></h5>
             </div>
+            </br>
             <div class="modal-body">
-                <table class="table" id="forward">
+                <table class="table table-sm" id="forward">
                     <tbody>
                     </tbody>
                 </table>
-                <table class="table" id="defense">
+                </br>
+                <table class="table table-sm" id="defense">
                     <tbody>
                     </tbody>
                 </table>
-                <table class="table" id="goalie">
+                </br>
+                <table class="table table-sm" id="goalie">
                     <tbody>
                     </tbody>
                 </table>

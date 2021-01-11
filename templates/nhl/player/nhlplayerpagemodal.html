@@ -15,7 +15,7 @@
                 playerNameString = `<a href=\"/api/nhl/players/${player.playerId}\">${ player.fullName }</a>`
                 var trHTML = "<tr>" +
                 "<th colspan=\"2\">Team</th>" +
-                `<td colspan=\"2\">${ player.team }</td>` +
+                `<th colspan=\"2\">${ player.team }</th>` +
                 "</tr>";
 
                 trHTML += "<tr>" +
@@ -66,11 +66,11 @@
                     }
                     else {
                         var playerStats = "<tr>" +
-                        "<th></th><td>GP</td><td>G</td><td>A</td><td>TP</td><td>PIM</td><td>+/-</td>" +
-                        "<td>PPG</td><td>PPP</td>" +
-<!--                        "<td>shots</td><td>hits</td>" +-->
-<!--                        "<td>TOI</td><td>ETOI</td><td>SHTOI</td>" +-->
-                        "<td>PPTOI</td>" +
+                        "<th></th><th>GP</th><th>G</th><th>A</th><th>TP</th><th>PIM</th><th>+/-</th>" +
+                        "<th>PPG</th><th>PPP</th>" +
+                        "<th>TOI</th><th>ETOI</th><th>SHTOI</th>" +
+                        "<th>PPTOI</th>" +
+                        "<th>SHOTS</th><th>HITS</th>" +
                         "</tr>"
                         player.stats.forEach(function(item){
                             playerStats += `<tr><td>${item.season}</td>` +
@@ -83,12 +83,12 @@
                             `<td>${item.stat.powerPlayGoals}</td>` +
 <!--                            `<td>${item.stat.powerPlayPoints - item.stat.powerPlayGoals}</td>` +-->
                             `<td>${item.stat.powerPlayPoints}</td>` +
-<!--                            `<td>${item.stat.shots}</td>` +-->
-<!--                            `<td>${item.stat.hits}</td>` +-->
-<!--                            `<td>${item.stat.timeOnIcePerGame}</td>` +-->
-<!--                            `<td>${item.stat.evenTimeOnIcePerGame}</td>` +-->
-<!--                            `<td>${item.stat.shortHandedTimeOnIcePerGame}</td>` +-->
+                            `<td>${item.stat.timeOnIcePerGame}</td>` +
+                            `<td>${item.stat.evenTimeOnIcePerGame}</td>` +
+                            `<td>${item.stat.shortHandedTimeOnIcePerGame}</td>` +
                             `<td>${item.stat.powerPlayTimeOnIcePerGame}</td>` +
+                            `<td>${item.stat.shots}</td>` +
+                            `<td>${item.stat.hits}</td>` +
                             "</tr>"
                         })
 
@@ -106,24 +106,31 @@
     }
 
 
+
+
+
 </script>
 <div class="modal fade" id="player-modal" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <!-- Modal content-->
-        <div class="modal-content">
+        <div class="modal-content" style="overflow-y:auto;">
             <div class="modal-header">
                 <h5 class="modal-title" id="player_name"></h5>
             </div>
             <div class="modal-body">
-                <table border="1" cellpadding="2px" id="player_info_table">
-                    <tbody>
-                    </tbody>
-                </table>
+                <div class="container-fluid" style="overflow-x:auto;">
+                    <table class="table table-sm" id="player_info_table">
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
                 <br>
-                <table border="1" cellpadding="2px" id="player_stat_table">
-                    <tbody>
-                    </tbody>
-                </table>
+                <div class="container-fluid" style="overflow-x:auto;">
+                    <table class="table table-sm table-hover" id="player_stat_table">
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>

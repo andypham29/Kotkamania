@@ -113,7 +113,7 @@
         var toggles = document.forms[0]
         if (toggles === undefined) return false
         for (i = 0; i < toggles.length; i++) {
-                if (toggles[i].checked) {
+                if (toggles[i].checked && toggles[i].value == 'Favorite') {
                     return true
                 }
           }
@@ -155,18 +155,21 @@
                     })
                 }
 
-                fantasy_players_cookie = [].concat(getPlayersInCookie('fantasy_c'), getPlayersInCookie('fantasy_l'), getPlayersInCookie('fantasy_r'), getPlayersInCookie('fantasy_d'), getPlayersInCookie('fantasy_g'))
+                fantasy_players_cookie = [].concat(getPlayersInCookie('fantasy_c'), getPlayersInCookie('fantasy_l'), getPlayersInCookie('fantasy_r'), getPlayersInCookie('fantasy_d'), getPlayersInCookie('fantasy_g'), getPlayersInCookie('fantasy_na'))
                 fantasy_favorites_cookie = getPlayersInCookie('favorite_fantasy_player')
                 color = "#aed0f5"
                 favoriteOn = checkFavoriteToggleOn()
-                // console.log(favoriteOn)
+                console.log(favoriteOn)
                 $.each(response, function (i, fantasy_player)
                 {
                     
                     if (favoriteOn && fantasy_favorites_cookie.indexOf(fantasy_player.playerId) < 0) {
                         return true;
                     }
-                    cookie_string_for_player = `fantasy_${fantasy_player.positionCode.toLowerCase()}`
+                    player_nhl_position = fantasy_player.positionCode.toLowerCase()
+                    player_nhl_position = ['C','L','R','D','G'].indexOf(player_nhl_position) >= 0 ? player_nhl_position : 'na'
+
+                    cookie_string_for_player = `fantasy_${player_nhl_position}`
                     cookie_string_for_favorite = "favorite_fantasy_player"
                     style = ""
                     if(fantasy_players_cookie.filter(function(id) { return id === fantasy_player.playerId; }).length > 0) {

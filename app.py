@@ -57,6 +57,11 @@ def nhl_fantasy():
     return render_template("index.html", page="nhl_fantasy")
 
 
+@app.route('/nhl/players')
+def nhl_players():
+    return render_template("index.html", page="nhl_player")
+
+
 # -------- API Routing -------------
 @app.route('/api/drafts')
 def getEntireDraftSimulation():
@@ -99,7 +104,7 @@ def getNhlRoster(id):
 @app.route('/api/nhl/players/<id>')
 def getNhlPlayer(id):
     response = NHLPlayerServiceFacade().get_player_by_playerId_and_seasons(id,
-                                                                           ["20152016", "20162017", "20172018",
+                                                                           ["20162017", "20172018",
                                                                             "20182019", "20192020", "20202021"])
     return json.dumps(response, default=lambda o: o.__dict__)
 
@@ -120,6 +125,8 @@ def getNhlFantasyPlayers():
         response = FantasyNhlPlayerService().getAllFantasySkatersWithPositionCodes(request.args.getlist('position'))
     elif request.args.get('team') is not None:
         response = FantasyNhlPlayerService().getAllFantasySkatersWithTeamId(request.args.get('team'))
+    elif request.args.get('playerName') is not None:
+        response = FantasyNhlPlayerService().getAllFantasySkatersBySearchName(request.args.get('playerName'))
 
     else:
         response = FantasyNhlPlayerService().getAllFantasySkaters()

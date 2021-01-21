@@ -26,7 +26,7 @@ class FantasyForwardGradeHelper:
 
         # general = ((grade_ppg * index + grade_ppa + grade_ppp + grade_shotPct) + (
         #         (grade_toi + grade_pptoi + grade_evtoi) * index / 3))
-        grade += grade_g * index * 0.225 + grade_g + grade_a * 1.75 + grade_p * 4 + grade_atp * scale + grade_ppg + grade_ppp * 0.725 * grade_pptoi
+        grade += grade_g * index * 0.225 + grade_g + grade_a * 1.75 + grade_p * 3 + grade_atp * scale + grade_ppg + grade_ppp * 0.725 * grade_pptoi + grade_toi
         grade = grade * scale
         print(skaterFullName, grade_g, grade_a, grade_p, grade_atp, grade_ppg, grade_ppp, grade)
         # print(
@@ -195,8 +195,17 @@ class FantasyForwardGradeHelper:
 
     def __calculate_grade_toi(self, player_stat):
         toi = datetime.datetime.strptime(player_stat.timeOnIcePerGame, '%M:%S')
-        grade = (toi.minute * 60 + toi.second) / (15 * 60)
-        return grade if (grade > 0.5) else 0.5
+        toi = (toi.minute * 60 + toi.second)
+        if toi < 15 * 60:
+            return 7
+        elif 15 * 60 <= toi < 17 * 60:
+            return 8
+        elif 17 * 60 <= toi < 20 * 60:
+            return 9
+        elif 20 * 60 <= toi < 25 * 60:
+            return 10
+        else:
+            return 10.5
 
     def __calculate_grade_pptoi(self, player_stat):
         pptoi = datetime.datetime.strptime(player_stat.powerPlayTimeOnIcePerGame, '%M:%S')

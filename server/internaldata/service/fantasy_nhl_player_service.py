@@ -1,3 +1,5 @@
+import re
+
 from server.internaldata.repository.fantasy_nhl_player_dao import FantasyNhlPlayerDao
 
 
@@ -23,6 +25,11 @@ class FantasyNhlPlayerService:
 
     def getAllFantasySkatersWithTeamId(self, teamId):
         return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersByTeamId(teamId)
+
+    def getAllFantasySkatersBySearchName(self, name):
+        regex = re.compile('[^a-zA-Z]')
+        name = regex.sub('', name)
+        return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersBySearchName(name)
 
     def deleteFantasySkaterById(self, id):
         FantasyNhlPlayerDao(self.uri).deleteFantasySkaterById(id)

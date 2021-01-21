@@ -137,6 +137,21 @@ class FantasyNhlPlayerDao:
 
         return list
 
+    def getAllFantasySkatersBySearchName(self, name):
+        self.c.execute(f"SELECT * FROM fantasy_nhl_player WHERE skaterFullName LIKE \'%{name}%\'")
+
+        records = self.c.fetchall()
+
+        list = []
+        for row in records:
+            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
+                                              row[9])
+            list.append(fantasy_skater)
+
+        self.conn.close()
+
+        return list
+
     def deleteFantasySkaterById(self, playerId):
         self.c.execute('''DELETE FROM fantasy_nhl_player WHERE playerId=?''', (playerId,))
 

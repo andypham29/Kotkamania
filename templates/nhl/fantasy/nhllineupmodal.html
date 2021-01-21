@@ -3,9 +3,9 @@
         if(player == "" || player == undefined) {
             return "-"
         }
-        url = `href="/api/nhl/players/${player.playerId}"`
+        url = `"/nhl/players/${player.playerId}"`
         return `<div>
-                    <a>${ player.skaterFullName }</a><br/>
+                    <a href=${url}>${ player.skaterFullName }</a><br/>
                     <span class="badge badge-pill badge-dark">${ player.fantasyGrade }</span>
                 </div>`
     }

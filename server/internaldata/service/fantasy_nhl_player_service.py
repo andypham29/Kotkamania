@@ -29,6 +29,8 @@ class FantasyNhlPlayerService:
     def getAllFantasySkatersBySearchName(self, name):
         regex = re.compile('[^a-zA-Z]')
         name = regex.sub('', name)
+        if name == "":
+            return []
         return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersBySearchName(name)
 
     def deleteFantasySkaterById(self, id):

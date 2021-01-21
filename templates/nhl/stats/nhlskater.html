@@ -42,7 +42,8 @@
                 {
                     trHTML += "<tr>" +
                     `<td>${ ++i }</td>` +
-                    `<td><a href=\"/api/nhl/players/${player.playerId}\">${ player.skaterFullName }</a></td>` +
+<!--                    `<td><a href=\"/api/nhl/players/${player.playerId}\">${ player.skaterFullName }</a></td>` +-->
+                    `<td><button class="btn btn-link" data-toggle="modal" data-target="#player-modal" onclick=\"loadPlayerModal(${player.playerId})\">${ player.skaterFullName }</button></td>` +
                     `<td>${ player.seasonId }</td>` +
                     `<td>${ player.teamAbbrevs }</td>` +
                     `<td>${ player.shootsCatches }</td>` +
@@ -78,9 +79,12 @@
     }
     $(document).ready(getSkaters());
 
+
 </script>
 
 <div class="loader"></div>
+{% include 'nhl/player/nhlplayerpagemodal.html' %}
+{% include 'nhl/fantasy/nhllineupmodal.html' %}
 <table border="1" cellpadding="5px" class="table-hover" id="draft_table">
     <tbody>
     </tbody>

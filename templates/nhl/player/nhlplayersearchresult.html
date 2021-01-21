@@ -1,0 +1,56 @@
+<script>
+    function loadSearchPlayerList() {
+        var url = new URL(window.location.href);
+        var name = url.searchParams.get("search");
+        console.log(name)
+        $.ajax({
+            url: `/api/nhl/fantasy?playerName=${name}`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                if(response.length == 1) {
+                    window.location.replace(`/api/nhl/players/${ response[0].playerId}`)
+                }
+                if(response.length > 1) {
+                    var trHTML = "<tr>" +
+                    "<th>Player</th>" +
+                    "<th>Position</th>" +
+                    "<th>Team</th>" +
+                    "</tr>";
+
+                    $.each(response, function (i, player)
+                    {
+                        trHTML += "<tr>" +
+                        `<td><a href="/nhl/players/${ player.playerId}">${ player.skaterFullName }</a></td>` +
+                        `<td>${ player.positionCode }</td>` +
+                        `<td>${ player.teamName }</td>` +
+                        "</tr>"
+                    });
+                    $('table#draft_table tbody').html(trHTML)
+                }
+            },
+            type: 'GET'
+        });
+    }
+    $(document).ready(loadSearchPlayerList());
+
+
+
+
+
+</script>
+
+{% include 'nhl/player/nhlplayerpagemodal.html' %}
+
+<div class="container">
+    <div class="alert alert-primary" role="alert">
+        Search Result
+    </div>
+    <table class="table" id="draft_table">
+        <tbody>
+        </tbody>
+    </table>
+</div>

@@ -21,30 +21,17 @@
 
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179485039-1"></script>
-    <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+    <!--    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179485039-1"></script>-->
+    <!--    <script>-->
+    <!--          window.dataLayer = window.dataLayer || [];-->
+    <!--          function gtag(){dataLayer.push(arguments);}-->
+    <!--          gtag('js', new Date());-->
 
-          gtag('config', 'UA-179485039-1');
+    <!--          gtag('config', 'UA-179485039-1');-->
 
-    </script>
+    <!--    </script>-->
 </head>
 <body>
-<!--<div class="container justify-content-center align-items-center">-->
-<!--    <div class="row">-->
-<!--        <div class="col-sm">-->
-<!--            <h1>NHL Mock Draft</h1>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="row">-->
-<!--        <div class="col-sm">-->
-<!--            {% include 'logo.html' %}-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
 <div align="center">
     <div class="header py-3">
         <table>
@@ -82,6 +69,13 @@
             {% endif %}
             {% if (page=="nhl_fantasy") %}
             <td>{% include 'nhl/fantasy/fantasyplayer.html' %}</td>
+            {% endif %}
+            {% if (page=="nhl_player") %}
+            {% if (player_id) %}
+            <td>{% include 'nhl/player/nhlplayerpage.html' %}</td>
+            {% else %}
+            <td>{% include 'nhl/player/nhlplayersearchresult.html' %}</td>
+            {% endif %}
             {% endif %}
         </tr>
     </div>

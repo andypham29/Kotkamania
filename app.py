@@ -62,6 +62,11 @@ def nhl_players():
     return render_template("index.html", page="nhl_player")
 
 
+@app.route('/nhl/players/<id>')
+def nhl_player_page(id):
+    return render_template("index.html", page="nhl_player", player_id=id)
+
+
 # -------- API Routing -------------
 @app.route('/api/drafts')
 def getEntireDraftSimulation():

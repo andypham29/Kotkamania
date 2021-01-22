@@ -2,7 +2,6 @@
     function loadPlayerPage() {
     var url = window.location.href
     var playerId = url.substring(url.lastIndexOf('/') + 1)
-    console.log("hello")
     console.log(playerId)
     $('table#player_info_table tbody').html("")
     $('h5#player_name').html("")
@@ -108,6 +107,8 @@
             type: 'GET'
         });
     }
+    $('h2#player_name').html("Hello")
+
     $(document).ready(loadPlayerPage());
 
 </script>

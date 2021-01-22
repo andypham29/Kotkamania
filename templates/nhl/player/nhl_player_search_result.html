@@ -1,8 +1,9 @@
 <script>
-    function loadSearchPlayerList() {
-        var url = new URL(window.location.href);
-        var name = url.searchParams.get("search");
-        console.log(name)
+    function getHtmlMessage(message) {
+        return `<div class="alert alert-primary" role="alert">${ message }</div>`
+    }
+
+    function loadSearchPlayerList(name) {
         $.ajax({
             url: `/api/nhl/fantasy?playerName=${name}`,
             crossDomain: true,
@@ -12,7 +13,7 @@
             },
             success: function(response) {
                 if(response.length == 1) {
-                    window.location.replace(`/api/nhl/players/${ response[0].playerId}`)
+                    window.location.replace(`/nhl/players/${ response[0].playerId}`)
                 }
                 if(response.length > 1) {
                     var trHTML = "<tr>" +
@@ -31,24 +32,38 @@
                     });
                     $('table#draft_table tbody').html(trHTML)
                 }
+                else {
+                    var message = "No result found."
+                    $('div#message_search_page').html(getHtmlMessage(message))
+                }
             },
             type: 'GET'
         });
     }
-    $(document).ready(loadSearchPlayerList());
+    function handleSearchRequest() {
+        var url = new URL(window.location.href);
+        var name = url.searchParams.get("search");
 
-
-
-
-
+        if(name.length < 3) {
+            var message = "Please limit your search further and try again."
+            $(window).on('load', function(){
+                $('div#message_search_page').html(getHtmlMessage(message))
+            });
+        }
+        else {
+            loadSearchPlayerList(name)
+        }
+    }
+    $(document).ready(handleSearchRequest());
 </script>
 
 {% include 'nhl/player/nhlplayerpagemodal.html' %}
 
 <div class="container">
-    <div class="alert alert-primary" role="alert">
-        Search Result
-    </div>
+    <br/>
+    <h2>Search Result</h2>
+    <div id="message_search_page"></div>
+    <br/>
     <table class="table" id="draft_table">
         <tbody>
         </tbody>

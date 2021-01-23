@@ -2,6 +2,7 @@ import json
 
 from flask import Flask, request, render_template
 
+from server.internaldata.service.facade.fantasy_nhl_player_facade import FantasyNhlPlayerFacade
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
 from server.mockdraft.service.facade.mockdraft_selector_service_facade import MockDraftSelectorServiceFacade
 from server.mockdraft.service.prospect_elite_service import ProspectEliteService
@@ -126,15 +127,26 @@ def getNhlStatsSkater():
 
 @app.route('/api/nhl/fantasy')
 def getNhlFantasyPlayers():
-    if request.args.getlist('position'):
-        response = FantasyNhlPlayerService().getAllFantasySkatersWithPositionCodes(request.args.getlist('position'))
-    elif request.args.get('team') is not None:
+    if request.args.get('team') is not None:
         response = FantasyNhlPlayerService().getAllFantasySkatersWithTeamId(request.args.get('team'))
     elif request.args.get('playerName') is not None:
         response = FantasyNhlPlayerService().getAllFantasySkatersBySearchName(request.args.get('playerName'))
 
     else:
-        response = FantasyNhlPlayerService().getAllFantasySkaters()
+        positions = request.args.getlist('position')
+        min_game = request.args.get('minGame')
+        percentile_shot = request.args.get('shotPercentile')
+        percentile_hit = request.args.get('hitPercentile')
+        percentile_block = request.args.get('blockPercentile')
+        percentile_goal = request.args.get('goalPercentile')
+        percentile_assist = request.args.get('assistPercentile')
+        percentile_point = request.args.get('pointPercentile')
+        response = FantasyNhlPlayerFacade().getAllFantasySkaters(positions, min_game, percentile_shot,
+                                                                 percentile_hit,
+                                                                 percentile_block,
+                                                                 percentile_goal,
+                                                                 percentile_assist,
+                                                                 percentile_point)
     return json.dumps(response, default=lambda o: o.__dict__)
 
 

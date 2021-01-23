@@ -122,6 +122,27 @@ class FantasyNhlPlayerDao:
 
         return list
 
+    def getAllFantasySkatersInPlayerIdList(self, playerIdList):
+        # positionCodes[:] = [value for value in positionCodes if value in ['L', 'C', 'R', 'D', 'G']]
+        filter_parameters = str(playerIdList).replace('[', '(').replace(']', ')')
+
+        query = f'''SELECT * FROM fantasy_nhl_player 
+            WHERE positionCode IN {filter_parameters}'''
+
+        self.c.execute(query)
+
+        records = self.c.fetchall()
+
+        list = []
+        for row in records:
+            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
+                                              row[9])
+            list.append(fantasy_skater)
+
+        self.conn.close()
+
+        return list
+
     def getAllFantasySkatersByTeamId(self, teamId):
         self.c.execute('''SELECT * FROM fantasy_nhl_player WHERE teamId=?''', (teamId,))
 

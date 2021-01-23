@@ -23,13 +23,16 @@ class FantasyNhlPlayerService:
     def getAllFantasySkatersWithPositionCodes(self, positionCodes):
         return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersByPositionCodes(positionCodes)
 
+    def getAllFantasySkatersInPlayerIdList(self, playerIdList):
+        return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersInPlayerIdList(playerIdList)
+
     def getAllFantasySkatersWithTeamId(self, teamId):
         return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersByTeamId(teamId)
 
     def getAllFantasySkatersBySearchName(self, name):
         regex = re.compile('[^a-zA-Z]')
         name = regex.sub('', name)
-        if name == "":
+        if name == "" or len(name) < 3:
             return []
         return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersBySearchName(name)
 

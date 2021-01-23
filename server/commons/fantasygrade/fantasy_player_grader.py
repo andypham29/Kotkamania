@@ -31,7 +31,9 @@ class FantasyPlayerGrader:
         fantasy_value_20172018 = self.__convert_to_fantasy_player_by_year(player, "20172018")
         fantasy_value_20182019 = self.__convert_to_fantasy_player_by_year(player, "20182019")
         fantasy_value_20192020 = self.__convert_to_fantasy_player_by_year(player, "20192020")
+        fantasy_value_20202021 = self.__convert_to_fantasy_player_by_year(player, "20202021")
 
+        grade_20202021 = fantasy_value_20202021["grade"]
         grade_20192020 = fantasy_value_20192020["grade"] * 1.0125
         grade_20182019 = grade_20192020 if (
                 fantasy_value_20182019["grade"] <= 0 or fantasy_value_20182019["games"] < 10) else \
@@ -40,7 +42,7 @@ class FantasyPlayerGrader:
                 fantasy_value_20172018["grade"] <= 0 or fantasy_value_20172018["games"] < 10) else \
             fantasy_value_20172018["grade"] * 0.9
 
-        grade = (grade_20192020 * 19 + grade_20182019 * 5 + grade_20172018 * 1) / 25
+        grade = (grade_20202021 * 2 + grade_20192020 * 17 + grade_20182019 * 5 + grade_20172018 * 1) / 25
         grade = round(grade, 2)
         print(f"[{player.skaterFullName}] 19-20:{grade_20192020}  18-19:{grade_20182019}  17-18:{grade_20172018} ")
         shotPct = fantasy_value_20192020["shotPct"]
@@ -72,7 +74,7 @@ class FantasyPlayerGrader:
         player_stat = InternalPlayerStatRepository().get_internal_players_stats_by_playerId_and_seasonId(
             player.playerId, year)
 
-        if player_stat is None:
+        if player_stat is None and year != "20202021":
             if player.positionCode == 'G':
                 stat = NHLPlayerServiceFacade().get_player_by_playerId_and_seasons(player.playerId, [year]).stats
             else:

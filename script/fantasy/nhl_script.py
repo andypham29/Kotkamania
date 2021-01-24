@@ -78,11 +78,11 @@ if __name__ == '__main__':
     # FantasyScript().save_player_stats_to_internal_db()
     # # InternalPlayerRepository().create_database()
 
-    FantasyScript() \
-        .process_defensemen() \
-        .close()
+    # FantasyScript() \
+    #     .process_defensemen() \
+    #     .close()
 
-    # FantasyScript().save_player_grade_for_all_players_in_internal_db()
+    FantasyScript().save_player_grade_for_all_players_in_internal_db()
     # FantasyScript().save_player_grade_for_forwards_to_excel()
 
     # stats = InternalPlayerStatRepository().get_internal_player_stats_by_playerId(8470187)

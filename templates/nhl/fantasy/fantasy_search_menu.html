@@ -2,10 +2,19 @@
 
     <div id="searchbar" style="background-color: white">
         <h2>Fantasy Player List</h2>
-        <input class="search form-control" id="myInput" onkeyup="searchValueInTable()"
-               placeholder="Search player's name"
-               title="Type in a name"
-               type="text">
+        <tr>
+            <input class="search form-control" id="myInput" onkeyup="searchValueInTable()"
+                   placeholder="Search player's name"
+                   title="Type in a name"
+                   type="text">
+            <a aria-controls="advanced_search" aria-expanded="false" class="btn btn-outline-dark"
+               data-target="#advanced_search"
+               data-toggle="collapse" type="button">Toggle Advanced Search</a>
+        </tr>
+        <br/>
+        <tr>{% include 'nhl/fantasy/fantasy_advance_search.html' %}</tr>
+        <br/>
+
         <form action="" class="form-check">
             <tr>
                 <div class="form-check checkboxes btn-group-toggle" data-toggle="buttons">
@@ -30,19 +39,22 @@
                         GOALIE
                     </label>
                     <label class="form-check-label btn btn-outline-secondary" for="Favorite">
-                        <input class="checkbox-inline" id="Favorite" name="positions" type="checkbox" value="Favorite">
+                        <input class="checkbox-inline" id="Favorite" name="positions" type="checkbox"
+                               value="Favorite">
                         FAVORITES
                     </label>
                 </div>
             </tr>
-            </br>
+            <br/>
             <tr>
                 <input class="btn btn-outline-primary" onclick="getFantasyPlayerPage()" type="button"
-                       value="Get By Score">
+                       value="Filter By Score">
                 <input class="btn btn-outline-primary" onclick="getFantasyPlayerPage('yahoo')" type="button"
-                       value="Get By Yahoo">
-            <tr>
+                       value="Filter By Yahoo">
+                <br/>
+            </tr>
         </form>
-        </br>
+
+        <br/>
     </div>
 </div>

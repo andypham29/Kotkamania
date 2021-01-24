@@ -18,12 +18,12 @@ class FantasyPercentileCalculator:
         stats = [self.get_stat_by_playerId_and_season(player.playerId, "20192020") for player in players]
         min_game = 30 if not min_game else min_game
 
-        shot = np.array([stat.shots for stat in stats if self.__check_condition(stat, min_game)])
-        hit = np.array([stat.hits for stat in stats if self.__check_condition(stat, min_game)])
-        block = np.array([stat.blocked for stat in stats if self.__check_condition(stat, min_game)])
-        goal = np.array([stat.goals for stat in stats if self.__check_condition(stat, min_game)])
-        assist = np.array([stat.assists for stat in stats if self.__check_condition(stat, min_game)])
-        point = np.array([stat.points for stat in stats if self.__check_condition(stat, min_game)])
+        shot = np.array([stat.shots / stat.games * 82 for stat in stats if self.__check_condition(stat, min_game)])
+        hit = np.array([stat.hits / stat.games * 82 for stat in stats if self.__check_condition(stat, min_game)])
+        block = np.array([stat.blocked / stat.games * 82 for stat in stats if self.__check_condition(stat, min_game)])
+        goal = np.array([stat.goals / stat.games * 82 for stat in stats if self.__check_condition(stat, min_game)])
+        assist = np.array([stat.assists / stat.games * 82 for stat in stats if self.__check_condition(stat, min_game)])
+        point = np.array([stat.points / stat.games * 82 for stat in stats if self.__check_condition(stat, min_game)])
 
         try:
 
@@ -52,7 +52,10 @@ class FantasyPercentileCalculator:
     @staticmethod
     def __get_valid_percentile(percentile):
         try:
-            return int(percentile)
+            percentile = int(percentile)
+            if 0 < percentile < 100:
+                return percentile
+            raise Exception("Percentile out of bound")
         except Exception as e:
             print("FantasyPercentileCalculator: ", e)
             return 0
@@ -62,7 +65,6 @@ class FantasyPercentileCalculator:
         if not stat:
             return False
 
-        print(not stat.games and stat.games > min_game)
         return stat.games and stat.games > min_game
 
     def get_all_players_stats(self, players):

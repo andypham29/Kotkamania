@@ -96,6 +96,9 @@
         });
     }
     function loadTeamModal(teamId) {
+        // only for Kucherov
+        if(teamId == 0)
+         teamId = 14
         $('table#forward tbody').html("")
         $('table#defense tbody').html("")
         $('table#goalie tbody').html("")

@@ -1,0 +1,45 @@
+<div class="container-fluid collapse" id="advanced_search">
+    <br/>
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <p>Percentile is the value below which a percentage of data falls. If a candidate scores in the 90th
+            percentile, they have scored higher than 90% of the group. 50th percentile would represent the median.
+        </p>
+        <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form>
+        <div class="form-row">
+            <div class="col">
+                <label for="shot_percentile">Shot Percentile</label>
+                <input class="form-control" id="shot_percentile" max="100" min="0" name="shotPercentile"
+                       placeholder="Shot Percentile" step="5" type="number">
+            </div>
+            <div class="col">
+                <label for="hit_percentile">Hit Percentile</label>
+                <input class="form-control" id="hit_percentile" max="100" min="0" name="hitPercentile"
+                       placeholder="Hit Percentile" step="5" type="number">
+            </div>
+            <div class="col">
+                <label for="block_percentile">Block Percentile</label>
+                <input class="form-control" id="block_percentile" max="100" min="0" name="blockPercentile"
+                       placeholder="Block Percentile" step="5" type="number">
+            </div>
+            <div class="col">
+                <label for="goal_percentile">Goal Percentile</label>
+                <input class="form-control" id="goal_percentile" max="100" min="0" name="goalPercentile"
+                       placeholder="Goal Percentile" step="5" type="number">
+            </div>
+            <div class="col">
+                <label for="assist_percentile">Assist Percentile</label>
+                <input class="form-control" id="assist_percentile" max="100" min="0" name="assistPercentile"
+                       placeholder="Assist Percentile" step="5" type="number">
+            </div>
+            <div class="col">
+                <label for="point_percentile">Point Percentile</label>
+                <input class="form-control" id="point_percentile" max="100" min="0" name="pointPercentile"
+                       placeholder="Point Percentile" step="5" type="number">
+            </div>
+        </div>
+    </form>
+</div>

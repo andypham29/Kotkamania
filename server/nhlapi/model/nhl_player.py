@@ -26,11 +26,15 @@ class SeasonStat:
 
 class PlayerStat:
 
-    def __init__(self, timeOnIce, assists, goals, pim, shots, games, hits, powerPlayGoals, powerPlayPoints,
-                 powerPlayTimeOnIce, evenTimeOnIce, penaltyMinutes, faceOffPct, shotPct, gameWinningGoals,
-                 overTimeGoals, shortHandedGoals, shortHandedPoints, shortHandedTimeOnIce, blocked, plusMinus,
-                 points, shifts, timeOnIcePerGame, evenTimeOnIcePerGame, shortHandedTimeOnIcePerGame,
-                 powerPlayTimeOnIcePerGame):
+    def __init__(self, timeOnIce=None, assists=None, goals=None, pim=None, shots=None, games=None, hits=None,
+                 powerPlayGoals=None, powerPlayPoints=None,
+                 powerPlayTimeOnIce=None, evenTimeOnIce=None, penaltyMinutes=None, faceOffPct=None, shotPct=None,
+                 gameWinningGoals=None,
+                 overTimeGoals=None, shortHandedGoals=None, shortHandedPoints=None, shortHandedTimeOnIce=None,
+                 blocked=None, plusMinus=None,
+                 points=None, shifts=None, timeOnIcePerGame=None, evenTimeOnIcePerGame=None,
+                 shortHandedTimeOnIcePerGame=None,
+                 powerPlayTimeOnIcePerGame=None):
         self.timeOnIce = timeOnIce
         self.assists = assists
         self.goals = goals

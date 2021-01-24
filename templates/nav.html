@@ -1,21 +1,39 @@
 <div class="sticky-top">
-    <nav class="navbar navbar-expand-sm navbar-light bg-white"
+    <nav class="navbar navbar-expand-md"
          style="background-color: white; height: 10%;">
         <div class="container justify-content-center">
-            <a class="nav-item nav-link" href="/">Home</a>
-            <a class="nav-item nav-link" href="/prospects">Prospects</a>
-            <a class="nav-item nav-link" href="/draftcenter">Draft Center</a>
-            <a class="nav-item nav-link" href="/draftsimulator">Draft Simulator</a>
-            <a class="nav-item nav-link" href="/nhl/stats/skater">NHL</a>
-            <a class="nav-item nav-link" href="/nhl/fantasy">NHL Fantasy <span
-                    class="badge badge-primary">new</span></a>
+            <button aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation"
+                    class="navbar-toggler navbar-light"
+                    data-target="#navbarTogglerDemo01" data-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <ul class="nav navbar-nav">
+                    <li><a class="nav-item nav-link" href="/">Home</a></li>
+                    <li><a class="nav-item nav-link" href="/prospects">Prospects</a></li>
+                    <li><a class="nav-item nav-link" href="/draftcenter">Draft Center</a></li>
+                    <li><a class="nav-item nav-link" href="/draftsimulator">Draft Simulator</a></li>
+                    <li><a class="nav-item nav-link" href="/nhl/stats/skater">NHL</a></li>
+                    <li><a class="nav-item nav-link" href="/nhl/fantasy">NHL Fantasy <span
+                            class="badge badge-primary">new</span></a></li>
+                </ul>
+                <ul class="nav navbar-nav ml-auto">
+                    <li>
+                        <form action="/nhl/players" class="form-inline ml-auto">
+                            <input aria-label="Search" class="form-control mr-sm-2" name="search"
+                                   placeholder="Search Player"
+                                   required type="search">
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
     {% if (page=="nhl_roster" or page=="nhl_stats_skater") %}
     {% include 'nhl/nhl_nav.html' %}
     {% endif %}
     {% if (page=="nhl_fantasy") %}
-    {% include 'nhl/fantasy/fantasysearchmenu.html' %}
+    {% include 'nhl/fantasy/fantasy_search_menu.html' %}
     {% endif %}
 </div>
 

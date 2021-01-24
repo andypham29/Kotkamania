@@ -20,31 +20,19 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
 
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179485039-1"></script>
-    <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+    <!--    Global site tag (gtag.js) - Google Analytics-->
+    <!--    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179485039-1"></script>-->
+    <!--    <script>-->
+    <!--              window.dataLayer = window.dataLayer || [];-->
+    <!--              function gtag(){dataLayer.push(arguments);}-->
+    <!--              gtag('js', new Date());-->
 
-          gtag('config', 'UA-179485039-1');
+    <!--              gtag('config', 'UA-179485039-1');-->
 
-    </script>
+
+    <!--    </script>-->
 </head>
 <body>
-<!--<div class="container justify-content-center align-items-center">-->
-<!--    <div class="row">-->
-<!--        <div class="col-sm">-->
-<!--            <h1>NHL Mock Draft</h1>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="row">-->
-<!--        <div class="col-sm">-->
-<!--            {% include 'logo.html' %}-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
 <div align="center">
     <div class="header py-3">
         <table>
@@ -66,22 +54,29 @@
             <td>{% include 'news/news.html' %}</td>
             {% endif %}
             {% if page=="draft_simulator" %}
-            <td>{% include 'draftsimulator/draftsimulator.html' %}</td>
+            <td>{% include 'draftsimulator/draft_simulator.html' %}</td>
             {% endif %}
             {% if page=="prospect" %}
-            <td>{% include 'prospectpage/prospectpage.html' %}</td>
+            <td>{% include 'prospectpage/prospect_page.html' %}</td>
             {% endif %}
             {% if page=="prospect_list" %}
-            <td>{% include 'prospectlist/prospectlist.html' %}</td>
+            <td>{% include 'prospectlist/prospect_list.html' %}</td>
             {% endif %}
             {% if page=="draft_center" %}
-            <td>{% include 'draftcenter/draftcenter.html' %}</td>
+            <td>{% include 'draftcenter/draft_center.html' %}</td>
             {% endif %}
             {% if (page=="nhl_roster" or page=="nhl_stats_skater") %}
             <td>{% include 'nhl/nhl_index.html' %}</td>
             {% endif %}
             {% if (page=="nhl_fantasy") %}
-            <td>{% include 'nhl/fantasy/fantasyplayer.html' %}</td>
+            <td>{% include 'nhl/fantasy/fantasy_player.html' %}</td>
+            {% endif %}
+            {% if (page=="nhl_player") %}
+            {% if (player_id) %}
+            <td>{% include 'nhl/player/nhl_player_page.html' %}</td>
+            {% else %}
+            <td>{% include 'nhl/player/nhl_player_search_result.html' %}</td>
+            {% endif %}
             {% endif %}
         </tr>
     </div>

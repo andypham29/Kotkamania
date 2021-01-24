@@ -1,5 +1,8 @@
 <script>
-    function loadPlayerModal(playerId) {
+    function loadPlayerPage() {
+    var url = window.location.href
+    var playerId = url.substring(url.lastIndexOf('/') + 1)
+    console.log(playerId)
     $('table#player_info_table tbody').html("")
     $('h5#player_name').html("")
     $('table#player_stat_table tbody').html("")
@@ -97,45 +100,31 @@
                 }
 
                 $('table#player_info_table tbody').html(trHTML)
-                $('h5#player_name').html(playerNameString)
+                $('h2#player_name').html(playerNameString)
                 $('table#player_stat_table tbody').html(stats)
 
             },
             type: 'GET'
         });
     }
+    $('h2#player_name').html("Hello")
 
-
-
-
+    $(document).ready(loadPlayerPage());
 
 </script>
-<div class="modal fade" id="player-modal" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <!-- Modal content-->
-        <div class="modal-content" style="overflow-y:auto;">
-            <div class="modal-header">
-                <h5 class="modal-title" id="player_name"></h5>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid" style="overflow-x:auto;">
-                    <table class="table table-sm" id="player_info_table">
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-                <br>
-                <div class="container-fluid" style="overflow-x:auto;">
-                    <table class="table table-sm table-hover" id="player_stat_table">
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-            </div>
-        </div>
-
-    </div>
+<div class="container-fluid" style="overflow-x:auto;">
+    <br>
+    <h2 class="title" id="player_name"></h2>
+    <br>
+    <table class="table table-sm" id="player_info_table">
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<br>
+<div class="container-fluid" style="overflow-x:auto;">
+    <table class="table table-sm table-hover" id="player_stat_table">
+        <tbody>
+        </tbody>
+    </table>
 </div>

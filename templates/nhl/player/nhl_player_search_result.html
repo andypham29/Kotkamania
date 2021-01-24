@@ -1,0 +1,72 @@
+<script>
+    function getHtmlMessage(message) {
+        return `<div class="alert alert-primary" role="alert">${ message }</div>`
+    }
+
+    function loadSearchPlayerList(name) {
+        $.ajax({
+            url: `/api/nhl/fantasy?playerName=${name}`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                if(response.length == 1) {
+                    window.location.replace(`/nhl/players/${ response[0].playerId}`)
+                }
+                if(response.length > 1) {
+                    var trHTML = "<tr>" +
+                    "<th>Player</th>" +
+                    "<th>Position</th>" +
+                    "<th>Team</th>" +
+                    "</tr>";
+
+                    $.each(response, function (i, player)
+                    {
+                        trHTML += "<tr>" +
+                        `<td><a href="/nhl/players/${ player.playerId}">${ player.skaterFullName }</a></td>` +
+                        `<td>${ player.positionCode }</td>` +
+                        `<td>${ player.teamName }</td>` +
+                        "</tr>"
+                    });
+                    $('table#draft_table tbody').html(trHTML)
+                }
+                else {
+                    var message = "No result found."
+                    $('div#message_search_page').html(getHtmlMessage(message))
+                }
+            },
+            type: 'GET'
+        });
+    }
+    function handleSearchRequest() {
+        var url = new URL(window.location.href);
+        var name = url.searchParams.get("search");
+
+        if(name.length < 3) {
+            var message = "Please limit your search further and try again."
+            $(window).on('load', function(){
+                $('div#message_search_page').html(getHtmlMessage(message))
+            });
+        }
+        else {
+            loadSearchPlayerList(name)
+        }
+    }
+    $(document).ready(handleSearchRequest());
+
+</script>
+
+{% include 'nhl/player/nhl_player_page_modal.html' %}
+
+<div class="container">
+    <br/>
+    <h2>Search Result</h2>
+    <div id="message_search_page"></div>
+    <br/>
+    <table class="table" id="draft_table">
+        <tbody>
+        </tbody>
+    </table>
+</div>

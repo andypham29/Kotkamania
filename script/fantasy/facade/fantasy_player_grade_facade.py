@@ -1,6 +1,8 @@
-from script.fantasy.facade.fantasy_player_grader import FantasyPlayerGrader
-from script.fantasy.fantasyhelper.fantasy_defense_grade_helper import FantasyDefenseGradeHelper
-from script.fantasy.fantasyhelper.fantasy_forward_grade_helper import FantasyForwardGradeHelper
+from server.commons.fantasygrade.fantasy_defense_grade_helper import FantasyDefenseGradeHelper
+from server.commons.fantasygrade.fantasy_forward_grade_helper import FantasyForwardGradeHelper
+
+from server.commons.fantasygrade.fantasy_player_grader import FantasyPlayerGrader
+
 from server.internaldata.repository.player_repository import InternalPlayerRepository
 from server.internaldata.repository.player_stat_repository import InternalPlayerStatRepository
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
@@ -70,6 +72,11 @@ class FantasyPlayerGradeFacade:
         # InternalPlayerRepository().save_internal_players(players)
         players = InternalPlayerRepository().get_defensemen(amount)
 
+        return [self.__convert_to_fantasy_player(player) for player in players]
+
+    def get_fantasy_goalie(self, amount=100):
+        players = FantasyNhlPlayerService(
+            '../../server/internaldata/db/fantasy.db').getAllFantasySkatersWithPositionCodes(["G"])[:amount]
         return [self.__convert_to_fantasy_player(player) for player in players]
 
     def get_all_fantasy_player_from_internal_db(self):

@@ -33,7 +33,6 @@
                     "</div></div></td>" +
                     "</tr>"
                 });
-                console.log(trHTML)
                 $('table#draft_table tbody').html(trHTML)
                 $(".loader").remove();
                 $('#refresh').removeAttr('hidden')
@@ -41,13 +40,6 @@
             type: 'GET'
         });
     });
-
-
-
-
-
-
-
 </script>
 <div class="container" style="top-padding: 10px">
     <div class="alert alert-primary" role="alert">

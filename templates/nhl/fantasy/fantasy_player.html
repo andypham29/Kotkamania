@@ -94,8 +94,7 @@
     }
 
     function buildFantasyUrlQueryParam() {
-          var positions = document.forms[1];
-          console.log(positions)
+          var positions = document.forms[2];
           var txt = "";
           var first = true;
           if (positions === undefined) return ""
@@ -109,8 +108,7 @@
                     txt += `${symbol}position=${positions[i].value}`;
                 }
           }
-          var percentiles = document.forms[2];
-          console.log(percentiles)
+          var percentiles = document.forms[1];
           if (percentiles === undefined) {
             return txt
           }

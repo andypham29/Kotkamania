@@ -70,7 +70,7 @@
                         "<th>PPG</th><th>PPP</th>" +
                         "<th>TOI</th><th>ETOI</th><th>SHTOI</th>" +
                         "<th>PPTOI</th>" +
-                        "<th>SHOTS</th><th>HITS</th>" +
+                        "<th>SHOTS</th><th>HITS</th><th>BLKS</th>" +
                         "</tr>"
                         player.stats.forEach(function(item){
                             playerStats += `<tr><td>${item.season}</td>` +
@@ -89,6 +89,7 @@
                             `<td>${item.stat.powerPlayTimeOnIcePerGame}</td>` +
                             `<td>${item.stat.shots}</td>` +
                             `<td>${item.stat.hits}</td>` +
+                            `<td>${item.stat.blocked}</td>` +
                             "</tr>"
                         })
 

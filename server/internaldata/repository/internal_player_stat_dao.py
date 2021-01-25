@@ -1,5 +1,6 @@
 import sqlite3
 
+from server.commons.helper.time_converter import TimeConverter
 from server.internaldata.model.internal_nhl_player_stat import InternalPlayerStat
 
 
@@ -23,7 +24,11 @@ class InternalPlayerStatDao:
         for attr, value in percentile_values.__dict__.items():
             if value.percentile is None:
                 continue
-            query += f" AND {attr} > {value.value}"
+            if attr in ['timeOnIcePerGame', 'powerPlayTimeOnIcePerGame', 'evenTimeOnIcePerGame']:
+                query += f' AND {attr} > "{TimeConverter.convert_total_seconds_to_string(value.value)}"'
+            else:
+                query += f" AND {attr} > {value.value}"
+        print(query)
         self.c.execute(query)
         records = self.c.fetchall()
 

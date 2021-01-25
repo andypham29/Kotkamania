@@ -141,12 +141,18 @@ def getNhlFantasyPlayers():
         percentile_goal = request.args.get('goalPercentile')
         percentile_assist = request.args.get('assistPercentile')
         percentile_point = request.args.get('pointPercentile')
+        percentile_toi = request.args.get('toiPercentile')
+        percentile_pptoi = request.args.get('pptoiPercentile')
+        percentile_evtoi = request.args.get('evtoiPercentile')
         response = FantasyNhlPlayerFacade().getAllFantasySkaters(positions, min_game, percentile_shot,
                                                                  percentile_hit,
                                                                  percentile_block,
                                                                  percentile_goal,
                                                                  percentile_assist,
-                                                                 percentile_point)
+                                                                 percentile_point,
+                                                                 percentile_toi,
+                                                                 percentile_pptoi,
+                                                                 percentile_evtoi)
     return json.dumps(response, default=lambda o: o.__dict__)
 
 

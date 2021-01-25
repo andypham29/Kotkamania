@@ -1,6 +1,5 @@
-import datetime
-
 from script.fantasy.model.fantasy_skater_grade import FantasySkaterGrade
+from server.commons.helper.time_converter import TimeConverter
 
 
 class FantasyDefenseGradeHelper:
@@ -196,8 +195,7 @@ class FantasyDefenseGradeHelper:
         return 0.85 if shotPct <= 0.0 or not None else (shotPct / 100) ** -1 * 0.1
 
     def __calculate_grade_toi(self, player_stat):
-        toi = datetime.datetime.strptime(player_stat.timeOnIcePerGame, '%M:%S')
-        toi = (toi.minute * 60 + toi.second)
+        toi = TimeConverter.convert_string_to_total_seconds(player_stat.timeOnIcePerGame)
         if toi < 15 * 60:
             return 7
         elif 15 * 60 <= toi < 17 * 60:
@@ -214,11 +212,11 @@ class FantasyDefenseGradeHelper:
             return 10.5
 
     def __calculate_grade_pptoi(self, player_stat):
-        pptoi = datetime.datetime.strptime(player_stat.powerPlayTimeOnIcePerGame, '%M:%S')
-        grade = (pptoi.minute * 60 + pptoi.second) / (2 * 60)
+        pptoi = TimeConverter.convert_string_to_total_seconds(player_stat.powerPlayTimeOnIcePerGame)
+        grade = pptoi / (2 * 60)
         return grade if (grade > 0.5) else 0.5
 
     def __calculate_grade_evtoi(self, player_stat):
-        evtoi = datetime.datetime.strptime(player_stat.evenTimeOnIcePerGame, '%M:%S')
-        grade = (evtoi.minute * 60 + evtoi.second) / (20 * 60)
+        evtoi = TimeConverter.convert_string_to_total_seconds(player_stat.evenTimeOnIcePerGame)
+        grade = evtoi / (20 * 60)
         return grade if (grade > 0.5) else 0.5

@@ -11,7 +11,8 @@ class TimeConverter:
     @staticmethod
     def convert_total_seconds_to_string(seconds):
         s = int(seconds % 60)
-        m = str(int((seconds - s) / 60))
+        m = int((seconds - s) / 60)
         s = f"0{s}" if s < 10 else f"{s}"
+        m = f"0{m}" if m < 10 else f"{m}"
 
         return f"{m}:{s}"

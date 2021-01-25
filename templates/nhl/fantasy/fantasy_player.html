@@ -193,7 +193,6 @@
                     if(fantasy_favorites_cookie.filter(function(id) { return id === fantasy_player.playerId; }).length > 0) {
                         active_class = "active"
                     }
-                    console.log(`[${fantasy_player.skaterFullName}] favorite: ${active_class}, selected: ${selected}, style: ${style}`)
                     player_position_display = (fantasy_player.yahooEligibility == null) ? fantasy_player.positionCode : fantasy_player.yahooEligibility
                     trHTML += `<tr id=\'` + fantasy_player.playerId + `\' ${ style } >` +
                     `<td>${ ++i }</td>` +

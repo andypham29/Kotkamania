@@ -25,10 +25,11 @@ class InternalPlayerStatDao:
             if value.percentile is None:
                 continue
             if attr in ['timeOnIcePerGame', 'powerPlayTimeOnIcePerGame', 'evenTimeOnIcePerGame']:
+                print(f"{attr} > {TimeConverter.convert_total_seconds_to_string(value.value)}")
                 query += f' AND {attr} > "{TimeConverter.convert_total_seconds_to_string(value.value)}"'
             else:
                 query += f" AND {attr} > {value.value}"
-        print(query)
+
         self.c.execute(query)
         records = self.c.fetchall()
 
@@ -36,6 +37,7 @@ class InternalPlayerStatDao:
         for row in records:
             list.append(self.__row_to_object(row))
         self.conn.close()
+        print("[Percentile Filter] fetched number of rows: ", len(list))
         return list
 
     def __row_to_object(self, row):

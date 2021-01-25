@@ -30,7 +30,7 @@ class FantasyNhlPlayerService:
         return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersByTeamId(teamId)
 
     def getAllFantasySkatersBySearchName(self, name):
-        regex = re.compile('[^a-zA-Z]')
+        regex = re.compile('[^a-zA-Z- ]')
         name = regex.sub('', name)
         if name == "" or len(name) < 3:
             return []

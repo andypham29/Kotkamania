@@ -10,7 +10,7 @@ class FantasyNhlPlayerFacade:
 
     def getAllFantasySkaters(self,
                              positions, min_game, percentile_shot, percentile_hit, percentile_block, percentile_goal,
-                             percentile_assist, percentile_point):
+                             percentile_assist, percentile_point, percentile_toi, percentile_pptoi, percentile_evtoi):
         fantasy_players_service = FantasyNhlPlayerService(uri=self.uri_fantasy)
         internal_player_service = InternalPlayerStatService(uri=self.uri_internal)
         if not positions or (len(positions) == 1 and positions[0].upper() == 'G'):
@@ -18,7 +18,8 @@ class FantasyNhlPlayerFacade:
         else:
             fantasy_players = fantasy_players_service.getAllFantasySkatersWithPositionCodes(positions)
         user_percentile_params = [min_game, percentile_shot, percentile_hit, percentile_block, percentile_goal,
-                                  percentile_assist, percentile_point]
+                                  percentile_assist, percentile_point, percentile_toi, percentile_pptoi,
+                                  percentile_evtoi]
         if all([elem is None for elem in user_percentile_params]):
             return fantasy_players
         else:
@@ -32,7 +33,10 @@ class FantasyNhlPlayerFacade:
                 percentile_block=percentile_block,
                 percentile_goal=percentile_goal,
                 percentile_assist=percentile_assist,
-                percentile_point=percentile_point)
+                percentile_point=percentile_point,
+                percentile_toi=percentile_toi,
+                percentile_pptoi=percentile_pptoi,
+                percentile_evtoi=percentile_evtoi)
 
             print([(attr, value.__dict__) for attr, value in percentile_values.__dict__.items()])
             stats_at_percentiles = internal_player_service.get_internal_players_stats_at_percentile_values_and_seasonId(

@@ -13,8 +13,10 @@ class FantasyNhlPlayerFacade:
                              percentile_assist, percentile_point, percentile_toi, percentile_pptoi, percentile_evtoi):
         fantasy_players_service = FantasyNhlPlayerService(uri=self.uri_fantasy)
         internal_player_service = InternalPlayerStatService(uri=self.uri_internal)
-        if not positions or (len(positions) == 1 and positions[0].upper() == 'G'):
+        if not positions:
             fantasy_players = fantasy_players_service.getAllFantasySkaters()
+        elif len(positions) == 1 and positions[0].upper() == 'G':
+            fantasy_players = fantasy_players_service.getAllFantasySkatersWithPositionCodes(positions)
         else:
             fantasy_players = fantasy_players_service.getAllFantasySkatersWithPositionCodes(positions)
         user_percentile_params = [min_game, percentile_shot, percentile_hit, percentile_block, percentile_goal,

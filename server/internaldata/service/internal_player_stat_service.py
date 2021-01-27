@@ -13,3 +13,10 @@ class InternalPlayerStatService:
     def get_internal_players_stats_at_percentile_values_and_seasonId(self, percentile_values, seasonId):
         return InternalPlayerStatDao(uri=self.uri).get_internal_players_stats_at_percentile_values_and_seasonId(
             percentile_values, seasonId)
+
+    def insert_internal_players_stats(self, playerId, seasonId, stat):
+        try:
+            InternalPlayerStatDao(uri=self.uri).insert_internal_players_stats(playerId, seasonId, stat)
+            print(f"[SAVE INTERNAL STAT] {seasonId}")
+        except Exception as e:
+            print(e)

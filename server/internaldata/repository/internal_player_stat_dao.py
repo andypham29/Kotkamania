@@ -28,8 +28,8 @@ class InternalPlayerStatDao:
                 print(f"{attr} > {TimeConverter.convert_total_seconds_to_string(value.value)}")
                 query += f' AND {attr} > "{TimeConverter.convert_total_seconds_to_string(value.value)}"'
             else:
-                query += f" AND {attr} > {value.value}"
-
+                query += f" AND {attr} > {value.value} * games"
+        print(query)
         self.c.execute(query)
         records = self.c.fetchall()
 
@@ -39,6 +39,71 @@ class InternalPlayerStatDao:
         self.conn.close()
         print("[Percentile Filter] fetched number of rows: ", len(list))
         return list
+
+    def insert_internal_players_stats(self, playerId, seasonId, stat):
+        self.c.execute(
+            f'''INSERT OR IGNORE INTO internal_player_stat (playerId,
+            seasonId,
+            timeOnIce,
+            assists,
+            goals,
+            pim,
+            shots,
+            games,
+            hits,
+            powerPlayGoals,
+            powerPlayPoints,
+            powerPlayTimeOnIce,
+            evenTimeOnIce,
+            penaltyMinutes,
+            faceOffPct,
+            shotPct,
+            gameWinningGoals,
+            overTimeGoals,
+            shortHandedGoals,
+            shortHandedPoints,
+            shortHandedTimeOnIce,
+            blocked,
+            plusMinus,
+            points,
+            shifts,
+            timeOnIcePerGame,
+            evenTimeOnIcePerGame,
+            shortHandedTimeOnIcePerGame,
+            powerPlayTimeOnIcePerGame
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
+            (playerId,
+             seasonId,
+             stat.timeOnIce,
+             stat.assists,
+             stat.goals,
+             stat.pim,
+             stat.shots,
+             stat.games,
+             stat.hits,
+             stat.powerPlayGoals,
+             stat.powerPlayPoints,
+             stat.powerPlayTimeOnIce,
+             stat.evenTimeOnIce,
+             stat.penaltyMinutes,
+             stat.faceOffPct,
+             stat.shotPct,
+             stat.gameWinningGoals,
+             stat.overTimeGoals,
+             stat.shortHandedGoals,
+             stat.shortHandedPoints,
+             stat.shortHandedTimeOnIce,
+             stat.blocked,
+             stat.plusMinus,
+             stat.points,
+             stat.shifts,
+             stat.timeOnIcePerGame,
+             stat.evenTimeOnIcePerGame,
+             stat.shortHandedTimeOnIcePerGame,
+             stat.powerPlayTimeOnIcePerGame,))
+
+        self.conn.commit()
+        self.conn.close()
 
     def __row_to_object(self, row):
         return InternalPlayerStat(

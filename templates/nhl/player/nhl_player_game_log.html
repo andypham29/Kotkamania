@@ -1,0 +1,97 @@
+<script>
+    function getPlayerGameLog(playerId, position) {
+            $('table#player_game_log tbody').html("")
+
+            $.ajax({
+            url: `https://statsapi.web.nhl.com/api/v1/people/${playerId}/stats?stats=gameLog&season=20202021`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                player = response
+                var stats = ""
+                var games_shown = 5
+                if(player.stats[0].splits != undefined){
+                if(!(position).localeCompare('G')) {
+                        var goalieStats = "<tr>" +
+                        "<th></th><th></th><th>RES</th><td>SV</td><td>SHA</td><td>SV%</td><td>SO</td><td>TOI</td>" +
+                        "</tr>"
+
+                        player.stats[0].splits.slice(0, games_shown)
+                        player.stats[0].splits.forEach(function(item){
+                            console.log(item)
+                            var opponent = item.opponent.name.split(" ")
+                            opponent = opponent[opponent.length - 1]
+
+                            var date = item.date.split("-")
+                            date = `${date[date.length - 2]}/${date[date.length - 1]}`
+
+                            goalieStats += "<tr>" +
+                            `<td>${date}</td>` +
+                            `<td>${opponent}</td>` +
+                            `<td>${item.stat.decision}</td>` +
+                            `<td>${item.stat.saves}</td>` +
+                            `<td>${item.stat.shotsAgainst}</td>` +
+                            `<td>${item.stat.savePercentage}</td>` +
+                            `<td>${item.stat.shutouts}</td>` +
+                            `<td>${item.stat.timeOnIce}</td>` +
+                            "</tr>"
+                        })
+
+                        stats = goalieStats
+                    }
+                    else {
+                        var playerStats = "<tr>" +
+                        "<th></th><th></th><th>G</th><th>A</th><th>TP</th><th>PIM</th><th>+/-</th>" +
+                        "<th>PPG</th><th>PPP</th>" +
+                        "<th>TOI</th><th>ETOI</th><th>SHTOI</th>" +
+                        "<th>PPTOI</th>" +
+                        "<th>SHOTS</th><th>HITS</th><th>BLKS</th>" +
+                        "</tr>"
+
+                        player.stats[0].splits.slice(0, games_shown)
+                        player.stats[0].splits.forEach(function(item){
+                            console.log(item)
+                            var opponent = item.opponent.name.split(" ")
+                            opponent = opponent[opponent.length - 1]
+
+                            var date = item.date.split("-")
+                            date = `${date[date.length - 2]}/${date[date.length - 1]}`
+                            playerStats += `<td>${date}</td>` +
+                            `<td>${opponent}</td>` +
+                            `<td>${item.stat.goals}</td>` +
+                            `<td>${item.stat.assists}</td>` +
+                            `<td>${item.stat.points}</td>` +
+                            `<td>${item.stat.pim}</td>` +
+                            `<td>${item.stat.plusMinus}</td>` +
+                            `<td>${item.stat.powerPlayGoals}</td>` +
+<!--                            `<td>${item.stat.powerPlayPoints - item.stat.powerPlayGoals}</td>` +-->
+                            `<td>${item.stat.powerPlayPoints}</td>` +
+                            `<td>${item.stat.timeOnIce}</td>` +
+                            `<td>${item.stat.evenTimeOnIce}</td>` +
+                            `<td>${item.stat.shortHandedTimeOnIce}</td>` +
+                            `<td>${item.stat.powerPlayTimeOnIce}</td>` +
+                            `<td>${item.stat.shots}</td>` +
+                            `<td>${item.stat.hits}</td>` +
+                            `<td>${item.stat.blocked}</td>` +
+                            "</tr>"
+                        })
+
+                        stats = playerStats
+                    }
+                }
+
+                $('table#player_game_log tbody').html(stats)
+
+            },
+            type: 'GET'
+        });
+    }
+
+</script>
+<table class="table table-sm table-hover" id="player_game_log">
+    <tbody>
+    </tbody>
+</table>

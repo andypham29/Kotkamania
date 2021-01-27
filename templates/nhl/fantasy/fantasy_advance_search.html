@@ -1,3 +1,16 @@
+<script>
+        function clearAdvancedSearchField() {
+            var percentiles = document.forms[1]
+            if (percentiles === undefined) {
+            return
+            }
+            for (i = 0; i < percentiles.length; i++) {
+                percentiles[i].value = ""
+            }
+        }
+
+
+</script>
 <div class="container-fluid collapse" id="advanced_search">
     <br/>
     <h5>Percentile</h5>

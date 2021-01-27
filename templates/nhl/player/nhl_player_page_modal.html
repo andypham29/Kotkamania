@@ -1,9 +1,13 @@
 <script>
     function loadPlayerModal(playerId) {
-    $('table#player_info_table tbody').html("")
-    $('h5#player_name').html("")
-    $('table#player_stat_table tbody').html("")
-    $.ajax({
+        $('table#player_info_table tbody').html("")
+        $('h5#player_name').html("")
+        $('table#player_stat_table tbody').html("")
+        getPlayerStats(playerId)
+    }
+
+    function getPlayerStats(playerId) {
+            $.ajax({
             url: `/api/nhl/players/${playerId}`,
             crossDomain: true,
             dataType: "json",
@@ -12,6 +16,8 @@
             },
             success: function(response) {
                 player = response
+                getPlayerGameLog(player.playerId, player.position)
+
                 playerNameString = `<a href=\"/nhl/players/${player.playerId}\">${ player.fullName }</a>`
                 var trHTML = "<tr>" +
                 "<th colspan=\"2\">Team</th>" +
@@ -127,10 +133,16 @@
                 </div>
                 <br>
                 <div class="container-fluid" style="overflow-x:auto;">
+                    <h5 class="async">Player Stats</h5>
                     <table class="table table-sm table-hover" id="player_stat_table">
                         <tbody>
                         </tbody>
                     </table>
+                </div>
+                <br/>
+                <div class="container-fluid" style="overflow-x:auto;">
+                    <h5 class="async">Game Logs</h5>
+                    {% include 'nhl/player/nhl_player_game_log.html' %}
                 </div>
             </div>
             <div class="modal-footer">

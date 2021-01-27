@@ -19,12 +19,12 @@ class FantasyPercentileCalculator:
         stats = [self.get_stat_by_playerId_and_season(player.playerId, "20192020") for player in players]
         min_game = 30 if not min_game else min_game
 
-        shot = np.array([stat.shots / stat.games * 82 for stat in stats if self.__check_condition(stat, min_game)])
-        hit = np.array([stat.hits / stat.games * 82 for stat in stats if self.__check_condition(stat, min_game)])
-        block = np.array([stat.blocked / stat.games * 82 for stat in stats if self.__check_condition(stat, min_game)])
-        goal = np.array([stat.goals / stat.games * 82 for stat in stats if self.__check_condition(stat, min_game)])
-        assist = np.array([stat.assists / stat.games * 82 for stat in stats if self.__check_condition(stat, min_game)])
-        point = np.array([stat.points / stat.games * 82 for stat in stats if self.__check_condition(stat, min_game)])
+        shot = np.array([stat.shots / stat.games for stat in stats if self.__check_condition(stat, min_game)])
+        hit = np.array([stat.hits / stat.games for stat in stats if self.__check_condition(stat, min_game)])
+        block = np.array([stat.blocked / stat.games for stat in stats if self.__check_condition(stat, min_game)])
+        goal = np.array([stat.goals / stat.games for stat in stats if self.__check_condition(stat, min_game)])
+        assist = np.array([stat.assists / stat.games for stat in stats if self.__check_condition(stat, min_game)])
+        point = np.array([stat.points / stat.games for stat in stats if self.__check_condition(stat, min_game)])
         toi = np.array([TimeConverter.convert_string_to_total_seconds(stat.timeOnIcePerGame) for stat in stats if
                         self.__check_condition(stat, min_game)])
         pptoi = np.array(

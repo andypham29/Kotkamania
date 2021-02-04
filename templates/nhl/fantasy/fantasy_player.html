@@ -70,6 +70,20 @@
             // button.classList.add("active")
         }
     }
+    function addWatchListPlayerById(id) {
+        cookie_name = "watchlist_fantasy_player"
+        console.log(`${id} ${cookie_name}`)
+
+        button = document.getElementById("check_button_" + id.toString())
+        if (button.classList.contains('active')) {
+            removePlayerInCookie(id, cookie_name)
+            // button.classList.remove("active")
+        }
+        else {
+            savePlayerInCookie(id, cookie_name)
+            // button.classList.add("active")
+        }
+    }
 
     function searchValueInTable(value = null) {
         var input, filter, table, tr, td, i, txtValue;
@@ -132,6 +146,16 @@
           }
         return false
     }
+        function checkWatchListToggleOn() {
+        var toggles = document.forms[2]
+        if (toggles === undefined) return false
+        for (i = 0; i < toggles.length; i++) {
+                if (toggles[i].checked && toggles[i].value == 'Watchlist') {
+                    return true
+                }
+          }
+        return false
+    }
     function getFantasyPlayerPage(sort="fantasy") {
         url = `/api/nhl/fantasy` + buildFantasyUrlQueryParam()
         $.ajax({
@@ -170,19 +194,22 @@
 
                 fantasy_players_cookie = [].concat(getPlayersInCookie('fantasy_c'), getPlayersInCookie('fantasy_l'), getPlayersInCookie('fantasy_r'), getPlayersInCookie('fantasy_d'), getPlayersInCookie('fantasy_g'), getPlayersInCookie('fantasy_na'))
                 fantasy_favorites_cookie = getPlayersInCookie('favorite_fantasy_player')
+                fantasy_watchlist_cookie = getPlayersInCookie('watchlist_fantasy_player')
+
                 color = "#aed0f5"
                 favoriteOn = checkFavoriteToggleOn()
+                watchlistOn = checkWatchListToggleOn()
                 $.each(response, function (i, fantasy_player)
                 {
                     
-                    if (favoriteOn && fantasy_favorites_cookie.indexOf(fantasy_player.playerId) < 0) {
+                    if ((favoriteOn && fantasy_favorites_cookie.indexOf(fantasy_player.playerId) < 0) ||
+                        (watchlistOn && fantasy_watchlist_cookie.indexOf(fantasy_player.playerId) < 0)) {
                         return true;
                     }
                     player_nhl_position = fantasy_player.positionCode.toLowerCase()
                     player_nhl_position = ['c','l','r','d','g'].indexOf(player_nhl_position) >= 0 ? player_nhl_position : 'na'
 
                     cookie_string_for_player = `fantasy_${player_nhl_position}`
-                    cookie_string_for_favorite = "favorite_fantasy_player"
                     style = ""
                     selected = ""
                     if(fantasy_players_cookie.filter(function(id) { return id === fantasy_player.playerId; }).length > 0) {
@@ -192,6 +219,10 @@
                     active_class = ""
                     if(fantasy_favorites_cookie.filter(function(id) { return id === fantasy_player.playerId; }).length > 0) {
                         active_class = "active"
+                    }
+                    active_class_2 = ""
+                    if(fantasy_watchlist_cookie.filter(function(id) { return id === fantasy_player.playerId; }).length > 0) {
+                        active_class_2 = "active"
                     }
                     player_position_display = (fantasy_player.yahooEligibility == null) ? fantasy_player.positionCode : fantasy_player.yahooEligibility
                     trHTML += `<tr id=\'` + fantasy_player.playerId + `\' ${ style } >` +
@@ -208,6 +239,13 @@
                     `<td><button type="button" id="star_button_${ fantasy_player.playerId }" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="addFavoritePlayerById(${fantasy_player.playerId})" class="btn btn-outline-primary ${active_class}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
                         <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.523-3.356c.329-.314.158-.888-.283-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767l-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288l1.847-3.658 1.846 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.564.564 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                    </svg>
+                    </button></td>` +
+                    `<td><button type="button" id="check_button_${ fantasy_player.playerId }" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="addWatchListPlayerById(${fantasy_player.playerId})" class="btn btn-outline-primary ${active_class_2}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                      <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                      <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
                     </svg>
                     </button></td>` +
                     `<td><button type="button" class="btn btn-outline-primary ${ selected }" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="togglePlayerRowById([` + fantasy_player.playerId + `, '${cookie_string_for_player}'])">

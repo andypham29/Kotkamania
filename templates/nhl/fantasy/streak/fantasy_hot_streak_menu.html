@@ -1,22 +1,19 @@
-<div class="container-fluid">
+<div style="background-color: white">
+    <div class="container">
 
-    <div id="searchbar" style="background-color: white">
-        <h2>Fantasy Player List</h2>
-        <tr>
-            <input class="search form-control" id="myInput" onkeyup="searchValueInTable()"
-                   placeholder="Search player's name"
-                   title="Type in a name"
-                   type="text">
-            <a aria-controls="advanced_search" aria-expanded="false" class="btn btn-sm btn-outline-dark"
-               data-target="#advanced_search"
-               data-toggle="collapse" type="button">Toggle Advanced Search</a>
-            <a aria-controls="advanced_search" aria-expanded="false" class="btn btn-sm btn-danger"
-               onclick="clearAdvancedSearchField()" type="button">Clear Advanced Search</a>
-        </tr>
-        <br/>
-        <tr>{% include 'nhl/fantasy/fantasy_advance_search.html' %}</tr>
-        <br/>
-
+        <h2>Fantasy Hot Streak</h2>
+        <div class="alert alert-primary" role="alert">
+            <pre>
+                INDEX for an average player is around 1.
+                PTS is the numbers of points in the last 5 games, adjusted with point streaks and no point streaks
+                TOI is calculated for time on ice above 15 min in the last 5 games, adjusted with increase and decrease in ice time
+                PPTOI is calculated for PP time on ice above 15 min in the last 5 games, adjusted with increase and decrease in PP time
+            </pre>
+        </div>
+        <input class="search form-control" id="myInput" onkeyup="searchValueInTable()"
+               placeholder="Search player's name"
+               title="Type in a name"
+               type="text">
         <form action="" class="form-check">
             <tr>
                 <div class="form-check checkboxes btn-group-toggle" data-toggle="buttons">
@@ -35,10 +32,6 @@
                     <label class="form-check-label btn btn-outline-secondary" for="D">
                         <input class="checkbox-inline" id="D" name="positions" type="checkbox" value="D">
                         D
-                    </label>
-                    <label class="form-check-label btn btn-outline-secondary" for="G">
-                        <input class="checkbox-inline" id="G" name="positions" type="checkbox" value="G">
-                        G
                     </label>
                     <label class="form-check-label btn btn-outline-secondary" for="Favorite">
                         <input class="checkbox-inline" id="Favorite" name="positions" type="checkbox"
@@ -63,14 +56,10 @@
             </tr>
             <br/>
             <tr>
-                <input class="btn btn-sm btn-outline-primary" onclick="getFantasyPlayerPage()" type="button"
-                       value="Filter By Score">
-                <input class="btn btn-sm btn-outline-primary" onclick="getFantasyPlayerPage('yahoo')" type="button"
-                       value="Filter By Yahoo">
+                <input class="btn btn-outline-primary" onclick="getSkaters()" type="button"
+                       value="Filter">
                 <br/>
             </tr>
         </form>
-
-        <br/>
     </div>
 </div>

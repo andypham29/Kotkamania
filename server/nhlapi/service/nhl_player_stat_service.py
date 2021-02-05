@@ -25,40 +25,52 @@ class NHLPlayerStatService:
 
         return stats
 
+    def get_player_gamelogs_by_playerId_and_season(self, playerId, season):
+        stats = []
+        stats_json = HttpHelper.get(self.__get_player_gamelogs_url(playerId, season))
+        stat_splits = stats_json["stats"][0]["splits"]
+        stats += [SeasonStat(split["season"], self.__get_player_stat(split)) for split in stat_splits]
+
+        return stats
+
     @staticmethod
     def __get_player_stats_url(id, year):
         return f"https://statsapi.web.nhl.com/api/v1/people/{id}/stats?stats=statsSingleSeason&season={year}"
 
     @staticmethod
+    def __get_player_gamelogs_url(id, year):
+        return f"https://statsapi.web.nhl.com/api/v1/people/{id}/stats?stats=gameLog&season={year}"
+
+    @staticmethod
     def __get_player_stat(split):
         return PlayerStat(
-            timeOnIce=split["stat"]["timeOnIce"],
-            assists=split["stat"]["assists"],
-            goals=split["stat"]["goals"],
-            pim=split["stat"]["pim"],
-            shots=split["stat"]["shots"],
-            games=split["stat"]["games"],
-            hits=split["stat"]["hits"],
-            powerPlayGoals=split["stat"]["powerPlayGoals"],
-            powerPlayPoints=split["stat"]["powerPlayPoints"],
-            powerPlayTimeOnIce=split["stat"]["powerPlayTimeOnIce"],
-            evenTimeOnIce=split["stat"]["evenTimeOnIce"],
-            penaltyMinutes=split["stat"]["penaltyMinutes"],
-            faceOffPct=split["stat"]["faceOffPct"],
-            shotPct=split["stat"]["shotPct"],
-            gameWinningGoals=split["stat"]["gameWinningGoals"],
-            overTimeGoals=split["stat"]["overTimeGoals"],
-            shortHandedGoals=split["stat"]["shortHandedGoals"],
-            shortHandedPoints=split["stat"]["shortHandedPoints"],
-            shortHandedTimeOnIce=split["stat"]["shortHandedTimeOnIce"],
-            blocked=split["stat"]["blocked"],
-            plusMinus=split["stat"]["plusMinus"],
-            points=split["stat"]["points"],
-            shifts=split["stat"]["shifts"],
-            timeOnIcePerGame=split["stat"]["timeOnIcePerGame"],
-            evenTimeOnIcePerGame=split["stat"]["evenTimeOnIcePerGame"],
-            shortHandedTimeOnIcePerGame=split["stat"]["shortHandedTimeOnIcePerGame"],
-            powerPlayTimeOnIcePerGame=split["stat"]["powerPlayTimeOnIcePerGame"],
+            timeOnIce=split["stat"].get("timeOnIce", None),
+            assists=split["stat"].get("assists", None),
+            goals=split["stat"].get("goals", None),
+            pim=split["stat"].get("pim", None),
+            shots=split["stat"].get("shots", None),
+            games=split["stat"].get("games", None),
+            hits=split["stat"].get("hits", None),
+            powerPlayGoals=split["stat"].get("powerPlayGoals", None),
+            powerPlayPoints=split["stat"].get("powerPlayPoints", None),
+            powerPlayTimeOnIce=split["stat"].get("powerPlayTimeOnIce", None),
+            evenTimeOnIce=split["stat"].get("evenTimeOnIce", None),
+            penaltyMinutes=split["stat"].get("penaltyMinutes", None),
+            faceOffPct=split["stat"].get("faceOffPct", None),
+            shotPct=split["stat"].get("shotPct", None),
+            gameWinningGoals=split["stat"].get("gameWinningGoals", None),
+            overTimeGoals=split["stat"].get("overTimeGoals", None),
+            shortHandedGoals=split["stat"].get("shortHandedGoals", None),
+            shortHandedPoints=split["stat"].get("shortHandedPoints", None),
+            shortHandedTimeOnIce=split["stat"].get("shortHandedTimeOnIce", None),
+            blocked=split["stat"].get("blocked", None),
+            plusMinus=split["stat"].get("plusMinus", None),
+            points=split["stat"].get("points", None),
+            shifts=split["stat"].get("shifts", None),
+            timeOnIcePerGame=split["stat"].get("timeOnIcePerGame", None),
+            evenTimeOnIcePerGame=split["stat"].get("evenTimeOnIcePerGame", None),
+            shortHandedTimeOnIcePerGame=split["stat"].get("shortHandedTimeOnIcePerGame", None),
+            powerPlayTimeOnIcePerGame=split["stat"].get("powerPlayTimeOnIcePerGame", None)
         )
 
     @staticmethod

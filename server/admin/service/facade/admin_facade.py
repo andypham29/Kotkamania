@@ -18,10 +18,7 @@ class AdminFacade:
 
     def apply(self):
         today_date = datetime.now().strftime("%Y-%m-%d")
-        # InternalLogService().initNhlPlayerStatLogTable()
-        # a = InternalLogService().getNhlPlayerStatLogByDate(today_date)
-        a = False
-        if not a:
+        if not InternalLogService().getNhlPlayerStatLogByDate(today_date):
             log = NhlPlayerStatLog(today_date, "test")
 
             InternalLogService().saveNhlPlayerStatLog(log)
@@ -46,13 +43,6 @@ class AdminFacade:
         pptoi = FantasyPlayerStreakIndexCalculator().get_pptoi_index_for_last_5(gamelogs)
 
         index = (pts * 3 + toi + pptoi) / 5 / 3
-        # return {
-        #     "name": name,
-        #     "pts": a,
-        #     "toi": b,
-        #     "pptoi": c,
-        #     "index": round(index, 3)
-        # }
         return FantasyPlayerStreakIndex(playerId, name, position, pts, toi, pptoi, round(index, 3))
 
     def __update_fantasy_players_from_nhl_rosters(self):
@@ -65,10 +55,6 @@ class AdminFacade:
         if position != 'G':
             InternalPlayerStatService().get_internal_players_stats_by_playerId_and_seasonId(playerId, season)
         return stat
-
-    def calculate_player_streak_from_gamelog(self, playerId, season="20202021"):
-        # TODO make logic to calculate if a player is on a streak
-        gamelogs = self.get_player_gamelogs_by_id_and_season(playerId, season)
 
     def get_player_gamelogs_by_id_and_season(self, playerId, season="20202021"):
         return [data.stat for data in

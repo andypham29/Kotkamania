@@ -1,5 +1,3 @@
-<script src="{{url_for('static', filename='cookiehandler.js')}}"></script>
-<script src="{{url_for('static', filename='fantasycookiehandler.js')}}"></script>
 <script>
     function loadPlayerModal(playerId) {
         $('table#player_info_table tbody').html("")
@@ -105,7 +103,7 @@
                     }
                 }
 
-                var extra_footer = `<td><button type="button" id="star_button_${ player.playerId }" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="addFavoritePlayerById(${player.playerId})" class="btn btn-sm btn-outline-primary ${active_class}">
+                var compare_button = `<td><button type="button" data-dismiss="modal" data-toggle="modal" data-target="#player-compare-modal" onclick="loadPlayerCompareModal(${player.playerId})" class="btn btn-outline-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
                       <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                       <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
@@ -113,7 +111,7 @@
                     </svg>
                     COMPARE
                     </button></td>` +
-                    `<td><button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                    `<td>
                     </td>`
 
 
@@ -121,18 +119,16 @@
                 $('h5#player_name').html(playerNameString)
                 $('table#player_stat_table tbody').html(stats)
 
-                $('div.modal-footer').html(extra_footer)
+                $('div#compare_player').html(compare_button)
 
             },
             type: 'GET'
         });
     }
 
-
-
-
-
 </script>
+{% include 'nhl/player/nhl_player_compare_modal.html' %}
+
 <div class="modal fade" id="player-modal" role="dialog">
     <div class="modal-dialog modal-lg">
         <!-- Modal content-->
@@ -147,6 +143,7 @@
                         </tbody>
                     </table>
                 </div>
+                <div id="compare_player"></div>
                 <br>
                 <div class="container-fluid" style="overflow-x:auto;">
                     <h5 class="async">Player Stats</h5>
@@ -162,6 +159,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
             </div>
         </div>
 

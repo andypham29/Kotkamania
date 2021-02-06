@@ -1,0 +1,204 @@
+<script type="text/javascript">
+
+    function clearSearchResultTable() {
+    }
+    function changeHigherStatsToGreen() {
+        var counter = 0
+        $('table#compare_table').find('tr').each(function(){
+            if(counter++ < 2) { return }
+            var p1 = $(this).find('td').eq(0)
+            var p2 = $(this).find('td').eq(1)
+
+            var p1_value = isNaN(p1.html()) ? p1.html() : Number(p1.html())
+            var p2_value = isNaN(p2.html()) ? p2.html() : Number(p2.html())
+
+          if(p1_value > p2_value) {
+            p1.css('color', 'green')
+            p1.css('font-weight', 'bold')
+            p2.css('color', 'red')
+          }
+          if(p1_value < p2_value) {
+            p2.css('color', 'green')
+            p2.css('font-weight', 'bold')
+            p1.css('color', 'red')
+          }
+        });
+    }
+    function loadPlayerCompareModal(playerId) {
+        getPlayerCompareStats(playerId, -1)
+    }
+    function loadSearchPlayerList() {
+        name = document.getElementById('compare_search').value
+        $.ajax({
+            url: `/api/nhl/fantasy?playerName=${name}`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                clearSearchResultTable()
+
+                if(response.length == 1) {
+                    getPlayerCompareStats(response[0].playerId, false)
+                }
+                if(response.length > 1) {
+                    var trHTML = "<tr>" +
+                    "<th>Player</th>" +
+                    "<th>Position</th>" +
+                    "<th>Team</th>" +
+                    "</tr>";
+
+                    $.each(response, function (i, player)
+                    {
+                        trHTML += "<tr>" +
+                        `<td><a>
+                        <button class="btn btn-sm btn-link" onclick='getPlayerCompareStats(${player.playerId}, false)'>
+                        ${ player.skaterFullName }
+                        </button></a></td>` +
+                        `<td>${ player.positionCode }</td>` +
+                        `<td>${ player.teamName }</td>` +
+                        "</tr>"
+                    });
+                    $('table#compare_result_table tbody').html(trHTML)
+                }
+                else {
+                    var message = "No result found."
+<!--                    $('div#message_search_page').html(getHtmlMessage(message))-->
+                }
+            },
+            type: 'GET'
+        });
+    }
+    function getPlayerCompareStats(playerId, isPlayer1=true) {
+
+            $.ajax({
+            url: `/api/nhl/players/${playerId}`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                player = response
+                getPlayerGameLog(player.playerId, player.position)
+
+                var stat_array = []
+                var statsHeaderArray = []
+
+                if(player.stats[0] !== undefined){
+                    var item = player.stats.find((e) => {return e.season === "20202021"})
+
+                if(!(player.position).localeCompare('G')) {
+                        statsHeaderArray = ["PLAYER",item.season,"GP","GAA","SV%",
+                        "WIN","LOSE","SO"]
+
+                        stat_array = [player.fullName,
+                            "",
+                            item.stat.games,
+                            item.stat.goalAgainstAverage,
+                            item.stat.savePercentage,
+                            item.stat.wins,
+                            item.stat.losses,
+                            item.stat.shutouts]
+                    }
+                    else {
+                        statsHeaderArray = ['PLAYER',`${item.season}`, 'GP', 'G', 'A', 'TP', 'PIM', '+/-', 'PPPG',
+                            'PPP', 'TOI', 'ETOI', 'SHTOI', 'PPTOI', 'SOG', 'HITS', 'BLKS']
+
+                        stat_array = [player.fullName,
+                            "",
+                            item.stat.games,
+                            item.stat.goals,
+                            item.stat.assists,
+                            item.stat.points,
+                            item.stat.pim,
+                            item.stat.plusMinus,
+                            item.stat.powerPlayGoals,
+                            item.stat.powerPlayPoints,
+                            item.stat.timeOnIcePerGame,
+                            item.stat.evenTimeOnIcePerGame,
+                            item.stat.shortHandedTimeOnIcePerGame,
+                            item.stat.powerPlayTimeOnIcePerGame,
+                            item.stat.shots,
+                            item.stat.hits,
+                            item.stat.blocked]
+
+
+                    }
+                }
+                    if(isPlayer1){
+                        statsHeader = ""
+                        statsHeaderArray.forEach((e) => {
+                            statsHeader += `<tr><th style='text-align:center'>${e}</th></tr>`
+                        })
+                        $('table#compare_table').html(statsHeader)
+
+                        var first = true
+                        var counter = 0
+                        $('table#compare_table').find('tr').each(function(){
+                            var player_default = first ? "Select Player" : ""
+                            first = false
+                            $(this).find('th').eq(-1).before(`<td style='text-align:center'>${stat_array[counter++]}</td>`);
+                            $(this).find('th').eq(-1).after(`<td style='text-align:center'>${player_default}</td>`);
+                        });
+                    }
+                    else {
+                        counter = 0
+                        $('table#compare_table').find('tr').each(function(){
+<!--                            $(this).find('th').eq(-1).after(`<td style='text-align:center;'>${stat_array[counter++]}</td>`);-->
+                            $('table#compare_table tr td:nth-child(3)').each(function(i){
+                                $(this).text(stat_array[counter++]);
+                            });
+                        });
+                        $('table#compare_result_table tbody').empty()
+
+                        changeHigherStatsToGreen()
+                    }
+            },
+            type: 'GET'
+        });
+    }
+
+
+
+
+
+
+
+</script>
+
+<div class="modal fade" id="player-compare-modal" role="dialog" style="overflow-y:auto;">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content" style="overflow-y:auto;">
+            <div class="modal-header">
+                <h5 class="modal-title">Compare Players</h5>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid  mr-auto ml-auto" style="overflow-y:auto;margin: 0 auto">
+                    <form action="javascript:loadSearchPlayerList();" class="form-inline">
+                        <input aria-label="Search" class="form-control col-lg-8" id="compare_search" name="search"
+                               placeholder="Search Player"
+                               required type="search">
+                    </form>
+                    <div id="message_search_page"></div>
+                    <div class="table-responsive" style="margin: auto; ">
+                        <table cellpadding="1" class="table table-hover mx-auto w-auto" id="compare_result_table">
+                            <tbody style="overflow-y:auto;">
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                    <div id="compare_search_result"></div>
+                    <table class="table table-sm" id="compare_table">
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

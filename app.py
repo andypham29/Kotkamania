@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, make_response
 
 from server.admin.service.facade.admin_facade import AdminFacade
 from server.internaldata.service.facade.fantasy_nhl_player_facade import FantasyNhlPlayerFacade
@@ -13,6 +13,7 @@ from server.nhlapi.service.facade.nhl_roster_service_facade import NHLRosterServ
 from server.nhlapi.service.nhl_stats_leader_service import NHLStatsLeaderService
 from server.nhlapi.service.nhl_team_service import NhlTeamService
 from server.twitterapi.service.facade.twitter_service_facade import TwitterServiceFacade
+from setting import Setting
 
 app = Flask(__name__)
 
@@ -20,13 +21,17 @@ app = Flask(__name__)
 # Admin Routing
 @app.route('/admin/script')
 def runSystemScript():
+    api_key = request.headers.get('x-api-key')
+    print(api_key, ' = ', Setting.KKMANIA_API_KEY)
+    if api_key != Setting.KKMANIA_API_KEY:
+        return make_response("Unable to access resource.", 401)
     response = AdminFacade().apply()
-    # return make_response("", 200)
-    return json.dumps(response, default=lambda o: o.__dict__)
+    if len(response) == 0:
+        return make_response("Script already ran for the day.", 200)
+    return make_response("Script succesful.", 200)
 
 
 # Frontend Routing
-
 @app.route('/')
 def index():
     return render_template("index.html", page="index")

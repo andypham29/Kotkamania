@@ -27,7 +27,7 @@ class AdminFacade:
             print(len(players))
             for player in players:
                 index = self.__get_gamelogs_index(player.playerId, player.skaterFullName, player.positionCode)
-                print(index)
+                print(index.__dict__)
                 FantasyPlayerStreakIndexService().initFantasyPlayerStreakIndexTable()
                 FantasyPlayerStreakIndexService().saveOrUpdateFantasyPlayerStreakIndex(index)
                 index_list.append(index)

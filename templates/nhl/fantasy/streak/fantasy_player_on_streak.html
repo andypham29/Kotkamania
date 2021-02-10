@@ -88,6 +88,8 @@
 
                 favoriteOn = checkFavoriteToggleOn()
                 watchlistOn = checkWatchListToggleOn()
+                color = "#aed0f5"
+
                 $.each(response, function (i, player)
                 {
                     if ((favoriteOn && fantasy_favorites_cookie.indexOf(player.playerId) < 0) ||
@@ -100,10 +102,8 @@
 
                     cookie_string_for_player = `fantasy_${player_nhl_position}`
                     style = ""
-                    selected = ""
                     if(fantasy_players_cookie.filter(function(id) { return id === player.playerId; }).length > 0) {
                         style = ` style="background-color: ${ color };"`
-                        selected = "active"
                     }
                     active_class = ""
                     if(fantasy_favorites_cookie.filter(function(id) { return id === player.playerId; }).length > 0) {
@@ -113,7 +113,7 @@
                     if(fantasy_watchlist_cookie.filter(function(id) { return id === player.playerId; }).length > 0) {
                         active_class_2 = "active"
                     }
-                    trHTML += "<tr>" +
+                    trHTML += `<tr ${ style }>` +
                     `<td>${ ++i }</td>` +
 <!--                    `<td><a href=\"/api/nhl/players/${player.playerId}\">${ player.skaterFullName }</a></td>` +-->
                     `<td><button class="btn btn-link" data-toggle="modal" data-target="#player-modal" onclick=\"loadPlayerModal(${player.playerId})\">${ player.skaterFullName }</button></td>` +

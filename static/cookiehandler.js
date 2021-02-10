@@ -31,7 +31,7 @@ function setCookie(name,value,days = 365) {
         return (value == "") ? [] : JSON.parse(value).prospects
     }
 
-    function savePlayerInCookie(id, name, cookie_name) {
+    function savePlayerInCookie1(id, name, cookie_name) {
         var cookies = getCookie(cookie_name)
         var json = {}
 
@@ -49,7 +49,7 @@ function setCookie(name,value,days = 365) {
         setCookie(cookie_name, JSON.stringify(json))
     }
 
-    function removePlayerInCookie(id, cookie_name) {
+    function removePlayerInCookie1(id, cookie_name) {
         var cookies = getCookie(cookie_name)
         var json = {}
         var newProspects = (cookies == "") ? [] : JSON.parse(cookies).prospects

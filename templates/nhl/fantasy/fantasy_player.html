@@ -14,7 +14,6 @@
         if (actual_color == (color) || actual_color != "") {
             document.getElementById(id.toString()).style.backgroundColor = "white";
             removePlayerInCookie(id, cookie_name)
-            console.log(`${cookie_name}: ${getPlayersInCookie(cookie_name)}`)
         }
         else{
             document.getElementById(id.toString()).style.backgroundColor = color;
@@ -64,7 +63,11 @@
             return txt
           }
           for (i = 0; i < percentiles.length; i++) {
-
+                if (['shotPercentile','hitPercentile','blockPercentile','assistPercentile',
+                    'pointPercentile', 'toiPercentile', 'pptoiPercentile', 'evtoiPercentile']
+                    .indexOf(percentiles[i].name) < 0) {
+                    continue
+                }
                 if (percentiles[i].value !="") {
                     symbol = (first) ? '?' : '&'
                     first = false
@@ -93,7 +96,7 @@
           }
         return false
     }
-    function getFantasyPlayerPage(sort="fantasy") {
+    function getFantasyPlayerPage(sort="fantasy", yahoo_rosters=[]) {
         url = `/api/nhl/fantasy` + buildFantasyUrlQueryParam()
         $.ajax({
             url: url,
@@ -162,6 +165,12 @@
                     if(fantasy_watchlist_cookie.filter(function(id) { return id === fantasy_player.playerId; }).length > 0) {
                         active_class_2 = "active"
                     }
+                    if(yahoo_rosters.indexOf(fantasy_player.skaterFullName) >= 0){
+                        style = ` style="background-color: ${ color };"`
+                        selected = "active"
+                        console.log(fantasy_player.playerId, cookie_string_for_player)
+                        savePlayerInCookie(fantasy_player.playerId, cookie_string_for_player)
+                    }
                     player_position_display = (fantasy_player.yahooEligibility == null) ? fantasy_player.positionCode : fantasy_player.yahooEligibility
                     trHTML += `<tr id=\'` + fantasy_player.playerId + `\' ${ style } >` +
                     `<td>${ ++i }</td>` +
@@ -205,9 +214,11 @@
     $(document).ready(getFantasyPlayerPage());
 
 
+
 </script>
 {% include 'nhl/player/nhl_player_page_modal.html' %}
 {% include 'nhl/fantasy/nhl_lineup_modal.html' %}
+{% include 'nhl/fantasy/yahoo/yahoo_roster_parser.html' %}
 <div class="loader"></div>
 <div class="container-fluid">
     <div class="draftcenter_prospect_table" style="width: 100%; overflow:auto;">

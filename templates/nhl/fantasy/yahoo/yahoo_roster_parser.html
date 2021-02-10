@@ -1,0 +1,66 @@
+<script src="{{url_for('static', filename='cookiehandler.js')}}"></script>
+<script>
+    function getPlayerNamesFromYahooContent(content) {
+        var lineArray = content.split('\t')
+
+        for(var i = lineArray.length -1; i >= 0 ; i--){
+            if(!lineArray[i].includes(' - ')){
+                lineArray.splice(i, 1);
+                continue
+            }
+            var limiter = 'Note'
+            lineArray[i] = lineArray[i].split(' - ')[0]
+            lineArray[i] = lineArray[i].replace('Notes', limiter)
+            lineArray[i] = lineArray[i].substr(lineArray[i].indexOf(limiter) + 5, lineArray[i].length)
+            lineArray[i] = lineArray[i].split(' ').slice(0, -1).join(' ')
+        }
+        return lineArray
+    }
+    function deleteFantasyCookies() {
+        eraseCookie('fantasy_c')
+        eraseCookie('fantasy_l')
+        eraseCookie('fantasy_r')
+        eraseCookie('fantasy_d')
+        eraseCookie('fantasy_g')
+        eraseCookie('fantasy_na')
+
+    }
+
+    function loadFantasyPageWithNewRoster() {
+        deleteFantasyCookies()
+        var user_input = document.getElementById('yahoo_rosters').value
+        var content = getPlayerNamesFromYahooContent(user_input)
+        document.getElementById('yahoo_rosters').value = ""
+
+        getFantasyPlayerPage("", content)
+    }
+
+
+</script>
+
+<div class="modal fade" id="yahoo-roster-modal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content" style="overflow-y:auto;">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Yahoo Rosters</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-primary" role="alert">
+                    Copy/Paste in the content of the roster page of your yahoo league.
+                </div>
+                <form action="">
+                    <textarea cols="50" id="yahoo_rosters" rows="4"></textarea><br/>
+                    <input class="btn btn-sm btn-secondary" data-dismiss="modal"
+                           onclick="loadFantasyPageWithNewRoster()"
+                           type="button" value="Save Rosters">
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

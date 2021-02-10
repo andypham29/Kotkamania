@@ -20,7 +20,7 @@ class FantasyNhlPlayerDao:
         	yahooEligibility TEXT,
         	avgPick DOUBLE,
         	avgRound DOUBLE,
-        	percentDrafted TEXT
+        	percentDrafted TEXT,
         	teamName TEXT NOT NULL,
         	)''')
 

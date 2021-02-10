@@ -15,13 +15,13 @@
         
         str = ""
         for(i = 0; i < 4 ; i++) {
+            c = forwards.find(element => { return (element.yahooEligibility != null && element.yahooEligibility.includes("C")) || element.positionCode == "C"})
+            c_player = (c != null && c.fantasyGrade > 60) ? c : forwards[0]
+            forwards.splice(forwards.indexOf(c_player), 1)[0]
+
             lw = forwards.find(element => { return (element.yahooEligibility != null && element.yahooEligibility.includes("L")) || element.positionCode == "L"})
             lw_player = (lw != null && lw.fantasyGrade > 68) ? lw : forwards[0]
             forwards.splice(forwards.indexOf(lw_player), 1)[0]
-
-            c = forwards.find(element => { return (element.yahooEligibility != null && element.yahooEligibility.includes("C")) || element.positionCode == "C"})
-            c_player = (c != null && c.fantasyGrade > 68) ? c : forwards[0]
-            forwards.splice(forwards.indexOf(c_player), 1)[0]
 
             rw = forwards.find(element => { return (element.yahooEligibility != null && element.yahooEligibility.includes("R")) || element.positionCode == "R"})
             rw_player = (rw!= null && rw.fantasyGrade > 68) ? rw : forwards[0]

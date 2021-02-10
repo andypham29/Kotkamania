@@ -1,5 +1,6 @@
 from server.commons.fantasygrade.fantasy_percentile_calculator import FantasyPercentileCalculator
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
+from server.internaldata.service.fantasy_player_streak_index_service import FantasyPlayerStreakIndexService
 from server.internaldata.service.internal_player_stat_service import InternalPlayerStatService
 
 
@@ -7,6 +8,21 @@ class FantasyNhlPlayerFacade:
     def __init__(self, uri_fantasy=None, uri_internal=None):
         self.uri_fantasy = uri_fantasy
         self.uri_internal = uri_internal
+
+    def getAllFantasySkatersOnHotStreak(self, fantasy_players):
+
+        streak_ids = [s.playerId for s in
+                      FantasyPlayerStreakIndexService(self.uri_fantasy).getAllFantasyPlayerStreakIndexes()]
+
+        list = []
+        for id in streak_ids:
+            try:
+                player = next((x for x in fantasy_players if x.playerId == id), None)
+                list.append(player)
+            except:
+                continue
+        return list
+        # return sorted(fantasy_players, key=lambda x: streak_ids.index(x.playerId))
 
     def getAllFantasySkaters(self,
                              positions, min_game, percentile_shot, percentile_hit, percentile_block, percentile_goal,

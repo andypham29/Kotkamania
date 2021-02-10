@@ -20,3 +20,4 @@ class Setting:
     CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
     ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
     ACCESS_TOKEN_SECRET = os.getenv("ACCESS_TOKEN_SECRET")
+    KKMANIA_API_KEY = os.getenv("KKMANIA_API_KEY")

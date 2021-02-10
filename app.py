@@ -1,9 +1,11 @@
 import json
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, make_response
 
+from server.admin.service.facade.admin_facade import AdminFacade
 from server.internaldata.service.facade.fantasy_nhl_player_facade import FantasyNhlPlayerFacade
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
+from server.internaldata.service.fantasy_player_streak_index_service import FantasyPlayerStreakIndexService
 from server.mockdraft.service.facade.mockdraft_selector_service_facade import MockDraftSelectorServiceFacade
 from server.mockdraft.service.prospect_elite_service import ProspectEliteService
 from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
@@ -11,10 +13,25 @@ from server.nhlapi.service.facade.nhl_roster_service_facade import NHLRosterServ
 from server.nhlapi.service.nhl_stats_leader_service import NHLStatsLeaderService
 from server.nhlapi.service.nhl_team_service import NhlTeamService
 from server.twitterapi.service.facade.twitter_service_facade import TwitterServiceFacade
+from setting import Setting
 
 app = Flask(__name__)
 
 
+# Admin Routing
+@app.route('/admin/script')
+def runSystemScript():
+    api_key = request.headers.get('x-api-key')
+    print(api_key, ' = ', Setting.KKMANIA_API_KEY)
+    if api_key != Setting.KKMANIA_API_KEY:
+        return make_response("Unable to access resource.", 401)
+    response = AdminFacade().apply()
+    if len(response) == 0:
+        return make_response("Script already ran for the day.", 200)
+    return make_response("Script succesful.", 200)
+
+
+# Frontend Routing
 @app.route('/')
 def index():
     return render_template("index.html", page="index")
@@ -56,6 +73,11 @@ def nhl_stats_skater():
 @app.route('/nhl/fantasy')
 def nhl_fantasy():
     return render_template("index.html", page="nhl_fantasy")
+
+
+@app.route('/nhl/fantasy/streak')
+def nhl_fantasy_streak():
+    return render_template("index.html", page="nhl_fantasy_streak")
 
 
 @app.route('/nhl/players')
@@ -125,6 +147,8 @@ def getNhlStatsSkater():
 
 @app.route('/api/nhl/fantasy')
 def getNhlFantasyPlayers():
+    # if request.args.get('streak').lower() == 'true':
+    # response = FantasyNhlPlayerFacade().getAllFantasySkatersOnHotStreak()
     if request.args.get('team') is not None:
         response = FantasyNhlPlayerService().getAllFantasySkatersWithTeamId(request.args.get('team'))
     elif request.args.get('playerName') is not None:
@@ -151,6 +175,16 @@ def getNhlFantasyPlayers():
                                                                  percentile_toi,
                                                                  percentile_pptoi,
                                                                  percentile_evtoi)
+    return json.dumps(response, default=lambda o: o.__dict__)
+
+
+@app.route('/api/nhl/fantasy/streak')
+def getNhlFantasyPlayerStreaks():
+    positions = request.args.getlist('position')
+    if len(positions) > 0:
+        response = FantasyPlayerStreakIndexService().getAllFantasyPlayerStreakIndexesByPositionCodes(positions)
+    else:
+        response = FantasyPlayerStreakIndexService().getAllFantasyPlayerStreakIndexes()
     return json.dumps(response, default=lambda o: o.__dict__)
 
 

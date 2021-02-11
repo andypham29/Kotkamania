@@ -35,14 +35,14 @@ class FantasyPlayerGrader:
 
         grade_20202021 = fantasy_value_20202021["grade"]
         grade_20192020 = fantasy_value_20192020["grade"] * 1.0125
-        grade_20182019 = grade_20192020 if (
+        grade_20182019 = grade_20202021 if (
                 fantasy_value_20182019["grade"] <= 0 or fantasy_value_20182019["games"] < 10) else \
             fantasy_value_20182019["grade"] * 0.93
-        grade_20172018 = grade_20192020 if (
+        grade_20172018 = grade_20202021 if (
                 fantasy_value_20172018["grade"] <= 0 or fantasy_value_20172018["games"] < 10) else \
             fantasy_value_20172018["grade"] * 0.9
 
-        grade = (grade_20202021 * 2 + grade_20192020 * 17 + grade_20182019 * 5 + grade_20172018 * 1) / 25
+        grade = (grade_20202021 * 7 + grade_20192020 * 12 + grade_20182019 * 5 + grade_20172018 * 1) / 25
         grade = round(grade, 2)
         print(f"[{player.skaterFullName}] 19-20:{grade_20192020}  18-19:{grade_20182019}  17-18:{grade_20172018} ")
         shotPct = fantasy_value_20192020["shotPct"]
@@ -73,14 +73,14 @@ class FantasyPlayerGrader:
     def __convert_to_fantasy_player_by_year(self, player, year):
         player_stat = InternalPlayerStatRepository().get_internal_players_stats_by_playerId_and_seasonId(
             player.playerId, year)
-
-        if player_stat is None and year != "20202021":
+        if player_stat is None:
             if player.positionCode == 'G':
                 stat = NHLPlayerServiceFacade().get_player_by_playerId_and_seasons(player.playerId, [year]).stats
             else:
                 stat = NHLPlayerStatService().get_player_stat_by_playerId_and_seasons(player.playerId, [year])
                 p = NHLPlayerServiceFacade().get_player_by_playerId_and_seasons(player.playerId, [year])
-                InternalPlayerStatRepository().save_internal_player_stats(p)
+                # if year != "20202021":
+                #     InternalPlayerStatRepository().save_internal_player_stats(p)
 
             if not stat:
                 return {"shotPct": 0,

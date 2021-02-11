@@ -7,7 +7,7 @@ from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPla
 
 class FantasyScript:
 
-    def __init__(self, fantasy_player_helper=FantasyPlayerGradeFacade(),
+    def __init__(self, fantasy_player_helper=FantasyPlayerGradeFacade('../../server/internaldata/db/fantasy.db'),
                  excel_helper=ExcelHelper(),
                  internal_player_repository=InternalPlayerRepository(),
                  fantasy_nhl_player_service=FantasyNhlPlayerService('../../server/internaldata/db/fantasy.db')):

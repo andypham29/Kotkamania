@@ -19,16 +19,15 @@ app = Flask(__name__)
 
 
 # Admin Routing
-@app.route('/admin/script')
-def runSystemScript():
+@app.route('/admin/script/<offset>')
+def runSystemScript(offset):
     api_key = request.headers.get('x-api-key')
-    print(api_key, ' = ', Setting.KKMANIA_API_KEY)
     if api_key != Setting.KKMANIA_API_KEY:
         return make_response("Unable to access resource.", 401)
-    response = AdminFacade().apply()
+    response = AdminFacade().apply(offset)
     if len(response) == 0:
         return make_response("Script already ran for the day.", 200)
-    return make_response("Script succesful.", 200)
+    return make_response(f"Script succesful {int(offset) + 1}/10.", 200)
 
 
 # Frontend Routing

@@ -16,14 +16,15 @@ class AdminFacade:
     def __init__(self):
         pass
 
-    def apply(self):
+    def apply(self, offset):
+        offset = int(offset)
         today_date = datetime.now().strftime("%Y-%m-%d")
-        if not InternalLogService().getNhlPlayerStatLogByDate(today_date):
-            log = NhlPlayerStatLog(today_date, "test")
+        log = InternalLogService().getNhlPlayerStatLogByDate(today_date)
+        timeExecuted = log.timeExecuted if log is not None else 0
+        if not log or timeExecuted <= 10:
 
-            InternalLogService().saveNhlPlayerStatLog(log)
             index_list = []
-            players = FantasyNhlPlayerService().getAllFantasySkatersWithPositionCodes(['C', 'L', 'R', 'D'])
+            players = FantasyNhlPlayerService().getAllFantasySkatersWithPositionCodes(['C', 'L', 'R', 'D'], offset)
             print(len(players))
             for player in players:
                 index = self.__get_gamelogs_index(player.playerId, player.skaterFullName, player.positionCode)
@@ -31,6 +32,15 @@ class AdminFacade:
                 FantasyPlayerStreakIndexService().initFantasyPlayerStreakIndexTable()
                 FantasyPlayerStreakIndexService().saveOrUpdateFantasyPlayerStreakIndex(index)
                 index_list.append(index)
+
+            InternalLogService().initNhlPlayerStatLogTable()
+
+            if not log:
+                log = NhlPlayerStatLog(today_date, "test", timeExecuted)
+                InternalLogService().saveNhlPlayerStatLog(log)
+            else:
+                log.timeExecuted += 1
+                InternalLogService().updateNhlPlayerStatLog(log)
 
             return sorted(index_list, key=lambda x: x.index, reverse=True)
         return []

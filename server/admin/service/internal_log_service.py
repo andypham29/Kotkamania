@@ -20,3 +20,9 @@ class InternalLogService:
             InternalLogDao(self.uri).saveNhlPlayerStatLog(log)
         except Exception as e:
             print(e)
+
+    def updateNhlPlayerStatLog(self, log):
+        try:
+            InternalLogDao(self.uri).updateNhlPlayerStatLog(log)
+        except Exception as e:
+            print(e)

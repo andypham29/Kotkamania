@@ -90,6 +90,14 @@ def nhl_player_page(id):
 
 
 # -------- API Routing -------------
+
+def makeHttpResponse(data):
+    return app.response_class(
+        response=json.dumps(data, default=lambda o: o.__dict__),
+        mimetype='application/json'
+    )
+
+
 @app.route('/api/drafts')
 def getEntireDraftSimulation():
     if request.args.get('ranked') is not None and request.args.get('ranked').upper() == "TRUE":
@@ -98,7 +106,7 @@ def getEntireDraftSimulation():
         response = MockDraftSelectorServiceFacade().getEntireDraftSimulation()
 
     # return json.dumps([draft.__dict__ for draft in draftpicks])
-    return json.dumps(response, default=lambda o: o.__dict__)
+    return makeHttpResponse(response)
 
 
 @app.route('/api/prospects')
@@ -113,25 +121,25 @@ def getProspects():
     else:
         response = ProspectEliteService().getAllProspects()
 
-    return json.dumps(response, default=lambda o: o.__dict__)
+    return makeHttpResponse(response)
 
 
 @app.route('/api/news')
 def getTwitterNews():
     response = TwitterServiceFacade().get_hockey_tweets()
-    return json.dumps(response, default=lambda o: o.__dict__)
+    return makeHttpResponse(response)
 
 
 @app.route('/api/nhl/rosters/<id>')
 def getNhlRoster(id):
     response = NHLRosterServiceFacade().get_nhl_roster_by_team_id(id)
-    return json.dumps(response, default=lambda o: o.__dict__)
+    return makeHttpResponse(response)
 
 
 @app.route('/api/nhl/players/<id>')
 def getNhlPlayer(id):
     response = NHLPlayerServiceFacade().get_player_by_playerId_and_seasons(id)
-    return json.dumps(response, default=lambda o: o.__dict__)
+    return makeHttpResponse(response)
 
 
 @app.route('/api/nhl/stats/skaters')
@@ -141,7 +149,7 @@ def getNhlStatsSkater():
                + NHLStatsLeaderService().getAllPlayers(start=201, end=300) \
                + NHLStatsLeaderService().getAllPlayers(start=301, end=400) \
                + NHLStatsLeaderService().getAllPlayers(start=401, end=500)
-    return json.dumps(response, default=lambda o: o.__dict__)
+    return makeHttpResponse(response)
 
 
 @app.route('/api/nhl/fantasy')
@@ -174,7 +182,7 @@ def getNhlFantasyPlayers():
                                                                  percentile_toi,
                                                                  percentile_pptoi,
                                                                  percentile_evtoi)
-    return json.dumps(response, default=lambda o: o.__dict__)
+    return makeHttpResponse(response)
 
 
 @app.route('/api/nhl/fantasy/streak')

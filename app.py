@@ -192,7 +192,7 @@ def getNhlFantasyPlayerStreaks():
         response = FantasyPlayerStreakIndexService().getAllFantasyPlayerStreakIndexesByPositionCodes(positions)
     else:
         response = FantasyPlayerStreakIndexService().getAllFantasyPlayerStreakIndexes()
-    return json.dumps(response, default=lambda o: o.__dict__)
+    return makeHttpResponse(response)
 
 
 if __name__ == '__main__':

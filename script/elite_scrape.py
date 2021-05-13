@@ -1,15 +1,16 @@
-import bs4 as bs
-import urllib.request
 import json
+import urllib.request
+
+import bs4 as bs
 
 from server.mockdraft.model.prospect import ProspectElite
 from server.mockdraft.repository.prospect_elite_dao import ProspectEliteDao
 
 year = "2021"
 
-hp_url = [f'https://www.eliteprospects.com/draft-center/{year}/tsn-craig-button', 0] # hp -> tsn
-fc_url = [f'https://www.eliteprospects.com/draft-center/{year}/future-considerations', 1]
-iss_url = [f'https://www.eliteprospects.com/draft-center/{year}/iss-hockey', 2]
+hp_url = [f'https://www.eliteprospects.com/draft-center/{year}/sportsnet-s', 0]  # hp -> tsn
+fc_url = [f'https://www.eliteprospects.com/draft-center/{year}/fchockey', 1]
+iss_url = [f'https://www.eliteprospects.com/draft-center/{year}/neutral-zone', 2]
 mh_url = [f'https://www.eliteprospects.com/draft-center/{year}/mckeen-s-hockey', 3]
 elite_url = [f'https://www.eliteprospects.com/draft-center/{year}/eliteprospects.com', 4]
 
@@ -76,8 +77,8 @@ def insertProspectToDb(prospects):
             ProspectEliteDao(year).insertOrUpdateProspectElite(prospect)
 
 def dataToFile(data):
-    with open('../data1.json', 'w', encoding='utf-8') as f:
-        json.dump([item.__dict__ for item in data ], f, ensure_ascii=False, indent=4)
+    with open('../data2021.json', 'w', encoding='utf-8') as f:
+        json.dump([item.__dict__ for item in data], f, ensure_ascii=False, indent=4)
 
 prospects = (
     getProspectFromEliteUrl(hp_url) +
@@ -87,13 +88,14 @@ prospects = (
     getProspectFromEliteUrl(elite_url)
 )
 
-ProspectEliteDao(year).initProspectEliteTable()
-insertProspectToDb(prospects)
+if __name__ == '__main__':
 
-allProspects = ProspectEliteDao(year).getAllProspects()
+    ProspectEliteDao(year).initProspectEliteTable()
+    insertProspectToDb(prospects)
 
-for prospect in allProspects:
-    ProspectEliteDao(year).updateProspectEliteAvgRank(prospect)
+    allProspects = ProspectEliteDao(year).getAllProspects()
 
-dataToFile(allProspects)
+    for prospect in allProspects:
+        ProspectEliteDao(year).updateProspectEliteAvgRank(prospect)
 
+    dataToFile(allProspects)

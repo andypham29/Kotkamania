@@ -1,9 +1,9 @@
-name: Deploy
+name: CI/CD Pipeline Stg
 
 on:
   push:
     branches:
-      - release
+      - staging
 
 jobs:
   build:

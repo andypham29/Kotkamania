@@ -29,7 +29,10 @@ jobs:
           aws-region: ca-central-1
       # Step 5
       - name: Build Application and Run unit Test
-        run: python app.py & pytest
+        run: python app.py
+      # Step 6
+      - name: Test with pytest
+        run: pytest
 
   continuous-deployment:
     runs-on: ubuntu-latest

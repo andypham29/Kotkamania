@@ -27,12 +27,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ca-central-1
-      # Step 5
-      - name: Build Application and Run unit Test
-        run: python app.py
-      # Step 6
-      - name: Test with pytest
-        run: pytest
 
   continuous-deployment:
     runs-on: ubuntu-latest

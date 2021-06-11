@@ -3,7 +3,7 @@ name: CI/CD Pipeline Prod
 on:
   push:
     branches:
-      - staging
+      - release
 
 jobs:
   continuous-integration:

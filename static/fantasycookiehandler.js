@@ -61,17 +61,20 @@ function addWatchListPlayerById(id) {
     }
 }
 
-function moveUpPlayerInCookie(index, cookie_name) {
+function moveUpPlayerInCookie(playerId1, playerId2, cookie_name) {
+
     var cookies = getCookie(cookie_name)
     var json = {}
     var newProspects = (cookies == "") ? [] : JSON.parse(cookies)
-    console.log(index)
-    if (index > 0) {
-      var temp = newProspects[index];
-      newProspects[index] = newProspects[index-1];
-      newProspects[index-1] = temp;
-      console.log(newProspects)
 
+    var playerId1_position = newProspects.indexOf(parseInt(playerId1))
+    var playerId2_position = newProspects.indexOf(parseInt(playerId2))
+
+    if (playerId2_position >= 0 && playerId2_position >= 0) {
+       // remove playerId1
+       newProspects.splice(playerId1_position, 1)
+       // move playerId1 above playerId2
+       newProspects.splice(playerId2_position, 0, parseInt(playerId1));
     }
 
     json = newProspects

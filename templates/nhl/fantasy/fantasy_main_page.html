@@ -103,8 +103,9 @@
 
         if(row.rowIndex > 1) {
             parent.insertBefore(row, sibling)
-            console.log(`rowIndex: ${row.rowIndex}`)
-            moveUpPlayerInCookie(row.rowIndex, cookiename)
+            var playerId1 = row.id
+            var playerId2 = sibling.id
+            moveUpPlayerInCookie(playerId1, playerId2, cookiename)
         }
     }
 

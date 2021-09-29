@@ -2,8 +2,6 @@ import json
 from types import SimpleNamespace
 
 from server.commons.fantasygrade.fantasy_forward_grade_helper import FantasyForwardGradeHelper
-from server.commons.fantasygrade.fantasy_player_grader import FantasyPlayerGrader, Grade
-from server.nhlapi.service.nhl_player_stat_service import NHLPlayerStatService
 
 stat = '''
 {
@@ -80,38 +78,6 @@ def test_when_getting_forward_grade_then_return_grade():
 
 def test_when_getting_forward_under25_grade_then_return_grade():
     grade = FantasyForwardGradeHelper().getForwardGrade(player_name, json_stat)
-    assert grade is not None
-    print(player_name, ": ", grade)
-    assert grade >= 30
-
-
-def test2():
-    grade = Grade(
-        FantasyForwardGradeHelper().getForwardGrade(player_name, json_stat),
-        0,
-        0,
-        0
-    )
-    player_final_grade = FantasyPlayerGrader.calculate_overall_grade("Cole Caufield", grade)
-    print(player_final_grade)
-    assert player_final_grade >= 30
-
-
-def test():
-    playoff_stat = NHLPlayerStatService().get_player_playoff_stat_by_playerId_and_seasons("8481540", ["20202021"])
-    grade_20202021_p = FantasyForwardGradeHelper().getForwardGrade(player_name, playoff_stat[0].stat)
-    grade_20202021 = FantasyForwardGradeHelper().getForwardGrade(player_name, json_stat)
-    grade_20192020 = 0
-    grade_20182019 = 0
-    grade_20172018 = 0
-
-    if grade_20202021_p > 0:
-        grade = (
-                            grade_20202021_p * 4 + grade_20202021 * 7 + grade_20192020 * 8 + grade_20182019 * 5 + grade_20172018 * 1) / 25
-    else:
-        grade = (grade_20202021 * 7 + grade_20192020 * 12 + grade_20182019 * 5 + grade_20172018 * 1) / 25
-    grade = round(grade, 2)
-
     assert grade is not None
     print(player_name, ": ", grade)
     assert grade >= 30

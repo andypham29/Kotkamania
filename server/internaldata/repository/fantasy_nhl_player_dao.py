@@ -22,6 +22,7 @@ class FantasyNhlPlayerDao:
         	avgRound DOUBLE,
         	percentDrafted TEXT,
         	teamName TEXT NOT NULL,
+        	nhlRank INTEGER,
         	)''')
 
         self.conn.commit()
@@ -39,7 +40,8 @@ class FantasyNhlPlayerDao:
             yahooEligibility,
             avgPick,
             avgRound,
-            percentDrafted) VALUES (?,?,?,?,?,?,?,?,?,?)''',
+            percentDrafted
+            nhlRank) VALUES (?,?,?,?,?,?,?,?,?,?,?)''',
             (fantasy_skater.playerId,
              fantasy_skater.skaterFullName,
              fantasy_skater.positionCode,
@@ -49,7 +51,8 @@ class FantasyNhlPlayerDao:
              fantasy_skater.yahooEligibility,
              fantasy_skater.avgPick,
              fantasy_skater.avgRound,
-             fantasy_skater.percentDrafted))
+             fantasy_skater.percentDrafted,
+             fantasy_skater.nhlRank))
 
         self.c.execute(
             '''UPDATE fantasy_nhl_player SET
@@ -62,6 +65,7 @@ class FantasyNhlPlayerDao:
             avgPick = ifnull(?, avgPick),
             avgRound = ifnull(?, avgRound),
             percentDrafted = ifnull(?, percentDrafted)
+            nhlRank = ifnull(?, nhlRank)
             WHERE playerId = ?''',
             (fantasy_skater.skaterFullName,
              fantasy_skater.positionCode,
@@ -72,6 +76,7 @@ class FantasyNhlPlayerDao:
              fantasy_skater.avgPick,
              fantasy_skater.avgRound,
              fantasy_skater.percentDrafted,
+             fantasy_skater.nhlRank,
              fantasy_skater.playerId))
 
         self.conn.commit()
@@ -83,7 +88,8 @@ class FantasyNhlPlayerDao:
         row = self.c.fetchone()
 
         self.conn.close()
-        return FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
+        return FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
+                                row[9], row[10])
 
     def getAllFantasySkaters(self):
         self.c.execute('''SELECT * FROM fantasy_nhl_player WHERE fantasyGrade > 30''')  # temp
@@ -93,7 +99,7 @@ class FantasyNhlPlayerDao:
         list = []
         for row in records:
             fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
-                                              row[9])
+                                              row[9], row[10])
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -117,7 +123,7 @@ class FantasyNhlPlayerDao:
         list = []
         for row in records:
             fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
-                                              row[9])
+                                              row[9], row[10])
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -138,7 +144,7 @@ class FantasyNhlPlayerDao:
         list = []
         for row in records:
             fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
-                                              row[9])
+                                              row[9], row[10])
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -152,8 +158,9 @@ class FantasyNhlPlayerDao:
 
         list = []
         for row in records:
-            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
-                                              row[9])
+            fantasy_skater = fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6],
+                                                               row[7], row[8],
+                                                               row[9], row[10])
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -168,7 +175,7 @@ class FantasyNhlPlayerDao:
         list = []
         for row in records:
             fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
-                                              row[9])
+                                              row[9], row[10])
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -185,6 +192,15 @@ class FantasyNhlPlayerDao:
         self.c.execute('''UPDATE fantasy_nhl_player SET
         fantasyGrade = ?
         WHERE playerId = ?''', (grade, playerId,))
+
+        self.conn.commit()
+        self.conn.close()
+
+    def updateNhlRankForFantasySkaterWithName(self, playerName, nhlRank):
+        print(playerName, ": ", nhlRank)
+        self.c.execute('''UPDATE fantasy_nhl_player SET
+        nhlRank = ?
+        WHERE skaterFullName = ?''', (nhlRank, playerName,))
 
         self.conn.commit()
         self.conn.close()

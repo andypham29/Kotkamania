@@ -12,6 +12,12 @@
                data-toggle="collapse" type="button">Toggle Advanced Search</a>
             <a aria-controls="advanced_search" aria-expanded="false" class="btn btn-sm btn-danger"
                onclick="clearAdvancedSearchField()" type="button">Clear Advanced Search</a>
+            <button class="btn btn-sm btn-dark" onclick="getFantasyPlayerPage('favorite')" type="button"
+                    value="Get Favorite">Get Favorite
+            </button>
+            <button class="btn btn-sm btn-dark" onclick="getFantasyPlayerPage('watchlist')" type="button"
+                    value="Get WatchList">Get WatchList
+            </button>
             <button class="btn btn-sm btn-primary" data-target="#players-stat-modal" data-toggle="modal"
                     onclick="getNhlPlayersLeaderStatModal('D')" type="button">D
             </button>
@@ -75,10 +81,8 @@
                        value="Filter By Score">
                 <input class="btn btn-sm btn-outline-primary" onclick="getFantasyPlayerPage('yahoo')" type="button"
                        value="Filter By Yahoo">
-                <input class="btn btn-sm btn-outline-primary" onclick="getFantasyPlayerPage('favorite')" type="button"
-                       value="Get Favorite">
-                <input class="btn btn-sm btn-outline-primary" onclick="getFantasyPlayerPage('watchlist')" type="button"
-                       value="Get WatchList">
+                <input class="btn btn-sm btn-outline-primary" onclick="getFantasyPlayerPage('nhl')" type="button"
+                       value="Filter By NHL.com">
                 <button class="btn btn-sm btn-primary" data-target="#yahoo-roster-modal" data-toggle="modal"
                         type="button">
                     Save Yahoo Rosters

@@ -125,6 +125,7 @@
                 "<th>Team</th>" +
                 "<th>Position</th>" +
                 "<th>Score</th>" +
+                "<th>Nhl Rank</th>" +
                 "<th>Avg Pick</th>" +
                 "<th>Avg Round</th>" +
                 "<th>Percent Drafted</th>" +
@@ -155,6 +156,16 @@
                 if(sort == "yahoo") {
                     response.sort(function(a, b) {
                         return (a.avgPick===null)-(b.avgPick===null) || +(a.avgPick>b.avgPick)||-(a.avgPick<b.avgPick);
+                    })
+                }
+                if(sort == "nhl") {
+                    response.sort(function(a, b) {
+                        if(a.nhlRank == null && b.nhlRank == null) {
+                            return (a.avgPick===null)-(b.avgPick===null) || +(a.avgPick>b.avgPick)||-(a.avgPick<b.avgPick);
+                        }
+                        else {
+                            return (a.nhlRank===null)-(b.nhlRank===null) || +(a.nhlRank>b.nhlRank)||-(a.nhlRank<b.nhlRank);
+                        }
                     })
                 }
                 else if(sort == "favorite") {
@@ -219,6 +230,7 @@
                     `<td><button class="btn btn-sm btn-link" data-toggle="modal" data-target="#team-modal" onclick=\"loadTeamModal(${fantasy_player.teamId})\">${ fantasy_player.teamName }</button></td>` +
                     `<td>${ player_position_display }</td>` +
                     `<td>${ fantasy_player.fantasyGrade }</td>` +
+                    `<td>${ fantasy_player.nhlRank }</td>` +
                     `<td>${ fantasy_player.avgPick }</td>` +
                     `<td>${ fantasy_player.avgRound }</td>` +
                     `<td>${ fantasy_player.percentDrafted }</td>` +

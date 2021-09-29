@@ -86,7 +86,7 @@
           }
         return false
     }
-        function checkWatchListToggleOn() {
+    function checkWatchListToggleOn() {
         var toggles = document.forms[2]
         if (toggles === undefined) return false
         for (i = 0; i < toggles.length; i++) {
@@ -96,6 +96,18 @@
           }
         return false
     }
+    function moveRowUp(current_row, cookiename) {
+        var row = current_row.parentNode.parentNode,
+        sibling = row.previousElementSibling,
+        parent = row.parentNode;
+
+        if(row.rowIndex > 1) {
+            parent.insertBefore(row, sibling)
+            console.log(`rowIndex: ${row.rowIndex}`)
+            moveUpPlayerInCookie(row.rowIndex, cookiename)
+        }
+    }
+
     function getFantasyPlayerPage(sort="fantasy", yahoo_rosters=[]) {
         url = `/api/nhl/fantasy` + buildFantasyUrlQueryParam()
         $.ajax({
@@ -122,9 +134,38 @@
 
                 var i = 0
                 // sort response by ascending avg_rank
+
+                var reorderable = (sort == "favorite" || sort == "watchlist") ? true : false
+
+                var td_reoder_attribute = reorderable ?
+                 `<td><button type="button" onclick="moveRowUp(this, '${sort}_fantasy_player')" class="btn btn-sm btn-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                      <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                    </svg>
+                    </button></td>`
+                 : ""
+
+                fantasy_favorites_cookie = getPlayersInCookie('favorite_fantasy_player')
+                fantasy_watchlist_cookie = getPlayersInCookie('watchlist_fantasy_player')
+
+                favoriteOn = checkFavoriteToggleOn()
+                watchlistOn = checkWatchListToggleOn()
+
                 if(sort == "yahoo") {
                     response.sort(function(a, b) {
                         return (a.avgPick===null)-(b.avgPick===null) || +(a.avgPick>b.avgPick)||-(a.avgPick<b.avgPick);
+                    })
+                }
+                else if(sort == "favorite") {
+                    favoriteOn = true
+                    response.sort(function(a, b) {
+                        return fantasy_favorites_cookie.indexOf(a.playerId) - fantasy_favorites_cookie.indexOf(b.playerId);
+                    })
+                }
+                else if(sort == "watchlist") {
+                    watchlistOn = true
+                    response.sort(function(a, b) {
+                        return fantasy_watchlist_cookie.indexOf(a.playerId) - fantasy_watchlist_cookie.indexOf(b.playerId);
                     })
                 }
                 else {
@@ -134,12 +175,9 @@
                 }
 
                 fantasy_players_cookie = [].concat(getPlayersInCookie('fantasy_c'), getPlayersInCookie('fantasy_l'), getPlayersInCookie('fantasy_r'), getPlayersInCookie('fantasy_d'), getPlayersInCookie('fantasy_g'), getPlayersInCookie('fantasy_na'))
-                fantasy_favorites_cookie = getPlayersInCookie('favorite_fantasy_player')
-                fantasy_watchlist_cookie = getPlayersInCookie('watchlist_fantasy_player')
 
                 color = "#aed0f5"
-                favoriteOn = checkFavoriteToggleOn()
-                watchlistOn = checkWatchListToggleOn()
+
                 $.each(response, function (i, fantasy_player)
                 {
                     
@@ -177,8 +215,7 @@
                     // `<td><button class="btn btn-sm btn-outline-primary ${active_class}" data-toggle="button" data-target="#star_button_${ fantasy_player.playerId } id="star_button_${ fantasy_player.playerId }" onclick=toggleFavoritePlayerById(${ fantasy_player.playerId })>
 
                     `<td><button class="btn btn-sm btn-link" data-toggle="modal" data-target="#player-modal" onclick=\"loadPlayerModal(${fantasy_player.playerId})\">${ fantasy_player.skaterFullName }</button></td>` +
-<!--                    `<td><button class="btn btn-sm btn-link" data-toggle="modal" data-target="#team-modal" onclick=\"loadTeamModal(${fantasy_player.teamId})\">${ fantasy_player.teamName }</button></td>` +-->
-                    `<td><button class="btn btn-sm btn-link" data-toggle="modal" data-target="#players-stat-modal" onclick=\"helloWorld()\">${ fantasy_player.teamName }</button></td>` +
+                    `<td><button class="btn btn-sm btn-link" data-toggle="modal" data-target="#team-modal" onclick=\"loadTeamModal(${fantasy_player.teamId})\">${ fantasy_player.teamName }</button></td>` +
                     `<td>${ player_position_display }</td>` +
                     `<td>${ fantasy_player.fantasyGrade }</td>` +
                     `<td>${ fantasy_player.avgPick }</td>` +
@@ -201,6 +238,7 @@
                         <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
                     </svg>
                     </button></td>` +
+                    td_reoder_attribute +
                     "</tr>"
 
                 });

@@ -86,7 +86,7 @@ class FantasyNhlPlayerDao:
         return FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
 
     def getAllFantasySkaters(self):
-        self.c.execute('''SELECT * FROM fantasy_nhl_player''')
+        self.c.execute('''SELECT * FROM fantasy_nhl_player WHERE fantasyGrade > 30''')  # temp
 
         records = self.c.fetchall()
 

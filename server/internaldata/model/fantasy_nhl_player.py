@@ -9,7 +9,8 @@ class FantasyNhlPlayer:
                  avgPick=None,
                  avgRound=None,
                  percentDrafted=None,
-                 teamName=""):
+                 teamName="",
+                 nhlRank=None):
         self.playerId = id
         self.skaterFullName = skaterFullName
         self.positionCode = positionCode
@@ -20,3 +21,4 @@ class FantasyNhlPlayer:
         self.avgRound = avgRound
         self.percentDrafted = percentDrafted
         self.teamName = teamName
+        self.nhlRank = nhlRank

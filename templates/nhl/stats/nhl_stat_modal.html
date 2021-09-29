@@ -1,0 +1,105 @@
+<script>
+    function getNhlPlayersLeaderStatModal(position) {
+        $('table#players_stat_info_table tbody').html("")
+        getNhlPlayersLeaderStat(position)
+    }
+
+    function getNhlPlayersLeaderStat(position) {
+        var query = ""
+        if(['D', 'F', 'G'].includes(position)) {
+            query += `?position=${position}`
+        }
+        $.ajax({
+            url: `/api/nhl/stats/skaters${query}`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                var trHTML = "<tr>" +
+                "<th></th>" +
+                "<th>Player</th>" +
+<!--                "<th>Season</th>" +-->
+                "<th>Team</th>" +
+                "<th>S/C</th>" +
+                "<th>Pos</th>" +
+                "<th>GP</th>" +
+                "<th>G</th>" +
+                "<th>A</th>" +
+                "<th>P</th>" +
+                "<th>+/-</th>" +
+                "<th>PIM</th>" +
+                "<th>P/GP</th>" +
+                "<th>EVG</th>" +
+                "<th>EVP</th>" +
+                "<th>PPG</th>" +
+                "<th>PPP</th>" +
+                "<th>SHG</th>" +
+                "<th>SHP</th>" +
+                "<th>OTG</th>" +
+                "<th>GWG</th>" +
+                "<th>S</th>" +
+                "<th>S%</th>" +
+                "</tr>";
+
+                var i = 0
+                $.each(response, function (i, player)
+                {
+                    trHTML += "<tr>" +
+                    `<td>${ ++i }</td>` +
+// <!--                    `<td><a href=\"/api/nhl/players/${player.playerId}\">${ player.skaterFullName }</a></td>` +-->
+                    `<td><button class="btn btn-link" data-toggle="modal" data-target="#player-modal" onclick=\"loadPlayerModal(${player.playerId})\">${ player.skaterFullName }</button></td>` +
+<!--                    `<td>${ player.seasonId }</td>` +-->
+                    `<td>${ player.teamAbbrevs }</td>` +
+                    `<td>${ player.shootsCatches }</td>` +
+                    `<td>${ player.positionCode }</td>` +
+                    `<td>${ player.gamesPlayed }</td>` +
+                    `<td>${ player.goals }</td>` +
+                    `<td>${ player.assists }</td>` +
+                    `<td>${ player.points }</td>` +
+                    `<td>${ player.plusMinus }</td>` +
+                    `<td>${ player.penaltyMinutes }</td>` +
+                    `<td>${ player.pointsPerGame }</td>` +
+                    `<td>${ player.evGoals }</td>` +
+                    `<td>${ player.evPoints }</td>` +
+                    `<td>${ player.ppGoals }</td>` +
+                    `<td>${ player.ppPoints }</td>` +
+                    `<td>${ player.shGoals }</td>` +
+                    `<td>${ player.shPoints }</td>` +
+                    `<td>${ player.otGoals }</td>` +
+                    `<td>${ player.gameWinningGoals }</td>` +
+                    `<td>${ player.shots }</td>` +
+                    `<td>${ player.shootingPct }</td>` +
+                    "</tr>"
+
+                    $('table#players_stat_info_table tbody').html(trHTML)
+
+                })
+            },
+            type: 'GET'
+        });
+    }
+
+
+</script>
+
+<div class="modal fade" id="players-stat-modal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content" style="overflow-y:auto;">
+            <div class="modal-body">
+                <div class="container-fluid" style="overflow-x:auto; overflow-y:auto;">
+                    <table class="table table-sm" id="players_stat_info_table">
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

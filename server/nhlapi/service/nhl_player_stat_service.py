@@ -7,6 +7,15 @@ class NHLPlayerStatService:
     def __init__(self):
         pass
 
+    def get_player_playoff_stat_by_playerId_and_seasons(self, playerId, seasons=[""]):
+        stats = []
+        for season in seasons:
+            stats_json = HttpHelper.get(self.__get_player_playoff_stats_url(playerId, season))
+            stat_splits = stats_json["stats"][0]["splits"]
+            stats += [SeasonStat(split["season"], self.__get_player_stat(split)) for split in stat_splits]
+
+        return stats
+
     def get_player_stat_by_playerId_and_seasons(self, playerId, seasons=[""]):
         stats = []
         for season in seasons:
@@ -32,6 +41,10 @@ class NHLPlayerStatService:
         stats += [SeasonStat(split["season"], self.__get_player_stat(split)) for split in stat_splits]
 
         return stats
+
+    @staticmethod
+    def __get_player_playoff_stats_url(id, year):
+        return f"https://statsapi.web.nhl.com/api/v1/people/{id}/stats?stats=statsSingleSeasonPlayoffs&season={year}"
 
     @staticmethod
     def __get_player_stats_url(id, year):

@@ -1,7 +1,7 @@
 from server.commons.fantasygrade.fantasy_defense_grade_helper import FantasyDefenseGradeHelper
 from server.commons.fantasygrade.fantasy_forward_grade_helper import FantasyForwardGradeHelper
 
-from server.commons.fantasygrade.fantasy_player_grader import FantasyPlayerGrader
+from server.commons.fantasygrade.fantasy_player_grader_facade import FantasyPlayerGraderFacade
 
 from server.internaldata.repository.player_repository import InternalPlayerRepository
 from server.internaldata.repository.player_stat_repository import InternalPlayerStatRepository
@@ -90,4 +90,4 @@ class FantasyPlayerGradeFacade:
         return [self.__convert_to_fantasy_player(player) for player in players]
 
     def __convert_to_fantasy_player(self, player):
-        return FantasyPlayerGrader().convert_to_fantasy_player(player)
+        return FantasyPlayerGraderFacade().convert_to_fantasy_player(player)

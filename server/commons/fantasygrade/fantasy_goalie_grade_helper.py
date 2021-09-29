@@ -26,11 +26,11 @@ class FantasyGoalieGradeHelper:
     def __scale_by_games_played(self, player_stat):
         gp = player_stat.games
         gp = gp if gp else 1
-        if gp < 10:
+        if gp < gp * 0.05:
             return 0.6
-        elif 10 <= gp < 20:
+        elif gp * 0.05 <= gp < gp * 0.15:
             return 0.9
-        elif 20 <= gp < 30:
+        elif gp * 0.15 <= gp < gp * 0.25:
             return 0.95
         else:
             return 1

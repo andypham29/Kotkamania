@@ -177,7 +177,8 @@
                     // `<td><button class="btn btn-sm btn-outline-primary ${active_class}" data-toggle="button" data-target="#star_button_${ fantasy_player.playerId } id="star_button_${ fantasy_player.playerId }" onclick=toggleFavoritePlayerById(${ fantasy_player.playerId })>
 
                     `<td><button class="btn btn-sm btn-link" data-toggle="modal" data-target="#player-modal" onclick=\"loadPlayerModal(${fantasy_player.playerId})\">${ fantasy_player.skaterFullName }</button></td>` +
-                    `<td><button class="btn btn-sm btn-link" data-toggle="modal" data-target="#team-modal" onclick=\"loadTeamModal(${fantasy_player.teamId})\">${ fantasy_player.teamName }</button></td>` +
+<!--                    `<td><button class="btn btn-sm btn-link" data-toggle="modal" data-target="#team-modal" onclick=\"loadTeamModal(${fantasy_player.teamId})\">${ fantasy_player.teamName }</button></td>` +-->
+                    `<td><button class="btn btn-sm btn-link" data-toggle="modal" data-target="#players-stat-modal" onclick=\"helloWorld()\">${ fantasy_player.teamName }</button></td>` +
                     `<td>${ player_position_display }</td>` +
                     `<td>${ fantasy_player.fantasyGrade }</td>` +
                     `<td>${ fantasy_player.avgPick }</td>` +
@@ -215,9 +216,14 @@
 
 
 
+
+
 </script>
+<!-- Add modals here -->
 {% include 'nhl/player/nhl_player_page_modal.html' %}
 {% include 'nhl/fantasy/nhl_lineup_modal.html' %}
+{% include 'nhl/stats/nhl_stat_modal.html' %}
+
 {% include 'nhl/fantasy/yahoo/yahoo_roster_parser.html' %}
 <div class="loader"></div>
 <div class="container-fluid">

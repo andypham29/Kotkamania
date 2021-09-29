@@ -44,7 +44,7 @@ class FantasyForwardGradeHelper:
         if gp < 10:
             return 0.5
         elif 10 <= gp < 20:
-            return 0.88
+            return 0.9
         elif 20 <= gp < 30:
             return 0.93
         elif 30 <= gp < 40:

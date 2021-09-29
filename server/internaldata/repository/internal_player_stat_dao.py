@@ -7,6 +7,7 @@ from server.internaldata.model.internal_nhl_player_stat import InternalPlayerSta
 class InternalPlayerStatDao:
     def __init__(self, uri=None):
         uri = 'server/internaldata/db/internal.db' if uri is None else uri
+        # uri = '../../server/internaldata/db/internal.db' if uri is None else uri
         self.conn = sqlite3.connect(uri)
         self.c = self.conn.cursor()
 

@@ -80,6 +80,8 @@ if __name__ == '__main__':
 
     # FantasyScript() \
     #     .process_defensemen() \
+    #     .process_forward() \
+    #     .process_goalies() \
     #     .close()
 
     FantasyScript().save_player_grade_for_all_players_in_internal_db()

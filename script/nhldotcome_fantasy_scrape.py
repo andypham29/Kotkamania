@@ -15,7 +15,7 @@ def hello():
             nhlRank = int(row[0])
             # print(playerName[1:], ": ", nhlRank)
             FantasyNhlPlayerDao(
-                '../server/internaldata/db/fantasy.db'
+                '../server/internaldata/db/internal.db'
             ).updateNhlRankForFantasySkaterWithName(playerName, nhlRank)
 
 

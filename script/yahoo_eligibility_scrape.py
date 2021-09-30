@@ -41,7 +41,7 @@ class YahooEligibilityScrape:
         return data
 
     def update_fantasy_db_with_yahoo_info(self, data):
-        fantasy = FantasyNhlPlayerService(uri='../server/internaldata/db/fantasy.db')
+        fantasy = FantasyNhlPlayerService(uri='../server/internaldata/db/internal.db')
         for d in data:
             print(d)
             fantasy.updateFantasyYahooInfoForFantasySkater(d)

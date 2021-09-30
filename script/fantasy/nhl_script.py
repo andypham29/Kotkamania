@@ -7,10 +7,10 @@ from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPla
 
 class FantasyScript:
 
-    def __init__(self, fantasy_player_helper=FantasyPlayerGradeFacade('../../server/internaldata/db/fantasy.db'),
+    def __init__(self, fantasy_player_helper=FantasyPlayerGradeFacade('../../server/internaldata/db/internal.db'),
                  excel_helper=ExcelHelper(),
                  internal_player_repository=InternalPlayerRepository(),
-                 fantasy_nhl_player_service=FantasyNhlPlayerService('../../server/internaldata/db/fantasy.db')):
+                 fantasy_nhl_player_service=FantasyNhlPlayerService('../../server/internaldata/db/internal.db')):
         self.fantasy_player_helper = fantasy_player_helper
         self.excel_helper = excel_helper
         self.internal_player_repository = internal_player_repository
@@ -76,7 +76,8 @@ class FantasyScript:
 if __name__ == '__main__':
     # FantasyScript().save_fantasy_nhl_players()
     # FantasyScript().save_player_stats_to_internal_db()
-    # # InternalPlayerRepository().create_database()
+    # InternalPlayerRepository().create_database()
+    # FantasyNhlPlayerDao().initFantasySkaterTable()
 
     # FantasyScript() \
     #     .process_defensemen() \
@@ -84,6 +85,7 @@ if __name__ == '__main__':
     #     .process_goalies() \
     #     .close()
 
+    # FantasyScript().save_fantasy_nhl_players()
     FantasyScript().save_player_grade_for_all_players_in_internal_db()
     # FantasyScript().save_player_grade_for_forwards_to_excel()
 

@@ -1,6 +1,6 @@
 from server.mockdraft.service.mockdraft_selector_service import MockDraftSelectorService
-from server.nhlapi.service.nhl_team_service import NhlTeamService
 from server.mockdraft.service.prospect_elite_service import ProspectEliteService
+from server.nhlapi.service.nhl_team_service import NhlTeamService
 
 
 class MockDraftSelectorServiceFacade:
@@ -11,7 +11,7 @@ class MockDraftSelectorServiceFacade:
     def getEntireDraftSimulation(self):
         prospects = ProspectEliteService().getAllProspectsWithRanking()
         mockdraft = MockDraftSelectorService(prospects)
-        teams = NhlTeamService().getAllTeams()
+        teams = NhlTeamService().getAllTeamsForDraft()
         reverseSortedTeams = sorted(teams, key=lambda x: x.leagueRank, reverse=True)
 
         draftlist = []

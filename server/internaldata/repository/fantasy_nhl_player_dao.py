@@ -7,6 +7,7 @@ class FantasyNhlPlayerDao:
 
     def __init__(self, uri=None):
         uri = 'server/internaldata/db/fantasy.db' if uri is None else uri
+        # uri = '../../server/internaldata/db/internal.db' if uri is None else uri
         self.conn = sqlite3.connect(uri)
         self.c = self.conn.cursor()
 
@@ -22,7 +23,7 @@ class FantasyNhlPlayerDao:
         	avgRound DOUBLE,
         	percentDrafted TEXT,
         	teamName TEXT NOT NULL,
-        	nhlRank INTEGER,
+        	nhlRank INTEGER
         	)''')
 
         self.conn.commit()
@@ -40,7 +41,7 @@ class FantasyNhlPlayerDao:
             yahooEligibility,
             avgPick,
             avgRound,
-            percentDrafted
+            percentDrafted,
             nhlRank) VALUES (?,?,?,?,?,?,?,?,?,?,?)''',
             (fantasy_skater.playerId,
              fantasy_skater.skaterFullName,
@@ -64,7 +65,7 @@ class FantasyNhlPlayerDao:
             yahooEligibility = ifnull(?, yahooEligibility),
             avgPick = ifnull(?, avgPick),
             avgRound = ifnull(?, avgRound),
-            percentDrafted = ifnull(?, percentDrafted)
+            percentDrafted = ifnull(?, percentDrafted),
             nhlRank = ifnull(?, nhlRank)
             WHERE playerId = ?''',
             (fantasy_skater.skaterFullName,

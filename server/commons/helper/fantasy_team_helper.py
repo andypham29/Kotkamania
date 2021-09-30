@@ -8,7 +8,7 @@ class FantasyTeamHelper:
     def get_all_players_in_teams(self):
         nhl_roster_service_facade = NHLRosterServiceFacade()
         roster_players = []
-        teams = NhlTeamService().getAllTeams()
+        teams = NhlTeamService().getAllTeamsForDraft()
         for team in teams:
             roster_players += [
                 FantasyNhlPlayer(id=player.playerId, skaterFullName=player.fullName, positionCode=player.position,
@@ -19,4 +19,5 @@ class FantasyTeamHelper:
 
 
 if __name__ == '__main__':
-    print(FantasyTeamHelper().get_all_players_in_teams())
+    # print([i.__dict__ for i in NhlTeamService().getAllTeamsForDraft()])
+    print([i.__dict__ for i in NhlTeamService().getAllTeams()])

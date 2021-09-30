@@ -8,6 +8,16 @@ class NhlTeamService:
         pass
 
     def getAllTeams(self):
+        json = HttpHelper.get('https://statsapi.web.nhl.com/api/v1/teams')
+        teams = []
+        for item in json.get('teams'):
+            id = item['id']
+            name = item['name']
+
+            teams.append(Team(id=id, name=name))
+        return teams
+
+    def getAllTeamsForDraft(self):
         json = HttpHelper.get('https://statsapi.web.nhl.com/api/v1/standings')
         return self.__getTeamsFromAllDivision(json)
 

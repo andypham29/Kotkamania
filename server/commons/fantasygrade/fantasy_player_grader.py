@@ -3,8 +3,7 @@ class FantasyPlayerGrader:
     @staticmethod
     def calculate_overall_grade(player_name, grade):
         grade_weighting = [10, 7, 3, 1]
-        grade_weighting_no_grade = [9, 6, 1, 1]
-        # grade_index = [1.025, 1, 1.0125,  0.93, 0.9]
+        grade_weighting_no_grade = [9, 2, 0.5, 0.5]
 
         total_grade = 0
         total_weight = 0

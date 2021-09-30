@@ -158,7 +158,7 @@
                         return (a.avgPick===null)-(b.avgPick===null) || +(a.avgPick>b.avgPick)||-(a.avgPick<b.avgPick);
                     })
                 }
-                if(sort == "nhl") {
+                else if(sort == "nhl") {
                     response.sort(function(a, b) {
                         if(a.nhlRank == null && b.nhlRank == null) {
                             return (a.avgPick===null)-(b.avgPick===null) || +(a.avgPick>b.avgPick)||-(a.avgPick<b.avgPick);

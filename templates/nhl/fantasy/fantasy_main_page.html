@@ -41,7 +41,9 @@
             }
         }
     }
-
+    function buildSortQueryParam(sort) {
+        return `?sort=${ sort }`
+    }
     function buildFantasyUrlQueryParam() {
           var positions = document.forms[2];
           var txt = "";

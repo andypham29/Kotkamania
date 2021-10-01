@@ -1,3 +1,19 @@
+class DisplayStat:
+
+    def __init__(self, assists=0, goals=0, points=0, games=0, shots=0,
+                 hits=0, blocked=0, plusMinus=0, powerPlayGoals=0, powerPlayPoints=0):
+        self.assists = assists
+        self.goals = goals
+        self.points = points
+        self.games = games
+        self.shots = shots
+        self.hits = hits
+        self.blocked = blocked
+        self.plusMinus = plusMinus
+        self.powerPlayGoals = powerPlayGoals
+        self.powerPlayPoints = powerPlayPoints
+
+
 class FantasyNhlPlayer:
 
     def __init__(self, id="",
@@ -23,20 +39,4 @@ class FantasyNhlPlayer:
         self.percentDrafted = percentDrafted
         self.teamName = teamName
         self.nhlRank = nhlRank
-        self.stat = stat
-
-
-class DisplayStat:
-
-    def __init__(self, assists=0, goals=0, points=0, games=0, shots=0,
-                 hits=0, blocked=0, plusMinus=0, powerPlayGoals=0, powerPlayPoints=0):
-        self.assists = assists
-        self.goals = goals
-        self.points = points
-        self.games = games
-        self.shots = shots
-        self.hits = hits
-        self.blocked = blocked
-        self.plusMinus = plusMinus
-        self.powerPlayGoals = powerPlayGoals
-        self.powerPlayPoints = powerPlayPoints
+        self.stat = stat if stat else DisplayStat()

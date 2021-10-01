@@ -97,9 +97,10 @@ class FantasyNhlPlayerDao:
         self.c.execute('''SELECT a.playerId, skaterFullName, positionCode, teamId, fantasyGrade, yahooEligibility, 
             avgPick, avgRound, percentDrafted, teamName, nhlRank, assists, goals, points, games, shots, hits, blocked, 
             plusMinus, powerPlayGoals, powerPlayPoints 
-            FROM fantasy_nhl_player a CROSS INNER JOIN internal_player_stat b 
-            ON a.playerId == b.playerId 
-            WHERE b.seasonId == 20202021''')
+            FROM fantasy_nhl_player a
+            LEFT JOIN (SELECT * FROM internal_player_stat WHERE seasonId == 20202021) b
+            USING(playerId)
+            ''')
 
         records = self.c.fetchall()
 

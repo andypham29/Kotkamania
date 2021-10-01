@@ -11,7 +11,7 @@ def hello():
     with open('nhl_data.csv', newline='') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in spamreader:
-            playerName = row[1][1:]
+            playerName = " ".join(row[1].split())
             nhlRank = int(row[0])
             # print(playerName[1:], ": ", nhlRank)
             FantasyNhlPlayerDao(

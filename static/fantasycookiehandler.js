@@ -50,6 +50,21 @@ function addWatchListPlayerById(id) {
     cookie_name = "watchlist_fantasy_player"
     console.log(`${id} ${cookie_name}`)
 
+    button = document.getElementById("glass_button_" + id.toString())
+    if (button.classList.contains('active')) {
+        removePlayerInCookie(id, cookie_name)
+        // button.classList.remove("active")
+    }
+    else {
+        savePlayerInCookie(id, cookie_name)
+        // button.classList.add("active")
+    }
+}
+
+function addDraftBoardListPlayerById (id) {
+    cookie_name = "draftboard_fantasy_player"
+    console.log(`${id} ${cookie_name}`)
+
     button = document.getElementById("check_button_" + id.toString())
     if (button.classList.contains('active')) {
         removePlayerInCookie(id, cookie_name)

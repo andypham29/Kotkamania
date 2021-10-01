@@ -1,12 +1,13 @@
 import sqlite3
 
-from server.internaldata.model.fantasy_nhl_player import FantasyNhlPlayer
+from server.internaldata.model.fantasy_nhl_player import FantasyNhlPlayer, DisplayStat
 
 
 class FantasyNhlPlayerDao:
 
     def __init__(self, uri=None):
-        uri = 'server/internaldata/db/fantasy.db' if uri is None else uri
+        # uri = 'server/internaldata/db/fantasy.db' if uri is None else uri
+        uri = 'server/internaldata/db/internal.db' if uri is None else uri
         # uri = '../../server/internaldata/db/internal.db' if uri is None else uri
         self.conn = sqlite3.connect(uri)
         self.c = self.conn.cursor()
@@ -91,6 +92,31 @@ class FantasyNhlPlayerDao:
         self.conn.close()
         return FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
                                 row[9], row[10])
+
+    def getAllFantasySkatersWithStat(self):
+        self.c.execute('''SELECT a.playerId, skaterFullName, positionCode, teamId, fantasyGrade, yahooEligibility, 
+            avgPick, avgRound, percentDrafted, teamName, nhlRank, assists, goals, points, games, shots, hits, blocked, 
+            plusMinus, powerPlayGoals, powerPlayPoints 
+            FROM fantasy_nhl_player a CROSS INNER JOIN internal_player_stat b 
+            ON a.playerId == b.playerId 
+            WHERE b.seasonId == 20202021''')
+
+        records = self.c.fetchall()
+
+        list = []
+        for row in records:
+            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
+                                              row[9], row[10],
+                                              DisplayStat(
+                                                  row[11], row[12], row[13], row[14], row[15], row[16], row[17],
+                                                  row[18],
+                                                  row[19], row[20]
+                                              ))
+            list.append(fantasy_skater)
+
+        self.conn.close()
+
+        return list
 
     def getAllFantasySkaters(self):
         self.c.execute('''SELECT * FROM fantasy_nhl_player WHERE fantasyGrade > 30''')  # temp

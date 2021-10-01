@@ -1,5 +1,4 @@
 <script src="{{url_for('static', filename='cookiehandler.js')}}"></script>
-<script src="{{url_for('static', filename='fantasycookiehandler.js')}}"></script>
 <script>
     function togglePlayerRowById(data) {
         id = data[0]
@@ -96,6 +95,16 @@
           }
         return false
     }
+    function checkToggleOnForFilter(toggle_name) {
+        var toggles = document.forms[2]
+        if (toggles === undefined) return false
+        for (i = 0; i < toggles.length; i++) {
+                if (toggles[i].checked && toggles[i].value == "Draftboard") {
+                    return true
+                }
+          }
+        return false
+    }
     function moveRowUp(current_row, cookiename) {
         var row = current_row.parentNode.parentNode,
         sibling = row.previousElementSibling,
@@ -129,6 +138,17 @@
                 "<th>Yahoo Avg</th>" +
                 "<th>Avg Round</th>" +
                 "<th>Percent Drafted</th>" +
+                `<th>GP</th>
+                <th>G</th>
+                <th>A</th>
+                <th>P</th>
+                <th>+/-</th>
+                <th>PPG</th>
+                <th>PPP</th>
+                <th>S</th>
+                <th>HIT</th>
+                <th>BLK</th>` +
+                "<th></th>" +
                 "<th></th>" +
                 "<th></th>" +
                 "<th></th>" +
@@ -137,7 +157,7 @@
                 var i = 0
                 // sort response by ascending avg_rank
 
-                var reorderable = (sort == "favorite" || sort == "watchlist") ? true : false
+                var reorderable = (sort == "favorite" || sort == "watchlist" || sort == "draftboard" ) ? true : false
 
                 var td_reoder_attribute = reorderable ?
                  `<td><button type="button" onclick="moveRowUp(this, '${sort}_fantasy_player')" class="btn btn-sm btn-secondary">
@@ -149,9 +169,11 @@
 
                 fantasy_favorites_cookie = getPlayersInCookie('favorite_fantasy_player')
                 fantasy_watchlist_cookie = getPlayersInCookie('watchlist_fantasy_player')
+                fantasy_draftboard_cookie = getPlayersInCookie('draftboard_fantasy_player')
 
                 favoriteOn = checkFavoriteToggleOn()
                 watchlistOn = checkWatchListToggleOn()
+                draftboardOn = checkToggleOnForFilter('Draftboard')
 
                 if(sort == "yahoo") {
                     response.sort(function(a, b) {
@@ -180,6 +202,12 @@
                         return fantasy_watchlist_cookie.indexOf(a.playerId) - fantasy_watchlist_cookie.indexOf(b.playerId);
                     })
                 }
+                else if(sort == "draftboard") {
+                    draftboardOn = true
+                    response.sort(function(a, b) {
+                        return fantasy_watchlist_cookie.indexOf(a.playerId) - fantasy_watchlist_cookie.indexOf(b.playerId);
+                    })
+                }
                 else {
                     response.sort(function(a, b) {
                         return (a.fantasyGrade===null)-(b.fantasyGrade===null) || +(a.fantasyGrade<b.fantasyGrade)||-(a.fantasyGrade>b.fantasyGrade);
@@ -192,9 +220,10 @@
 
                 $.each(response, function (i, fantasy_player)
                 {
-                    
+
                     if ((favoriteOn && fantasy_favorites_cookie.indexOf(fantasy_player.playerId) < 0) ||
-                        (watchlistOn && fantasy_watchlist_cookie.indexOf(fantasy_player.playerId) < 0)) {
+                        (watchlistOn && fantasy_watchlist_cookie.indexOf(fantasy_player.playerId) < 0) ||
+                        (draftboardOn && fantasy_draftboard_cookie.indexOf(fantasy_player.playerId) < 0)) {
                         return true;
                     }
                     player_nhl_position = fantasy_player.positionCode.toLowerCase()
@@ -215,6 +244,10 @@
                     if(fantasy_watchlist_cookie.filter(function(id) { return id === fantasy_player.playerId; }).length > 0) {
                         active_class_2 = "active"
                     }
+                    active_class_3 = ""
+                    if(fantasy_draftboard_cookie.filter(function(id) { return id === fantasy_player.playerId; }).length > 0) {
+                        active_class_3 = "active"
+                    }
                     if(yahoo_rosters.indexOf(fantasy_player.skaterFullName) >= 0){
                         style = ` style="background-color: ${ color };"`
                         selected = "active"
@@ -234,27 +267,38 @@
                     `<td>${ fantasy_player.avgPick }</td>` +
                     `<td>${ fantasy_player.avgRound }</td>` +
                     `<td>${ fantasy_player.percentDrafted }</td>` +
+                    `<td>${ fantasy_player.stat.games }</td>
+                    <td>${ fantasy_player.stat.goals }</td>
+                    <td>${ fantasy_player.stat.assists }</td>
+                    <td>${ fantasy_player.stat.points }</td>
+                    <td>${ fantasy_player.stat.plusMinus }</td>
+                    <td>${ fantasy_player.stat.powerPlayGoals }</td>
+                    <td>${ fantasy_player.stat.powerPlayPoints }</td>
+                    <td>${ fantasy_player.stat.shots }</td>
+                    <td>${ fantasy_player.stat.hits }</td>
+                    <td>${ fantasy_player.stat.blocked }</td>` +
                     `<td>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-6 padding-0">
-                                <button type="button" id="star_button_${ fantasy_player.playerId }" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="addFavoritePlayerById(${fantasy_player.playerId})" class="btn btn-sm btn-outline-primary ${active_class}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
-                                        <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.523-3.356c.329-.314.158-.888-.283-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767l-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288l1.847-3.658 1.846 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.564.564 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="col-sm-6 padding-0">
-                                <button type="button" id="check_button_${ fantasy_player.playerId }" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="addWatchListPlayerById(${fantasy_player.playerId})" class="btn btn-sm btn-outline-primary ${active_class_2}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
-                                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-                                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                        <button type="button" id="star_button_${ fantasy_player.playerId }" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="addFavoritePlayerById(${fantasy_player.playerId})" class="btn btn-sm btn-outline-primary ${active_class}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+                                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.523-3.356c.329-.314.158-.888-.283-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767l-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288l1.847-3.658 1.846 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.564.564 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                            </svg>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" id="glass_button_${ fantasy_player.playerId }" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="addWatchListPlayerById(${fantasy_player.playerId})" class="btn btn-sm btn-outline-primary ${active_class_2}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eyeglasses" viewBox="0 0 16 16">
+                            <path d="M4 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm2.625.547a3 3 0 0 0-5.584.953H.5a.5.5 0 0 0 0 1h.541A3 3 0 0 0 7 8a1 1 0 0 1 2 0 3 3 0 0 0 5.959.5h.541a.5.5 0 0 0 0-1h-.541a3 3 0 0 0-5.584-.953A1.993 1.993 0 0 0 8 6c-.532 0-1.016.208-1.375.547zM14 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
+                            </svg>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" id="check_button_${ fantasy_player.playerId }" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="addDraftBoardListPlayerById(${fantasy_player.playerId})" class="btn btn-sm btn-outline-primary ${active_class_3}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                            </svg>
+                        </button>
                     </td>`+
                     `<td><button type="button" class="btn btn-sm btn-outline-primary ${ selected }" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="togglePlayerRowById([` + fantasy_player.playerId + `, '${cookie_string_for_player}'])">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
@@ -279,12 +323,15 @@
 
 
 
+
 </script>
+<script src="{{url_for('static', filename='fantasycookiehandler.js')}}"></script>
 <!-- Add modals here -->
 {% include 'nhl/player/nhl_player_page_modal.html' %}
 {% include 'nhl/fantasy/nhl_lineup_modal.html' %}
 {% include 'nhl/stats/nhl_stat_modal.html' %}
 
+{% include 'nhl/fantasy/cookielist/cookie_list_popup.html' %}
 {% include 'nhl/fantasy/yahoo/yahoo_roster_parser.html' %}
 <div class="loader"></div>
 <div class="container-fluid">

@@ -1,0 +1,99 @@
+<script>
+    function getCookieForTextArea() {
+        var favorite = getPlayersInCookie('favorite_fantasy_player')
+        var watchlist = getPlayersInCookie('watchlist_fantasy_player')
+        var draftboard = getPlayersInCookie('draftboard_fantasy_player')
+
+        document.getElementById("favorite_list").value = favorite.toString()
+        document.getElementById("watchlist_list").value = watchlist.toString()
+        document.getElementById("draftboard_list").value = draftboard.toString()
+    }
+
+    function deleteFantasyCookies() {
+        eraseCookie('fantasy_c')
+        eraseCookie('fantasy_l')
+        eraseCookie('fantasy_r')
+    }
+
+    function importList(textAreaId) {
+        var map1 = new Map();
+        // key=textArea id : value=cookie_name
+        map1.set('favorite_list', 'favorite_fantasy_player');
+        map1.set('watchlist_list', 'watchlist_fantasy_player');
+        map1.set('draftboard_list', 'draftboard_fantasy_player');
+
+        map1.forEach((value,key)=>{
+            console.log(key + ": " + document.getElementById(key).value)
+            // convert strings to int
+            var list = document.getElementById(key).value.split(",").map(el => {
+              let n = Number(el);
+              return n === 0 ? null : n
+            });
+            if(Array.isArray(list)){
+                console.log("true array")
+                setCookie(value, JSON.stringify(list.filter(Boolean)))
+            }
+        })
+        location.reload();
+    }
+
+
+
+</script>
+<script src="{{url_for('static', filename='cookiehandler.js')}}"></script>
+
+<div class="modal fade" id="cookie-list-modal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content" style="overflow-y:auto;">
+            <div class="modal-header">
+                <h5 class="modal-title">Import Player Lists</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-primary" role="alert">
+                    Copy/Paste in the text boxes to import your lists of players.
+                </div>
+                <form action="">
+                    <div class="form-row">
+                        <div class="col padding-0">
+                            <label>Favorite</label>
+                        </div>
+                        <div class="col">
+                            <textarea cols="50" id="favorite_list" rows="4"></textarea><br/>
+                        </div>
+
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label>Watchlist</label>
+                        </div>
+                        <div class="col">
+                            <textarea cols="50" id="watchlist_list" rows="4"></textarea><br/>
+                        </div>
+
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label>Draft Board</label>
+                        </div>
+                        <div class="col">
+                            <textarea cols="50" id="draftboard_list" rows="4"></textarea><br/>
+                        </div>
+
+                    </div>
+                    <!--                    <div class="form-row">-->
+
+                    <!--                    </div>-->
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <input class="btn btn-sm btn-outline-primary" data-dismiss="modal"
+                       onclick="importList()"
+                       type="button" value="Save Rosters">
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

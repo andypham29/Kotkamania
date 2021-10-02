@@ -1,4 +1,5 @@
 <script src="{{url_for('static', filename='cookiehandler.js')}}"></script>
+<script src="{{url_for('static', filename='fantasycookiehandler.js')}}"></script>
 <script>
     function togglePlayerRowById(data) {
         id = data[0]
@@ -116,6 +117,7 @@
             parent.insertBefore(row, sibling)
             var playerId1 = row.id
             var playerId2 = sibling.id
+            console.log(`${cookiename}: moving ${playerId1} with ${playerId2}`)
             moveUpPlayerInCookie(playerId1, playerId2, cookiename)
         }
     }
@@ -207,7 +209,7 @@
                 else if(sort == "draftboard") {
                     draftboardOn = true
                     response.sort(function(a, b) {
-                        return fantasy_watchlist_cookie.indexOf(a.playerId) - fantasy_watchlist_cookie.indexOf(b.playerId);
+                        return fantasy_draftboard_cookie.indexOf(a.playerId) - fantasy_draftboard_cookie.indexOf(b.playerId);
                     })
                 }
                 else {
@@ -327,7 +329,6 @@
 
 
 </script>
-<script src="{{url_for('static', filename='fantasycookiehandler.js')}}"></script>
 <!-- Add modals here -->
 {% include 'nhl/player/nhl_player_page_modal.html' %}
 {% include 'nhl/fantasy/nhl_lineup_modal.html' %}

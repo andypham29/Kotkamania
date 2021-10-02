@@ -156,7 +156,7 @@
                 "<th></th>" +
                 "</tr>";
 
-                var i = 0
+                var table_id = 0
                 // sort response by ascending avg_rank
 
                 var reorderable = (sort == "favorite" || sort == "watchlist" || sort == "draftboard" ) ? true : false
@@ -258,7 +258,7 @@
                     }
                     player_position_display = (fantasy_player.yahooEligibility == null) ? fantasy_player.positionCode : fantasy_player.yahooEligibility
                     trHTML += `<tr id=\'` + fantasy_player.playerId + `\' ${ style } >` +
-                    `<td>${ ++i }</td>` +
+                    `<td>${ ++table_id }</td>` +
                     // `<td><button class="btn btn-sm btn-outline-primary ${active_class}" data-toggle="button" data-target="#star_button_${ fantasy_player.playerId } id="star_button_${ fantasy_player.playerId }" onclick=toggleFavoritePlayerById(${ fantasy_player.playerId })>
 
                     `<td><button class="btn btn-sm btn-link" data-toggle="modal" data-target="#player-modal" onclick=\"loadPlayerModal(${fantasy_player.playerId})\">${ fantasy_player.skaterFullName }</button></td>` +

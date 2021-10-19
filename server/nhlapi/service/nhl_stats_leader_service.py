@@ -7,19 +7,19 @@ class NHLStatsLeaderService:
     def __init__(self):
         pass
 
-    def getAllPlayers(self, start="0", end="100", seasonId="20202021"):
+    def getAllPlayers(self, start="0", end="100", seasonId="20212022"):
         response = HttpHelper.get(self.__get_url_player_paging(start, end, seasonId))["data"]
         return [self.__getStatsForAllLeaderPlayers(player) for player in response]
 
-    def getForwards(self, start="0", end="100", seasonId="20202021"):
+    def getForwards(self, start="0", end="100", seasonId="20212022"):
         response = HttpHelper.get(self.__get_url_forward_paging(start, end, seasonId))["data"]
         return [self.__getStatsForAllLeaderPlayers(player) for player in response]
 
-    def getDefensemen(self, start="0", end="100", seasonId="20202021"):
+    def getDefensemen(self, start="0", end="100", seasonId="20212022"):
         response = HttpHelper.get(self.__get_url_defense_paging(start, end, seasonId))["data"]
         return [self.__getStatsForAllLeaderPlayers(player) for player in response]
 
-    def getGoalies(self, start="0", end="100", seasonId="20202021"):
+    def getGoalies(self, start="0", end="100", seasonId="20212022"):
         response = HttpHelper.get(self.__get_url_goalie_paging(start, end, seasonId))["data"]
         return [self.__getStatsForAllLeaderPlayers(player) for player in response]
 

@@ -14,7 +14,7 @@ class NHLPlayerServiceFacade:
         self.internalPlayerStatService = internalPlayerStatService
 
     def get_player_by_playerId_and_seasons(self, playerId, seasons=[]):
-        seasons = seasons if seasons else ["20162017", "20172018", "20182019", "20192020", "20202021"]
+        seasons = seasons if seasons else ["20162017", "20172018", "20182019", "20192020", "20202021", "20212022"]
         player = self.nhlPlayerService.get_player_by_id(playerId)
         if player.position == "G":
             stats = self.nhlPlayerStatService.get_goalie_stat_by_playerId_and_season(playerId, seasons)

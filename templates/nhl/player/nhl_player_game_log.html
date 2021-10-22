@@ -3,7 +3,7 @@
             $('table#player_game_log tbody').html("")
 
             $.ajax({
-            url: `https://statsapi.web.nhl.com/api/v1/people/${playerId}/stats?stats=gameLog&season=20202021`,
+            url: `https://statsapi.web.nhl.com/api/v1/people/${playerId}/stats?stats=gameLog&season=20212022`,
             crossDomain: true,
             dataType: "json",
             error: function(response) {

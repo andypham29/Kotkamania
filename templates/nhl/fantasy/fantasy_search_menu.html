@@ -12,6 +12,21 @@
                data-toggle="collapse" type="button">Toggle Advanced Search</a>
             <a aria-controls="advanced_search" aria-expanded="false" class="btn btn-sm btn-danger"
                onclick="clearAdvancedSearchField()" type="button">Clear Advanced Search</a>
+            <button class="btn btn-sm btn-dark" onclick="getFantasyPlayerPage('favorite')" type="button"
+                    value="Get Favorite">Get Favorite
+            </button>
+            <button class="btn btn-sm btn-dark" onclick="getFantasyPlayerPage('watchlist')" type="button"
+                    value="Get WatchList">Get WatchList
+            </button>
+            <button class="btn btn-sm btn-dark" onclick="getFantasyPlayerPage('draftboard')" type="button"
+                    value="Get DraftBoard">Get Draftboard
+            </button>
+            <button class="btn btn-sm btn-primary" data-target="#players-stat-modal" data-toggle="modal"
+                    onclick="getNhlPlayersLeaderStatModal('D')" type="button">D
+            </button>
+            <button class="btn btn-sm btn-primary" data-target="#players-stat-modal" data-toggle="modal"
+                    onclick="getNhlPlayersLeaderStatModal('F')" type="button">F
+            </button>
         </tr>
         <br/>
         <tr>{% include 'nhl/fantasy/fantasy_advance_search.html' %}</tr>
@@ -51,6 +66,15 @@
                     <label class="form-check-label btn btn-outline-secondary" for="Watchlist">
                         <input class="checkbox-inline" id="Watchlist" name="positions" type="checkbox"
                                value="Watchlist">
+
+                        <svg class="bi bi-eyeglasses" fill="currentColor" height="16" viewBox="0 0 16 16"
+                             width="16" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm2.625.547a3 3 0 0 0-5.584.953H.5a.5.5 0 0 0 0 1h.541A3 3 0 0 0 7 8a1 1 0 0 1 2 0 3 3 0 0 0 5.959.5h.541a.5.5 0 0 0 0-1h-.541a3 3 0 0 0-5.584-.953A1.993 1.993 0 0 0 8 6c-.532 0-1.016.208-1.375.547zM14 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
+                        </svg>
+                    </label>
+                    <label class="form-check-label btn btn-outline-secondary" for="Draftboard">
+                        <input class="checkbox-inline" id="Draftboard" name="positions" type="checkbox"
+                               value="Draftboard">
                         <svg class="bi bi-clipboard-check" fill="currentColor" height="16" viewBox="0 0 16 16"
                              width="16" xmlns="http://www.w3.org/2000/svg">
                             <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"
@@ -62,19 +86,26 @@
                 </div>
             </tr>
             <br/>
+
             <tr>
+
                 <input class="btn btn-sm btn-outline-primary" onclick="getFantasyPlayerPage()" type="button"
                        value="Filter By Score">
+                <input class="btn btn-sm btn-outline-primary" onclick="getFantasyPlayerPage('nhl')" type="button"
+                       value="Filter By NHL.com">
                 <input class="btn btn-sm btn-outline-primary" onclick="getFantasyPlayerPage('yahoo')" type="button"
                        value="Filter By Yahoo">
                 <button class="btn btn-sm btn-primary" data-target="#yahoo-roster-modal" data-toggle="modal"
                         type="button">
                     Save Yahoo Rosters
                 </button>
+                <button class="btn btn-sm btn-secondary" data-target="#cookie-list-modal" data-toggle="modal"
+                        onclick="getCookieForTextArea()" type="button">
+                    Save Lists
+                </button>
                 <br/>
             </tr>
         </form>
-
         <br/>
     </div>
 </div>

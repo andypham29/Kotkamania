@@ -144,11 +144,18 @@ def getNhlPlayer(id):
 
 @app.route('/api/nhl/stats/skaters')
 def getNhlStatsSkater():
-    response = NHLStatsLeaderService().getAllPlayers() \
-               + NHLStatsLeaderService().getAllPlayers(start=101, end=200) \
-               + NHLStatsLeaderService().getAllPlayers(start=201, end=300) \
-               + NHLStatsLeaderService().getAllPlayers(start=301, end=400) \
-               + NHLStatsLeaderService().getAllPlayers(start=401, end=500)
+    if request.args.get('position') == 'D':
+        response = NHLStatsLeaderService().getDefensemen()
+    elif request.args.get('position') == 'F':
+        response = NHLStatsLeaderService().getForwards()
+    elif request.args.get('position') == 'G':
+        response = NHLStatsLeaderService().getGoalies()
+    else:
+        response = NHLStatsLeaderService().getAllPlayers() \
+                   + NHLStatsLeaderService().getAllPlayers(start=101, end=200) \
+                   + NHLStatsLeaderService().getAllPlayers(start=201, end=300) \
+                   + NHLStatsLeaderService().getAllPlayers(start=301, end=400) \
+                   + NHLStatsLeaderService().getAllPlayers(start=401, end=500)
     return makeHttpResponse(response)
 
 

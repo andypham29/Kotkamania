@@ -1,6 +1,46 @@
 <script>
+    function clearGraph() {
+        // remove chart before adding new
+        var chartDiv = document.getElementById('chart_div')
+        chartDiv.removeChild(chartDiv.firstChild)
+        chartDiv.innerHTML = `<canvas id="myChart"></canvas>`
+    }
+    function getPlayerStatsGraph(pointsArray) {
+
+        // console.log(`points: ${pointsArray}`)
+        var xValues = Array.from(Array(pointsArray.length + 1).keys())
+        var yValues = [0]
+        pointsArray.reverse().forEach(item => {
+            var lastValue = yValues[yValues.length - 1]
+            yValues.push(lastValue + item)
+        })
+        // console.log(`x: ${xValues}`)
+        // console.log(`y: ${yValues}`)
+
+        // "myChart" is the id of the graph in the html
+        // creating chart with handler
+        setGraph("myChart", xValues, yValues, "P")
+    }
+
+    function getGoalieStatsGraph(winsArray) {
+
+        // console.log(`points: ${winsArray}`)
+        var xValues = Array.from(Array(winsArray.length + 1).keys())
+        var yValues = [0]
+        winsArray.reverse().forEach(item => {
+            var lastValue = yValues[yValues.length - 1]
+            yValues.push(lastValue + item)
+        })
+        // console.log(`x: ${xValues}`)
+        // console.log(`y: ${yValues}`)
+
+        // "myChart" is the id of the graph in the html
+        // creating chart with handler
+        setGraph("myChart", xValues, yValues, "G")
+    }
     function getPlayerGameLog(playerId, position) {
             $('table#player_game_log tbody').html("")
+            clearGraph()
 
             $.ajax({
             url: `https://statsapi.web.nhl.com/api/v1/people/${playerId}/stats?stats=gameLog&season=20212022`,
@@ -20,6 +60,11 @@
                         "</tr>"
 
                         player.stats[0].splits.slice(0, games_shown)
+                        getGoalieStatsGraph(player.stats[0].splits.map(item => {
+                            var result = item.stat.decision
+                            if(result === "W") return 1
+                            else return 0
+                        }))
                         player.stats[0].splits.forEach(function(item){
                             var opponent = item.opponent.name.split(" ")
                             opponent = opponent[opponent.length - 1]
@@ -51,6 +96,9 @@
                         "</tr>"
 
                         player.stats[0].splits.slice(0, games_shown)
+                         // chart
+                        getPlayerStatsGraph(player.stats[0].splits.map(item => item.stat.points))
+
                         player.stats[0].splits.forEach(function(item){
                             var opponent = item.opponent.name.split(" ")
                             opponent = opponent[opponent.length - 1]
@@ -88,8 +136,16 @@
         });
     }
 
+
 </script>
-<table class="table table-sm table-hover" id="player_game_log">
+<script src="{{url_for('static', filename='chartjshandler.js')}}"></script>
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+</script>
+<div id="chart_div">
+</div>
+<h5 class="async">Game Logs</h5>
+<table class="table table-sm table-hover" id="player_game_log" style="width:100%;max-width:700px">
     <tbody>
     </tbody>
 </table>

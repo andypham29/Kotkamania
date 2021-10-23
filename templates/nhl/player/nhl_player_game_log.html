@@ -3,7 +3,7 @@
         // remove chart before adding new
         var chartDiv = document.getElementById('chart_div')
         chartDiv.removeChild(chartDiv.firstChild)
-        chartDiv.innerHTML = `<canvas id="myChart"></canvas>`
+        chartDiv.innerHTML = `<canvas id="myChart" style="width:100%;max-width:700px"></canvas>`
     }
     function getPlayerStatsGraph(pointsArray) {
 
@@ -144,6 +144,7 @@
 </script>
 <div id="chart_div">
 </div>
+<br>
 <h5 class="async">Game Logs</h5>
 <table class="table table-sm table-hover" id="player_game_log" style="width:100%;max-width:700px">
     <tbody>

@@ -29,7 +29,7 @@ class NHLPlayerServiceFacade:
                     if len(player_stat) > 0:
                         stat = player_stat[0].stat
 
-                        if seasonId != "20202021":
+                        if seasonId != "20212022":
                             self.internalPlayerStatService.insert_internal_players_stats(playerId, seasonId, stat)
                     print(f"[{playerId}] Statistic for season {seasonId} from NHLAPI")
 

@@ -47,7 +47,7 @@ class AdminFacade:
         # print(InternalLogService().getNhlPlayerStatLogByDate(today_date))
 
     def __get_gamelogs_index(self, playerId, name, position):
-        gamelogs = self.get_player_gamelogs_by_id_and_season(playerId, "20202021")
+        gamelogs = self.get_player_gamelogs_by_id_and_season(playerId, "20212022")
         pts = FantasyPlayerStreakIndexCalculator().get_point_index_for_last_5(gamelogs)
         toi = FantasyPlayerStreakIndexCalculator().get_toi_index_for_last_5(gamelogs)
         pptoi = FantasyPlayerStreakIndexCalculator().get_pptoi_index_for_last_5(gamelogs)
@@ -60,13 +60,13 @@ class AdminFacade:
         for player in nhl_roster_players:
             FantasyNhlPlayerService().saveFantasySkater(player)
 
-    def __save_and_return_players_stats_by_year(self, playerId, position, season="20202021"):
+    def __save_and_return_players_stats_by_year(self, playerId, position, season="20212022"):
         stat = NHLPlayerStatService().get_player_stat_by_playerId_and_seasons(playerId, [season])
         if position != 'G':
             InternalPlayerStatService().get_internal_players_stats_by_playerId_and_seasonId(playerId, season)
         return stat
 
-    def get_player_gamelogs_by_id_and_season(self, playerId, season="20202021"):
+    def get_player_gamelogs_by_id_and_season(self, playerId, season="20212022"):
         return [data.stat for data in
                 NHLPlayerStatService().get_player_gamelogs_by_playerId_and_season(playerId, season)]
 

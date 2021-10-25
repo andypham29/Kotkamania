@@ -132,7 +132,10 @@ class FantasyNhlPlayerDao:
             WHERE positionCode IN {filter_parameters}'''
         for position in positionCodes:
             query += f" OR yahooEligibility LIKE '%{position}%'"
-        # query += f"LIMIT 125 OFFSET {125 * offset}"
+
+        if offset is not None:
+            print("hello")
+            query += f"LIMIT 100 OFFSET {100 * offset}"
 
         self.c.execute(query)
 

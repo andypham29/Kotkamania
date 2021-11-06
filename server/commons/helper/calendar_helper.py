@@ -19,5 +19,6 @@ class CalendarHelper:
 
 
 if __name__ == '__main__':
-    print(CalendarHelper.get_current_week_monday())
-    print(CalendarHelper.get_current_week_sunday())
+    print(CalendarHelper.get_current_week_monday().day)
+    print(CalendarHelper.get_current_day().day)
+    print(CalendarHelper.get_current_week_sunday().day)

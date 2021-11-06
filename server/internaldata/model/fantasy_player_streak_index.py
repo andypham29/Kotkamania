@@ -6,7 +6,8 @@ class FantasyPlayerStreakIndex:
                  pts=None,
                  toi=None,
                  pptoi=None,
-                 index=None):
+                 index=None,
+                 lastUpdated=None):
         self.playerId = id
         self.skaterFullName = skaterFullName
         self.positionCode = positionCode
@@ -14,3 +15,4 @@ class FantasyPlayerStreakIndex:
         self.toi = toi
         self.pptoi = pptoi
         self.index = index
+        self.lastUpdated = lastUpdated

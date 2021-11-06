@@ -10,6 +10,7 @@ from server.mockdraft.service.facade.mockdraft_selector_service_facade import Mo
 from server.mockdraft.service.prospect_elite_service import ProspectEliteService
 from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
 from server.nhlapi.service.facade.nhl_roster_service_facade import NHLRosterServiceFacade
+from server.nhlapi.service.nhl_schedule_service import NHLScheduleService
 from server.nhlapi.service.nhl_stats_leader_service import NHLStatsLeaderService
 from server.nhlapi.service.nhl_team_service import NhlTeamService
 from server.twitterapi.service.facade.twitter_service_facade import TwitterServiceFacade
@@ -127,6 +128,12 @@ def getProspects():
 @app.route('/api/news')
 def getTwitterNews():
     response = TwitterServiceFacade().get_hockey_tweets()
+    return makeHttpResponse(response)
+
+
+@app.route('/api/nhl/schedule/<id>')
+def getNhlScheduleByTeamId(id):
+    response = NHLScheduleService().get_current_week_schedule_by_teamId(id)
     return makeHttpResponse(response)
 
 

@@ -4,7 +4,7 @@ from server.mockdraft.model.draftpick import DraftPick
 
 
 class MockDraftSelectorService:
-    def __init__(self, prospectlist, total_rounds=31):
+    def __init__(self, prospectlist, total_rounds=32):
         self.prospectlist = self.__getSortedListByAvgRank(prospectlist)
         self.total_rounds = total_rounds
 

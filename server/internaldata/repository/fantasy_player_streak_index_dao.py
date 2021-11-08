@@ -18,7 +18,9 @@ class FantasyPlayerStreakIndexDao:
         pts INTEGER NOT NULL,
         toi DOUBLE NOT NULL,
         pptoi DOUBLE NOT NULL,
-        streakIndex DOUBLE NOT NULL);''')
+        streakIndex DOUBLE NOT NULL,
+        lastUpdated TEXT
+        );''')
 
         self.conn.commit()
         self.conn.close()
@@ -31,15 +33,18 @@ class FantasyPlayerStreakIndexDao:
             pts, 
             toi, 
             pptoi,
-            streakIndex
-            ) VALUES (?,?,?,?,?,?,?)''',
+            streakIndex,
+            lastUpdated
+            ) VALUES (?,?,?,?,?,?,?,?)''',
             (fantasy_streak_info.playerId,
              fantasy_streak_info.skaterFullName,
              fantasy_streak_info.positionCode,
              fantasy_streak_info.pts,
              fantasy_streak_info.toi,
              fantasy_streak_info.pptoi,
-             fantasy_streak_info.index,))
+             fantasy_streak_info.index,
+             fantasy_streak_info.lastUpdated
+             ))
 
         self.c.execute(
             '''UPDATE fantasy_streak SET
@@ -48,7 +53,8 @@ class FantasyPlayerStreakIndexDao:
             pts = ifnull(?, pts), 
             toi = ifnull(?, toi), 
             pptoi = ifnull(?, pptoi),
-            streakIndex = ifnull(?, streakIndex)
+            streakIndex = ifnull(?, streakIndex),
+            lastUpdated = ifnull(?, lastUpdated)
             WHERE playerId = ?''',
             (fantasy_streak_info.skaterFullName,
              fantasy_streak_info.positionCode,
@@ -56,6 +62,7 @@ class FantasyPlayerStreakIndexDao:
              fantasy_streak_info.toi,
              fantasy_streak_info.pptoi,
              fantasy_streak_info.index,
+             fantasy_streak_info.lastUpdated,
              fantasy_streak_info.playerId,))
 
         self.conn.commit()
@@ -142,4 +149,4 @@ class FantasyPlayerStreakIndexDao:
         self.conn.close()
 
     def __row_to_object(self, row):
-        return FantasyPlayerStreakIndex(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+        return FantasyPlayerStreakIndex(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])

@@ -134,8 +134,7 @@ class FantasyNhlPlayerDao:
             query += f" OR yahooEligibility LIKE '%{position}%'"
 
         if offset is not None:
-            print("hello")
-            query += f"LIMIT 100 OFFSET {100 * offset}"
+            query += f"LIMIT 125 OFFSET {125 * offset}"
 
         self.c.execute(query)
 

@@ -1,10 +1,11 @@
 class Player:
 
-    def __init__(self, playerId, fullName, position, team, primaryNumber, birthDate, currentAge, birthCity,
+    def __init__(self, playerId, fullName, position, teamId, team, primaryNumber, birthDate, currentAge, birthCity,
                  birthCountry, height, weight, shootCatches, stats=None):
         self.playerId = playerId
         self.fullName = fullName
         self.position = position
+        self.teamId = teamId
         self.team = team
         self.primaryNumber = primaryNumber
         self.birthDate = birthDate

@@ -14,6 +14,7 @@ class NHLPlayerService:
         return Player(player["id"],
                       player["fullName"],
                       player["primaryPosition"]["code"],
+                      player["currentTeam"]["id"] if player.get("currentTeam") is not None else None,
                       player["currentTeam"]["name"] if player.get("currentTeam") is not None else None,
                       player["primaryNumber"] if player.get("primaryNumber") is not None else None,
                       player["birthDate"] if player.get("birthDate") is not None else None,

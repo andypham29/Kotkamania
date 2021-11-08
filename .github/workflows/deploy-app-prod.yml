@@ -1,10 +1,10 @@
 name: CI/CD Pipeline Prod
 
-#on:
-#  push:
-#    branches:
-#      - release
-on: [ push ]
+on:
+  push:
+    branches:
+      - release
+#on: [ push ]
 
 jobs:
   continuous-integration:

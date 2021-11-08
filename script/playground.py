@@ -9,7 +9,8 @@ def hello():
     # b.saveFantasySkater(quinn)
 
     brady = a.getFantasySkaterById(8480801)
-    b.saveFantasySkater(brady)
+    print(brady.teamId + 10)
+    # b.saveFantasySkater(brady)
 
 
 if __name__ == '__main__':

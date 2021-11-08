@@ -16,6 +16,7 @@
             success: function(response) {
                 player = response
                 getPlayerGameLog(player.playerId, player.position)
+                getSchedule(player.teamId)
 
                 playerNameString = `<a href=\"/api/nhl/players/${player.playerId}\">${ player.fullName }</a>`
                 var trHTML = "<tr>" +
@@ -132,5 +133,6 @@
         </tbody>
     </table>
     <br>
+    {% include 'nhl/schedule/nhl_player_schedule.html' %}
     {% include 'nhl/player/nhl_player_game_log.html' %}
 </div>

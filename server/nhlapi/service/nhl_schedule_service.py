@@ -37,7 +37,7 @@ class NHLScheduleService:
                             teamName=away_json.get("team").get("name"),
                             score=away_json.get("score"))
 
-        display_day = datetime.strptime(date, "%Y-%m-%d").day % 7 - 1
+        display_day = (datetime.strptime(date, "%Y-%m-%d").day - 1) % 7
         return NhlGame(day=display_day,
                        date=date,
                        gamePk=gamePk,

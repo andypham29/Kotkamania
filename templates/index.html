@@ -79,6 +79,9 @@
             <td>{% include 'nhl/player/nhl_player_search_result.html' %}</td>
             {% endif %}
             {% endif %}
+            {% if (page=="nhl_schedule") %}
+            <td>{% include 'nhl/schedule/nhl_teams_schedule.html' %}</td>
+            {% endif %}
         </tr>
     </div>
     <div class="container" style="height: 30px"></div>

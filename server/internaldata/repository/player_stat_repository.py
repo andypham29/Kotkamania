@@ -56,10 +56,11 @@ class InternalPlayerStatRepository:
             try:
                 session.add(stat)
                 print(f"[{player.playerId}.{stat.seasonId}] Success!")
+                session.commit()
             except Exception as e:
                 print(f"[{player.playerId}.{stat.seasonId}] Unable to save season, {e}")
 
-        session.commit()
+        session.close()
 
 
 def bulk_save_internal_players_stats(self, players):

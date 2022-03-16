@@ -17,7 +17,7 @@ class FantasyPlayerGradeFacade:
                  fantasy_defense_grade_helper=FantasyDefenseGradeHelper(),
                  nhl_stats_leader_service=NHLStatsLeaderService(),
                  nhl_player_service_facade=NHLPlayerServiceFacade(),
-                 fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../server/internaldata/db/fantasy.db')):
+                 fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../server/internaldata/db/internal.db')):
         self.fantasy_forward_grade_service = fantasy_skater_grade_helper
         self.fantasy_defensemen_grade_service = fantasy_defense_grade_helper
         self.nhl_stats_leader_service = nhl_stats_leader_service

@@ -22,8 +22,6 @@ def getProspectFromRow(i, data):
         name_position = getNamePositionTupple(data[1])
         p.name = name_position[0]
         p.position = name_position[1]
-        # if data[0] == "-":
-        #     data[0] = 45
 
         if(i == 0): p.hp = data[0]
         if(i == 1): p.fc = data[0]

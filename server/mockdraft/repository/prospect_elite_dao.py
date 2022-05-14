@@ -5,7 +5,7 @@ from server.mockdraft.model.prospect import ProspectElite
 
 class ProspectEliteDao:
 
-    def __init__(self, year="2021"):
+    def __init__(self, year="2022"):
         self.tablename = f"eliteprospect{year}"
         self.conn = sqlite3.connect('server/mockdraft/db/eliteprospect.db')
         self.c = self.conn.cursor()

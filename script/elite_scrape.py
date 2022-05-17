@@ -10,7 +10,7 @@ year = "2022"
 
 hp_url = [f'https://www.eliteprospects.com/draft-center/{year}/sportsnet', 0]  # hp -> tsn
 fc_url = [f'https://www.eliteprospects.com/draft-center/{year}/fchockey', 1]
-iss_url = [f'https://www.eliteprospects.com/draft-center/{year}/neutral-zone', 2]
+iss_url = [f'https://www.eliteprospects.com/draft-center/{year}/recruit-scouting', 2]
 mh_url = [f'https://www.eliteprospects.com/draft-center/{year}/mckeen-s-hockey', 3]
 elite_url = [f'https://www.eliteprospects.com/draft-center/{year}/eliteprospects.com', 4]
 

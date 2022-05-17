@@ -5,6 +5,8 @@ class TimeConverter:
 
     @staticmethod
     def convert_string_to_total_seconds(time):
+        if time is None:
+            return 0
         time = datetime.strptime(time, '%M:%S')
         return time.minute * 60 + time.second
 

@@ -28,11 +28,11 @@ class FantasyPlayerGraderFacade:
         self.fantasy_nhl_player_service = fantasy_nhl_player_service
 
     def convert_to_fantasy_player(self, player):
-        # years = ["20172018", "20182019", "20192020"]
-        fantasy_value_20172018 = self.__get_fantasy_player_by_year(player, "20172018")
-        fantasy_value_20182019 = self.__get_fantasy_player_by_year(player, "20182019")
-        fantasy_value_20192020 = self.__get_fantasy_player_by_year(player, "20192020")
-        fantasy_value_20202021 = self.__get_fantasy_player_by_year(player, "20202021")
+        current_year = 2022
+        fantasy_value_year1 = self.__get_fantasy_player_by_year(player, f"{current_year - 4}{current_year - 3}")
+        fantasy_value_year2 = self.__get_fantasy_player_by_year(player, f"{current_year - 3}{current_year - 2}")
+        fantasy_value_year3 = self.__get_fantasy_player_by_year(player, f"{current_year - 2}{current_year - 1}")
+        fantasy_value_year4 = self.__get_fantasy_player_by_year(player, f"{current_year - 1}{current_year}")
 
         playoff_stat = NHLPlayerStatService().get_player_playoff_stat_by_playerId_and_seasons(player.playerId,
                                                                                               "20202021")
@@ -40,14 +40,14 @@ class FantasyPlayerGraderFacade:
         # grade_20202021_p = 0 if len(playoff_stat) == 0 else\
         #     self.fantasy_forward_grade_service.getForwardGrade(player.skaterFullName, playoff_stat)
 
-        grade_20202021 = fantasy_value_20202021["grade"]
-        grade_20192020 = fantasy_value_20192020["grade"] * 1.0125
-        grade_20182019 = grade_20202021 if (
-                fantasy_value_20182019["grade"] <= 0 or fantasy_value_20182019["games"] < 10) else \
-            fantasy_value_20182019["grade"] * 0.93
-        grade_20172018 = grade_20202021 if (
-                fantasy_value_20172018["grade"] <= 0 or fantasy_value_20172018["games"] < 10) else \
-            fantasy_value_20172018["grade"] * 0.9
+        grade_year4 = fantasy_value_year4["grade"]
+        grade_year3 = fantasy_value_year3["grade"] * 1.0125
+        grade_year2 = grade_year4 if (
+                fantasy_value_year2["grade"] <= 0 or fantasy_value_year2["games"] < 10) else \
+            fantasy_value_year2["grade"] * 0.93
+        grade_year1 = grade_year4 if (
+                fantasy_value_year1["grade"] <= 0 or fantasy_value_year1["games"] < 10) else \
+            fantasy_value_year1["grade"] * 0.9
 
         # grade = 0
         # if (grade_20202021_p > 0):
@@ -59,17 +59,18 @@ class FantasyPlayerGraderFacade:
         grade = FantasyPlayerGrader.calculate_overall_grade(
             player.skaterFullName,
             Grade(
-                grade_20202021,
-                grade_20192020,
-                grade_20182019,
-                grade_20172018
+                grade_year4,
+                grade_year3,
+                grade_year2,
+                grade_year1
             )
         )
-        print(f"[{player.skaterFullName}] 19-20:{grade_20192020}  18-19:{grade_20182019}  17-18:{grade_20172018} ")
-        shotPct = fantasy_value_20192020["shotPct"]
+        print(
+            f"[{player.skaterFullName}] {current_year - 2}{current_year - 1}:{grade_year3}  {current_year - 3}{current_year - 2}:{grade_year2}  {current_year - 4}{current_year - 3}:{grade_year1} ")
+        shotPct = fantasy_value_year3["shotPct"]
 
         player_stat = InternalPlayerStatRepository().get_internal_players_stats_by_playerId_and_seasonId(
-            player.playerId, "20192020")
+            player.playerId, f"{current_year - 1}{current_year}")
         if not player_stat:
             return FantasyPlayer(player.playerId,
                                  player.skaterFullName,
@@ -100,8 +101,8 @@ class FantasyPlayerGraderFacade:
             else:
                 stat = NHLPlayerStatService().get_player_stat_by_playerId_and_seasons(player.playerId, [year])
                 p = NHLPlayerServiceFacade().get_player_by_playerId_and_seasons(player.playerId, [year])
-                if year == "20202021":
-                    InternalPlayerStatRepository().save_internal_player_stats(p)
+                # if year == "20212022":
+                #     InternalPlayerStatRepository().save_internal_player_stats(p)
 
             if not stat:
                 return {"shotPct": 0,

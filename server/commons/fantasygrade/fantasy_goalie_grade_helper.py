@@ -39,6 +39,8 @@ class FantasyGoalieGradeHelper:
         games = player_stat.games
 
     def __calculate_grade_wins(self, player_stat):
+        if player_stat.games == 0:
+            return 6
         # return -0.003 * (player_stat.goals / player_stat.games * 82 - 70) ** 2 + 10
         wins = player_stat.wins / player_stat.games * 100
         win_percent = wins if wins else 0

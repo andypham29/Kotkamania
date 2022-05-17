@@ -3,6 +3,7 @@ from script.fantasy.fantasyhelper.excel_helper import ExcelHelper
 from script.fantasy.fantasyhelper.fantasy_team_helper import FantasyTeamHelper
 from server.internaldata.repository.player_repository import InternalPlayerRepository
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
+from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
 
 
 class FantasyScript:
@@ -22,6 +23,17 @@ class FantasyScript:
         nhl_roster_players = FantasyTeamHelper().get_all_players_in_teams()
         for player in nhl_roster_players:
             self.fantasy_nhl_player_service.saveFantasySkater(player)
+
+        print("done")
+
+    def save_nhl_players_stats_by_year(self):
+        # self.fantasy_nhl_player_service.initFantasySkaterTable()
+
+        nhl_roster_players = FantasyTeamHelper().get_all_players_in_teams()
+        for player in nhl_roster_players:
+            if player.positionCode != "G":
+                NHLPlayerServiceFacade().get_player_by_playerId_and_seasons(player.playerId, ["20212022"])
+                # InternalPlayerStatRepository().save_internal_player_stats(p)
 
         print("done")
 
@@ -74,6 +86,7 @@ class FantasyScript:
 
 
 if __name__ == '__main__':
+    # FantasyScript().save_nhl_players_stats_by_year()
     # FantasyScript().save_fantasy_nhl_players()
     # FantasyScript().save_player_stats_to_internal_db()
     # InternalPlayerRepository().create_database()

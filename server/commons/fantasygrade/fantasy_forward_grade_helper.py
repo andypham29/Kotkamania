@@ -1,4 +1,4 @@
-import datetime
+from server.commons.helper.time_converter import TimeConverter
 
 
 class FantasyForwardGradeHelper:
@@ -53,6 +53,8 @@ class FantasyForwardGradeHelper:
             return 1
 
     def __calculate_grade_goals(self, player_stat):
+        if player_stat.games == 0:
+            return 5
         # return -0.003 * (player_stat.goals / player_stat.games * 82 - 70) ** 2 + 10
         goal = player_stat.goals / player_stat.games * 82
         if goal < 10:
@@ -75,6 +77,8 @@ class FantasyForwardGradeHelper:
             return 10
 
     def __calculate_grade_assists(self, player_stat):
+        if player_stat.games == 0:
+            return 5
         # return -0.0015 * (player_stat.assists / player_stat.games * 82 - 100) ** 2 + 10
         assists = player_stat.assists / player_stat.games * 82
         if assists < 15:
@@ -91,6 +95,8 @@ class FantasyForwardGradeHelper:
             return 10
 
     def __calculate_grade_points(self, player_stat):
+        if player_stat.games == 0:
+            return 5
         # return -0.0007 * (player_stat.points / player_stat.games * 82 - 150) ** 2 + 10
         points = player_stat.points / player_stat.games * 82
         if points < 20:
@@ -115,6 +121,8 @@ class FantasyForwardGradeHelper:
             return 10
 
     def __calculate_grade_actual_total_points(self, player_stat):
+        if player_stat.games == 0:
+            return 3
         # return -0.0007 * (player_stat.points / player_stat.games * 82 - 100) ** 2 + 10
         points = player_stat.points
         if points < 10:
@@ -139,6 +147,8 @@ class FantasyForwardGradeHelper:
             return 10
 
     def __calculate_grade_ppgoals(self, player_stat):
+        if player_stat.games == 0:
+            return 6
         # return player_stat.powerPlayGoals / player_stat.games * 8
         ppgoals = player_stat.powerPlayGoals / player_stat.games * 82
         if ppgoals < 4:
@@ -159,9 +169,13 @@ class FantasyForwardGradeHelper:
             return 10
 
     def __calculate_grade_ppassists(self, player_stat):
+        if player_stat.games == 0:
+            return 0
         return (player_stat.powerPlayPoints - player_stat.powerPlayGoals) / player_stat.games * 6
 
     def __calculate_grade_pppoints(self, player_stat):
+        if player_stat.games == 0:
+            return 6
         # return player_stat.powerPlayPoints / player_stat.games * 10
         pppoints = player_stat.powerPlayPoints / player_stat.games * 82
 
@@ -194,8 +208,7 @@ class FantasyForwardGradeHelper:
             return grade
 
     def __calculate_grade_toi(self, player_stat):
-        toi = datetime.datetime.strptime(player_stat.timeOnIcePerGame, '%M:%S')
-        toi = (toi.minute * 60 + toi.second)
+        toi = TimeConverter.convert_string_to_total_seconds(player_stat.timeOnIcePerGame)
         if toi < 15 * 60:
             return 7
         elif 15 * 60 <= toi < 17 * 60:
@@ -208,11 +221,11 @@ class FantasyForwardGradeHelper:
             return 10.5
 
     def __calculate_grade_pptoi(self, player_stat):
-        pptoi = datetime.datetime.strptime(player_stat.powerPlayTimeOnIcePerGame, '%M:%S')
-        grade = (pptoi.minute * 60 + pptoi.second) / (2.5 * 60)
+        pptoi = TimeConverter.convert_string_to_total_seconds(player_stat.powerPlayTimeOnIcePerGame)
+        grade = pptoi / (2.5 * 60)
         return grade if (grade > 0.5) else 0.5
 
     def __calculate_grade_evtoi(self, player_stat):
-        evtoi = datetime.datetime.strptime(player_stat.evenTimeOnIcePerGame, '%M:%S')
-        grade = (evtoi.minute * 60 + evtoi.second) / (13 * 60)
+        evtoi = TimeConverter.convert_string_to_total_seconds(player_stat.evenTimeOnIcePerGame)
+        grade = evtoi / (13 * 60)
         return grade if (grade > 0.5) else 0.5

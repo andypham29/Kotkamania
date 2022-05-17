@@ -95,6 +95,11 @@ def nhl_schedule():
     return render_template("index.html", page="nhl_schedule")
 
 
+@app.route('/nhl/teams')
+def nhl_teams():
+    return render_template("index.html", page="nhl_teams")
+
+
 # -------- API Routing -------------
 
 def makeHttpResponse(data):
@@ -133,6 +138,12 @@ def getProspects():
 @app.route('/api/news')
 def getTwitterNews():
     response = TwitterServiceFacade().get_hockey_tweets()
+    return makeHttpResponse(response)
+
+
+@app.route('/api/nhl/teams')
+def getNhlTeams():
+    response = NhlTeamService().getAllTeams()
     return makeHttpResponse(response)
 
 

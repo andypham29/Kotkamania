@@ -58,10 +58,14 @@ class FantasyDefenseGradeHelper:
             return 1
 
     def __calculate_grade_shotAttempt(self, player_stat):
+        if player_stat.games == 0:
+            return 0
         shotPctIndex = round(-0.055 * (player_stat.shotPct / 12) ** 3 + 1.05, 2)
         return ((player_stat.shots / player_stat.games) ** shotPctIndex) / 2
 
     def __calculate_grade_goals(self, player_stat):
+        if player_stat.games == 0:
+            return 5
         # return -0.003 * (player_stat.goals / player_stat.games * 82 - 30) ** 2 + 10
         goal = player_stat.goals / player_stat.games * 82
         if goal < 3:
@@ -82,6 +86,8 @@ class FantasyDefenseGradeHelper:
             return 10
 
     def __calculate_grade_assists(self, player_stat):
+        if player_stat.games == 0:
+            return 4
         # return -0.0015 * (player_stat.assists / player_stat.games * 82 - 50) ** 2 + 10
         assists = player_stat.assists / player_stat.games * 82
         if assists < 5:
@@ -104,6 +110,8 @@ class FantasyDefenseGradeHelper:
             return 10
 
     def __calculate_grade_points(self, player_stat):
+        if player_stat.games == 0:
+            return 5
         # return -0.0007 * (player_stat.points / player_stat.games * 82 - 100) ** 2 + 10
         points = player_stat.points / player_stat.games * 82
         if points < 20:
@@ -124,6 +132,8 @@ class FantasyDefenseGradeHelper:
             return 10
 
     def __calculate_grade_actual_total_points(self, player_stat):
+        if player_stat.games == 0:
+            return 6
         # return -0.0007 * (player_stat.points / player_stat.games * 82 - 100) ** 2 + 10
         points = player_stat.points / player_stat.games
         if points < 25:
@@ -146,6 +156,8 @@ class FantasyDefenseGradeHelper:
             return 10
 
     def __calculate_grade_ppgoals(self, player_stat):
+        if player_stat.games == 0:
+            return 6
         # return -0.003 * (player_stat.powerPlayGoals / player_stat.games * 82 - 40) ** 2 + 10
         ppgoals = player_stat.powerPlayGoals / player_stat.games * 82
         if ppgoals < 4:
@@ -164,10 +176,14 @@ class FantasyDefenseGradeHelper:
             return 10
 
     def __calculate_grade_ppassists(self, player_stat):
+        if player_stat.games == 0:
+            return 0
         ppa = (player_stat.powerPlayPoints - player_stat.powerPlayGoals)
         return -0.0015 * (ppa / player_stat.games * 82 - 60) ** 2 + 10
 
     def __calculate_grade_pppoints(self, player_stat):
+        if player_stat.games == 0:
+            return 4
         # return -0.0007 * (player_stat.points / player_stat.games * 82 - 80) ** 2 + 10
         pppoints = player_stat.powerPlayPoints / player_stat.games * 82
 

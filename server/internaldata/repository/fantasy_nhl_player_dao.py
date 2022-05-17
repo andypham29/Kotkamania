@@ -11,6 +11,7 @@ class FantasyNhlPlayerDao:
         # uri = '../../server/internaldata/db/internal.db' if uri is None else uri
         self.conn = sqlite3.connect(uri)
         self.c = self.conn.cursor()
+        self.year = "20212022"
 
     def initFantasySkaterTable(self):
         self.c.execute('''CREATE TABLE IF NOT EXISTS fantasy_nhl_player(
@@ -94,11 +95,11 @@ class FantasyNhlPlayerDao:
                                 row[9], row[10])
 
     def getAllFantasySkatersWithStat(self):
-        self.c.execute('''SELECT a.playerId, skaterFullName, positionCode, teamId, fantasyGrade, yahooEligibility, 
+        self.c.execute(f'''SELECT a.playerId, skaterFullName, positionCode, teamId, fantasyGrade, yahooEligibility, 
             avgPick, avgRound, percentDrafted, teamName, nhlRank, assists, goals, points, games, shots, hits, blocked, 
             plusMinus, powerPlayGoals, powerPlayPoints 
             FROM fantasy_nhl_player a
-            LEFT JOIN (SELECT * FROM internal_player_stat WHERE seasonId == 20202021) b
+            LEFT JOIN (SELECT * FROM internal_player_stat WHERE seasonId == {self.year}) b
             USING(playerId)
             ''')
 
@@ -127,7 +128,7 @@ class FantasyNhlPlayerDao:
             avgPick, avgRound, percentDrafted, teamName, nhlRank, assists, goals, points, games, shots, hits, blocked, 
             plusMinus, powerPlayGoals, powerPlayPoints 
             FROM fantasy_nhl_player a
-            LEFT JOIN (SELECT * FROM internal_player_stat WHERE seasonId == 20202021) b
+            LEFT JOIN (SELECT * FROM internal_player_stat WHERE seasonId == {self.year}) b
             USING(playerId)
             WHERE positionCode IN {filter_parameters}'''
         for position in positionCodes:

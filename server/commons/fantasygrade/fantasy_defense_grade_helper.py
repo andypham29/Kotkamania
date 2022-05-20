@@ -13,7 +13,6 @@ class FantasyDefenseGradeHelper:
         grade_g = self.__calculate_grade_goals(player_stat)
         grade_a = self.__calculate_grade_assists(player_stat)
         grade_p = self.__calculate_grade_points(player_stat)
-        grade_atp = self.__calculate_grade_actual_total_points(player_stat)
         grade_ppg = self.__calculate_grade_ppgoals(player_stat)
         grade_ppa = self.__calculate_grade_ppassists(player_stat)
         grade_ppp = self.__calculate_grade_points(player_stat)
@@ -30,7 +29,7 @@ class FantasyDefenseGradeHelper:
         scale = self.__scale_by_games_played(player_stat)
         print(skaterFullName, " evtoi: ", grade_evtoi, " scale: ", scale)
 
-        grade += grade_g + grade_a * 1.5 + grade_p * 4 + grade_atp * 1.5 + grade_ppg + grade_ppp + grade_ppp * grade_pptoi + grade_toi * 8
+        grade += grade_g + grade_a + grade_p * 7 + grade_ppg + grade_ppp * grade_pptoi + grade_ppp * 3.25 + grade_toi * 4.5
         print(skaterFullName, grade_g, grade_a, grade_p, grade_ppg, grade_ppp, grade_pptoi)
 
         grade = grade * scale / 2
@@ -73,39 +72,41 @@ class FantasyDefenseGradeHelper:
         elif 3 <= goal < 5:
             return 7
         elif 5 <= goal < 10:
-            return 7.5
-        elif 10 <= goal < 15:
-            return 7.7
-        elif 15 <= goal < 20:
             return 8
-        elif 20 <= goal < 25:
+        elif 10 <= goal < 15:
             return 8.5
+        elif 15 <= goal < 20:
+            return 9.3
+        elif 20 <= goal < 22:
+            return 9.5
+        elif 22 <= goal < 25:
+            return 9.7
         elif 25 <= goal < 30:
-            return 9
+            return 9.8
         else:
             return 10
 
     def __calculate_grade_assists(self, player_stat):
         if player_stat.games == 0:
-            return 4
+            return 5
         # return -0.0015 * (player_stat.assists / player_stat.games * 82 - 50) ** 2 + 10
         assists = player_stat.assists / player_stat.games * 82
         if assists < 5:
-            return 5
+            return 6
         elif 5 <= assists < 10:
             return 6.5
         elif 10 <= assists < 20:
-            return 6
-        elif 20 <= assists < 25:
             return 7
-        elif 25 <= assists < 30:
-            return 7.5
-        elif 30 <= assists < 40:
-            return 7.8
-        elif 40 <= assists < 50:
+        elif 20 <= assists < 25:
             return 8
+        elif 25 <= assists < 30:
+            return 8.8
+        elif 30 <= assists < 40:
+            return 9.3
+        elif 40 <= assists < 50:
+            return 9.5
         elif 50 <= assists < 60:
-            return 9
+            return 9.8
         else:
             return 10
 
@@ -117,41 +118,21 @@ class FantasyDefenseGradeHelper:
         if points < 20:
             return 6
         elif 20 <= points < 30:
-            return 7
+            return 7.5
         elif 30 <= points < 40:
-            return 7.5
+            return 8
         elif 40 <= points < 50:
-            return 7.8
+            return 8.5
         elif 50 <= points < 60:
-            return 8
+            return 9
         elif 60 <= points < 65:
-            return 8.5
-        elif 65 <= points < 70:
-            return 9
-        else:
-            return 10
-
-    def __calculate_grade_actual_total_points(self, player_stat):
-        if player_stat.games == 0:
-            return 6
-        # return -0.0007 * (player_stat.points / player_stat.games * 82 - 100) ** 2 + 10
-        points = player_stat.points / player_stat.games
-        if points < 25:
-            return 7
-        elif 25 <= points < 35:
-            return 7.5
-        elif 35 <= points < 40:
-            return 8
-        elif 40 <= points < 45:
-            return 8.5
-        elif 45 <= points < 50:
-            return 8.8
-        elif 50 <= points < 55:
-            return 9
-        elif 55 <= points < 60:
             return 9.3
-        elif 60 <= points < 65:
-            return 9.5
+        elif 65 <= points < 70:
+            return 9.7
+        elif 70 <= points < 75:
+            return 9.8
+        elif 75 <= points < 80:
+            return 9.9
         else:
             return 10
 
@@ -190,19 +171,19 @@ class FantasyDefenseGradeHelper:
         if pppoints < 5:
             return 5
         elif 5 <= pppoints < 10:
-            return 6
-        elif 10 <= pppoints < 15:
-            return 7
-        elif 15 <= pppoints < 20:
             return 7.5
-        elif 20 <= pppoints < 25:
+        elif 10 <= pppoints < 15:
             return 8
-        elif 25 <= pppoints < 30:
+        elif 15 <= pppoints < 20:
             return 8.5
-        elif 30 <= pppoints < 35:
+        elif 20 <= pppoints < 25:
             return 9
-        elif 35 <= pppoints < 40:
+        elif 25 <= pppoints < 30:
             return 9.5
+        elif 30 <= pppoints < 35:
+            return 9.7
+        elif 35 <= pppoints < 40:
+            return 9.9
         else:
             return 10
 
@@ -217,15 +198,15 @@ class FantasyDefenseGradeHelper:
         elif 15 * 60 <= toi < 17 * 60:
             return 8
         elif 17 * 60 <= toi < 18 * 60:
-            return 8.3
-        elif 18 * 60 <= toi < 20 * 60:
             return 8.5
-        elif 20 * 60 <= toi < 23 * 60:
+        elif 18 * 60 <= toi < 20 * 60:
             return 9
+        elif 20 * 60 <= toi < 23 * 60:
+            return 9.5
         elif 23 * 60 <= toi < 25 * 60:
-            return 10
+            return 9.8
         else:
-            return 10.5
+            return 10
 
     def __calculate_grade_pptoi(self, player_stat):
         pptoi = TimeConverter.convert_string_to_total_seconds(player_stat.powerPlayTimeOnIcePerGame)

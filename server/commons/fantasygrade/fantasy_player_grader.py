@@ -27,7 +27,7 @@ class FantasyPlayerGrader:
         if total_weight == 0:
             return 0
 
-        return round(total_grade / total_weight, 2)
+        return round((total_grade + grade.current_year) / (total_weight + 1), 2)
 
 
 class Grade:

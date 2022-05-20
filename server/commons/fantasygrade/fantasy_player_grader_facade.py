@@ -41,13 +41,15 @@ class FantasyPlayerGraderFacade:
         #     self.fantasy_forward_grade_service.getForwardGrade(player.skaterFullName, playoff_stat)
 
         grade_year4 = fantasy_value_year4["grade"]
-        grade_year3 = fantasy_value_year3["grade"] * 1.0125
+        grade_year3 = grade_year4 if (
+                fantasy_value_year3["grade"] <= 0 or fantasy_value_year3["games"] < 10) else \
+            fantasy_value_year3["grade"] * 1.0125
         grade_year2 = grade_year4 if (
                 fantasy_value_year2["grade"] <= 0 or fantasy_value_year2["games"] < 10) else \
-            fantasy_value_year2["grade"] * 0.93
+            fantasy_value_year2["grade"] * 0.98
         grade_year1 = grade_year4 if (
                 fantasy_value_year1["grade"] <= 0 or fantasy_value_year1["games"] < 10) else \
-            fantasy_value_year1["grade"] * 0.9
+            fantasy_value_year1["grade"] * 0.95
 
         # grade = 0
         # if (grade_20202021_p > 0):

@@ -76,7 +76,7 @@ class FantasyPlayerGradeFacade:
 
     def get_fantasy_goalie(self, amount=100):
         players = FantasyNhlPlayerService(
-            '../../server/internaldata/db/fantasy.db').getAllFantasySkatersWithPositionCodes(["G"])[:amount]
+            '../../server/internaldata/db/internal.db').getAllFantasySkatersWithPositionCodes(["G"])[:amount]
         return [self.__convert_to_fantasy_player(player) for player in players]
 
     def get_all_fantasy_player_from_internal_db(self):

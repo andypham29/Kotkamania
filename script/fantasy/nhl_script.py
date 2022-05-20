@@ -50,32 +50,32 @@ class FantasyScript:
                                                                                      fantasy_player.score)
 
     def process_forward(self):
-        fantasy_skaters = self.fantasy_player_helper.get_fantasy_forward(amount=30)
+        fantasy_skaters = self.fantasy_player_helper.get_fantasy_forward(amount=10)
         fantasy_skaters.sort(key=lambda x: x.score, reverse=True)
-        for fantasy_skater in fantasy_skaters:
-            self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_skater.id,
-                                                                                     fantasy_skater.score)
+        # for fantasy_skater in fantasy_skaters:
+        #     self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_skater.id,
+        #                                                                              fantasy_skater.score)
 
         self.excel_helper.write_players_to_excel(sheet='forward', players=fantasy_skaters)
 
         return self
 
     def process_defensemen(self):
-        fantasy_defensemen = self.fantasy_player_helper.get_fantasy_defensemen(amount=1000)
+        fantasy_defensemen = self.fantasy_player_helper.get_fantasy_defensemen(amount=20)
         fantasy_defensemen.sort(key=lambda x: x.score, reverse=True)
-        for fantasy_defenseman in fantasy_defensemen:
-            self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_defenseman.id,
-                                                                                     fantasy_defenseman.score)
+        # for fantasy_defenseman in fantasy_defensemen:
+        #     self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_defenseman.id,
+        #                                                                              fantasy_defenseman.score)
 
         self.excel_helper.write_players_to_excel(sheet='defense', players=fantasy_defensemen)
         return self
 
     def process_goalies(self):
-        fantasy_goalies = self.fantasy_player_helper.get_fantasy_goalie(amount=100)
+        fantasy_goalies = self.fantasy_player_helper.get_fantasy_goalie(amount=50)
         fantasy_goalies.sort(key=lambda x: x.score, reverse=True)
-        for fantasy_goalie in fantasy_goalies:
-            self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_goalie.id,
-                                                                                     fantasy_goalie.score)
+        # for fantasy_goalie in fantasy_goalies:
+        #     self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_goalie.id,
+        #                                                                              fantasy_goalie.score)
 
         self.excel_helper.write_players_to_excel(sheet='goalie', players=fantasy_goalies)
         return self

@@ -45,6 +45,7 @@ class FantasyScript:
 
     def save_player_grade_for_all_players_in_internal_db(self):
         fantasy_players = self.fantasy_player_helper.get_all_fantasy_player_from_internal_db()
+        # fantasy_players = self.fantasy_player_helper.get_fantasy_goalie()
         for fantasy_player in fantasy_players:
             self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_player.id,
                                                                                      fantasy_player.score)
@@ -71,7 +72,7 @@ class FantasyScript:
         return self
 
     def process_goalies(self):
-        fantasy_goalies = self.fantasy_player_helper.get_fantasy_goalie(amount=50)
+        fantasy_goalies = self.fantasy_player_helper.get_fantasy_goalie(amount=100)
         fantasy_goalies.sort(key=lambda x: x.score, reverse=True)
         # for fantasy_goalie in fantasy_goalies:
         #     self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_goalie.id,
@@ -79,6 +80,9 @@ class FantasyScript:
 
         self.excel_helper.write_players_to_excel(sheet='goalie', players=fantasy_goalies)
         return self
+
+    def get_fantasy_grade_by_id(self, id):
+        print(self.fantasy_player_helper.get_fantasy_grade_by_id(id).__dict__)
 
     def close(self):
         print("closing excel")
@@ -98,6 +102,7 @@ if __name__ == '__main__':
     #     .process_goalies() \
     #     .close()
 
+    # FantasyScript().get_fantasy_grade_by_id(8476885)
     # FantasyScript().save_fantasy_nhl_players()
     FantasyScript().save_player_grade_for_all_players_in_internal_db()
     # FantasyScript().save_player_grade_for_forwards_to_excel()

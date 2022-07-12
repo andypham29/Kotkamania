@@ -5,8 +5,9 @@ import bs4 as bs
 
 from server.mockdraft.model.prospect import ProspectElite
 from server.mockdraft.repository.prospect_elite_dao import ProspectEliteDao
+from setting import Setting
 
-year = "2022"
+year = Setting.NHL_YEAR
 
 hp_url = [f'https://www.eliteprospects.com/draft-center/{year}/sportsnet', 0]  # hp -> tsn
 fc_url = [f'https://www.eliteprospects.com/draft-center/{year}/fchockey', 1]

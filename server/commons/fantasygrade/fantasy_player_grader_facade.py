@@ -1,8 +1,10 @@
+from server.commons.fantasybadge.fantasy_player_badge_factory import FantasyPlayerBadgeFactory
 from server.commons.fantasygrade.fantasy_defense_grade_helper import FantasyDefenseGradeHelper
 from server.commons.fantasygrade.fantasy_forward_grade_helper import FantasyForwardGradeHelper
 from server.commons.fantasygrade.fantasy_goalie_grade_helper import FantasyGoalieGradeHelper
 from server.commons.fantasygrade.fantasy_player_grader import FantasyPlayerGrader, Grade
-from server.commons.model.fantasy_player import FantasyPlayer
+from server.commons.helper.nhl_season_converter import NhlYearConverter
+from server.commons.fantasyplayer.model.fantasy_player import FantasyPlayer
 from server.internaldata.repository.player_stat_repository import InternalPlayerStatRepository
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
 from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
@@ -28,11 +30,11 @@ class FantasyPlayerGraderFacade:
         self.fantasy_nhl_player_service = fantasy_nhl_player_service
 
     def convert_to_fantasy_player(self, player):
-        current_year = 2022
-        fantasy_value_year1 = self.__get_fantasy_player_by_year(player, f"{current_year - 4}{current_year - 3}")
-        fantasy_value_year2 = self.__get_fantasy_player_by_year(player, f"{current_year - 3}{current_year - 2}")
-        fantasy_value_year3 = self.__get_fantasy_player_by_year(player, f"{current_year - 2}{current_year - 1}")
-        fantasy_value_year4 = self.__get_fantasy_player_by_year(player, f"{current_year - 1}{current_year}")
+        current_year = NhlYearConverter.get_current_season()
+        fantasy_value_year1 = self.__get_fantasy_player_by_year(player, NhlYearConverter.get_previous_season_by_year_removed(3))
+        fantasy_value_year2 = self.__get_fantasy_player_by_year(player, NhlYearConverter.get_previous_season_by_year_removed(2))
+        fantasy_value_year3 = self.__get_fantasy_player_by_year(player, NhlYearConverter.get_previous_season_by_year_removed(1))
+        fantasy_value_year4 = self.__get_fantasy_player_by_year(player, current_year)
 
         playoff_stat = NHLPlayerStatService().get_player_playoff_stat_by_playerId_and_seasons(player.playerId,
                                                                                               "20202021")
@@ -40,23 +42,17 @@ class FantasyPlayerGraderFacade:
         # grade_20202021_p = 0 if len(playoff_stat) == 0 else\
         #     self.fantasy_forward_grade_service.getForwardGrade(player.skaterFullName, playoff_stat)
 
-        grade_year4 = fantasy_value_year4["grade"]
-        grade_year3 = grade_year4 if (
-                fantasy_value_year3["grade"] <= 0 or fantasy_value_year3["games"] < 10) else \
+        grade_year4 = fantasy_value_year4["grade"] if (fantasy_value_year4["games"] > 10) else \
+            fantasy_value_year4["grade"] * 0.8
+        grade_year3 = grade_year4 * 0.8 if (
+                fantasy_value_year4["grade"] <= 0 or fantasy_value_year4["games"] < 10) else \
             fantasy_value_year3["grade"] * 1.0125
-        grade_year2 = grade_year4 if (
-                fantasy_value_year2["grade"] <= 0 or fantasy_value_year2["games"] < 10) else \
+        grade_year2 = None if (
+                fantasy_value_year3["grade"] <= 0 or fantasy_value_year3["games"] < 10) else \
             fantasy_value_year2["grade"] * 0.98
-        grade_year1 = grade_year4 if (
-                fantasy_value_year1["grade"] <= 0 or fantasy_value_year1["games"] < 10) else \
+        grade_year1 = None if (
+                fantasy_value_year2["grade"] <= 0 or fantasy_value_year2["games"] < 10) else \
             fantasy_value_year1["grade"] * 0.95
-
-        # grade = 0
-        # if (grade_20202021_p > 0):
-        #     grade = (grade_20202021_p * 4 +grade_20202021 * 7 + grade_20192020 * 8 + grade_20182019 * 5 + grade_20172018 * 1) / 25
-        # else:
-        #     grade = (grade_20202021 * 7 + grade_20192020 * 12 + grade_20182019 * 5 + grade_20172018 * 1) / 25
-        # grade = round(grade, 2)
 
         grade = FantasyPlayerGrader.calculate_overall_grade(
             player.skaterFullName,
@@ -72,7 +68,7 @@ class FantasyPlayerGraderFacade:
         shotPct = fantasy_value_year3["shotPct"]
 
         player_stat = InternalPlayerStatRepository().get_internal_players_stats_by_playerId_and_seasonId(
-            player.playerId, f"{current_year - 1}{current_year}")
+            player.playerId, current_year)
         if not player_stat:
             return FantasyPlayer(player.playerId,
                                  player.skaterFullName,

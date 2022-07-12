@@ -1,13 +1,14 @@
 import sqlite3
 
 from server.mockdraft.model.prospect import ProspectElite
+from setting import Setting
 
 
 class ProspectEliteDao:
 
-    def __init__(self, year="2022"):
+    def __init__(self, year=Setting.NHL_YEAR):
         self.tablename = f"eliteprospect{year}"
-        self.conn = sqlite3.connect('server/mockdraft/db/eliteprospect.db')
+        self.conn = sqlite3.connect('../server/mockdraft/db/eliteprospect.db')
         self.c = self.conn.cursor()
 
     def initProspectEliteTable(self):

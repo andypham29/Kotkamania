@@ -1,6 +1,6 @@
 class FantasyPlayer:
 
-    def __init__(self, id="", name="", games="", goals="", assists="", points="", shotPctIndex="", score="", pptoi=""):
+    def __init__(self, id="", name="", games="", goals="", assists="", points="", shotPctIndex="", score="", pptoi="", badge=None):
         self.id = id
         self.name = name
         self.games = games

@@ -7,7 +7,7 @@ class TwitterServiceFacade:
         self.twitter_service = twitter_service
 
     def get_hockey_tweets(self):
-        nhl_users = ["CapFriendly", "PuckReportNHL", "cdnsprospects"]
+        nhl_users = ["CapFriendly", "PuckReportNHL", "cdnsprospects", "CF_Transactions"]
         tweets = []
 
         tweets += self.__get_tweet_by_users(nhl_users)

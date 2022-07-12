@@ -8,7 +8,9 @@ class FantasyGoalieGradeHelper:
         if player_stat is None:
             return 0
 
+        grade_goal_against = self.__calculate_grade_goals_against(player_stat)
         grade_wins = self.__calculate_grade_wins(player_stat)
+        grade_win_percent = self.__calculate_grade_wins_percent(player_stat)
         grade_save_avg = self.__calculate_grade_save_percentage(player_stat)
         grade_save_even = self.__calculate_grade_save_percentage_even(player_stat)
         grade_save_pp = self.__calculate_grade_save_percentage_pp(player_stat)
@@ -16,26 +18,19 @@ class FantasyGoalieGradeHelper:
         index_shutouts = self.__calculate_index_shutout(player_stat)
         grade_games_played = self.__calculate_grade_games_played(player_stat)
 
-        scale = self.__scale_by_games_played(player_stat)
+        grade += grade_wins * index_shutouts
+        grade += grade_win_percent * 5
+        grade += grade_goal_against * 4
+        grade += grade_save_even
+        grade += grade_save_pp
+        grade += grade_save_pk
+        grade += grade_save_avg * 6
+        grade += grade_games_played * 6.5
 
-        grade += (1.75 + index_shutouts * 0.25) * (
-                grade_wins * 5 + grade_save_even + grade_save_pp + grade_save_pk + grade_save_avg * 3.5 +
-                grade_games_played * 8) / 4
-        grade = grade
+        grade = grade / 2.5
         print(skaterFullName, grade, grade_wins + grade_save_even + grade_save_pp + grade_save_pk + grade_save_avg)
         return round(grade, 2)
 
-    def __scale_by_games_played(self, player_stat):
-        gp = player_stat.games
-        gp = gp if gp else 1
-        # if gp < gp * 0.05:
-        #     return 0.6
-        # elif gp * 0.05 <= gp < gp * 0.15:
-        #     return 0.9
-        # elif gp * 0.15 <= gp < gp * 0.25:
-        #     return 0.95
-        # else:
-        return 1
 
     def __calculate_grade_games_played(self, player_stat):
         games = player_stat.games
@@ -62,6 +57,24 @@ class FantasyGoalieGradeHelper:
             return 10
 
     def __calculate_grade_wins(self, player_stat):
+        wins = player_stat.wins
+
+        if wins < 20:
+            return 7
+        elif 20 <= wins < 30:
+            return 8
+        elif 30 <= wins < 32:
+            return 8.5
+        elif 32 <= wins < 35:
+            return 9
+        elif 35 <= wins < 38:
+            return 9.2
+        elif 38 <= wins < 40:
+            return 9.5
+        else:
+            return 10
+
+    def __calculate_grade_wins_percent(self, player_stat):
         if player_stat.games == 0:
             return 6
         wins = player_stat.wins / player_stat.games * 100
@@ -87,18 +100,20 @@ class FantasyGoalieGradeHelper:
         goal_against = goal_against if goal_against is not None else 10
 
         if goal_against > 5:
-            return 5
-        elif 5 >= goal_against > 4:
             return 6
-        elif 4 >= goal_against > 3:
+        elif 5 >= goal_against > 4:
             return 7
-        elif 3 >= goal_against > 2.5:
+        elif 4 >= goal_against > 3:
+            return 7.5
+        elif 3 >= goal_against > 2.75:
             return 8
-        elif 2.5 >= goal_against > 2:
+        elif 2.75 >= goal_against > 2.5:
+            return 8.5
+        elif 2.5 >= goal_against > 2.25:
             return 9
-        elif 2 >= goal_against > 1.5:
+        elif 2.25 >= goal_against > 2:
             return 9.5
-        elif 1.5 >= goal_against > 1:
+        elif 2 >= goal_against > 1.5:
             return 9.8
         else:
             return 10

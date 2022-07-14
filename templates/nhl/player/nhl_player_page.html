@@ -49,6 +49,10 @@
                 `<td>${ player.shootCatches }</td>` +
                 "</tr>"
 
+                var badge = player.badge
+                console.log(badge)
+                getPlayerBadgeRadar([badge.scoring, badge.playmaking, badge.defense, badge.powerplay, badge.intangibles])
+
                 var stats = ""
                 if(player.stats[0] !== undefined){
                 if(!(player.position).localeCompare('G')) {
@@ -76,7 +80,7 @@
                         "<th>PPG</th><th>PPP</th>" +
                         "<th>TOI</th><th>ETOI</th><th>SHTOI</th>" +
                         "<th>PPTOI</th>" +
-                        "<th>SHOTS</th><th>HITS</th>" +
+                        "<th>SHOTS</th><th>HITS</th><th>BLK</th>" +
                         "</tr>"
                         player.stats.forEach(function(item){
                             playerStats += `<tr><td>${item.season}</td>` +
@@ -95,6 +99,7 @@
                             `<td>${item.stat.powerPlayTimeOnIcePerGame}</td>` +
                             `<td>${item.stat.shots}</td>` +
                             `<td>${item.stat.hits}</td>` +
+                            `<td>${item.stat.blocked}</td>` +
                             "</tr>"
                         })
 
@@ -116,6 +121,7 @@
 
 
 </script>
+<script src="{{url_for('static', filename='chartjshandler.js')}}"></script>
 <div class="container-fluid" style="overflow-x:auto;">
     <br>
     <h2 class="title" id="player_name"></h2>
@@ -133,6 +139,7 @@
         </tbody>
     </table>
     <br>
+    {% include 'nhl/player/nhl_player_badge.html' %}
     {% include 'nhl/schedule/nhl_player_schedule.html' %}
     {% include 'nhl/player/nhl_player_game_log.html' %}
 </div>

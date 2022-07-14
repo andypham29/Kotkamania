@@ -23,6 +23,7 @@ function setGraph(chartName, xValues, yValues, playerType) {
         }]
       },
       options: {
+        responsive: true,
         legend: {display: false},
         title: {
             display: true,
@@ -52,5 +53,48 @@ function setGraph(chartName, xValues, yValues, playerType) {
               ],
         },
       }
+    });
+}
+
+function setRadar(radarName, values) {
+    console.log(values)
+    const data = {
+      labels: [
+        'scoring',
+        'playmaking',
+        'defense',
+        'powerplay',
+        'intangibles'
+      ],
+      datasets: [{
+        data: values,
+        label: "Player",
+        fill: true,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgb(54, 162, 235)',
+        pointBackgroundColor: 'rgb(54, 162, 235)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgb(54, 162, 235)'
+      }]
+    };
+    new Chart(radarName, {
+      type: 'radar',
+      data: data,
+      options: {
+        responsive: true,
+        spanGaps: true,
+        scales: {
+            r: {
+                min: 0,
+                max: 11,
+                ticks: {
+                  beginAtZero: true,
+                  stepSize: 2,
+                  display: false,
+                }
+            },
+        },
+      },
     });
 }

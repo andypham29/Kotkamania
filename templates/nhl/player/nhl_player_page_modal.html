@@ -50,6 +50,10 @@
                 `<td>${ player.shootCatches }</td>` +
                 "</tr>"
 
+                var badge = player.badge
+                console.log(player)
+                getPlayerBadgeRadar([badge.scoring, badge.playmaking, badge.defense, badge.powerplay, badge.intangibles])
+
                 var stats = ""
                 if(player.stats[0] !== undefined){
                 if(!(player.position).localeCompare('G')) {
@@ -129,7 +133,6 @@
 
 </script>
 {% include 'nhl/player/nhl_player_compare_modal.html' %}
-
 <div class="modal fade" id="player-modal" role="dialog">
     <div class="modal-dialog modal-lg">
         <!-- Modal content-->
@@ -155,6 +158,7 @@
                 </div>
                 <br/>
                 <div class="container-fluid" style="overflow-x:auto; overflow-y:auto;">
+                    {% include 'nhl/player/nhl_player_badge.html' %}
                     {% include 'nhl/schedule/nhl_player_schedule.html' %}
                     {% include 'nhl/player/nhl_player_game_log.html' %}
                 </div>

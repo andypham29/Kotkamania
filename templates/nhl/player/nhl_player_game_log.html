@@ -3,7 +3,7 @@
         // remove chart before adding new
         var chartDiv = document.getElementById('chart_div')
         chartDiv.removeChild(chartDiv.firstChild)
-        chartDiv.innerHTML = `<canvas id="myChart" style="width:100%;max-width:700px"></canvas>`
+        chartDiv.innerHTML = `<canvas id="myChart" style="height=50%;width:50%;max-width:700px"></canvas>`
     }
     function getPlayerStatsGraph(pointsArray) {
 
@@ -139,9 +139,7 @@
 
 </script>
 <script src="{{url_for('static', filename='chartjshandler.js')}}"></script>
-<script
-        src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
-</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <div id="chart_div">
 </div>
 <br>

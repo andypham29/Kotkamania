@@ -1,3 +1,6 @@
+from server.commons.fantasybadge.model.fantasy_player_badge import FantasyPlayerBadge
+
+
 class DisplayStat:
 
     def __init__(self, assists=0, goals=0, points=0, games=0, shots=0,
@@ -27,6 +30,7 @@ class FantasyNhlPlayer:
                  percentDrafted=None,
                  teamName="",
                  nhlRank=None,
+                 badge=None,
                  stat=None):
         self.playerId = id
         self.skaterFullName = skaterFullName
@@ -39,4 +43,5 @@ class FantasyNhlPlayer:
         self.percentDrafted = percentDrafted
         self.teamName = teamName
         self.nhlRank = nhlRank
+        self.badge = badge if badge else FantasyPlayerBadge()
         self.stat = stat if stat else DisplayStat()

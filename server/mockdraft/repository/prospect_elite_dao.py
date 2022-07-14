@@ -8,7 +8,7 @@ class ProspectEliteDao:
 
     def __init__(self, year=Setting.NHL_YEAR):
         self.tablename = f"eliteprospect{year}"
-        self.conn = sqlite3.connect('../server/mockdraft/db/eliteprospect.db')
+        self.conn = sqlite3.connect('server/mockdraft/db/eliteprospect.db')
         self.c = self.conn.cursor()
 
     def initProspectEliteTable(self):

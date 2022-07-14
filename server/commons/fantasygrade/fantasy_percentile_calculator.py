@@ -121,7 +121,7 @@ if __name__ == '__main__':
         internal_player_stat_service=InternalPlayerStatService(uri='../../internaldata/db/internal.db'),
         fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../internaldata/db/internal.db'))
     # players = f.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodes(["L", "C", "R"])
-    players = f.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodes(["D"])
+    players = f.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodesWithStats(["D"])
     filtered_players = []
 
     fi = open("percentile.txt", "a")

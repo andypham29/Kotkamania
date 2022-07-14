@@ -32,9 +32,9 @@ class FantasyNhlPlayerFacade:
         if not positions:
             fantasy_players = fantasy_players_service.getAllFantasySkaters()
         elif len(positions) == 1 and positions[0].upper() == 'G':
-            fantasy_players = fantasy_players_service.getAllFantasySkatersWithPositionCodes(positions)
+            fantasy_players = fantasy_players_service.getAllFantasySkatersWithPositionCodesWithStats(positions)
         else:
-            fantasy_players = fantasy_players_service.getAllFantasySkatersWithPositionCodes(positions)
+            fantasy_players = fantasy_players_service.getAllFantasySkatersWithPositionCodesWithStats(positions)
         user_percentile_params = [min_game, percentile_shot, percentile_hit, percentile_block, percentile_goal,
                                   percentile_assist, percentile_point, percentile_toi, percentile_pptoi,
                                   percentile_evtoi]

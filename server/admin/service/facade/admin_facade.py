@@ -25,7 +25,7 @@ class AdminFacade:
         if not log or timeExecuted <= 10:
 
             index_list = []
-            players = FantasyNhlPlayerService().getAllFantasySkatersWithPositionCodes(['C', 'L', 'R', 'D'], offset)
+            players = FantasyNhlPlayerService().getAllFantasySkatersWithPositionCodesWithStats(['C', 'L', 'R', 'D'], offset)
             print(len(players))
             for player in players:
                 index = self.__get_gamelogs_index(player.playerId, player.skaterFullName, player.positionCode)

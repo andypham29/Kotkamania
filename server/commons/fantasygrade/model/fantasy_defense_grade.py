@@ -51,15 +51,17 @@ class FantasyDefenseGrade:
 
     def __calculate_grade_goals(self, player_stat):
         if player_stat.games == 0:
-            return 5
+            return 3
         # return -0.003 * (player_stat.goals / player_stat.games * 82 - 30) ** 2 + 10
         goal = player_stat.goals / player_stat.games * 82
         if goal < 3:
-            return 6
+            return 3
         elif 3 <= goal < 5:
-            return 7
-        elif 5 <= goal < 10:
-            return 8
+            return 4
+        elif 5 <= goal < 8:
+            return 5
+        elif 8 <= goal < 10:
+            return 6
         elif 10 <= goal < 15:
             return 8.5
         elif 15 <= goal < 20:
@@ -272,7 +274,7 @@ class FantasyDefenseGrade:
     def __calculate_grade_blk(self, player_stat):
         if player_stat.games == 0:
             return 2
-        blk = player_stat.blk / player_stat.games
+        blk = player_stat.blocked / player_stat.games
         if blk < 1.093:
             return 3
         elif 1.093 <= blk < 1.193:
@@ -291,9 +293,9 @@ class FantasyDefenseGrade:
             return 10
 
     def __calculate_grade_pktoi(self, player_stat):
-        toi = TimeConverter.convert_string_to_total_seconds(player_stat.timeOnIcePerGame)
+        toi = TimeConverter.convert_string_to_total_seconds(player_stat.shortHandedTimeOnIcePerGame)
         if toi < 30:
-            return 4
+            return 1
         elif 30 <= toi < 45:
             return 5
         elif 45 <= toi < 1 * 60:

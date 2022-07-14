@@ -21,6 +21,9 @@ class FantasyNhlPlayerService:
         return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersWithStat()
 
     def getAllFantasySkatersWithPositionCodes(self, positionCodes, offset=None):
+        return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersByPositionCodes(positionCodes, offset)
+
+    def getAllFantasySkatersWithPositionCodesWithStats(self, positionCodes, offset=None):
         return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersByPositionCodesWithStats(positionCodes, offset)
 
     def getAllFantasySkatersInPlayerIdList(self, playerIdList):
@@ -44,3 +47,6 @@ class FantasyNhlPlayerService:
 
     def updateFantasyYahooInfoForFantasySkater(self, yahoo_info):
         FantasyNhlPlayerDao(self.uri).updateFantasyYahooInfoForFantasySkater(yahoo_info)
+
+    def updateFantasyBadgeForFantasySkaterByPlayerId(self, fantasy_badge, playerId):
+        FantasyNhlPlayerDao(self.uri).updateFantasyBadgeForFantasySkaterByPlayerId(fantasy_badge, playerId)

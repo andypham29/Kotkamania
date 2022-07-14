@@ -209,13 +209,29 @@ class FantasyForwardGrade:
 
     def __calculate_grade_pptoi(self, player_stat):
         pptoi = TimeConverter.convert_string_to_total_seconds(player_stat.powerPlayTimeOnIcePerGame)
-        grade = pptoi / (2.5 * 60)
-        return grade if (grade > 0.5) else 0.5
+        if pptoi < 112.0:
+            return 6
+        elif 112.0 <= pptoi < 140.1:
+            return 7
+        elif 140.1 <= pptoi < 163.0:
+            return 8
+        elif 163.0 <= pptoi < 187.7:
+            return 9
+        else:
+            return 10
 
     def __calculate_grade_evtoi(self, player_stat):
         evtoi = TimeConverter.convert_string_to_total_seconds(player_stat.evenTimeOnIcePerGame)
-        grade = evtoi / (13 * 60)
-        return grade if (grade > 0.5) else 0.5
+        if evtoi < 817.8:
+            return 6
+        elif 817.8 <= evtoi < 854.0:
+            return 7
+        elif 854.0 <= evtoi < 886.40:
+            return 8
+        elif 886.40 <= evtoi < 929.7:
+            return 9
+        else:
+            return 10
 
     def __calculate_grade_sog(self, player_stat):
         if player_stat.games == 0:
@@ -262,7 +278,7 @@ class FantasyForwardGrade:
     def __calculate_grade_blk(self, player_stat):
         if player_stat.games == 0:
             return 2
-        blk = player_stat.blk / player_stat.games
+        blk = player_stat.blocked / player_stat.games
         if blk < 0.332:
             return 3
         elif 0.332 <= blk < 0.378:
@@ -281,9 +297,9 @@ class FantasyForwardGrade:
             return 10
 
     def __calculate_grade_pktoi(self, player_stat):
-        toi = TimeConverter.convert_string_to_total_seconds(player_stat.timeOnIcePerGame)
+        toi = TimeConverter.convert_string_to_total_seconds(player_stat.shortHandedTimeOnIcePerGame)
         if toi < 30:
-            return 4
+            return 1
         elif 30 <= toi < 45:
             return 5
         elif 45 <= toi < 1 * 60:

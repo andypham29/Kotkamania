@@ -3,7 +3,7 @@
         // remove chart before adding new
         var radarDiv = document.getElementById('radar_div')
         radarDiv.removeChild(radarDiv.firstChild)
-        radarDiv.innerHTML = `<canvas id="myRadar" style="height=100%;width:100%;max-width:700px;max-height:700px"></canvas>`
+        radarDiv.innerHTML = `<canvas id="myRadar" style="height=100%;width:100%;max-width:400px;max-height:400px"></canvas>`
         var ctx = document.getElementById('myRadar')
         setRadar("myRadar", data)
     }

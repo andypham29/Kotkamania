@@ -1,250 +1,250 @@
-1  ,Connor McDavid       ,C    ,EDM
-2  ,Nathan MacKinnon     ,C    ,COL
-3  ,Leon Draisaitl       ,C/LW ,EDM
-4  ,Nikita Kucherov      ,RW   ,TBL
-5  ,Auston Matthews      ,C    ,TOR
-6  ,Andrei Vasilevskiy   ,G    ,TBL
-7  ,Artemi Panarin       ,LW   ,NYR
-8  ,Brad Marchand        ,LW   ,BOS
-9  ,Mikko Rantanen       ,RW   ,COL
-10 ,David Pastrnak       ,RW   ,BOS
-11 ,Patrick Kane         ,RW   ,CHI
-12 ,Alex Ovechkin        ,LW   ,WSH
-13 ,Jonathan Huberdeau   ,LW   ,FLA
-14 ,Cale Makar           ,D    ,COL
-15 ,Brady Tkachuk        ,LW   ,OTT (RFA)
-16 ,Aleksander Barkov    ,C    ,FLA
-17 ,Brayden Point        ,C/RW ,TBL
-18 ,Mitchell Marner      ,RW   ,TOR
-19 ,Victor Hedman        ,D    ,TBL
-20 ,Sidney Crosby        ,C    ,PIT (INJ.)
-21 ,Mika Zibanejad       ,C    ,NYR
-22 ,Adam Fox             ,D    ,NYR
-23 ,Sebastian Aho        ,C    ,CAR
-24 ,Robin Lehner         ,G    ,VGK
-25 ,Darcy Kuemper        ,G    ,COL
-26 ,Kirill Kaprizov      ,LW/RW,MIN
-27 ,Connor Hellebuyck    ,G    ,WPG
-28 ,Andrei Svechnikov    ,LW/RW,CAR
-29 ,Steven Stamkos       ,C/RW ,TBL
-30 ,Patrice Bergeron     ,C    ,BOS
-31 ,Matthew Tkachuk      ,LW/RW,CGY
-32 ,Max Pacioretty       ,LW   ,VGK
-33 ,Aaron Ekblad         ,D    ,FLA
-34 ,John Carlson         ,D    ,WSH
-35 ,Mark Scheifele       ,C    ,WPG (suspended 1 game)
-36 ,Semyon Varlamov      ,G    ,NYI
-37 ,Igor Shesterkin      ,G    ,NYR
-38 ,Quinn Hughes         ,D    ,VAN (RFA)
-39 ,Elias Pettersson     ,C    ,VAN (RFA)
-40 ,Alex DeBrincat       ,LW/RW,CHI
-41 ,Gabriel Landeskog    ,C/LW ,COL
-42 ,Mark Stone           ,RW   ,VGK
-43 ,Kyle Connor          ,LW   ,WPG
-44 ,Nikolaj Ehlers       ,LW/RW,WPG
-45 ,Jake Guentzel        ,LW/RW,PIT
-46 ,John Tavares         ,C    ,TOR
-47 ,Anze Kopitar         ,C    ,LAK
-48 ,Johnny Gaudreau      ,LW/RW,CGY
-49 ,Brock Boeser         ,RW   ,VAN
-50 ,Marc-Andre Fleury    ,G    ,CHI
-51 ,J.T. Miller          ,C/LW ,VAN
-52 ,Charlie McAvoy       ,D    ,BOS
-53 ,Alex Pietrangelo     ,D    ,VGK
-54 ,William Nylander     ,LW/RW,TOR
-55 ,Ilya Sorokin         ,G    ,NYI
-56 ,Spencer Knight       ,G    ,FLA (rookie)
-57 ,Dougie Hamilton      ,D    ,NJD
-58 ,Seth Jones           ,D    ,CHI
-59 ,Philipp Grubauer     ,G    ,SEA
-60 ,Frederik Andersen    ,G    ,CAR
-61 ,Shea Theodore        ,D    ,VGK
-62 ,Ryan O'Reilly        ,C    ,STL
-63 ,Cam Talbot           ,G    ,MIN
-64 ,Mathew Barzal        ,C    ,NYI
-65 ,Morgan Rielly        ,D    ,TOR
-66 ,Tyson Barrie         ,D    ,EDM
-67 ,Jack Eichel          ,C    ,BUF (INJ.)
-68 ,Evgeny Kuznetsov     ,C    ,WSH
-69 ,Sam Bennett          ,C/LW ,FLA
-70 ,Sam Reinhart         ,C/RW ,FLA
-71 ,Miro Heiskanen       ,D    ,DAL
-72 ,Ilya Samsonov        ,G    ,WSH
-73 ,Jack Hughes          ,C/LW ,NJD
-74 ,Nicklas Backstrom    ,C    ,WSH (INJ.)
-75 ,Juuse Saros          ,G    ,NSH
-76 ,Roope Hintz          ,C/LW ,DAL (INJ.)
-77 ,Jason Robertson      ,LW   ,DAL
-78 ,Thatcher Demko       ,G    ,VAN
-79 ,Jack Campbell        ,G    ,TOR
-80 ,Roman Josi           ,D    ,NSH
-81 ,Carey Price          ,G    ,MTL (INJ.)
-82 ,Linus Ullmark        ,G    ,BOS
-83 ,Ondrej Palat         ,LW   ,TBL
-84 ,T.J. Oshie           ,C/RW ,WSH
-85 ,Vladimir Tarasenko   ,RW   ,STL
-86 ,Joe Pavelski         ,C/RW ,DAL
-87 ,Sean Couturier       ,C    ,PHI
-88 ,Darnell Nurse        ,D    ,EDM
-89 ,Kris Letang          ,D    ,PIT
-90 ,Ryan Nugent-Hopkins  ,C/LW ,EDM
-91 ,Drew Doughty         ,D    ,LAK
-92 ,Torey Krug           ,D    ,STL
-93 ,Tyler Toffoli        ,LW/RW,MTL
-94 ,Cole Caufield        ,RW   ,MTL (rookie)
-95 ,Martin Necas         ,C/RW ,CAR
-96 ,Elias Lindholm       ,C/RW ,CGY
-97 ,Nick Suzuki          ,C/RW ,MTL
-98 ,John Klingberg       ,D    ,DAL
-99 ,Patric Hornqvist     ,RW   ,FLA
-100,David Perron         ,LW/RW,STL
-101,Petr Mrazek          ,G    ,TOR
-102,Jordan Binnington    ,G    ,STL
-103,Jakub Vrana          ,LW   ,DET (INJ.)
-104,Jakob Chychrun       ,D    ,ARI
-105,Jacob Markstrom      ,G    ,CGY
-106,Bryan Rust           ,LW/RW,PIT
-107,Tom Wilson           ,RW   ,WSH
-108,Kevin Fiala          ,LW/RW,MIN
-109,Brayden Schenn       ,C/RW ,STL
-110,Tyler Seguin         ,C/RW ,DAL
-111,Zach Werenski        ,D    ,CBJ
-112,Filip Forsberg       ,LW   ,NSH
-113,Anthony Mantha       ,LW/RW,WSH
-114,Blake Wheeler        ,C/RW ,WPG
-115,MacKenzie Weegar     ,D    ,FLA
-116,Zach Hyman           ,LW/RW,EDM
-117,Pavel Buchnevich     ,RW   ,STL
-118,Thomas Chabot        ,D    ,OTT
-119,Jeff Petry           ,D    ,MTL
-120,Dominik Kubalik      ,LW/RW,CHI
-121,Alexander Radulov    ,LW/RW,DAL (INJ.)
-122,Ryan Ellis           ,D    ,PHI
-123,Vitek Vanecek        ,G    ,WSH
-124,Jeremy Swayman       ,G    ,BOS (rookie)
-125,Taylor Hall          ,LW   ,BOS
-126,Sergei Bobrovsky     ,G    ,FLA
-127,Jared Spurgeon       ,D    ,MIN
-128,Vincent Trocheck     ,C    ,CAR
-129,Bo Horvat            ,C    ,VAN
-130,Alexis Lafreniere    ,LW   ,NYR
-131,Teuvo Teravainen     ,LW/RW,CAR
-132,Kevin Lankinen       ,G    ,CHI
-133,Ivan Provorov        ,D    ,PHI
-134,Neal Pionk           ,D    ,WPG
-135,Kirby Dach           ,C    ,CHI
-136,Dylan Larkin         ,C    ,DET (INJ.)
-137,Samuel Girard        ,D    ,COL
-138,Kaapo Kahkonen       ,G    ,MIN (rookie)
-139,Mikhail Sergachev    ,D    ,TBL
-140,Ty Smith             ,D    ,NJD
-141,Mackenzie Blackwood  ,G    ,NJD
-142,Viktor Arvidsson     ,LW/RW,LAK
-143,Jake Oettinger       ,G    ,DAL
-144,Brendan Gallagher    ,RW   ,MTL
-145,Conor Garland        ,LW/RW,VAN
-146,Trevor Zegras        ,C/LW ,ANA (rookie)
-147,Tony DeAngelo        ,D    ,CAR
-148,Evgeni Malkin        ,C    ,PIT (INJ.)
-149,Devon Toews          ,D    ,COL (INJ.)
-150,Carter Hart          ,G    ,PHI
-151,Alex Nedeljkovic     ,G    ,DET
-152,Alec Martinez        ,D    ,VGK
-153,William Karlsson     ,C    ,VGK
-154,Drake Batherson      ,RW   ,OTT
-155,Patrik Laine         ,LW/RW,CBJ
-156,Carter Verhaeghe     ,C/LW ,FLA
-157,Jamie Benn           ,C/LW ,DAL
-158,Tim Stutzle          ,LW   ,OTT
-159,Matt Dumba           ,D    ,MIN
-160,Mattias Ekholm       ,D    ,NSH
-161,Jonathan Toews       ,C    ,CHI
-162,Ryan Strome          ,C/RW ,NYR
-163,Jonathan Marchessault,C/LW ,VGK
-164,Andre Burakovsky     ,LW/RW,COL
-165,Josh Norris          ,C    ,OTT
-166,Jordan Eberle        ,RW   ,SEA
-167,Vince Dunn           ,D    ,SEA
-168,Jamie Drysdale       ,D    ,ANA (rookie)
-169,Anders Lee           ,LW   ,NYI
-170,Oliver Bjorkstrand   ,LW/RW,CBJ
-171,Chris Kreider        ,LW   ,NYR
-172,Claude Giroux        ,C/LW ,PHI
-173,Tomas Hertl          ,C/LW ,SJS
-174,Tristan Jarry        ,G    ,PIT
-175,Oliver Ekman-Larsson ,D    ,VAN
-176,Denis Gurianov       ,LW/RW,DAL
-177,Brent Burns          ,D    ,SJS
-178,Erik Karlsson        ,D    ,SJS
-179,Vasily Podkolzin     ,RW   ,VAN (rookie)
-180,Calvin Petersen      ,G    ,LAK
-181,Alex Killorn         ,LW/RW,TBL
-182,Joel Farabee         ,LW/RW,PHI
-183,Anthony Beauvillier  ,LW   ,NYI
-184,Anthony Duclair      ,LW/RW,FLA
-185,Josh Anderson        ,RW   ,MTL
-186,Jordan Staal         ,C    ,CAR
-187,Chris Driedger       ,G    ,SEA
-188,Cam Atkinson         ,RW   ,PHI
-189,Sean Monahan         ,C    ,CGY
-190,Jeff Carter          ,C/RW ,PIT
-191,Jakub Voracek        ,LW/RW,CBJ
-192,Oliver Wahlstrom     ,RW   ,NYI
-193,Rasmus Dahlin        ,D    ,BUF
-194,Eeli Tolvanen        ,LW/RW,NSH
-195,Nazem Kadri          ,C    ,COL
-196,Kaapo Kakko          ,RW   ,NYR
-197,Bowen Byram          ,D    ,COL (rookie)
-198,Jaden Schwartz       ,LW   ,SEA
-199,Quinton Byfield      ,C    ,LAK (rookie)
-200,Brett Pesce          ,D    ,CAR
-201,Jean-Gabriel Pageau  ,C    ,NYI
-202,Pavel Francouz       ,G    ,COL
-203,Noah Dobson          ,D    ,NYI
-204,Yegor Sharangovich   ,LW/RW,NJD
-205,Mark Giordano        ,D    ,SEA
-206,Colton Parayko       ,D    ,STL
-207,Max Comtois          ,LW/RW,ANA
-208,Nils Hoglander       ,LW/RW,VAN
-209,Elvis Merzlikins     ,G    ,CBJ
-210,John Gibson          ,G    ,ANA
-211,Brandon Saad         ,LW/RW,STL
-212,Phil Kessel          ,RW   ,ARI (INJ.)
-213,Filip Hronek         ,D    ,DET
-214,Anthony Cirelli      ,C/RW ,TBL
-215,Pierre-Luc Dubois    ,C    ,WPG
-216,Yanni Gourde         ,C/RW ,SEA (INJ.)
-217,Nico Hischier        ,C    ,NJD
-218,Timo Meier           ,LW/RW,SJS
-219,Travis Konecny       ,RW   ,PHI
-220,Marco Rossi          ,C    ,MIN (rookie)
-221,Mike Smith           ,G    ,EDM
-222,Jake Muzzin          ,D    ,TOR
-223,Jack Roslovic        ,C/RW ,CBJ
-224,Brock Nelson         ,C    ,NYI
-225,Craig Smith          ,RW   ,BOS
-226,Dustin Brown         ,RW   ,LAK
-227,Jared McCann         ,C/LW ,SEA
-228,Christian Dvorak     ,C/LW ,MTL
-229,Blake Coleman        ,LW/RW,CGY
-230,Mike Hoffman         ,LW/RW,MTL (INJ.)
-231,Jaroslav Halak       ,G    ,VAN
-232,Adam Boqvist         ,D    ,CBJ
-233,Frank Vatrano        ,LW/RW,FLA
-234,Jaccob Slavin        ,D    ,CAR
-235,Vitali Kravtsov      ,RW   ,NYR (rookie)
-236,Alex Newhook         ,C    ,COL (rookie)
-237,Erik Cernak          ,D    ,TBL
-238,Moritz Seider        ,D    ,DET (rookie)
-239,Connor Brown         ,LW/RW,OTT
-240,Mats Zuccarello      ,RW   ,MIN
-241,Kasperi Kapanen      ,LW/RW,PIT
-242,Rasmus Andersson     ,D    ,CGY
-243,Nick Schmaltz        ,C/RW ,ARI
-244,Joel Eriksson Ek     ,C    ,MIN
-245,Ryan Suter           ,D    ,DAL
-246,Pavel Zacha          ,C/LW ,NJD
-247,Rickard Rakell       ,LW/RW,ANA
-248,Charlie Coyle        ,C/RW ,BOS
-249,Jesse Puljujarvi     ,RW   ,EDM
-250,Jesperi Kotkaniemi   ,C/LW ,CAR
+1, Connor McDavid, C, EDM
+2, Leon Draisaitl, C/LW, EDM
+3, Auston Matthews, C, TOR
+4, Cale Makar, D, COL
+5, Nathan MacKinnon, C, COL
+6, Kirill Kaprizov, LW, MIN
+7, Mikko Rantanen, C/RW, COL
+8, Andrei Vasilevskiy, G, TBL
+9, Igor Shesterkin, G, NYR
+10, Nikita Kucherov, RW, TBL
+11, Aleksander Barkov, C, FLA
+12, Jonathan Huberdeau, LW, CGY
+13, Sidney Crosby, C, PIT
+14, Victor Hedman, D, TBL
+15, Alex Ovechkin, LW, WSH
+16, Matthew Tkachuk, RW, FLA
+17, Adam Fox, D, NYR
+18, Roman Josi, D, NSH
+19, Steven Stamkos, C/LW, TBL
+20, Mika Zibanejad, C, NYR
+21, Artemi Panarin, LW, NYR
+22, Mitchell Marner, RW, TOR
+23, J,T, Miller, C/LW, VAN
+24, Frederik Andersen, G, CAR (INJ,)
+25, Sebastian Aho, C, CAR
+26, Kyle Connor, LW, WPG
+27, David Pastrnak, RW, BOS
+28, Chris Kreider, LW/RW, NYR (INJ,)
+29, Gabriel Landeskog, C/LW, COL
+30, Timo Meier, LW/RW, SJS
+31, Brady Tkachuk, LW, OTT
+32, Jake Guentzel, LW, PIT
+33, Ilya Sorokin, G, NYI
+34, Juuse Saros, G, NSH (INJ,)
+35, Alex DeBrincat, LW, OTT
+36, Andrei Svechnikov, LW, CAR
+37, John Carlson, D, WSH
+38, Jack Eichel, C, VGK
+39, Mark Stone, RW, VGK
+40, Patrick Kane, RW, CHI
+41, Jason Robertson, LW, DAL
+42, Aaron Ekblad, D, FLA
+43, Moritz Seider, D, DET
+44, Max Pacioretty, LW, CAR
+45, Elias Pettersson, C/LW, VAN
+46, Jake Oettinger, G, DAL
+47, Thatcher Demko, G, VAN (INJ,)
+48, Johnny Gaudreau, LW, CBJ
+49, Quinn Hughes, D, VAN
+50, Jack Hughes, C, NJD (INJ,)
+51, Evgeni Malkin, C, PIT
+52, Claude Giroux, C/RW, OTT
+53, Patrice Bergeron, C, BOS* (INJ,)
+54, Vladimir Tarasenko, RW, STL
+55, Brayden Point, C, TBL (INJ,)
+56, Jack Campbell, G, EDM
+57, Filip Forsberg, LW, NSH
+58, Kris Letang, D, PIT
+59, Elias Lindholm, C, CGY
+60, Brent Burns, D, CAR
+61, Jacob Markstrom, G, CGY
+62, Morgan Rielly, D, TOR
+63, Nazem Kadri, C, COL*
+64, Evgeny Kuznetsov, C, WSH
+65, Mark Scheifele, C, WPG (INJ,)
+66, Nikolaj Ehlers, LW/RW, WPG
+67, John Tavares, C, TOR
+68, Kevin Fiala, LW/RW, LAK
+69, Evander Kane, LW, EDM
+70, Brad Marchand, LW, BOS (INJ,)
+71, Marc-Andre Fleury, G, MIN
+72, Darcy Kuemper, G, WSH
+73, Josh Norris, C, OTT
+74, Sam Reinhart, C/RW, FLA
+75, Devon Toews, D, COL
+76, Joe Pavelski, C/RW, DAL
+77, Pavel Buchnevich, LW/RW, STL
+78, William Nylander, LW/RW, TOR
+79, Sergei Bobrovsky, G, FLA
+80, Spencer Knight, G, FLA
+81, Drake Batherson, RW, OTT
+82, Tim Stützle, C/LW, OTT
+83, Patrik Laine, LW/RW, CBJ (INJ,)
+84, Jeremy Swayman, G, BOS
+85, Roope Hintz, C, DAL (INJ,)
+86, Tristan Jarry, G, PIT
+87, Connor Hellebuyck, G, WPG
+88, Matt Duchene, RW, NSH
+89, Drew Doughty, D, LAK (INJ,)
+90, Torey Krug, D, STL (INJ,)
+91, Pierre-Luc Dubois, C, WPG
+92, Dylan Larkin, C, DET (INJ,)
+93, Anze Kopitar, C, LAK
+94, Thomas Chabot, D, OTT (INJ,)
+95, Zach Werenski, D, CBJ
+96, Robert Thomas, C, STL
+97, MacKenzie Weegar, D, CGY
+98, Trevor Zegras, C, ANA
+99, Lucas Raymond, RW, DET
+100, Charlie McAvoy, D, BOS (INJ,)
+101, Rasmus Dahlin, D, BUF
+102, Teuvo Teravainen, LW/RW, CAR
+103, Cole Caufield, LW/RW, MTL
+104, Zach Hyman, LW/RW, EDM
+105, Bryan Rust, RW, PIT
+106, Shea Theodore, D, VGK
+107, Alex Pietrangelo, D, VGK
+108, Jonathan Quick, G, LAK
+109, Cam Talbot, G, OTT
+110, Jordan Kyrou, LW/RW, STL
+111, Mats Zuccarello, RW, MIN
+112, Brayden Schenn, C/LW, STL
+113, Noah Dobson, D, NYI
+114, Mathew Barzal, C, NYI
+115, Miro Heiskanen, D, DAL
+116, Evan Bouchard, D, EDM
+117, Jesper Bratt, RW, NJD
+118, Tage Thompson, C, BUF
+119, Bo Horvat, C, VAN (INJ,)
+120, Tom Wilson, RW, WSH (INJ,)
+121, Dougie Hamilton, D, NJD
+122, Jonathan Marchessault, LW/RW, VGK
+123, Ryan O'Reilly, C, STL
+124, Darnell Nurse, D, EDM
+125, Alexandar Georgiev, G, COL
+126, Matty Beniers, C, SEA (rookie)
+127, Jakub Vrana, LW, DET
+128, Vincent Trocheck, C, NYR
+129, Erik Karlsson, D, SJS (INJ,)
+130, Tyler Toffoli, LW/RW, CGY
+131, Jacob Trouba, D, NYR
+132, Matt Boldy, LW/RW, MIN
+133, Ryan Hartman, C, MIN
+134, Sean Couturier, C, PHI (INJ,)
+135, Bowen Byram, D, COL
+136, Owen Power, D, BUF (rookie)
+137, Ryan Nugent-Hopkins, C/LW, EDM
+138, Sam Bennett, C, FLA
+139, Brock Boeser, RW, VAN
+140, Troy Terry, RW, ANA
+141, Clayton Keller, LW/RW, ARI (INJ,)
+142, Tomas Hertl, C, SJS
+143, Brock Nelson, C, NYI
+144, Valeri Nichushkin, LW/RW, COL
+145, Ville Husso, G, DET
+146, Michael Bunting, LW, TOR
+147, David Perron, RW, DET
+148, Logan Thompson, G, VGK (rookie)
+149, Robin Lehner, G, VGK (INJ,)
+150, Blake Wheeler, C/RW, WPG
+151, Mikhail Sergachev, D, TBL
+152, Semyon Varlamov, G, NYI
+153, Jordan Binnington, G, STL
+154, Boone Jenner, C, CBJ (INJ,)
+155, Ondrej Palat, LW, NJD
+156, Nick Suzuki, C, MTL
+157, Vasily Podkolzin, LW/RW, VAN
+158, Alex Tuch, RW, BUF
+159, Nico Hischier, C, NJD
+160, Juraj Slafkovsky, LW, MTL (rookie)
+161, Adrian Kempe, LW/RW, LAK
+162, Seth Jarvis, LW/RW, CAR
+163, John Klingberg, D, ANA
+164, Anton Lundell, C, FLA
+165, Tony DeAngelo, D, PHI
+166, Joel Eriksson Ek, C, MIN
+167, Carter Verhaeghe, LW, FLA
+168, Rasmus Andersson, D, CGY
+169, Noah Hanifin, D, CGY
+170, Anton Forsberg, G, OTT
+171, Jared Spurgeon, D, MIN
+172, Seth Jones, D, CHI
+173, Andrew Copp, C/RW, DET
+174, Justin Faulk, D, STL
+175, Jakob Chychrun, D, ARI (INJ,)
+176, Taylor Hall, LW, BOS
+177, Jake Sanderson, D, OTT (rookie)
+178, Carter Hart, G, PHI (INJ,)
+179, Antti Raanta, G, CAR
+180, Tanner Jeannot, RW, NSH
+181, Viktor Arvidsson, LW/RW, LAK (INJ,)
+182, Vitek Vanecek, G, NJD
+183, John Gibson, G, ANA (INJ,)
+184, Tyler Bertuzzi, LW/RW, DET
+185, Andrew Mangiapane, LW/RW, CGY
+186, Pavel Francouz, G, COL
+187, Oliver Bjorkstrand, RW, SEA
+188, Dawson Mercer, C/RW, NJD
+189, Ilya Samsonov, G, TOR
+190, Matt Murray, G, TOR
+191, Ryan Johansen, C, NSH
+192, Ivan Barbashev, C/LW, STL
+193, T,J, Oshie, C/RW, WSH
+194, Jeff Petry, D, PIT
+195, Jeff Skinner, LW, BUF
+196, Alexis Lafrenière, LW/RW, NYR
+197, Oliver Wahlstrom, RW, NYI
+198, Hampus Lindholm, D, BOS
+199, Linus Ullmark, G, BOS
+200, Adam Boqvist, D, CBJ
+201, Alex Nedeljkovic, G, DET
+202, Cam Atkinson, RW, PHI
+203, Vince Dunn, D, SEA
+204, Anders Lee, LW, NYI
+205, Logan Couture, C, SJS
+206, Anthony Duclair, RW, FLA (INJ,)
+207, Damon Severson, D, NJD
+208, Elvis Merzlikins, G, CBJ
+209, Kirby Dach, C/RW, MTL
+210, Tyler Seguin, C/RW, DAL
+211, Cole Perfetti, C/RW, WPG (rookie)
+212, Cole Sillinger, C, CBJ
+213, Nick Schmaltz, C/RW, ARI
+214, Matt Dumba, D, MIN
+215, Samuel Girard, D, COL (INJ,)
+216, Ross Colton, C/LW, TBL
+217, Arthur Kaliyev, LW/RW, LAK
+218, Artturi Lehkonen, LW/RW, COL
+219, James Reimer, G, SJS
+220, Anthony Mantha, LW/RW, WSH
+221, Philip Tomasino, RW, NSH
+222, Travis Konecny, RW, PHI
+223, William Eklund, LW, SJS (rookie)
+224, Hendrix Lapierre, C, WSH (rookie)
+225, Phillip Danault, C, LAK
+226, Chandler Stephenson, C/RW, VGK
+227, Gustav Forsling, D, FLA
+228, Jake DeBrusk, LW/RW, BOS
+229, Jaccob Slavin, D, CAR
+230, Dylan Strome, C/RW, WSH
+231, Alex Killorn, LW/RW, TBL
+232, Jared McCann, C/LW, SEA
+233, Lawson Crouse, LW/RW, ARI (INJ,)
+234, Shane Wright, C, SEA (rookie)
+235, Trevor Moore, LW/RW, LAK
+236, Sean Durzi, D, LAK
+237, Mason Marchment, LW/RW, DAL
+238, Marco Rossi, C, MIN (rookie)
+239, Connor McMichael, C/LW, WSH
+240, Rickard Rakell, LW/RW, PIT
+241, Victor Olofsson, RW, BUF
+242, Yegor Sharangovich, C/LW, NJD
+243, Brendan Gallagher, RW, MTL
+244, Jordan Staal, C, CAR
+245, Pyotr Kochetkov, G, CAR (rookie)
+246, Alec Martinez, D, VGK
+247, Reilly Smith, RW, VGK (INJ,)
+248, Kent Johnson, LW, CBJ (rookie)
+249, Peyton Krebs, C/LW, BUF
+250, Pavel Zacha, C/LW, BOS

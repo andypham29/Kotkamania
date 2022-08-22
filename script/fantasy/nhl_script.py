@@ -109,7 +109,7 @@ class FantasyScript:
 
 if __name__ == '__main__':
     # FantasyScript().save_nhl_players_stats_by_year()
-    FantasyScript().save_fantasy_nhl_players()
+    # FantasyScript().save_fantasy_nhl_players()
     # FantasyScript().save_player_stats_to_internal_db()
     # InternalPlayerRepository().create_database()
     # FantasyNhlPlayerDao().initFantasySkaterTable()
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     #     .close()
 
     # FantasyScript().get_fantasy_grade_by_id(8476885)
-    # FantasyScript().save_fantasy_nhl_players()
+    FantasyScript().save_fantasy_nhl_players()
     # FantasyScript().save_player_grade_for_all_players_in_internal_db()
     # FantasyScript().save_player_badge_for_all_players_in_internal_db()
     # FantasyScript().save_player_grade_for_forwards_to_excel()

@@ -37,8 +37,44 @@
         location.reload();
     }
 
+    function fileTransfer(e, id) {
+    this.className = '';
+    e.preventDefault();
 
+    var holder = document.getElementById(id)
+    var file = e.dataTransfer.files[0],
+        reader = new FileReader();
+    reader.onload = function(event) {
+        console.log(event.target);
+        holder.value = event.target.result;
+    };
+    console.log(file);
+    reader.readAsText(file);
 
+    return false;
+}
+function download(id) {
+    var textarea = document.getElementById(id + "_list")
+    var data = textarea.value
+    if(!data) return
+    var filename = "kotkamania_" + id
+    var type = "txt"
+    var file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
+    }
+}
 </script>
 <script src="{{url_for('static', filename='cookiehandler.js')}}"></script>
 
@@ -57,34 +93,33 @@
                     <div class="form-row">
                         <div class="col padding-0">
                             <label>Favorite</label>
+                            <button class="btn btn-outline-primary" id="favorite" onclick="download(this.id)">export</button>
                         </div>
                         <div class="col">
-                            <textarea cols="50" id="favorite_list" rows="4"></textarea><br/>
+                            <textarea cols="50" id="favorite_list" rows="4" ondrop="fileTransfer(event, this.id)"></textarea><br/>
                         </div>
 
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <label>Watchlist</label>
+                            <button class="btn btn-outline-primary" id="watchlist" onclick="download(this.id)">export</button>
                         </div>
                         <div class="col">
-                            <textarea cols="50" id="watchlist_list" rows="4"></textarea><br/>
+                            <textarea cols="50" id="watchlist_list" rows="4" ondrop="fileTransfer(event, this.id)"></textarea><br/>
                         </div>
 
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <label>Draft Board</label>
+                            <button class="btn btn-outline-primary" id="draftboard" onclick="download(this.id)">export</button>
                         </div>
                         <div class="col">
-                            <textarea cols="50" id="draftboard_list" rows="4"></textarea><br/>
+                            <textarea cols="50" id="draftboard_list" rows="4" ondrop="fileTransfer(event, this.id)"></textarea><br/>
                         </div>
 
                     </div>
-                    <!--                    <div class="form-row">-->
-
-                    <!--                    </div>-->
-
                 </form>
             </div>
 

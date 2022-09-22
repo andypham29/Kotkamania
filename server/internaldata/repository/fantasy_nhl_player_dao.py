@@ -251,7 +251,7 @@ class FantasyNhlPlayerDao:
 
     def updateNhlRankForFantasySkaterWithName(self, playerName, nhlRank):
         print(playerName, ": ", nhlRank)
-        self.c.execute('''UPDATE fantasy_nhl_player SET nhlRank = NULL''')
+        # self.c.execute('''UPDATE fantasy_nhl_player SET nhlRank = NULL''')
         self.c.execute('''UPDATE fantasy_nhl_player SET
         nhlRank = ?
         WHERE skaterFullName = ?''', (nhlRank, playerName,))

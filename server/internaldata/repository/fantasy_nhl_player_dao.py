@@ -251,6 +251,7 @@ class FantasyNhlPlayerDao:
 
     def updateNhlRankForFantasySkaterWithName(self, playerName, nhlRank):
         print(playerName, ": ", nhlRank)
+        self.c.execute('''UPDATE fantasy_nhl_player SET nhlRank = NULL''')
         self.c.execute('''UPDATE fantasy_nhl_player SET
         nhlRank = ?
         WHERE skaterFullName = ?''', (nhlRank, playerName,))
@@ -278,6 +279,12 @@ class FantasyNhlPlayerDao:
         intangibles = ?
         WHERE playerId = ?''', (fantasy_badge.scoring, fantasy_badge.playmaking, fantasy_badge.defense,
                                 fantasy_badge.powerplay, fantasy_badge.intangibles, playerId,))
+
+        self.conn.commit()
+        self.conn.close()
+
+    def removeTeamIdFromAllFantasySkates(self):
+        self.c.execute('''UPDATE fantasy_nhl_player SET teamId = 0''')
 
         self.conn.commit()
         self.conn.close()

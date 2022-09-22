@@ -50,3 +50,6 @@ class FantasyNhlPlayerService:
 
     def updateFantasyBadgeForFantasySkaterByPlayerId(self, fantasy_badge, playerId):
         FantasyNhlPlayerDao(self.uri).updateFantasyBadgeForFantasySkaterByPlayerId(fantasy_badge, playerId)
+
+    def removeTeamIdFromAllFantasySkates(self):
+        FantasyNhlPlayerDao(self.uri).removeTeamIdFromAllFantasySkates()

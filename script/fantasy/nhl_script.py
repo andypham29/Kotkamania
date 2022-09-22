@@ -26,6 +26,7 @@ class FantasyScript:
 
         nhl_roster_players = FantasyTeamHelper().get_all_players_in_teams()
         for player in nhl_roster_players:
+            # self.fantasy_nhl_player_service.removeTeamIdFromAllFantasySkates()
             self.fantasy_nhl_player_service.saveFantasySkater(player)
 
         print("done")
@@ -65,7 +66,7 @@ class FantasyScript:
             if not player_stat:
                 continue
             badge = badge_factory.get_badge_for_skater(player_stat, fantasy_player.positionCode)
-            print(fantasy_player.skaterFullName, ": ",badge.__dict__, player_stat.__dict__)
+            print(fantasy_player.skaterFullName, ": ", badge.__dict__, player_stat.__dict__)
             self.fantasy_nhl_player_service.updateFantasyBadgeForFantasySkaterByPlayerId(badge, fantasy_player.playerId)
 
     def process_forward(self):

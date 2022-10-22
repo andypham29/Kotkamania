@@ -36,8 +36,8 @@ class FantasyPlayerGraderFacade:
         fantasy_value_year3 = self.__get_fantasy_player_by_year(player, NhlYearConverter.get_previous_season_by_year_removed(1))
         fantasy_value_year4 = self.__get_fantasy_player_by_year(player, current_year)
 
-        playoff_stat = NHLPlayerStatService().get_player_playoff_stat_by_playerId_and_seasons(player.playerId,
-                                                                                              "20202021")
+        # playoff_stat = NHLPlayerStatService().get_player_playoff_stat_by_playerId_and_seasons(player.playerId,
+        #                                                                                       "20202021")
         # grade_20202021_p = 0
         # grade_20202021_p = 0 if len(playoff_stat) == 0 else\
         #     self.fantasy_forward_grade_service.getForwardGrade(player.skaterFullName, playoff_stat)

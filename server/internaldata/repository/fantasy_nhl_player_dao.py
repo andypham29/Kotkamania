@@ -13,7 +13,7 @@ class FantasyNhlPlayerDao:
         # uri = '../../server/internaldata/db/internal.db' if uri is None else uri
         self.conn = sqlite3.connect(uri)
         self.c = self.conn.cursor()
-        self.year = NhlYearConverter.get_current_season()
+        self.year = NhlYearConverter.get_previous_season_by_year_removed(1)
 
     def initFantasySkaterTable(self):
         self.c.execute('''CREATE TABLE IF NOT EXISTS fantasy_nhl_player(

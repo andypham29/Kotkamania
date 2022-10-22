@@ -20,8 +20,8 @@ class FantasyHotStreakScript:
         print("done")
 
     def run_script(self, offset):
-        # url = f'https://nhlmockdraft2020.herokuapp.com/admin/script/{offset}'
-        url = f'http://localhost:5000/admin/script/{offset}'
+        url = f'https://nhlmockdraft2020.herokuapp.com/admin/script/{offset}'
+        # url = f'http://localhost:5000/admin/script/{offset}'
         api_key = Setting.KKMANIA_API_KEY
         headers = {'x-api-key': f'{api_key}'}
 

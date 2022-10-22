@@ -1,4 +1,5 @@
 from server.commons.fantasygrade.fantasy_percentile_calculator import FantasyPercentileCalculator
+from server.commons.helper.nhl_season_converter import NhlYearConverter
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
 from server.internaldata.service.fantasy_player_streak_index_service import FantasyPlayerStreakIndexService
 from server.internaldata.service.internal_player_stat_service import InternalPlayerStatService
@@ -59,7 +60,7 @@ class FantasyNhlPlayerFacade:
             print([(attr, value.__dict__) for attr, value in percentile_values.__dict__.items()])
             stats_at_percentiles = internal_player_service.get_internal_players_stats_at_percentile_values_and_seasonId(
                 percentile_values,
-                "20212022")
+                NhlYearConverter.get_current_season())
             # print([s.__dict__ for s in stats_at_percentiles])
             list_of_player_id = [s.playerId for s in stats_at_percentiles]
 

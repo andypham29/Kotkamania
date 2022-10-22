@@ -148,5 +148,11 @@ class FantasyPlayerStreakIndexDao:
         self.conn.commit()
         self.conn.close()
 
+    def deleteAllFantasySkaterStreak(self):
+        self.c.execute('''DELETE FROM fantasy_streak''')
+
+        self.conn.commit()
+        self.conn.close()
+
     def __row_to_object(self, row):
         return FantasyPlayerStreakIndex(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])

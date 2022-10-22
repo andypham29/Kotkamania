@@ -29,3 +29,6 @@ class FantasyPlayerStreakIndexService:
 
     def deleteFantasySkaterById(self, playerId):
         FantasyPlayerStreakIndexDao().deleteFantasySkaterById(playerId)
+
+    def deleteAllFantasySkaterStreak(self):
+        FantasyPlayerStreakIndexDao().deleteAllFantasySkaterStreak()

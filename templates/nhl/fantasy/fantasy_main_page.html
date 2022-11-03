@@ -61,10 +61,12 @@
                 }
           }
           var percentiles = document.forms[1];
+
           if (percentiles === undefined) {
             return txt
           }
           for (i = 0; i < percentiles.length; i++) {
+                console.log(percentiles[i].value)
                 if (['shotPercentile','hitPercentile','blockPercentile','assistPercentile',
                     'pointPercentile', 'toiPercentile', 'pptoiPercentile', 'evtoiPercentile']
                     .indexOf(percentiles[i].name) < 0) {

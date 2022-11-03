@@ -10,14 +10,14 @@ class FantasyPercentileCalculator:
 
     def __init__(self,
                  internal_player_stat_service=InternalPlayerStatService(uri='../../server/internaldata/db/internal.db'),
-                 fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../server/internaldata/db/fantasy.db')):
+                 fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../server/internaldata/db/internal.db')):
         self.fantasy_nhl_player_service = fantasy_nhl_player_service
         self.internal_player_stat_service = internal_player_stat_service
 
     def get_percentile_stats(self, players=[], min_game=None, percentile_shot=None, percentile_hit=None,
                              percentile_block=None, percentile_goal=None, percentile_assist=None, percentile_point=None,
                              percentile_toi=None, percentile_pptoi=None, percentile_evtoi=None):
-        current_season = NhlYearConverter.get_current_season()
+        current_season = NhlYearConverter.get_previous_season_by_year_removed(1)
         stats = [self.get_stat_by_playerId_and_season(player.playerId, current_season) for player in players]
         min_game = 30 if not min_game else min_game
 

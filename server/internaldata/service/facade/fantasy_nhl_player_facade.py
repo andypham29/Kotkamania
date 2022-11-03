@@ -57,10 +57,10 @@ class FantasyNhlPlayerFacade:
                 percentile_pptoi=percentile_pptoi,
                 percentile_evtoi=percentile_evtoi)
 
-            print([(attr, value.__dict__) for attr, value in percentile_values.__dict__.items()])
+            # print([(attr, value.__dict__) for attr, value in percentile_values.__dict__.items()])
             stats_at_percentiles = internal_player_service.get_internal_players_stats_at_percentile_values_and_seasonId(
                 percentile_values,
-                NhlYearConverter.get_current_season())
+                NhlYearConverter.get_previous_season_by_year_removed(1))
             # print([s.__dict__ for s in stats_at_percentiles])
             list_of_player_id = [s.playerId for s in stats_at_percentiles]
 

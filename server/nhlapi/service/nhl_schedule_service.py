@@ -67,7 +67,7 @@ class NHLScheduleService:
                             teamName=away_json.get("team").get("name"),
                             score=away_json.get("score"))
 
-        display_day = (datetime.strptime(date, "%Y-%m-%d").day - datetime.strptime(monday, "%Y-%m-%d").day)
+        display_day = (datetime.strptime(date, "%Y-%m-%d") - datetime.strptime(monday, "%Y-%m-%d")).days
         return NhlGame(day=display_day,
                        date=date,
                        gamePk=gamePk,
@@ -84,4 +84,5 @@ if __name__ == '__main__':
     schedule = NHLScheduleService().get_current_week_schedule_by_teamId(8)
 
     print(schedule.__dict__)
-    print([a.__dict__ for a in schedule.games])
+    print([a.__dict__ for a in schedule.teams[0].games])
+    print((datetime.strptime('2022-11-02', "%Y-%m-%d") - datetime.strptime('2022-10-31', "%Y-%m-%d")).days)

@@ -120,15 +120,18 @@ if __name__ == '__main__':
     f = FantasyPercentileCalculator(
         internal_player_stat_service=InternalPlayerStatService(uri='../../internaldata/db/internal.db'),
         fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../internaldata/db/internal.db'))
-    # players = f.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodes(["L", "C", "R"])
-    players = f.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodesWithStats(["D"])
+    players = f.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodes(["L", "C", "R"])
+    # players = f.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodesWithStats(["D"])
     filtered_players = []
 
-    fi = open("percentile.txt", "a")
-    for i in range(10, 100, 5):
+    fi = open("percentile.csv", "a")
+    fi.write("percentile," + ",".join([f"{k}" for k, v in PercentileObject().__dict__.items()]) + "\n")
+
+    for i in range(5, 100, 5):
         filtered_player = f.get_percentile_stats(players=players, min_game=None, percentile_shot=i, percentile_hit=i,
                                                  percentile_block=i, percentile_goal=i, percentile_assist=i,
                                                  percentile_point=i, percentile_toi=i, percentile_pptoi=i,
                                                  percentile_evtoi=i)
-        fi.write(f"{i}: " + str([f"{k}: {v.value}" for k, v in filtered_player.__dict__.items()]) + "\n")
+        # fi.write(f"{i}: " + str([f"{k}: {v.value}" for k, v in filtered_player.__dict__.items()]) + "\n")
+        fi.write(f"{i},\t" + ",".join([f"{v.value}" for k, v in filtered_player.__dict__.items()]) + "\n")
         filtered_players.append(filtered_player)

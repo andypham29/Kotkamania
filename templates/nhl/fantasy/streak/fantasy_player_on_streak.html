@@ -116,7 +116,7 @@
                     if(fantasy_watchlist_cookie.filter(function(id) { return id === player.playerId; }).length > 0) {
                         active_class_2 = "active"
                     }
-                    trHTML += `<tr ${ style } data-toggle="tooltip" data-placement="top" title="${ player.lastUpdated }">` +
+                    trHTML += `<tr ${ style } data-toggle="tooltip" data-placement="top" title="Last Updated: ${ player.lastUpdated }">` +
                     `<td>${ ++i }</td>` +
 <!--                    `<td><a href=\"/api/nhl/players/${player.playerId}\">${ player.skaterFullName }</a></td>` +-->
                     `<td><button class="btn btn-link" data-toggle="modal" data-target="#player-modal" onclick=\"loadPlayerModal(${player.playerId})\">${ player.skaterFullName }</button></td>` +

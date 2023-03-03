@@ -30,7 +30,7 @@ class FantasyPlayerGraderFacade:
         self.fantasy_nhl_player_service = fantasy_nhl_player_service
 
     def convert_to_fantasy_player(self, player):
-        current_year = NhlYearConverter.get_current_season()
+        current_year = int(NhlYearConverter.get_current_season())
         fantasy_value_year1 = self.__get_fantasy_player_by_year(player, NhlYearConverter.get_previous_season_by_year_removed(3))
         fantasy_value_year2 = self.__get_fantasy_player_by_year(player, NhlYearConverter.get_previous_season_by_year_removed(2))
         fantasy_value_year3 = self.__get_fantasy_player_by_year(player, NhlYearConverter.get_previous_season_by_year_removed(1))
@@ -113,10 +113,10 @@ class FantasyPlayerGraderFacade:
             shotPct = 0
             grade = self.fantasy_goalie_grade_helper.getGoalieGrade(player.skaterFullName, player_stat)
         elif player.positionCode == 'D':
-            shotPct = self.fantasy_defensemen_grade_service.shotPctIndex(player_stat)
+            shotPct = player_stat.shotPct
             grade = self.fantasy_defensemen_grade_service.getDefenseGrade(player.skaterFullName, player_stat)
         else:
-            shotPct = self.fantasy_forward_grade_service.shotPctIndex(player_stat)
+            shotPct = player_stat.shotPct
             grade = self.fantasy_forward_grade_service.getForwardGrade(player.skaterFullName, player_stat)
 
         return {"shotPct": shotPct,

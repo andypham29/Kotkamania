@@ -41,12 +41,16 @@ class FantasyPlayerGradeFacade:
             InternalPlayerStatRepository().save_internal_player_stats(p)
 
     def get_fantasy_forward(self, amount=100):
-        players = InternalPlayerRepository().get_forwards(amount)
+        # players = InternalPlayerRepository().get_forwards(amount)
+        players = players = FantasyNhlPlayerService(
+            '../../server/internaldata/db/internal.db').getAllFantasySkatersWithPositionCodesWithStats(["L", "C", "R"])[:amount]
 
         return [self.__convert_to_fantasy_player(player) for player in players]
 
     def get_fantasy_defensemen(self, amount=100):
-        players = InternalPlayerRepository().get_defensemen(amount)
+        # players = InternalPlayerRepository().get_defensemen(amount)
+        players = players = FantasyNhlPlayerService(
+            '../../server/internaldata/db/internal.db').getAllFantasySkatersWithPositionCodesWithStats(["D"])[:amount]
 
         return [self.__convert_to_fantasy_player(player) for player in players]
 

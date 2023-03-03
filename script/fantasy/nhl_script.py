@@ -22,7 +22,7 @@ class FantasyScript:
         self.current_season = NhlYearConverter.get_current_season()
 
     def save_fantasy_nhl_players(self):
-        # self.fantasy_nhl_player_service.initFantasySkaterTable()
+        self.fantasy_nhl_player_service.initFantasySkaterTable()
 
         nhl_roster_players = FantasyTeamHelper().get_all_players_in_teams()
         for player in nhl_roster_players:
@@ -70,34 +70,34 @@ class FantasyScript:
             self.fantasy_nhl_player_service.updateFantasyBadgeForFantasySkaterByPlayerId(badge, fantasy_player.playerId)
 
     def process_forward(self):
-        fantasy_skaters = self.fantasy_player_helper.get_fantasy_forward(amount=10)
-        fantasy_skaters.sort(key=lambda x: x.score, reverse=True)
-        # for fantasy_skater in fantasy_skaters:
-        #     self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_skater.id,
-        #                                                                              fantasy_skater.score)
+        fantasy_skaters = self.fantasy_player_helper.get_fantasy_forward()
+        # fantasy_skaters.sort(key=lambda x: x.score, reverse=True)
+        for fantasy_skater in fantasy_skaters:
+            self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_skater.id,
+                                                                                 fantasy_skater.score)
 
-        self.excel_helper.write_players_to_excel(sheet='forward', players=fantasy_skaters)
+        # self.excel_helper.write_players_to_excel(sheet='forward', players=fantasy_skaters)
 
         return self
 
     def process_defensemen(self):
-        fantasy_defensemen = self.fantasy_player_helper.get_fantasy_defensemen(amount=20)
-        fantasy_defensemen.sort(key=lambda x: x.score, reverse=True)
-        # for fantasy_defenseman in fantasy_defensemen:
-        #     self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_defenseman.id,
-        #                                                                              fantasy_defenseman.score)
+        fantasy_defensemen = self.fantasy_player_helper.get_fantasy_defensemen()
+        # fantasy_defensemen.sort(key=lambda x: x.score, reverse=True)
+        for fantasy_defenseman in fantasy_defensemen:
+            self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_defenseman.id,
+                                                                                     fantasy_defenseman.score)
 
-        self.excel_helper.write_players_to_excel(sheet='defense', players=fantasy_defensemen)
+        # self.excel_helper.write_players_to_excel(sheet='defense', players=fantasy_defensemen)
         return self
 
     def process_goalies(self):
         fantasy_goalies = self.fantasy_player_helper.get_fantasy_goalie(amount=100)
-        fantasy_goalies.sort(key=lambda x: x.score, reverse=True)
-        # for fantasy_goalie in fantasy_goalies:
-        #     self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_goalie.id,
-        #                                                                              fantasy_goalie.score)
+        # fantasy_goalies.sort(key=lambda x: x.score, reverse=True)
+        for fantasy_goalie in fantasy_goalies:
+            self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_goalie.id,
+                                                                                     fantasy_goalie.score)
 
-        self.excel_helper.write_players_to_excel(sheet='goalie', players=fantasy_goalies)
+        # self.excel_helper.write_players_to_excel(sheet='goalie', players=fantasy_goalies)
         return self
 
     def get_fantasy_grade_by_id(self, id):
@@ -122,9 +122,9 @@ if __name__ == '__main__':
     #     .close()
 
     # FantasyScript().get_fantasy_grade_by_id(8476885)
-    FantasyScript().save_fantasy_nhl_players()
+    # FantasyScript().save_fantasy_nhl_players()
     # FantasyScript().save_player_grade_for_all_players_in_internal_db()
-    # FantasyScript().save_player_badge_for_all_players_in_internal_db()
+    FantasyScript().save_player_badge_for_all_players_in_internal_db()
     # FantasyScript().save_player_grade_for_forwards_to_excel()
 
     # stats = InternalPlayerStatRepository().get_internal_player_stats_by_playerId(8470187)

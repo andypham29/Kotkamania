@@ -24,6 +24,8 @@ class AdminFacade:
         pass
 
     def apply(self, offset):
+        FantasyPlayerStreakIndexService().initFantasyPlayerStreakIndexTable()
+
         offset = int(offset)
         today_date = datetime.now().strftime("%Y-%m-%d")
         log = InternalLogService().getNhlPlayerStatLogByDate(today_date)
@@ -63,10 +65,10 @@ class AdminFacade:
         players = FantasyNhlPlayerService().getAllFantasySkatersWithPositionCodesWithStats(['C', 'L', 'R', 'D'])
         print(len(players))
         season = NhlYearConverter.get_current_season()
+        FantasyPlayerStreakIndexService().initFantasyPlayerStreakIndexTable()
         for player in players:
             index = self.__get_gamelogs_index(player.playerId, player.skaterFullName, player.positionCode, season)
             print(index.__dict__)
-            FantasyPlayerStreakIndexService().initFantasyPlayerStreakIndexTable()
             FantasyPlayerStreakIndexService().saveOrUpdateFantasyPlayerStreakIndex(index)
             index_list.append(index)
 

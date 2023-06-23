@@ -17,6 +17,16 @@ class NHLPlayerServiceFacade:
         self.internalPlayerStatService = internalPlayerStatService
         self.fantasyPlayerService = fantasyPlayerService
 
+    def save_player_by_playerId_and_season(self, playerId, seasonId):
+        # save only if stats are found for current year (seasonId)
+        try:
+            player_stat = self.nhlPlayerStatService.get_player_stat_by_playerId_and_seasons(playerId, [seasonId])[0]
+
+            stat = player_stat.stat
+            self.internalPlayerStatService.insert_internal_players_stats(playerId, seasonId, stat)
+        except:
+            print(f"[{playerId}] Unable to save stat for season [{seasonId}]")
+
     def get_player_by_playerId_and_seasons(self, playerId, seasons=[]):
         season_current = NhlYearConverter.get_current_season()
         season_minus1 = NhlYearConverter.get_previous_season_by_year_removed(1)

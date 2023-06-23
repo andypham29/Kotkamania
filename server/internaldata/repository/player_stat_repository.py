@@ -62,41 +62,44 @@ class InternalPlayerStatRepository:
 
         session.close()
 
+    def bulk_save_internal_players_stats(self, players):
+        stats = []
+        for player in players:
+            stats += [
+                InternalPlayerStat(
+                    playerId=player.playerId,
+                    seasonId=data.season,
+                    timeOnIce=data.stat.timeOnIce,
+                    assists=data.stat.assists,
+                    goals=data.stat.goals,
+                    pim=data.stat.pim,
+                    shots=data.stat.shots,
+                    games=data.stat.games,
+                    hits=data.stat.hits,
+                    powerPlayGoals=data.stat.powerPlayGoals,
+                    powerPlayPoints=data.stat.powerPlayPoints,
+                    powerPlayTimeOnIce=data.stat.powerPlayTimeOnIce,
+                    evenTimeOnIce=data.stat.evenTimeOnIce,
+                    penaltyMinutes=data.stat.penaltyMinutes,
+                    faceOffPct=data.stat.faceOffPct,
+                    shotPct=data.stat.shotPct,
+                    gameWinningGoals=data.stat.gameWinningGoals,
+                    overTimeGoals=data.stat.overTimeGoals,
+                    shortHandedGoals=data.stat.shortHandedGoals,
+                    shortHandedPoints=data.stat.shortHandedPoints,
+                    shortHandedTimeOnIce=data.stat.shortHandedTimeOnIce,
+                    blocked=data.stat.blocked,
+                    plusMinus=data.stat.plusMinus,
+                    points=data.stat.points,
+                    shifts=data.stat.shifts,
+                    timeOnIcePerGame=data.stat.timeOnIcePerGame,
+                    evenTimeOnIcePerGame=data.stat.evenTimeOnIcePerGame,
+                    shortHandedTimeOnIcePerGame=data.stat.shortHandedTimeOnIcePerGame,
+                    powerPlayTimeOnIcePerGame=data.stat.powerPlayTimeOnIcePerGame)
+                for data in player.stats if data is not None]
+        session.bulk_save_objects(stats)
+        session.commit()
 
-def bulk_save_internal_players_stats(self, players):
-    stats = []
-    for player in players:
-        stats += [
-            InternalPlayerStat(
-                playerId=player.playerId,
-                seasonId=data.season,
-                timeOnIce=data.stat.timeOnIce,
-                assists=data.stat.assists,
-                goals=data.stat.goals,
-                pim=data.stat.pim,
-                shots=data.stat.shots,
-                games=data.stat.games,
-                hits=data.stat.hits,
-                powerPlayGoals=data.stat.powerPlayGoals,
-                powerPlayPoints=data.stat.powerPlayPoints,
-                powerPlayTimeOnIce=data.stat.powerPlayTimeOnIce,
-                evenTimeOnIce=data.stat.evenTimeOnIce,
-                penaltyMinutes=data.stat.penaltyMinutes,
-                faceOffPct=data.stat.faceOffPct,
-                shotPct=data.stat.shotPct,
-                gameWinningGoals=data.stat.gameWinningGoals,
-                overTimeGoals=data.stat.overTimeGoals,
-                shortHandedGoals=data.stat.shortHandedGoals,
-                shortHandedPoints=data.stat.shortHandedPoints,
-                shortHandedTimeOnIce=data.stat.shortHandedTimeOnIce,
-                blocked=data.stat.blocked,
-                plusMinus=data.stat.plusMinus,
-                points=data.stat.points,
-                shifts=data.stat.shifts,
-                timeOnIcePerGame=data.stat.timeOnIcePerGame,
-                evenTimeOnIcePerGame=data.stat.evenTimeOnIcePerGame,
-                shortHandedTimeOnIcePerGame=data.stat.shortHandedTimeOnIcePerGame,
-                powerPlayTimeOnIcePerGame=data.stat.powerPlayTimeOnIcePerGame)
-            for data in player.stats if data is not None]
-    session.bulk_save_objects(stats)
-    session.commit()
+    def delete_player_stat(self, playerId):
+        session.query(InternalPlayerStat).filter(InternalPlayerStat.playerId == playerId).delete()
+        session.commit()

@@ -3,7 +3,6 @@ from script.fantasy.fantasyhelper.excel_helper import ExcelHelper
 from script.fantasy.fantasyhelper.fantasy_team_helper import FantasyTeamHelper
 from server.commons.fantasybadge.fantasy_player_badge_factory import FantasyPlayerBadgeFactory
 from server.commons.helper.nhl_season_converter import NhlYearConverter
-from server.internaldata.repository.player_repository import InternalPlayerRepository
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
 from server.internaldata.service.internal_player_stat_service import InternalPlayerStatService
 from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
@@ -13,11 +12,9 @@ class FantasyScript:
 
     def __init__(self, fantasy_player_helper=FantasyPlayerGradeFacade('../../server/internaldata/db/internal.db'),
                  excel_helper=ExcelHelper(),
-                 internal_player_repository=InternalPlayerRepository(),
                  fantasy_nhl_player_service=FantasyNhlPlayerService('../../server/internaldata/db/internal.db')):
         self.fantasy_player_helper = fantasy_player_helper
         self.excel_helper = excel_helper
-        self.internal_player_repository = internal_player_repository
         self.fantasy_nhl_player_service = fantasy_nhl_player_service
         self.current_season = NhlYearConverter.get_current_season()
 
@@ -36,8 +33,11 @@ class FantasyScript:
 
         nhl_roster_players = FantasyTeamHelper().get_all_players_in_teams()
         for player in nhl_roster_players:
+            uri = '../../server/internaldata/db/internal.db'
             if player.positionCode != "G":
-                NHLPlayerServiceFacade().get_player_by_playerId_and_seasons(player.playerId, [self.current_season])
+                NHLPlayerServiceFacade(internalPlayerStatService=InternalPlayerStatService(uri),
+                                       fantasyPlayerService=FantasyNhlPlayerService(uri)) \
+                    .save_player_by_playerId_and_season(player.playerId, self.current_season)
                 # InternalPlayerStatRepository().save_internal_player_stats(p)
 
         print("done")
@@ -70,11 +70,11 @@ class FantasyScript:
             self.fantasy_nhl_player_service.updateFantasyBadgeForFantasySkaterByPlayerId(badge, fantasy_player.playerId)
 
     def process_forward(self):
-        fantasy_skaters = self.fantasy_player_helper.get_fantasy_forward()
-        # fantasy_skaters.sort(key=lambda x: x.score, reverse=True)
+        fantasy_skaters = self.fantasy_player_helper.update_fantasy_grade_forward(100)
+        fantasy_skaters.sort(key=lambda x: x.score, reverse=True)
         for fantasy_skater in fantasy_skaters:
             self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_skater.id,
-                                                                                 fantasy_skater.score)
+                                                                                     fantasy_skater.score)
 
         # self.excel_helper.write_players_to_excel(sheet='forward', players=fantasy_skaters)
 

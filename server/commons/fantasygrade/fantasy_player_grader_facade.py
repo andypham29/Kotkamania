@@ -1,10 +1,9 @@
-from server.commons.fantasybadge.fantasy_player_badge_factory import FantasyPlayerBadgeFactory
 from server.commons.fantasygrade.fantasy_defense_grade_helper import FantasyDefenseGradeHelper
 from server.commons.fantasygrade.fantasy_forward_grade_helper import FantasyForwardGradeHelper
 from server.commons.fantasygrade.fantasy_goalie_grade_helper import FantasyGoalieGradeHelper
 from server.commons.fantasygrade.fantasy_player_grader import FantasyPlayerGrader, Grade
-from server.commons.helper.nhl_season_converter import NhlYearConverter
 from server.commons.fantasyplayer.model.fantasy_player import FantasyPlayer
+from server.commons.helper.nhl_season_converter import NhlYearConverter
 from server.internaldata.repository.player_stat_repository import InternalPlayerStatRepository
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
 from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
@@ -15,16 +14,15 @@ from server.nhlapi.service.nhl_stats_leader_service import NHLStatsLeaderService
 class FantasyPlayerGraderFacade:
 
     def __init__(self,
-                 fantasy_skater_grade_helper=FantasyForwardGradeHelper(),
-                 fantasy_defense_grade_helper=FantasyDefenseGradeHelper(),
-                 fantasy_goalie_grade_helper=FantasyGoalieGradeHelper(),
+                 percentile_stats_object=None,
                  nhl_stats_leader_service=NHLStatsLeaderService(),
                  nhl_player_service_facade=NHLPlayerServiceFacade(),
                  fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../../server/internaldata/db/fantasy.db')):
 
-        self.fantasy_forward_grade_service = fantasy_skater_grade_helper
-        self.fantasy_defensemen_grade_service = fantasy_defense_grade_helper
-        self.fantasy_goalie_grade_helper = fantasy_goalie_grade_helper
+        self.percentile_stats_object = percentile_stats_object
+        self.fantasy_forward_grade_service = FantasyForwardGradeHelper(self.percentile_stats_object)
+        self.fantasy_defensemen_grade_service = FantasyDefenseGradeHelper(self.percentile_stats_object)
+        self.fantasy_goalie_grade_helper = FantasyGoalieGradeHelper()
         self.nhl_stats_leader_service = nhl_stats_leader_service
         self.nhl_player_service_facade = nhl_player_service_facade
         self.fantasy_nhl_player_service = fantasy_nhl_player_service

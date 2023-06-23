@@ -3,7 +3,8 @@ from server.commons.helper.time_converter import TimeConverter
 
 class FantasyForwardGrade:
 
-    def __init__(self, player_stat):
+    def __init__(self, player_stat, percentile_stats_object=None):
+        self.percentile_stats_object = percentile_stats_object
         self.grade_g = self.__calculate_grade_goals(player_stat)
         self.grade_a = self.__calculate_grade_assists(player_stat)
         self.grade_p = self.__calculate_grade_points(player_stat)
@@ -21,6 +22,13 @@ class FantasyForwardGrade:
         self.grade_sog = self.__calculate_grade_sog(player_stat)
         self.grade_hits = self.__calculate_grade_hits(player_stat)
         self.grade_blk = self.__calculate_grade_blk(player_stat)
+
+    def get_percentile_by_stat(self, stat, stat_name):
+        try:
+            percentile_stat_list = self.percentile_stats_object.get(stat_name)
+        except:
+            return 0
+        return min(range(len(percentile_stat_list)), key=lambda i: abs(percentile_stat_list[i] - stat))
 
     def shotPctIndex(self, player_stat):
         index = round(-0.055 * (player_stat.shotPct / 12) ** 3 + 1.05, 2)
@@ -47,113 +55,46 @@ class FantasyForwardGrade:
 
     def __calculate_grade_goals(self, player_stat):
         if player_stat.games == 0:
-            return 5
+            return 50
         # return -0.003 * (player_stat.goals / player_stat.games * 82 - 70) ** 2 + 10
-        goal = player_stat.goals / player_stat.games * 82
-        if goal < 10:
-            return 7
-        elif 10 <= goal < 15:
-            return 8
-        elif 15 <= goal < 20:
-            return 8.5
-        elif 20 <= goal < 25:
-            return 8.8
-        elif 25 <= goal < 30:
-            return 9
-        elif 30 <= goal < 35:
-            return 9.5
-        elif 35 <= goal < 40:
-            return 9.7
-        elif 40 <= goal < 45:
-            return 9.75
-        elif 45 <= goal < 50:
-            return 9.8
-        elif 50 <= goal < 55:
-            return 9.85
-        elif 55 <= goal < 60:
-            return 9.9
-        else:
-            return 10
+        goal = player_stat.goals / player_stat.games
+        return self.get_percentile_by_stat(goal, "goal")
 
     def __calculate_grade_assists(self, player_stat):
         if player_stat.games == 0:
-            return 5
-        # return -0.0015 * (player_stat.assists / player_stat.games * 82 - 100) ** 2 + 10
-        assists = player_stat.assists / player_stat.games * 82
-        if assists < 15:
-            return 7
-        elif 15 <= assists < 25:
-            return 7.5
-        elif 25 <= assists < 35:
-            return 8
-        elif 35 <= assists < 40:
-            return 8.5
-        elif 40 <= assists < 45:
-            return 8.8
-        elif 45 <= assists < 50:
-            return 9.5
-        elif 50 <= assists < 55:
-            return 9.6
-        elif 55 <= assists < 60:
-            return 9.7
-        elif 60 <= assists < 65:
-            return 9.8
-        elif 65 <= assists < 70:
-            return 9.85
-        elif 70 <= assists < 75:
-            return 9.9
-        else:
-            return 10
+            return 50
+        # return -0.0015 * (player_stat.assists / player_stat.games * 82 - 50) ** 2 + 10
+        assists = player_stat.assists / player_stat.games
+        return self.get_percentile_by_stat(assists, "assist")
 
     def __calculate_grade_points(self, player_stat):
         if player_stat.games == 0:
-            return 5
-        # return -0.0007 * (player_stat.points / player_stat.games * 82 - 150) ** 2 + 10
-        points = player_stat.points / player_stat.games * 82
-        if points < 20:
-            return 6
-        elif 20 <= points < 30:
-            return 7
-        elif 30 <= points < 40:
-            return 7.5
-        elif 40 <= points < 50:
-            return 8
-        elif 50 <= points < 60:
-            return 8.5
-        elif 60 <= points < 70:
-            return 9
-        elif 70 <= points < 80:
-            return 9.3
-        elif 80 <= points < 90:
-            return 9.5
-        elif 90 <= points < 95:
-            return 9.8
-        elif 95 <= points < 100:
-            return 9.9
-        else:
-            return 10
+            return 50
+        # return -0.0007 * (player_stat.points / player_stat.games * 82 - 100) ** 2 + 10
+        points = player_stat.points / player_stat.games
+        return self.get_percentile_by_stat(points, "point")
 
     def __calculate_grade_ppgoals(self, player_stat):
         if player_stat.games == 0:
-            return 6
+            return 60
         # return player_stat.powerPlayGoals / player_stat.games * 8
         ppgoals = player_stat.powerPlayGoals / player_stat.games * 82
         if ppgoals < 4:
-            return 7
+            return 70
         elif 4 <= ppgoals < 7:
-            return 8
+            return 80
         elif 7 <= ppgoals < 10:
-            return 8.5
+            return 85
         elif 10 <= ppgoals < 12:
-            return 8.8
+            return 88
         elif 12 <= ppgoals < 15:
-            return 9
+            return 90
         elif 15 <= ppgoals < 18:
-            return 9.3
+            return 93
         elif 18 <= ppgoals < 20:
-            return 9.5
+            return 95
         else:
-            return 10
+            return 100
 
     def __calculate_grade_ppassists(self, player_stat):
         if player_stat.games == 0:
@@ -162,28 +103,28 @@ class FantasyForwardGrade:
 
     def __calculate_grade_pppoints(self, player_stat):
         if player_stat.games == 0:
-            return 6
+            return 60
         # return player_stat.powerPlayPoints / player_stat.games * 10
         pppoints = player_stat.powerPlayPoints / player_stat.games * 82
 
         if pppoints < 5:
-            return 7
+            return 70
         elif 5 <= pppoints < 10:
-            return 8
+            return 80
         elif 10 <= pppoints < 15:
-            return 8.5
+            return 85
         elif 15 <= pppoints < 20:
-            return 8.8
+            return 88
         elif 20 <= pppoints < 25:
-            return 9
+            return 90
         elif 25 <= pppoints < 30:
-            return 9.3
+            return 93
         elif 30 <= pppoints < 35:
-            return 9.6
+            return 96
         elif 35 <= pppoints < 40:
-            return 9.9
+            return 99
         else:
-            return 10
+            return 100
 
     def __calculate_grade_shotPct(self, player_stat):
         shotPct = player_stat.shotPct
@@ -195,120 +136,54 @@ class FantasyForwardGrade:
             return grade
 
     def __calculate_grade_toi(self, player_stat):
-        toi = TimeConverter.convert_string_to_total_seconds(player_stat.timeOnIcePerGame)
-        if toi < 15 * 60:
-            return 7
-        elif 15 * 60 <= toi < 17 * 60:
-            return 8
-        elif 17 * 60 <= toi < 20 * 60:
-            return 9
-        elif 20 * 60 <= toi < 25 * 60:
-            return 10
-        else:
-            return 10.5
+        if player_stat.games == 0:
+            return 0
+        toi = TimeConverter.convert_string_to_total_seconds(player_stat.timeOnIcePerGame) / player_stat.games
+        return self.get_percentile_by_stat(toi, "toi")
 
     def __calculate_grade_pptoi(self, player_stat):
-        pptoi = TimeConverter.convert_string_to_total_seconds(player_stat.powerPlayTimeOnIcePerGame)
-        if pptoi < 112.0:
-            return 6
-        elif 112.0 <= pptoi < 140.1:
-            return 7
-        elif 140.1 <= pptoi < 163.0:
-            return 8
-        elif 163.0 <= pptoi < 187.7:
-            return 9
-        else:
-            return 10
+        if player_stat.games == 0:
+            return 0
+        pptoi = TimeConverter.convert_string_to_total_seconds(player_stat.powerPlayTimeOnIcePerGame) / player_stat.games
+        return self.get_percentile_by_stat(pptoi, "pptoi")
 
     def __calculate_grade_evtoi(self, player_stat):
-        evtoi = TimeConverter.convert_string_to_total_seconds(player_stat.evenTimeOnIcePerGame)
-        if evtoi < 817.8:
-            return 6
-        elif 817.8 <= evtoi < 854.0:
-            return 7
-        elif 854.0 <= evtoi < 886.40:
-            return 8
-        elif 886.40 <= evtoi < 929.7:
-            return 9
-        else:
-            return 10
+        if player_stat.games == 0:
+            return 0
+        evtoi = TimeConverter.convert_string_to_total_seconds(player_stat.evenTimeOnIcePerGame) / player_stat.games
+        return self.get_percentile_by_stat(evtoi, "evtoi")
 
     def __calculate_grade_sog(self, player_stat):
         if player_stat.games == 0:
-            return 2
+            return 20
         sog = player_stat.shots / player_stat.games
-        if sog < 1.392:
-            return 3
-        elif 1.392 <= sog < 1.573:
-            return 4
-        elif 1.573 <= sog < 1.734:
-            return 5
-        elif 1.734 <= sog < 2.015:
-            return 6
-        elif 2.015 <= sog < 2.278:
-            return 7
-        elif 2.278 <= sog < 2.632:
-            return 8
-        elif 2.632 <= sog < 2.996:
-            return 9
-        else:
-            return 10
+        return self.get_percentile_by_stat(sog, "shot")
 
     def __calculate_grade_hits(self, player_stat):
         if player_stat.games == 0:
-            return 2
+            return 20
         hits = player_stat.hits / player_stat.games
-        if hits < 0.716:
-            return 3
-        elif 0.716 <= hits < 0.890:
-            return 4
-        elif 0.890 <= hits < 1.059:
-            return 5
-        elif 1.059 <= hits < 1.239:
-            return 6
-        elif 1.239 <= hits < 1.424:
-            return 7
-        elif 1.424 <= hits < 1.859:
-            return 8
-        elif 1.859 <= hits < 2.324:
-            return 9
-        else:
-            return 10
+        return self.get_percentile_by_stat(hits, "hit")
 
     def __calculate_grade_blk(self, player_stat):
         if player_stat.games == 0:
-            return 2
+            return 20
         blk = player_stat.blocked / player_stat.games
-        if blk < 0.332:
-            return 3
-        elif 0.332 <= blk < 0.378:
-            return 4
-        elif 0.378 <= blk < 0.420:
-            return 5
-        elif 0.420 <= blk < 0.463:
-            return 6
-        elif 0.463 <= blk < 0.545:
-            return 7
-        elif 0.545 <= blk < 0.617:
-            return 8
-        elif 0.617 <= blk < 0.7014:
-            return 9
-        else:
-            return 10
+        return self.get_percentile_by_stat(blk, "block")
 
     def __calculate_grade_pktoi(self, player_stat):
         toi = TimeConverter.convert_string_to_total_seconds(player_stat.shortHandedTimeOnIcePerGame)
         if toi < 30:
-            return 1
-        elif 30 <= toi < 45:
-            return 5
-        elif 45 <= toi < 1 * 60:
-            return 6
-        elif 1 * 60 <= toi < 1 * 60 + 30:
-            return 7
-        elif 1 * 60 + 15 <= toi < 2 * 60:
-            return 8
-        elif 2 * 60 <= toi < 2 * 60 + 30:
-            return 9
-        else:
             return 10
+        elif 30 <= toi < 45:
+            return 50
+        elif 45 <= toi < 1 * 60:
+            return 60
+        elif 1 * 60 <= toi < 1 * 60 + 30:
+            return 70
+        elif 1 * 60 + 15 <= toi < 2 * 60:
+            return 80
+        elif 2 * 60 <= toi < 2 * 60 + 30:
+            return 90
+        else:
+            return 100

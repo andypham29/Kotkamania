@@ -1,7 +1,4 @@
-from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
-
-
-def test_when_getting_player_stats_then_return_player(mocker):
+def test_when_getting_player_stats_then_return_player():
     # mocker.patch(
     #     'server.internaldata.service.fantasy_nhl_player_service',
     #     None

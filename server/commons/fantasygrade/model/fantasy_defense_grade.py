@@ -28,7 +28,7 @@ class FantasyDefenseGrade:
             percentile_stat_list = self.percentile_stats_object.get(stat_name)
         except:
             return 0
-        return min(range(len(percentile_stat_list)), key=lambda i: abs(percentile_stat_list[i] - stat))
+        return min(range(len(percentile_stat_list)), key=lambda i: abs(percentile_stat_list[i] - stat)) + 10
 
     def shotPctIndex(self, player_stat=None):
         grade_toi = self.__calculate_grade_toi(player_stat)

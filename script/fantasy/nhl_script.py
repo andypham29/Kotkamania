@@ -70,7 +70,7 @@ class FantasyScript:
             self.fantasy_nhl_player_service.updateFantasyBadgeForFantasySkaterByPlayerId(badge, fantasy_player.playerId)
 
     def process_forward(self):
-        fantasy_skaters = self.fantasy_player_helper.update_fantasy_grade_forward(100)
+        fantasy_skaters = self.fantasy_player_helper.update_fantasy_grade_forward()
         fantasy_skaters.sort(key=lambda x: x.score, reverse=True)
         for fantasy_skater in fantasy_skaters:
             self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_skater.id,
@@ -91,7 +91,7 @@ class FantasyScript:
         return self
 
     def process_goalies(self):
-        fantasy_goalies = self.fantasy_player_helper.get_fantasy_goalie(amount=100)
+        fantasy_goalies = self.fantasy_player_helper.get_fantasy_goalie()
         # fantasy_goalies.sort(key=lambda x: x.score, reverse=True)
         for fantasy_goalie in fantasy_goalies:
             self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_goalie.id,
@@ -110,16 +110,18 @@ class FantasyScript:
 
 if __name__ == '__main__':
     # FantasyScript().save_nhl_players_stats_by_year()
-    FantasyScript().save_fantasy_nhl_players()
+    # FantasyScript().save_fantasy_nhl_players()
     # FantasyScript().save_player_stats_to_internal_db()
     # InternalPlayerRepository().create_database()
     # FantasyNhlPlayerDao().initFantasySkaterTable()
 
-    # FantasyScript() \
-    #     .process_defensemen() \
-    #     .process_forward() \
-    #     .process_goalies() \
-    #     .close()
+    # FantasyScript().get_fantasy_grade_by_id(8477934)
+    # FantasyScript().get_fantasy_grade_by_id(8478402)
+    FantasyScript() \
+        .process_defensemen() \
+        # .process_forward() \
+        # .process_goalies() \
+        # .close()
 
     # FantasyScript().get_fantasy_grade_by_id(8476885)
     # FantasyScript().save_fantasy_nhl_players()

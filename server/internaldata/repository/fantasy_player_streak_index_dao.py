@@ -1,25 +1,13 @@
 import sqlite3
-import pymysql
 
 from server.internaldata.model.fantasy_player_streak_index import FantasyPlayerStreakIndex
-from setting import Setting
 
 
 class FantasyPlayerStreakIndexDao:
 
     def __init__(self, uri=None):
-        # uri = 'server/internaldata/db/fantasy.db' if uri is None else uri
-        # self.conn = sqlite3.connect(uri)
-        # self.c = self.conn.cursor()
-        self.conn = pymysql.connect(host=Setting.FREESQLDB_HOST,
-                                    user=Setting.FREESQLDB_USERNAME,
-                                    password=Setting.FREESQLDB_PASSWORD,
-                                    db=Setting.FREESQLDB_DB,
-                                    charset='utf8mb4',
-                                    port=int(Setting.FREESQLDB_PORT),
-                                    cursorclass=pymysql.cursors.DictCursor)
-        # (driver='{SQL Server}', host="sql9.freesqldatabase.com", database="sql9602963",
-        #                        trusted_connection="yes", user="sql9602963", password="qbRXwACteW", port="3306")
+        uri = 'server/internaldata/db/fantasy.db' if uri is None else uri
+        self.conn = sqlite3.connect(uri)
         self.c = self.conn.cursor()
 
     def initFantasyPlayerStreakIndexTable(self):
@@ -39,7 +27,7 @@ class FantasyPlayerStreakIndexDao:
 
     def saveOrUpdateFantasyPlayerStreakIndex(self, fantasy_streak_info):
         self.c.execute(
-            '''INSERT IGNORE INTO fantasy_streak (playerId, 
+            '''INSERT OR IGNORE INTO fantasy_streak (playerId, 
             skaterFullName, 
             positionCode, 
             pts, 
@@ -47,7 +35,7 @@ class FantasyPlayerStreakIndexDao:
             pptoi,
             streakIndex,
             lastUpdated
-            ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)''',
+            ) VALUES (?,?,?,?,?,?,?,?)''',
             (fantasy_streak_info.playerId,
              fantasy_streak_info.skaterFullName,
              fantasy_streak_info.positionCode,
@@ -60,14 +48,14 @@ class FantasyPlayerStreakIndexDao:
 
         self.c.execute(
             '''UPDATE fantasy_streak SET
-            skaterFullName = ifnull(%s, skaterFullName), 
-            positionCode = ifnull(%s, positionCode), 
-            pts = ifnull(%s, pts), 
-            toi = ifnull(%s, toi), 
-            pptoi = ifnull(%s, pptoi),
-            streakIndex = ifnull(%s, streakIndex),
-            lastUpdated = ifnull(%s, lastUpdated)
-            WHERE playerId = %s''',
+            skaterFullName = ifnull(?, skaterFullName), 
+            positionCode = ifnull(?, positionCode), 
+            pts = ifnull(?, pts), 
+            toi = ifnull(?, toi), 
+            pptoi = ifnull(?, pptoi),
+            streakIndex = ifnull(?, streakIndex),
+            lastUpdated = ifnull(?, lastUpdated)
+            WHERE playerId = ?''',
             (fantasy_streak_info.skaterFullName,
              fantasy_streak_info.positionCode,
              fantasy_streak_info.pts,
@@ -81,7 +69,7 @@ class FantasyPlayerStreakIndexDao:
         self.conn.close()
 
     def getFantasyPlayerStreakIndex(self, playerId):
-        self.c.execute('''SELECT * FROM fantasy_streak WHERE playerId = %s''', (playerId,))
+        self.c.execute('''SELECT * FROM fantasy_streak WHERE playerId = ?''', (playerId,))
 
         row = self.c.fetchone()
 
@@ -155,7 +143,7 @@ class FantasyPlayerStreakIndexDao:
         return list
 
     def deleteFantasySkaterById(self, playerId):
-        self.c.execute('''DELETE FROM fantasy_streak WHERE playerId=%s''', (playerId,))
+        self.c.execute('''DELETE FROM fantasy_streak WHERE playerId=?''', (playerId,))
 
         self.conn.commit()
         self.conn.close()
@@ -167,16 +155,4 @@ class FantasyPlayerStreakIndexDao:
         self.conn.close()
 
     def __row_to_object(self, row):
-        return FantasyPlayerStreakIndex(
-            row.get("playerId", None),
-            row.get("skaterFullName", None),
-            row.get("positionCode", None),
-            row.get("pts", None),
-            row.get("toi", None),
-            row.get("pptoi", None),
-            row.get("streakIndex", None),
-            row.get("lastUpdated", None))
-
-
-if __name__ == "__main__":
-    print(FantasyPlayerStreakIndexDao().getFantasyPlayerStreakIndex(8471218).__dict__)
+        return FantasyPlayerStreakIndex(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])

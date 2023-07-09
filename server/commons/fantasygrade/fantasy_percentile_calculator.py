@@ -81,21 +81,21 @@ class FantasyPercentileCalculator:
         goal = np.array([stat.goals / stat.games for stat in stats])
         assist = np.array([stat.assists / stat.games for stat in stats])
         point = np.array([stat.points / stat.games for stat in stats])
-        toi = np.array([TimeConverter.convert_string_to_total_seconds(stat.timeOnIcePerGame) for stat in stats])
+        toi = np.array([TimeConverter.convert_string_to_total_seconds(stat.timeOnIcePerGame) / stat.games for stat in stats])
         pptoi = np.array(
-            [TimeConverter.convert_string_to_total_seconds(stat.powerPlayTimeOnIcePerGame) for stat in stats])
+            [TimeConverter.convert_string_to_total_seconds(stat.powerPlayTimeOnIcePerGame) / stat.games for stat in stats])
         evtoi = np.array(
-            [TimeConverter.convert_string_to_total_seconds(stat.evenTimeOnIcePerGame) for stat in stats])
+            [TimeConverter.convert_string_to_total_seconds(stat.evenTimeOnIcePerGame) / stat.games for stat in stats])
         return {
-            "shot": [np.percentile(shot, i) for i in range(10, 100, 10)],
-            "hit": [np.percentile(hit, i) for i in range(10, 100, 10)],
-            "block": [np.percentile(block, i) for i in range(10, 100, 10)],
-            "goal": [np.percentile(goal, i) for i in range(10, 100, 10)],
-            "assist": [np.percentile(assist, i) for i in range(10, 100, 10)],
-            "point": [np.percentile(point, i) for i in range(10, 100, 10)],
-            "toi": [np.percentile(toi, i) for i in range(10, 100, 10)],
-            "pptoi": [np.percentile(pptoi, i) for i in range(10, 100, 10)],
-            "evtoi": [np.percentile(evtoi, i) for i in range(10, 100, 10)],
+            "shot": [np.percentile(shot, i) for i in range(10, 100, 1)],
+            "hit": [np.percentile(hit, i) for i in range(10, 100, 1)],
+            "block": [np.percentile(block, i) for i in range(10, 100, 1)],
+            "goal": [np.percentile(goal, i) for i in range(10, 100, 1)],
+            "assist": [np.percentile(assist, i) for i in range(10, 100, 1)],
+            "point": [np.percentile(point, i) for i in range(10, 100, 1)],
+            "toi": [np.percentile(toi, i) for i in range(10, 100, 1)],
+            "pptoi": [np.percentile(pptoi, i) for i in range(10, 100, 1)],
+            "evtoi": [np.percentile(evtoi, i) for i in range(10, 100, 1)],
         }
 
     @staticmethod

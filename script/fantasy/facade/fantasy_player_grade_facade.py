@@ -16,7 +16,7 @@ class FantasyPlayerGradeFacade:
                  # fantasy_skater_grade_helper=FantasyForwardGradeHelper(),
                  # fantasy_defense_grade_helper=FantasyDefenseGradeHelper(),
                  nhl_stats_leader_service=NHLStatsLeaderService(),
-                 nhl_player_service_facade=NHLPlayerServiceFacade(),
+                 nhl_player_service_facade=NHLPlayerServiceFacade(internalPlayerStatService=InternalPlayerStatService(uri='../../server/internaldata/db/internal.db')),
                  fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../server/internaldata/db/internal.db')):
         # self.fantasy_forward_grade_service = fantasy_skater_grade_helper
         # self.fantasy_defensemen_grade_service = fantasy_defense_grade_helper
@@ -39,11 +39,18 @@ class FantasyPlayerGradeFacade:
                                                     seasons=[season_current])
             InternalPlayerStatRepository().save_internal_player_stats(p)
 
+    def test_update_fantasy_player_by_id(self, id):
+        players = [FantasyNhlPlayerService(
+            '../../server/internaldata/db/internal.db').getFantasySkaterById(id)]
+        f = FantasyPercentileCalculator(
+            internal_player_stat_service=InternalPlayerStatService(uri='../../server/internaldata/db/internal.db'),
+            fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../server/internaldata/db/internal.db'))
+        return [self.__convert_to_fantasy_skater(player, f.get_all_stats_percentiles()) for player in players]
+
     def update_fantasy_grade_forward(self, amount=100):
         # players = InternalPlayerRepository().get_forwards(amount)
         players = FantasyNhlPlayerService(
-            '../../server/internaldata/db/internal.db').getAllFantasySkatersWithPositionCodesWithStats(["L", "C", "R"])[
-                  :amount]
+            '../../server/internaldata/db/internal.db').getAllFantasySkatersWithPositionCodes(["L", "C", "R"])
         f = FantasyPercentileCalculator(
             internal_player_stat_service=InternalPlayerStatService(uri='../../server/internaldata/db/internal.db'),
             fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../server/internaldata/db/internal.db'))
@@ -53,7 +60,8 @@ class FantasyPlayerGradeFacade:
     def get_fantasy_defensemen(self, amount=100):
         # players = InternalPlayerRepository().get_defensemen(amount)
         players = FantasyNhlPlayerService(
-            '../../server/internaldata/db/internal.db').getAllFantasySkatersWithPositionCodesWithStats(["D"])[:amount]
+            '../../server/internaldata/db/internal.db').getAllFantasySkatersWithPositionCodes(["D"])
+
 
         f = FantasyPercentileCalculator(
             internal_player_stat_service=InternalPlayerStatService(uri='../../server/internaldata/db/internal.db'),
@@ -63,7 +71,7 @@ class FantasyPlayerGradeFacade:
 
     def get_fantasy_goalie(self, amount=100):
         players = FantasyNhlPlayerService(
-            '../../server/internaldata/db/internal.db').getAllFantasySkatersWithPositionCodesWithStats(["G"])[:amount]
+            '../../server/internaldata/db/internal.db').getAllFantasySkatersWithPositionCodes(["G"])
         return [self.__convert_to_fantasy_player(player) for player in players]
 
     def get_all_fantasy_player_from_internal_db(self):
@@ -72,14 +80,18 @@ class FantasyPlayerGradeFacade:
         return [self.__convert_to_fantasy_player(player) for player in players]
 
     def get_all_fantasy_forward_from_internal_db(self):
-        players = self.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodesWithStats(['L', 'C', 'R'])
+        players = self.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodes(['L', 'C', 'R'])
 
         return [self.__convert_to_fantasy_player(player) for player in players]
 
     def get_fantasy_grade_by_id(self, id):
         player = FantasyNhlPlayerService(
             '../../server/internaldata/db/internal.db').getFantasySkaterById(id)
-        return FantasyPlayerGraderFacade().convert_to_fantasy_player(player)
+        f = FantasyPercentileCalculator(
+            internal_player_stat_service=InternalPlayerStatService(uri='../../server/internaldata/db/internal.db'),
+            fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../server/internaldata/db/internal.db'))
+        return FantasyPlayerGraderFacade(percentile_stats_object=f.get_all_stats_percentiles()) \
+            .convert_to_fantasy_player(player)
 
     def __convert_to_fantasy_player(self, player):
         return FantasyPlayerGraderFacade().convert_to_fantasy_player(player)

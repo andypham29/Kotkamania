@@ -93,10 +93,9 @@ class FantasyPlayerGraderFacade:
             player.playerId, year)
         if player_stat is None:
             if player.positionCode == 'G':
-                stat = NHLPlayerServiceFacade().get_player_by_playerId_and_seasons(player.playerId, [year]).stats
+                stat = self.nhl_player_service_facade.get_player_by_playerId_and_seasons(player.playerId, [year]).stats
             else:
                 stat = NHLPlayerStatService().get_player_stat_by_playerId_and_seasons(player.playerId, [year])
-                p = NHLPlayerServiceFacade().get_player_by_playerId_and_seasons(player.playerId, [year])
                 # if year == "20212022":
                 #     InternalPlayerStatRepository().save_internal_player_stats(p)
 

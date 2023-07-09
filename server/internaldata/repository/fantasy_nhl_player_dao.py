@@ -150,6 +150,33 @@ class FantasyNhlPlayerDao:
 
         return list
 
+    def getAllFantasySkatersByPositionCodes(self, positionCodes, offset):
+        positionCodes[:] = [value for value in positionCodes if value in ['L', 'C', 'R', 'D', 'G']]
+        filter_parameters = str(positionCodes).replace('[', '(').replace(']', ')')
+
+        query = f'''SELECT a.playerId, skaterFullName, positionCode, teamId, fantasyGrade, yahooEligibility, 
+            avgPick, avgRound, percentDrafted, teamName, nhlRank, scoring, playmaking, defense, powerplay, intangibles, 
+            assists, goals, points, games, shots, hits, blocked, plusMinus, powerPlayGoals, powerPlayPoints 
+            WHERE positionCode IN {filter_parameters}'''
+        for position in positionCodes:
+            query += f" OR yahooEligibility LIKE '%{position}%'"
+
+        if offset is not None:
+            query += f"LIMIT 125 OFFSET {125 * offset}"
+
+        self.c.execute(query)
+
+        records = self.c.fetchall()
+
+        list = []
+        for row in records:
+            fantasy_skater = self.__convert_to_model_with_display_stat(row)
+            list.append(fantasy_skater)
+
+        self.conn.close()
+
+        return list
+
     def getAllFantasySkaters(self):
         self.c.execute('''SELECT * FROM fantasy_nhl_player WHERE fantasyGrade > 30''')  # temp
 

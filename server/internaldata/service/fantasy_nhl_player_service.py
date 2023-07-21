@@ -17,6 +17,9 @@ class FantasyNhlPlayerService:
     def getFantasySkaterById(self, id):
         return FantasyNhlPlayerDao(self.uri).getFantasySkaterById(id)
 
+    def getFantasySkaterByIds(self, ids):
+        return FantasyNhlPlayerDao(self.uri).getFantasySkaterByIds(ids)
+
     def getAllFantasySkaters(self):
         return FantasyNhlPlayerDao(self.uri).getAllFantasySkatersWithStat()
 

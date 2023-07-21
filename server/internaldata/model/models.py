@@ -85,6 +85,13 @@ class InternalPlayerStat(base):
         sa.UniqueConstraint(playerId, seasonId),
     )
 
+class PlayerCard(base):
+    __tablename__ = 'kk_player_card_tcg'
+
+    id = sa.Column(sa.Integer, primary_key=True)
+    playerId = sa.Column(sa.Integer, nullable=True)
+    playerName = sa.Column(sa.Text, nullable=True)
+    rarity = sa.Column(sa.Text, nullable=True)
 
 #
 #

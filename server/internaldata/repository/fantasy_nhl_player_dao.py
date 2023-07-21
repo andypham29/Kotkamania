@@ -100,6 +100,21 @@ class FantasyNhlPlayerDao:
         self.conn.close()
         return self.__convert_to_model(row)
 
+    def getFantasySkaterByIds(self, playerIds):
+        query = f'SELECT * FROM fantasy_nhl_player WHERE playerId IN {tuple(playerIds)}'
+        self.c.execute(query)
+
+        records = self.c.fetchall()
+
+        list = []
+        for row in records:
+            fantasy_skater = self.__convert_to_model(row)
+            list.append(fantasy_skater)
+
+        self.conn.close()
+
+        return list
+
     def getAllFantasySkatersWithStat(self):
         self.c.execute(f'''SELECT a.playerId, skaterFullName, positionCode, teamId, fantasyGrade, yahooEligibility, 
             avgPick, avgRound, percentDrafted, teamName, nhlRank, scoring, playmaking, defense, powerplay, intangibles,

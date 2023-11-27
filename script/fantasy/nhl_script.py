@@ -110,17 +110,17 @@ class FantasyScript:
 
 if __name__ == '__main__':
     # FantasyScript().save_nhl_players_stats_by_year()
-    # FantasyScript().save_fantasy_nhl_players()
+    FantasyScript().save_fantasy_nhl_players()
     # FantasyScript().save_player_stats_to_internal_db()
     # InternalPlayerRepository().create_database()
     # FantasyNhlPlayerDao().initFantasySkaterTable()
 
     # FantasyScript().get_fantasy_grade_by_id(8477934)
     # FantasyScript().get_fantasy_grade_by_id(8478402)
-    FantasyScript() \
-        .process_defensemen() \
-        # .process_forward() \
-        # .process_goalies() \
+    # FantasyScript() \
+    #     .process_defensemen() \
+    #     .process_forward() \
+    #     .process_goalies() \
         # .close()
 
     # FantasyScript().get_fantasy_grade_by_id(8476885)

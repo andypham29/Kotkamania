@@ -1,5 +1,6 @@
 from helper.http_helper import HttpHelper
 from server.nhlapi.model.nhl_player import Player
+import json
 
 
 class NHLPlayerService:
@@ -8,26 +9,23 @@ class NHLPlayerService:
         pass
 
     def get_player_by_id(self, id):
-        info_json = HttpHelper.get(self.__get_player_info_url(id))
-        player = info_json["people"][0]
+        player = HttpHelper.get(self.__get_player_info_url(id))
 
-        return Player(player["id"],
-                      player["fullName"],
-                      player["primaryPosition"]["code"],
-                      player["currentTeam"]["id"] if player.get("currentTeam") is not None else None,
-                      player["currentTeam"]["name"] if player.get("currentTeam") is not None else None,
-                      player["primaryNumber"] if player.get("primaryNumber") is not None else None,
-                      player["birthDate"] if player.get("birthDate") is not None else None,
-                      player["currentAge"] if player.get("currentAge") is not None else None,
-                      player["birthCity"] if player.get("birthCity") is not None else None,
-                      player["birthCountry"] if player.get("birthCountry") is not None else None,
-                      player["height"] if player.get("height") is not None else None,
-                      player["weight"] if player.get("weight") is not None else None,
-                      player["shootsCatches"] if player.get("shootsCatches") is not None else None
+        return Player(player.get("playerId", None),
+                      player.get("fullName", None),
+                      player.get("position", None),
+                      player.get("currentTeamId", None),
+                      player.get("currentTeamAbbrev", None),
+                      player.get("sweaterNumber", None),
+                      player.get("birthDate", None),
+                      player.get("currentAge", None),
+                      player.get("birthCity", None),
+                      player.get("birthCountry", None),
+                      player.get("height", None),
+                      player.get("weight", None),
+                      player.get("shootsCatches", None),
                       )
 
     @staticmethod
     def __get_player_info_url(id):
-        return f"https://statsapi.web.nhl.com/api/v1/people/{id}"
-
-
+        return f"https://api-web.nhle.com/v1/player/{id}/landing"

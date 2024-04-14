@@ -28,10 +28,13 @@
               gtag('config', 'UA-179485039-1');
 
 
+
+
     </script>
 </head>
 <body>
 <div align="center">
+    {% if page=="index" %}
     <div class="header py-3">
         <table>
             <tr>
@@ -44,12 +47,13 @@
             </tr>
         </table>
     </div>
+    {% endif %}
     {% include 'nav.html' %}
 
     <div class="container-fluid">
         <tr>
             {% if page=="index" %}
-            <td>{% include 'news/news.html' %}</td>
+<!--            <td>{% include 'news/news.html' %}</td>-->
             {% endif %}
             {% if page=="draft_simulator" %}
             <td>{% include 'draftsimulator/draft_simulator.html' %}</td>
@@ -78,6 +82,9 @@
             {% else %}
             <td>{% include 'nhl/player/nhl_player_search_result.html' %}</td>
             {% endif %}
+            {% endif %}
+            {% if (page=="nhl_schedule") %}
+            <td>{% include 'nhl/schedule/nhl_teams_schedule.html' %}</td>
             {% endif %}
         </tr>
     </div>

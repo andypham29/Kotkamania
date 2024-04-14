@@ -1,10 +1,11 @@
 class Player:
 
-    def __init__(self, playerId, fullName, position, team, primaryNumber, birthDate, currentAge, birthCity,
-                 birthCountry, height, weight, shootCatches, stats=None):
+    def __init__(self, playerId, fullName, position, teamId, team, primaryNumber, birthDate, currentAge, birthCity,
+                 birthCountry, height, weight, shootCatches, stats=None, badge=None, playerDraftDetails=None):
         self.playerId = playerId
         self.fullName = fullName
         self.position = position
+        self.teamId = teamId
         self.team = team
         self.primaryNumber = primaryNumber
         self.birthDate = birthDate
@@ -15,6 +16,18 @@ class Player:
         self.weight = weight
         self.shootCatches = shootCatches
         self.stats = stats
+        self.badge = badge
+        self.playerDraftDetails = playerDraftDetails
+
+
+class PlayerDraftDetails:
+
+    def __init__(self, year, teamAbbrev, draftRound, pickInRound, overallPick):
+        self.year = year
+        self.teamAbbrev = teamAbbrev
+        self.draftRound = draftRound
+        self.pickInRound = pickInRound
+        self.overallPick = overallPick
 
 
 class SeasonStat:

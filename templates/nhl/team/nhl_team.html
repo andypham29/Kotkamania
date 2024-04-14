@@ -1,0 +1,149 @@
+<script>
+    function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("draft_table");
+        switching = true;
+        dir = "asc";
+
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+
+                if (dir == "asc") {
+                    if (parseFloat(x.innerHTML.toLowerCase()) > parseFloat(y.innerHTML.toLowerCase())) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (parseFloat(x.innerHTML.toLowerCase()) < parseFloat(y.innerHTML.toLowerCase())) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount ++;
+            } else {
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+    function loadTeamsStat() {
+        const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+
+        const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
+            v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+            )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+
+        // do the work...
+        document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {
+            const table = th.closest('table');
+            Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
+                .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
+                .forEach(tr => table.appendChild(tr) );
+        })));
+        $.ajax({
+            url: `/api/nhl/teams`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                var trHTML = "<tr>" +
+                `<th></th>` +
+                `<th style="position:sticky; left:0px; background-color:white;">team</th>` +
+                `<th onclick="sortTable(2)">gamesPlayed</th>` +
+                `<th onclick="sortTable(3)">wins</th>` +
+                `<th onclick="sortTable(4)">losses</th>` +
+                `<th onclick="sortTable(5)">ot</th>` +
+                `<th onclick="sortTable(6)">pts</th>` +
+                `<th onclick="sortTable(7)">ptPctg</th>` +
+                `<th onclick="sortTable(8)">goalsPerGame</th>` +
+                `<th onclick="sortTable(9)">goalsAgainstPerGame</th>` +
+                `<th onclick="sortTable(10)">evGGARatio</th>` +
+                `<th onclick="sortTable(11)">powerPlayPercentage</th>` +
+                `<th onclick="sortTable(12)">powerPlayGoals</th>` +
+                `<th onclick="sortTable(13)">powerPlayGoalsAgainst</th>` +
+                `<th onclick="sortTable(14)">powerPlayOpportunities</th>` +
+                `<th onclick="sortTable(15)">penaltyKillPercentage</th>` +
+                `<th onclick="sortTable(16)">shotsPerGame</th>` +
+                `<th onclick="sortTable(17)">shotsAllowed</th>` +
+                `<th onclick="sortTable(18)">winScoreFirst</th>` +
+                `<th onclick="sortTable(19)">winOppScoreFirst</th>` +
+                `<th onclick="sortTable(20)">winLeadFirstPer</th>` +
+                `<th onclick="sortTable(21)">winLeadSecondPer</th>` +
+                `<th onclick="sortTable(22)">winOutshootOpp</th>` +
+                `<th onclick="sortTable(23)">winOutshotByOpp</th>` +
+                `<th onclick="sortTable(24)">faceOffsTaken</th>` +
+                `<th onclick="sortTable(25)">faceOffsWon</th>` +
+                `<th onclick="sortTable(26)">faceOffsLost</th>` +
+                `<th onclick="sortTable(27)">faceOffWinPercentage</th>` +
+                `<th onclick="sortTable(28)">shootingPctg</th>` +
+                `<th onclick="sortTable(29)">savePctg</th>` +
+                "</tr>";
+
+                $.each(response, function (i, team)
+                {
+                    trHTML += "<tr>" +
+                    `<td>${ ++i }</td>` +
+                    `<td style="position:sticky; left:0px; background-color:white;">${ team.abbreviation }</td>` +
+                    `<td>${ team.teamStats.gamesPlayed }</td>` +
+                    `<td>${ team.teamStats.wins }</td>` +
+                    `<td>${ team.teamStats.losses }</td>` +
+                    `<td>${ team.teamStats.ot }</td>` +
+                    `<td>${ team.teamStats.pts }</td>` +
+                    `<td>${ team.teamStats.ptPctg }</td>` +
+                    `<td>${ team.teamStats.goalsPerGame }</td>` +
+                    `<td>${ team.teamStats.goalsAgainstPerGame }</td>` +
+                    `<td>${ team.teamStats.evGGARatio }</td>` +
+                    `<td>${ team.teamStats.powerPlayPercentage }</td>` +
+                    `<td>${ team.teamStats.powerPlayGoals }</td>` +
+                    `<td>${ team.teamStats.powerPlayGoalsAgainst }</td>` +
+                    `<td>${ team.teamStats.powerPlayOpportunities }</td>` +
+                    `<td>${ team.teamStats.penaltyKillPercentage }</td>` +
+                    `<td>${ team.teamStats.shotsPerGame }</td>` +
+                    `<td>${ team.teamStats.shotsAllowed }</td>` +
+                    `<td>${ team.teamStats.winScoreFirst }</td>` +
+                    `<td>${ team.teamStats.winOppScoreFirst }</td>` +
+                    `<td>${ team.teamStats.winLeadFirstPer }</td>` +
+                    `<td>${ team.teamStats.winLeadSecondPer }</td>` +
+                    `<td>${ team.teamStats.winOutshootOpp }</td>` +
+                    `<td>${ team.teamStats.winOutshotByOpp }</td>` +
+                    `<td>${ team.teamStats.faceOffsTaken }</td>` +
+                    `<td>${ team.teamStats.faceOffsWon }</td>` +
+                    `<td>${ team.teamStats.faceOffsLost }</td>` +
+                    `<td>${ team.teamStats.faceOffWinPercentage }</td>` +
+                    `<td>${ team.teamStats.shootingPctg }</td>` +
+                    `<td>${ team.teamStats.savePctg }</td>` +
+                    "</tr>"
+                });
+                $('table#draft_table tbody').html(trHTML)
+            },
+            type: 'GET'
+        });
+    }
+    $(document).ready(loadTeamsStat());
+
+
+</script>
+
+<div class="container">
+    <div class="alert alert-primary" role="alert">
+        New Teams Page!
+    </div>
+    <table cellpadding="5px" class="table table-responsive" id="draft_table">
+        <tbody>
+        </tbody>
+    </table>
+</div>

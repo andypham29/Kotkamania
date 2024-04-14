@@ -61,10 +61,12 @@
                 }
           }
           var percentiles = document.forms[1];
+
           if (percentiles === undefined) {
             return txt
           }
           for (i = 0; i < percentiles.length; i++) {
+                console.log(percentiles[i].value)
                 if (['shotPercentile','hitPercentile','blockPercentile','assistPercentile',
                     'pointPercentile', 'toiPercentile', 'pptoiPercentile', 'evtoiPercentile']
                     .indexOf(percentiles[i].name) < 0) {
@@ -339,7 +341,7 @@
 <div class="loader"></div>
 <div class="container-fluid">
     <div class="draftcenter_prospect_table" style="width: 100%; overflow:auto;">
-        <table cellpadding="5px" class="table table-sm" id="draft_table">
+        <table cellpadding="5px" class="table table-sm table-hover" id="draft_table">
             <tbody>
             </tbody>
         </table>

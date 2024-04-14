@@ -1,5 +1,6 @@
 import numpy as np
 
+from server.commons.helper.nhl_season_converter import NhlYearConverter
 from server.commons.helper.time_converter import TimeConverter
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
 from server.internaldata.service.internal_player_stat_service import InternalPlayerStatService
@@ -9,14 +10,15 @@ class FantasyPercentileCalculator:
 
     def __init__(self,
                  internal_player_stat_service=InternalPlayerStatService(uri='../../server/internaldata/db/internal.db'),
-                 fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../server/internaldata/db/fantasy.db')):
+                 fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../server/internaldata/db/internal.db')):
         self.fantasy_nhl_player_service = fantasy_nhl_player_service
         self.internal_player_stat_service = internal_player_stat_service
 
     def get_percentile_stats(self, players=[], min_game=None, percentile_shot=None, percentile_hit=None,
                              percentile_block=None, percentile_goal=None, percentile_assist=None, percentile_point=None,
                              percentile_toi=None, percentile_pptoi=None, percentile_evtoi=None):
-        stats = [self.get_stat_by_playerId_and_season(player.playerId, "20192020") for player in players]
+        current_season = NhlYearConverter.get_previous_season_by_year_removed(1)
+        stats = [self.get_stat_by_playerId_and_season(player.playerId, current_season) for player in players]
         min_game = 30 if not min_game else min_game
 
         shot = np.array([stat.shots / stat.games for stat in stats if self.__check_condition(stat, min_game)])
@@ -63,10 +65,38 @@ class FantasyPercentileCalculator:
                                     point=PercentileValue(percentile_point, percentile_point_value),
                                     toi=PercentileValue(percentile_toi, percentile_toi_value),
                                     pptoi=PercentileValue(percentile_pptoi, percentile_pptoi_value),
-                                    evtoi=PercentileValue(percentile_evtoi_value, percentile_evtoi))
+                                    evtoi=PercentileValue(percentile_evtoi, percentile_evtoi_value))
         except Exception as e:
             print(e)
             return None
+
+    def get_all_stats_percentiles(self):
+        current_season = NhlYearConverter.get_current_season()
+        # current_season = NhlYearConverter.get_previous_season_by_year_removed(1)
+        stats = self.internal_player_stat_service.get_internal_all_players_stats_by_seasonId(current_season)
+
+        shot = np.array([stat.shots / stat.games for stat in stats])
+        hit = np.array([stat.hits / stat.games for stat in stats])
+        block = np.array([stat.blocked / stat.games for stat in stats])
+        goal = np.array([stat.goals / stat.games for stat in stats])
+        assist = np.array([stat.assists / stat.games for stat in stats])
+        point = np.array([stat.points / stat.games for stat in stats])
+        toi = np.array([TimeConverter.convert_string_to_total_seconds(stat.timeOnIcePerGame) / stat.games for stat in stats])
+        pptoi = np.array(
+            [TimeConverter.convert_string_to_total_seconds(stat.powerPlayTimeOnIcePerGame) / stat.games for stat in stats])
+        evtoi = np.array(
+            [TimeConverter.convert_string_to_total_seconds(stat.evenTimeOnIcePerGame) / stat.games for stat in stats])
+        return {
+            "shot": [np.percentile(shot, i) for i in range(10, 100, 1)],
+            "hit": [np.percentile(hit, i) for i in range(10, 100, 1)],
+            "block": [np.percentile(block, i) for i in range(10, 100, 1)],
+            "goal": [np.percentile(goal, i) for i in range(10, 100, 1)],
+            "assist": [np.percentile(assist, i) for i in range(10, 100, 1)],
+            "point": [np.percentile(point, i) for i in range(10, 100, 1)],
+            "toi": [np.percentile(toi, i) for i in range(10, 100, 1)],
+            "pptoi": [np.percentile(pptoi, i) for i in range(10, 100, 1)],
+            "evtoi": [np.percentile(evtoi, i) for i in range(10, 100, 1)],
+        }
 
     @staticmethod
     def __get_valid_percentile(percentile):
@@ -85,11 +115,6 @@ class FantasyPercentileCalculator:
             return False
 
         return stat.games and stat.games > min_game
-
-    def get_all_players_stats(self, players):
-        # forwards = self.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodes(positions)
-        # print(forwards)
-        return [self.get_stat_by_playerId_and_season(player.playerId, "20192020") for player in players]
 
     def get_stat_by_playerId_and_season(self, playerId, year):
         # return InternalPlayerStatRepository().get_internal_players_stats_by_playerId_and_seasonId(
@@ -120,7 +145,21 @@ class PercentileValue:
 
 
 if __name__ == '__main__':
-    FantasyPercentileCalculator().get_percentile_stats(min_game=41, percentile_shot=50, percentile_hit=50,
-                                                       percentile_block=50, percentile_goal=50, percentile_assist=50,
-                                                       percentile_point=50, percentile_toi=50, percentile_pptoi=50,
-                                                       percentile_evtoi=50)
+    f = FantasyPercentileCalculator(
+        internal_player_stat_service=InternalPlayerStatService(uri='../../internaldata/db/internal.db'),
+        fantasy_nhl_player_service=FantasyNhlPlayerService(uri='../../internaldata/db/internal.db'))
+    players = f.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodes(["L", "C", "R"])
+    # players = f.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodesWithStats(["D"])
+    filtered_players = []
+
+    fi = open("percentile.csv", "a")
+    fi.write("percentile," + ",".join([f"{k}" for k, v in PercentileObject().__dict__.items()]) + "\n")
+
+    for i in range(5, 100, 5):
+        filtered_player = f.get_percentile_stats(players=players, min_game=None, percentile_shot=i, percentile_hit=i,
+                                                 percentile_block=i, percentile_goal=i, percentile_assist=i,
+                                                 percentile_point=i, percentile_toi=i, percentile_pptoi=i,
+                                                 percentile_evtoi=i)
+        # fi.write(f"{i}: " + str([f"{k}: {v.value}" for k, v in filtered_player.__dict__.items()]) + "\n")
+        fi.write(f"{i},\t" + ",".join([f"{v.value}" for k, v in filtered_player.__dict__.items()]) + "\n")
+        filtered_players.append(filtered_player)

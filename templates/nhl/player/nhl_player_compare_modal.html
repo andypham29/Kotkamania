@@ -87,7 +87,7 @@
                 var statsHeaderArray = []
 
                 if(player.stats[0] !== undefined){
-                    var item = player.stats.find((e) => {return e.season === "20202021"})
+                    var item = player.stats.find((e) => {return e.season === get_current_season()})
 
                 if(!(player.position).localeCompare('G')) {
                         statsHeaderArray = ["PLAYER",item.season,"GP","GAA","SV%",
@@ -167,7 +167,7 @@
 
 
 </script>
-
+<script src="{{url_for('static', filename='envvariables.js')}}"></script>
 <div class="modal fade" id="player-compare-modal" role="dialog" style="overflow-y:auto;">
     <div class="modal-dialog modal-lg">
         <!-- Modal content-->

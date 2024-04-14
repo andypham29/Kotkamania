@@ -1,5 +1,7 @@
 import sqlite3
 
+from server.commons.fantasybadge.model.fantasy_player_badge import FantasyPlayerBadge
+from server.commons.helper.nhl_season_converter import NhlYearConverter
 from server.internaldata.model.fantasy_nhl_player import FantasyNhlPlayer, DisplayStat
 
 
@@ -11,21 +13,27 @@ class FantasyNhlPlayerDao:
         # uri = '../../server/internaldata/db/internal.db' if uri is None else uri
         self.conn = sqlite3.connect(uri)
         self.c = self.conn.cursor()
+        self.year = NhlYearConverter.get_previous_season_by_year_removed(1)
 
     def initFantasySkaterTable(self):
         self.c.execute('''CREATE TABLE IF NOT EXISTS fantasy_nhl_player(
-           playerId INTEGER PRIMARY KEY,
-        	skaterFullName TEXT NOT NULL,
-        	positionCode TEXT NOT NULL,
-        	teamId INTEGER NOT NULL,
-        	fantasyGrade DOUBLE,
-        	yahooEligibility TEXT,
-        	avgPick DOUBLE,
-        	avgRound DOUBLE,
-        	percentDrafted TEXT,
-        	teamName TEXT NOT NULL,
-        	nhlRank INTEGER
-        	)''')
+            playerId INTEGER PRIMARY KEY,
+            skaterFullName TEXT NOT NULL,
+            positionCode TEXT NOT NULL,
+            teamId INTEGER NOT NULL,
+            fantasyGrade DOUBLE,
+            yahooEligibility TEXT,
+            avgPick DOUBLE,
+            avgRound DOUBLE,
+            percentDrafted TEXT,
+            teamName TEXT NOT NULL,
+            nhlRank INTEGER,
+            scoring DOUBLE,
+            playmaking DOUBLE,
+            defense DOUBLE,
+            powerplay DOUBLE,
+            intangibles DOUBLE
+            )''')
 
         self.conn.commit()
         self.conn.close()
@@ -90,15 +98,14 @@ class FantasyNhlPlayerDao:
         row = self.c.fetchone()
 
         self.conn.close()
-        return FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
-                                row[9], row[10])
+        return self.__convert_to_model(row)
 
     def getAllFantasySkatersWithStat(self):
-        self.c.execute('''SELECT a.playerId, skaterFullName, positionCode, teamId, fantasyGrade, yahooEligibility, 
-            avgPick, avgRound, percentDrafted, teamName, nhlRank, assists, goals, points, games, shots, hits, blocked, 
-            plusMinus, powerPlayGoals, powerPlayPoints 
+        self.c.execute(f'''SELECT a.playerId, skaterFullName, positionCode, teamId, fantasyGrade, yahooEligibility, 
+            avgPick, avgRound, percentDrafted, teamName, nhlRank, scoring, playmaking, defense, powerplay, intangibles,
+            assists, goals, points, games, shots, hits, blocked, plusMinus, powerPlayGoals, powerPlayPoints 
             FROM fantasy_nhl_player a
-            LEFT JOIN (SELECT * FROM internal_player_stat WHERE seasonId == 20202021) b
+            LEFT JOIN (SELECT * FROM internal_player_stat WHERE seasonId == {self.year}) b
             USING(playerId)
             ''')
 
@@ -106,13 +113,7 @@ class FantasyNhlPlayerDao:
 
         list = []
         for row in records:
-            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
-                                              row[9], row[10],
-                                              DisplayStat(
-                                                  row[11], row[12], row[13], row[14], row[15], row[16], row[17],
-                                                  row[18],
-                                                  row[19], row[20]
-                                              ))
+            fantasy_skater = self.__convert_to_model_with_display_stat(row)
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -124,15 +125,17 @@ class FantasyNhlPlayerDao:
         filter_parameters = str(positionCodes).replace('[', '(').replace(']', ')')
 
         query = f'''SELECT a.playerId, skaterFullName, positionCode, teamId, fantasyGrade, yahooEligibility, 
-            avgPick, avgRound, percentDrafted, teamName, nhlRank, assists, goals, points, games, shots, hits, blocked, 
-            plusMinus, powerPlayGoals, powerPlayPoints 
+            avgPick, avgRound, percentDrafted, teamName, nhlRank, scoring, playmaking, defense, powerplay, intangibles, 
+            assists, goals, points, games, shots, hits, blocked, plusMinus, powerPlayGoals, powerPlayPoints 
             FROM fantasy_nhl_player a
-            LEFT JOIN (SELECT * FROM internal_player_stat WHERE seasonId == 20202021) b
+            LEFT JOIN (SELECT * FROM internal_player_stat WHERE seasonId == {self.year}) b
             USING(playerId)
             WHERE positionCode IN {filter_parameters}'''
         for position in positionCodes:
             query += f" OR yahooEligibility LIKE '%{position}%'"
-        # query += f"LIMIT 125 OFFSET {125 * offset}"
+
+        if offset is not None:
+            query += f"LIMIT 125 OFFSET {125 * offset}"
 
         self.c.execute(query)
 
@@ -140,13 +143,34 @@ class FantasyNhlPlayerDao:
 
         list = []
         for row in records:
-            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
-                                              row[9], row[10],
-                                              DisplayStat(
-                                                  row[11], row[12], row[13], row[14], row[15], row[16], row[17],
-                                                  row[18],
-                                                  row[19], row[20]
-                                              ))
+            fantasy_skater = self.__convert_to_model_with_display_stat(row)
+            list.append(fantasy_skater)
+
+        self.conn.close()
+
+        return list
+
+    def getAllFantasySkatersByPositionCodes(self, positionCodes, offset):
+        positionCodes[:] = [value for value in positionCodes if value in ['L', 'C', 'R', 'D', 'G']]
+        filter_parameters = str(positionCodes).replace('[', '(').replace(']', ')')
+
+        query = f'''SELECT a.playerId, skaterFullName, positionCode, teamId, fantasyGrade, yahooEligibility, 
+            avgPick, avgRound, percentDrafted, teamName, nhlRank, scoring, playmaking, defense, powerplay, intangibles, 
+            assists, goals, points, games, shots, hits, blocked, plusMinus, powerPlayGoals, powerPlayPoints 
+            WHERE positionCode IN {filter_parameters}'''
+        for position in positionCodes:
+            query += f" OR yahooEligibility LIKE '%{position}%'"
+
+        if offset is not None:
+            query += f"LIMIT 125 OFFSET {125 * offset}"
+
+        self.c.execute(query)
+
+        records = self.c.fetchall()
+
+        list = []
+        for row in records:
+            fantasy_skater = self.__convert_to_model_with_display_stat(row)
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -160,8 +184,7 @@ class FantasyNhlPlayerDao:
 
         list = []
         for row in records:
-            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
-                                              row[9], row[10])
+            fantasy_skater = self.__convert_to_model(row)
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -184,8 +207,7 @@ class FantasyNhlPlayerDao:
 
         list = []
         for row in records:
-            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
-                                              row[9], row[10])
+            fantasy_skater = self.__convert_to_model(row)
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -205,8 +227,7 @@ class FantasyNhlPlayerDao:
 
         list = []
         for row in records:
-            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
-                                              row[9], row[10])
+            fantasy_skater = self.__convert_to_model(row)
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -220,9 +241,7 @@ class FantasyNhlPlayerDao:
 
         list = []
         for row in records:
-            fantasy_skater = fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6],
-                                                               row[7], row[8],
-                                                               row[9], row[10])
+            fantasy_skater = self.__convert_to_model(row)
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -236,8 +255,7 @@ class FantasyNhlPlayerDao:
 
         list = []
         for row in records:
-            fantasy_skater = FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
-                                              row[9], row[10])
+            fantasy_skater = self.__convert_to_model(row)
             list.append(fantasy_skater)
 
         self.conn.close()
@@ -260,6 +278,7 @@ class FantasyNhlPlayerDao:
 
     def updateNhlRankForFantasySkaterWithName(self, playerName, nhlRank):
         print(playerName, ": ", nhlRank)
+        # self.c.execute('''UPDATE fantasy_nhl_player SET nhlRank = NULL''')
         self.c.execute('''UPDATE fantasy_nhl_player SET
         nhlRank = ?
         WHERE skaterFullName = ?''', (nhlRank, playerName,))
@@ -277,3 +296,37 @@ class FantasyNhlPlayerDao:
 
         self.conn.commit()
         self.conn.close()
+
+    def updateFantasyBadgeForFantasySkaterByPlayerId(self, fantasy_badge, playerId):
+        self.c.execute('''UPDATE fantasy_nhl_player SET
+        scoring = ?,
+        playmaking = ?,
+        defense = ?,
+        powerplay = ?,
+        intangibles = ?
+        WHERE playerId = ?''', (fantasy_badge.scoring, fantasy_badge.playmaking, fantasy_badge.defense,
+                                fantasy_badge.powerplay, fantasy_badge.intangibles, playerId,))
+
+        self.conn.commit()
+        self.conn.close()
+
+    def removeTeamIdFromAllFantasySkates(self):
+        self.c.execute('''UPDATE fantasy_nhl_player SET teamId = 0''')
+
+        self.conn.commit()
+        self.conn.close()
+
+    @staticmethod
+    def __convert_to_model(row):
+        return FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6],
+                                row[7], row[8], row[9], row[10],
+                                badge=FantasyPlayerBadge(row[11], row[12], row[13], row[14], row[15]))
+
+    @staticmethod
+    def __convert_to_model_with_display_stat(row):
+        return FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10],
+                                badge=FantasyPlayerBadge(row[11], row[12], row[13], row[14], row[15]),
+                                stat=DisplayStat(
+                                    row[16], row[17], row[18], row[19], row[20],
+                                    row[21], row[22], row[23], row[24], row[25])
+                                )

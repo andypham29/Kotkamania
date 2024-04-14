@@ -5,7 +5,7 @@ from server.nhlapi.service.nhl_team_service import NhlTeamService
 
 class MockDraftSelectorServiceFacade:
 
-    def __init__(self, total_round=31):
+    def __init__(self, total_round=32):
         self.total_round = total_round
     
     def getEntireDraftSimulation(self):

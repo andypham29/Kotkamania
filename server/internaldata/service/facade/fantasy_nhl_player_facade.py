@@ -1,4 +1,5 @@
 from server.commons.fantasygrade.fantasy_percentile_calculator import FantasyPercentileCalculator
+from server.commons.helper.nhl_season_converter import NhlYearConverter
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
 from server.internaldata.service.fantasy_player_streak_index_service import FantasyPlayerStreakIndexService
 from server.internaldata.service.internal_player_stat_service import InternalPlayerStatService
@@ -32,9 +33,9 @@ class FantasyNhlPlayerFacade:
         if not positions:
             fantasy_players = fantasy_players_service.getAllFantasySkaters()
         elif len(positions) == 1 and positions[0].upper() == 'G':
-            fantasy_players = fantasy_players_service.getAllFantasySkatersWithPositionCodes(positions)
+            fantasy_players = fantasy_players_service.getAllFantasySkatersWithPositionCodesWithStats(positions)
         else:
-            fantasy_players = fantasy_players_service.getAllFantasySkatersWithPositionCodes(positions)
+            fantasy_players = fantasy_players_service.getAllFantasySkatersWithPositionCodesWithStats(positions)
         user_percentile_params = [min_game, percentile_shot, percentile_hit, percentile_block, percentile_goal,
                                   percentile_assist, percentile_point, percentile_toi, percentile_pptoi,
                                   percentile_evtoi]
@@ -56,10 +57,10 @@ class FantasyNhlPlayerFacade:
                 percentile_pptoi=percentile_pptoi,
                 percentile_evtoi=percentile_evtoi)
 
-            print([(attr, value.__dict__) for attr, value in percentile_values.__dict__.items()])
+            # print([(attr, value.__dict__) for attr, value in percentile_values.__dict__.items()])
             stats_at_percentiles = internal_player_service.get_internal_players_stats_at_percentile_values_and_seasonId(
                 percentile_values,
-                "20192020")
+                NhlYearConverter.get_previous_season_by_year_removed(1))
             # print([s.__dict__ for s in stats_at_percentiles])
             list_of_player_id = [s.playerId for s in stats_at_percentiles]
 

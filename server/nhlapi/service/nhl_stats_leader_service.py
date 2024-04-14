@@ -1,4 +1,5 @@
 from helper.http_helper import HttpHelper
+from server.commons.helper.nhl_season_converter import NhlYearConverter
 from server.nhlapi.model.nhl_leader_player import LeaderPlayer
 
 
@@ -7,19 +8,19 @@ class NHLStatsLeaderService:
     def __init__(self):
         pass
 
-    def getAllPlayers(self, start="0", end="100", seasonId="20212022"):
+    def getAllPlayers(self, start="0", end="100", seasonId=NhlYearConverter.get_current_season()):
         response = HttpHelper.get(self.__get_url_player_paging(start, end, seasonId))["data"]
         return [self.__getStatsForAllLeaderPlayers(player) for player in response]
 
-    def getForwards(self, start="0", end="100", seasonId="20212022"):
+    def getForwards(self, start="0", end="100", seasonId=NhlYearConverter.get_current_season()):
         response = HttpHelper.get(self.__get_url_forward_paging(start, end, seasonId))["data"]
         return [self.__getStatsForAllLeaderPlayers(player) for player in response]
 
-    def getDefensemen(self, start="0", end="100", seasonId="20212022"):
+    def getDefensemen(self, start="0", end="100", seasonId=NhlYearConverter.get_current_season()):
         response = HttpHelper.get(self.__get_url_defense_paging(start, end, seasonId))["data"]
         return [self.__getStatsForAllLeaderPlayers(player) for player in response]
 
-    def getGoalies(self, start="0", end="100", seasonId="20212022"):
+    def getGoalies(self, start="0", end="100", seasonId=NhlYearConverter.get_current_season()):
         response = HttpHelper.get(self.__get_url_goalie_paging(start, end, seasonId))["data"]
         return [self.__getStatsForAllLeaderPlayers(player) for player in response]
 

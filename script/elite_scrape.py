@@ -5,12 +5,13 @@ import bs4 as bs
 
 from server.mockdraft.model.prospect import ProspectElite
 from server.mockdraft.repository.prospect_elite_dao import ProspectEliteDao
+from setting import Setting
 
-year = "2021"
+year = Setting.NHL_YEAR
 
-hp_url = [f'https://www.eliteprospects.com/draft-center/{year}/sportsnet-s', 0]  # hp -> tsn
+hp_url = [f'https://www.eliteprospects.com/draft-center/{year}/sportsnet', 0]  # hp -> tsn
 fc_url = [f'https://www.eliteprospects.com/draft-center/{year}/fchockey', 1]
-iss_url = [f'https://www.eliteprospects.com/draft-center/{year}/neutral-zone', 2]
+iss_url = [f'https://www.eliteprospects.com/draft-center/{year}/recruit-scouting', 2]
 mh_url = [f'https://www.eliteprospects.com/draft-center/{year}/mckeen-s-hockey', 3]
 elite_url = [f'https://www.eliteprospects.com/draft-center/{year}/eliteprospects.com', 4]
 
@@ -22,8 +23,6 @@ def getProspectFromRow(i, data):
         name_position = getNamePositionTupple(data[1])
         p.name = name_position[0]
         p.position = name_position[1]
-        # if data[0] == "-":
-        #     data[0] = 45
 
         if(i == 0): p.hp = data[0]
         if(i == 1): p.fc = data[0]

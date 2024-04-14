@@ -1,0 +1,76 @@
+<script>
+    function getDateCard(json, date) {
+        var homeTeam = json == null ? "" : json.homeTeam.abbreviation
+        var awayTeam = json == null ? "" : json.awayTeam.abbreviation
+        var vs = json == null ? "" : "@"
+        var score = json == null ? "" : `${json.awayTeam.score} - ${json.homeTeam.score}`
+        var background = json == null ? "" : ` bg-secondary text-white`
+
+        return `<div class="card${background}" style="width: 8rem; height: 7rem;">
+                    <div class="card-body">
+                        <small>
+                            <h7 class="card-title" style = "display: flex; justify-content: flex-end" >${date}</h7>
+                            <h9>${awayTeam} ${vs} ${homeTeam} </h9></br>
+                            <h9>${score}</h9>
+                        </small>
+                    </div>
+                </div>
+        `
+    }
+    function getTeamScheduleRow(team_name, first_day, month, games) {
+        var game_counter = 0
+        var trHTML = `<tr><td>${team_name}<br>games: ${games.length}</td>`
+
+        for(var i=0; i<7; i++) {
+                if(game_counter < games.length && games[game_counter].day === i){
+                    trHTML = trHTML + `<td>${getDateCard(games[game_counter], month + "/"+ (first_day+i))}</td>`
+                    game_counter++
+                }
+                else {
+                    trHTML = trHTML + `<td>${getDateCard(null, month + "/"+ (first_day+i))}</td>`
+                }
+            }
+
+        return trHTML + "</tr>"
+    }
+    function getAllTeamsSchedule() {
+        // pagination = pagination + page
+        $.ajax({
+            url: `/api/nhl/schedule`,
+            crossDomain: true,
+            dataType: "json",
+            error: function(response) {
+                alert(JSON.stringify(response))
+            },
+            success: function(response) {
+                const [year, month, day] = response.firstDay.split('-');
+                var first_day = parseInt(day)
+                var teams = response.teams
+
+                var trHTML = ""
+
+                var team_counter = 0
+                for (var i=0; i<teams.length; i++) {
+                    trHTML = trHTML + getTeamScheduleRow(teams[i].team, first_day, month, teams[i].games)
+                }
+
+                $('table#schedule_table tbody').html(trHTML)
+                    $(".loader").remove();
+
+                },
+                type: 'GET'
+            });
+        }
+
+
+    $(document).ready(getAllTeamsSchedule());
+
+
+</script>
+<h5>Weekly Schedule</h5>
+<div class="container-fluid" style="overflow-x:auto;">
+    <table cellpadding="2px" class="table table-striped" id="schedule_table">
+        <tbody>
+        </tbody>
+    </table>
+</div>

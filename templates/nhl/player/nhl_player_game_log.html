@@ -1,9 +1,49 @@
 <script>
+    function clearGraph() {
+        // remove chart before adding new
+        var chartDiv = document.getElementById('chart_div')
+        chartDiv.removeChild(chartDiv.firstChild)
+        chartDiv.innerHTML = `<canvas id="myChart" style="height=50%;width:50%;max-width:700px;max-height:400px"></canvas>`
+    }
+    function getPlayerStatsGraph(pointsArray) {
+
+        // console.log(`points: ${pointsArray}`)
+        var xValues = Array.from(Array(pointsArray.length + 1).keys())
+        var yValues = [0]
+        pointsArray.reverse().forEach(item => {
+            var lastValue = yValues[yValues.length - 1]
+            yValues.push(lastValue + item)
+        })
+        // console.log(`x: ${xValues}`)
+        // console.log(`y: ${yValues}`)
+
+        // "myChart" is the id of the graph in the html
+        // creating chart with handler
+        setGraph("myChart", xValues, yValues, "P")
+    }
+
+    function getGoalieStatsGraph(winsArray) {
+
+        // console.log(`points: ${winsArray}`)
+        var xValues = Array.from(Array(winsArray.length + 1).keys())
+        var yValues = [0]
+        winsArray.reverse().forEach(item => {
+            var lastValue = yValues[yValues.length - 1]
+            yValues.push(lastValue + item)
+        })
+        // console.log(`x: ${xValues}`)
+        // console.log(`y: ${yValues}`)
+
+        // "myChart" is the id of the graph in the html
+        // creating chart with handler
+        setGraph("myChart", xValues, yValues, "G")
+    }
     function getPlayerGameLog(playerId, position) {
             $('table#player_game_log tbody').html("")
+            clearGraph()
 
             $.ajax({
-            url: `https://statsapi.web.nhl.com/api/v1/people/${playerId}/stats?stats=gameLog&season=20212022`,
+            url: `https://api-web.nhle.com/v1/player/{playerId}/game-log/20232024/2`,
             crossDomain: true,
             dataType: "json",
             error: function(response) {
@@ -13,13 +53,18 @@
                 player = response
                 var stats = ""
                 var games_shown = 5
-                if(player.stats[0].splits != undefined){
+                if(player.gameLog != undefined){
                 if(!(position).localeCompare('G')) {
                         var goalieStats = "<tr>" +
                         "<th></th><th></th><th>RES</th><td>SV</td><td>SHA</td><td>SV%</td><td>SO</td><td>TOI</td>" +
                         "</tr>"
 
                         player.stats[0].splits.slice(0, games_shown)
+                        getGoalieStatsGraph(player.stats[0].splits.map(item => {
+                            var result = item.stat.decision
+                            if(result === "W") return 1
+                            else return 0
+                        }))
                         player.stats[0].splits.forEach(function(item){
                             var opponent = item.opponent.name.split(" ")
                             opponent = opponent[opponent.length - 1]
@@ -51,6 +96,9 @@
                         "</tr>"
 
                         player.stats[0].splits.slice(0, games_shown)
+                         // chart
+                        getPlayerStatsGraph(player.stats[0].splits.map(item => item.stat.points))
+
                         player.stats[0].splits.forEach(function(item){
                             var opponent = item.opponent.name.split(" ")
                             opponent = opponent[opponent.length - 1]
@@ -59,21 +107,21 @@
                             date = `${date[date.length - 2]}/${date[date.length - 1]}`
                             playerStats += `<td>${date}</td>` +
                             `<td>${opponent}</td>` +
-                            `<td>${item.stat.goals}</td>` +
-                            `<td>${item.stat.assists}</td>` +
-                            `<td>${item.stat.points}</td>` +
-                            `<td>${item.stat.pim}</td>` +
-                            `<td>${item.stat.plusMinus}</td>` +
-                            `<td>${item.stat.powerPlayGoals}</td>` +
-<!--                            `<td>${item.stat.powerPlayPoints - item.stat.powerPlayGoals}</td>` +-->
-                            `<td>${item.stat.powerPlayPoints}</td>` +
-                            `<td>${item.stat.timeOnIce}</td>` +
-                            `<td>${item.stat.evenTimeOnIce}</td>` +
-                            `<td>${item.stat.shortHandedTimeOnIce}</td>` +
-                            `<td>${item.stat.powerPlayTimeOnIce}</td>` +
-                            `<td>${item.stat.shots}</td>` +
-                            `<td>${item.stat.hits}</td>` +
-                            `<td>${item.stat.blocked}</td>` +
+                            `<td>${item.goals}</td>` +
+                            `<td>${item.assists}</td>` +
+                            `<td>${item.points}</td>` +
+                            `<td>${item.pim}</td>` +
+                            `<td>${item.plusMinus}</td>` +
+                            `<td>${item.powerPlayGoals}</td>` +
+<!--                            `<td>${item.powerPlayPoints - item.powerPlayGoals}</td>` +-->
+                            `<td>${item.powerPlayPoints}</td>` +
+                            `<td>${item.timeOnIce}</td>` +
+                            `<td>${item.evenTimeOnIce}</td>` +
+                            `<td>${item.shortHandedTimeOnIce}</td>` +
+                            `<td>${item.powerPlayTimeOnIce}</td>` +
+                            `<td>${item.shots}</td>` +
+                            `<td>${item.hits}</td>` +
+                            `<td>${item.blocked}</td>` +
                             "</tr>"
                         })
 
@@ -88,8 +136,16 @@
         });
     }
 
+
 </script>
-<table class="table table-sm table-hover" id="player_game_log">
+<script src="{{url_for('static', filename='chartjshandler.js')}}"></script>
+<script src="{{url_for('static', filename='envvariables.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div id="chart_div">
+</div>
+<br>
+<h5 class="async">Game Logs</h5>
+<table class="table table-sm table-hover" id="player_game_log" style="width:100%;max-width:700px">
     <tbody>
     </tbody>
 </table>

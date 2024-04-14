@@ -1,0 +1,14 @@
+<script>
+    function getPlayerBadgeRadar(data) {
+        // remove chart before adding new
+        var radarDiv = document.getElementById('radar_div')
+        radarDiv.removeChild(radarDiv.firstChild)
+        radarDiv.innerHTML = `<canvas id="myRadar" style="height=100%;width:100%;max-width:400px;max-height:400px"></canvas>`
+        var ctx = document.getElementById('myRadar')
+        setRadar("myRadar", data)
+    }
+</script>
+<script src="{{url_for('static', filename='chartjshandler.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div id="radar_div">
+</div>

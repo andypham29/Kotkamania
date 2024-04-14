@@ -11,6 +11,11 @@ class InternalPlayerStatDao:
         self.conn = sqlite3.connect(uri)
         self.c = self.conn.cursor()
 
+    def get_internal_all_players_stats_by_seasonId(self, seasonId):
+        self.c.execute("SELECT * FROM internal_player_stat WHERE seasonId=?", (seasonId,))
+        rows = self.c.fetchall()
+        return [self.__row_to_object(row) for row in rows]
+
     def get_internal_players_stats_by_playerId_and_seasonId(self, playerId, seasonId):
         self.c.execute("SELECT * FROM internal_player_stat WHERE playerId=? AND seasonId=?", (playerId, seasonId,))
         row = self.c.fetchone()

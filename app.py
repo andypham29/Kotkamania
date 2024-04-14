@@ -10,6 +10,7 @@ from server.mockdraft.service.facade.mockdraft_selector_service_facade import Mo
 from server.mockdraft.service.prospect_elite_service import ProspectEliteService
 from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
 from server.nhlapi.service.facade.nhl_roster_service_facade import NHLRosterServiceFacade
+from server.nhlapi.service.nhl_schedule_service import NHLScheduleService
 from server.nhlapi.service.nhl_stats_leader_service import NHLStatsLeaderService
 from server.nhlapi.service.nhl_team_service import NhlTeamService
 from server.twitterapi.service.facade.twitter_service_facade import TwitterServiceFacade
@@ -64,7 +65,7 @@ def nhl_roster():
     return render_template("index.html", page="nhl_roster", teams=teams)
 
 
-@app.route('/nhl/stats/skater')
+@app.route('/nhl/stats/skaters')
 def nhl_stats_skater():
     return render_template("index.html", page="nhl_stats_skater")
 
@@ -87,6 +88,16 @@ def nhl_players():
 @app.route('/nhl/players/<id>')
 def nhl_player_page(id):
     return render_template("index.html", page="nhl_player", player_id=id)
+
+
+@app.route('/nhl/schedule')
+def nhl_schedule():
+    return render_template("index.html", page="nhl_schedule")
+
+
+@app.route('/nhl/teams')
+def nhl_teams():
+    return render_template("index.html", page="nhl_teams")
 
 
 # -------- API Routing -------------
@@ -127,6 +138,24 @@ def getProspects():
 @app.route('/api/news')
 def getTwitterNews():
     response = TwitterServiceFacade().get_hockey_tweets()
+    return makeHttpResponse(response)
+
+
+@app.route('/api/nhl/teams')
+def getNhlTeams():
+    response = NhlTeamService().getAllTeams()
+    return makeHttpResponse(response)
+
+
+@app.route('/api/nhl/schedule')
+def getNhlSchedule():
+    response = NHLScheduleService().get_current_week_games()
+    return makeHttpResponse(response)
+
+
+@app.route('/api/nhl/schedule/<id>')
+def getNhlScheduleByTeamId(id):
+    response = NHLScheduleService().get_current_week_schedule_by_teamId(id)
     return makeHttpResponse(response)
 
 

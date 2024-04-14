@@ -17,16 +17,6 @@ class NHLPlayerServiceFacade:
         self.internalPlayerStatService = internalPlayerStatService
         self.fantasyPlayerService = fantasyPlayerService
 
-    def save_player_by_playerId_and_season(self, playerId, seasonId):
-        # save only if stats are found for current year (seasonId)
-        try:
-            player_stat = self.nhlPlayerStatService.get_player_stat_by_playerId_and_seasons(playerId, [seasonId])[0]
-
-            stat = player_stat.stat
-            self.internalPlayerStatService.insert_internal_players_stats(playerId, seasonId, stat)
-        except:
-            print(f"[{playerId}] Unable to save stat for season [{seasonId}]")
-
     def get_player_by_playerId_and_seasons(self, playerId, seasons=[]):
         season_current = NhlYearConverter.get_current_season()
         season_minus1 = NhlYearConverter.get_previous_season_by_year_removed(1)
@@ -36,6 +26,7 @@ class NHLPlayerServiceFacade:
 
         seasons = seasons if seasons else [season_minus4, season_minus3, season_minus2, season_minus1, season_current]
         player = self.nhlPlayerService.get_player_by_id(playerId)
+        print(player.playerDraftDetails.__dict__)
         if player.position == "G":
             stats = self.nhlPlayerStatService.get_goalie_stat_by_playerId_and_season(playerId, seasons)
         else:
@@ -44,20 +35,8 @@ class NHLPlayerServiceFacade:
                 stat = self.internalPlayerStatService.get_internal_players_stats_by_playerId_and_seasonId(playerId,
                                                                                                           seasonId)
                 if stat is None:
-                    player_stat = self.nhlPlayerStatService.get_player_stat_by_playerId_and_seasons(playerId,
-                                                                                                    [seasonId])
-                    if len(player_stat) > 0:
-                        stat = player_stat[0].stat
-
-                        # if seasonId == "20212022":
-                        #     self.internalPlayerStatService.insert_internal_players_stats(playerId, seasonId, stat)
-                    print(f"[{playerId}] Statistic for season {seasonId} from NHLAPI")
-
-                if stat is None:
                     continue
                 stats.append(SeasonStat(seasonId, stat))
-
-            # stats = self.nhlPlayerStatService.get_player_stat_by_playerId_and_seasons(playerId, seasons)
 
         badge = self.fantasyPlayerService.getFantasySkaterById(playerId).badge
         player.stats = stats

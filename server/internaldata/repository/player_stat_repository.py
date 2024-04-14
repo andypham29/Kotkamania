@@ -17,6 +17,10 @@ class InternalPlayerStatRepository:
             .filter(and_(InternalPlayerStat.playerId == playerId,
                          InternalPlayerStat.seasonId == seasonId)).first()
 
+    def bulk_save_internal_players_stats_only(self, stats):
+        session.bulk_save_objects(stats)
+        session.commit()
+
     def save_internal_player_stats(self, player):
         stats = []
         stats += [

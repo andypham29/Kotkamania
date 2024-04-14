@@ -65,7 +65,7 @@ def nhl_roster():
     return render_template("index.html", page="nhl_roster", teams=teams)
 
 
-@app.route('/nhl/stats/skater')
+@app.route('/nhl/stats/skaters')
 def nhl_stats_skater():
     return render_template("index.html", page="nhl_stats_skater")
 

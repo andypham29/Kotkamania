@@ -3,9 +3,10 @@ from script.fantasy.fantasyhelper.excel_helper import ExcelHelper
 from script.fantasy.fantasyhelper.fantasy_team_helper import FantasyTeamHelper
 from server.commons.fantasybadge.fantasy_player_badge_factory import FantasyPlayerBadgeFactory
 from server.commons.helper.nhl_season_converter import NhlYearConverter
+from server.internaldata.repository.player_stat_repository import InternalPlayerStatRepository
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
 from server.internaldata.service.internal_player_stat_service import InternalPlayerStatService
-from server.nhlapi.service.facade.nhl_player_service_facade import NHLPlayerServiceFacade
+from server.nhlapi.service.nhl_statsmisc_service import NHLStatMiscService
 
 
 class FantasyScript:
@@ -25,20 +26,6 @@ class FantasyScript:
         for player in nhl_roster_players:
             # self.fantasy_nhl_player_service.removeTeamIdFromAllFantasySkates()
             self.fantasy_nhl_player_service.saveFantasySkater(player)
-
-        print("done")
-
-    def save_nhl_players_stats_by_year(self):
-        # self.fantasy_nhl_player_service.initFantasySkaterTable()
-
-        nhl_roster_players = FantasyTeamHelper().get_all_players_in_teams()
-        for player in nhl_roster_players:
-            uri = '../../server/internaldata/db/internal.db'
-            if player.positionCode != "G":
-                NHLPlayerServiceFacade(internalPlayerStatService=InternalPlayerStatService(uri),
-                                       fantasyPlayerService=FantasyNhlPlayerService(uri)) \
-                    .save_player_by_playerId_and_season(player.playerId, self.current_season)
-                # InternalPlayerStatRepository().save_internal_player_stats(p)
 
         print("done")
 
@@ -107,10 +94,16 @@ class FantasyScript:
         print("closing excel")
         self.excel_helper.close()
 
+    def save_stat(self):
+        InternalPlayerStatRepository().bulk_save_internal_players_stats_only(NHLStatMiscService().get_all_players())
+
+        print("done")
+
+
 
 if __name__ == '__main__':
     # FantasyScript().save_nhl_players_stats_by_year()
-    FantasyScript().save_fantasy_nhl_players()
+    FantasyScript().save_stat()
     # FantasyScript().save_player_stats_to_internal_db()
     # InternalPlayerRepository().create_database()
     # FantasyNhlPlayerDao().initFantasySkaterTable()

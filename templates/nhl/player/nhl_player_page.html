@@ -47,10 +47,13 @@
                 `<td>${ player.birthCountry }</td>` +
                 "<td>Shoots</td>" +
                 `<td>${ player.shootCatches }</td>` +
-                "</tr>"
+                "</tr>" +
+                "<tr>" +
+                "<td colspan=\"2\">Drafted</td>" +
+                `<td colspan=\"2\">${ player.playerDraftDetails.year } round ${ player.playerDraftDetails.draftRound } #${ player.playerDraftDetails.overallPick } by ${ player.playerDraftDetails.teamAbbrev }</td>` +
+                "</tr>";
 
                 var badge = player.badge
-                console.log(badge)
                 getPlayerBadgeRadar([badge.scoring, badge.playmaking, badge.defense, badge.powerplay, badge.intangibles])
 
                 var stats = ""
@@ -127,6 +130,10 @@
     <h2 class="title" id="player_name"></h2>
     <br>
     <table class="table table-sm" id="player_info_table">
+        <tbody>
+        </tbody>
+    </table>
+    <table class="table table-sm table-hover" id="player_draftinfo_table">
         <tbody>
         </tbody>
     </table>

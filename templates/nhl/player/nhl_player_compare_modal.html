@@ -34,7 +34,7 @@
             crossDomain: true,
             dataType: "json",
             error: function(response) {
-                alert(JSON.stringify(response))
+                console.log(JSON.stringify(response))
             },
             success: function(response) {
                 clearSearchResultTable()
@@ -77,7 +77,7 @@
             crossDomain: true,
             dataType: "json",
             error: function(response) {
-                alert(JSON.stringify(response))
+                console.log(JSON.stringify(response))
             },
             success: function(response) {
                 player = response

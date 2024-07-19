@@ -28,14 +28,32 @@ class NhlTeamConverter:
                29: "CBJ",
                30: "MIN",
                52: "WPG",
-               53: "ARZ",
+               53: "ARI",
                54: "VGK",
-               55: "SEA"
+               55: "SEA",
+               56: "UTA",
                }
 
     @staticmethod
     def get_abbreviation_by_teamId(teamId):
-        return NhlTeamConverter.options[int(teamId)]
+        try:
+            return NhlTeamConverter.options[int(teamId)]
+        except:
+            print(f"Unknown teamId: {teamId}")
+            return None
+
+    @staticmethod
+    def get_teamId_by_abr(abr):
+        try:
+            # TODO remove when UTAH
+            if abr == "ARI":
+                return 56
+            for key, val in NhlTeamConverter.options.items():
+                if val == abr:
+                    return key
+        except:
+            print(f"Unknown abbreviation: {None}")
+            return None
 
     @staticmethod
     def get_all_teamIds():

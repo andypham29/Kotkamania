@@ -61,7 +61,7 @@ class PlayerStat:
         self.evenTimeOnIce = evenTimeOnIce
         self.penaltyMinutes = penaltyMinutes
         self.faceOffPct = faceOffPct
-        self.shotPct = shotPct
+        self.shotPct = 0 if shotPct is None else shotPct
         self.gameWinningGoals = gameWinningGoals
         self.overTimeGoals = overTimeGoals
         self.shortHandedGoals = shortHandedGoals

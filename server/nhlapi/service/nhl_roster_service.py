@@ -37,4 +37,4 @@ class NHLRosterService:
             player.get("sweaterNumber", None),
         )
 if __name__ == '__main__':
-    print([i.__dict__ for i in NHLRosterService().get_team_roster_by_id(1)])
+    print([i.__dict__ for i in NHLRosterService().get_team_roster_by_id(None)])

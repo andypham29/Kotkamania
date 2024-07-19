@@ -71,3 +71,57 @@ class TeamStat:
         self.faceOffWinPercentage = faceOffWinPercentage
         self.shootingPctg = shootingPctg
         self.savePctg = savePctg
+
+    class NewTeamStat:
+
+        def __init__(self, gamesPlayed, goalDifferential, goalDifferentialPctg, goalAgainst, goalFor, goalsForPctg,
+                     homeGamesPlayed, homeGoalDifferential, homeGoalsAgainst, homeGoalsFor, homeLosses, homeOtLosses,
+                     homePoints, homeRegulationPlusOtWins, homeRegulationWins, homeTies, homeWins, losses, otLosses,
+                     pointPctg, points, regulationPlusOtWinPctg, regulationPlusOtWins, regulationWinPctg,
+                     regulationWins, roadGamesPlayed, roadGoalDifferential, roadGoalsAgainst, roadGoalsFor, roadLosses,
+                     roadOtLosses, roadPoints, roadRegulationPlusOtWins, roadRegulationWins, roadTies, roadWins,
+                     shootoutLosses, shootoutWins, ties, waiversSequence, wildcardSequence, winPctg, wins,
+                     ):
+            self.gamesPlayed = gamesPlayed
+            self.goalDifferential = goalDifferential
+            self.goalDifferentialPctg = goalDifferentialPctg
+            self.goalAgainst = goalAgainst
+            self.goalFor = goalFor
+            self.goalsForPctg = goalsForPctg
+            self.homeGamesPlayed = homeGamesPlayed
+            self.homeGoalDifferential = homeGoalDifferential
+            self.homeGoalsAgainst = homeGoalsAgainst
+            self.homeGoalsFor = homeGoalsFor
+            self.homeLosses = homeLosses
+            self.homeOtLosses = homeOtLosses
+            self.homePoints = homePoints
+            self.homeRegulationPlusOtWins = homeRegulationPlusOtWins
+            self.homeRegulationWins = homeRegulationWins
+            self.homeTies = homeTies
+            self.homeWins = homeWins
+            self.losses = losses
+            self.otLosses = otLosses
+            self.pointPctg = pointPctg
+            self.points = points
+            self.regulationPlusOtWinPctg = regulationPlusOtWinPctg
+            self.regulationPlusOtWins = regulationPlusOtWins
+            self.regulationWinPctg = regulationWinPctg
+            self.regulationWins = regulationWins
+            self.roadGamesPlayed = roadGamesPlayed
+            self.roadGoalDifferential = roadGoalDifferential
+            self.roadGoalsAgainst = roadGoalsAgainst
+            self.roadGoalsFor = roadGoalsFor
+            self.roadLosses = roadLosses
+            self.roadOtLosses = roadOtLosses
+            self.roadPoints = roadPoints
+            self.roadRegulationPlusOtWins = roadRegulationPlusOtWins
+            self.roadRegulationWins = roadRegulationWins
+            self.roadTies = roadTies
+            self.roadWins = roadWins
+            self.shootoutLosses = shootoutLosses
+            self.shootoutWins = shootoutWins
+            self.ties = ties
+            self.waiversSequence = waiversSequence
+            self.wildcardSequence = wildcardSequence
+            self.winPctg = winPctg
+            self.wins = wins

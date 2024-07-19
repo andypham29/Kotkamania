@@ -43,11 +43,11 @@
             clearGraph()
 
             $.ajax({
-            url: `https://api-web.nhle.com/v1/player/{playerId}/game-log/20232024/2`,
+            url: `https://api-web.nhle.com/v1/player/{playerId}/game-log/20242025/2`,
             crossDomain: true,
             dataType: "json",
             error: function(response) {
-                alert(JSON.stringify(response))
+                console.log(JSON.stringify(response))
             },
             success: function(response) {
                 player = response

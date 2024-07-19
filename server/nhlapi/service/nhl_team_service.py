@@ -1,4 +1,5 @@
 from helper.http_helper import HttpHelper
+from server.commons.helper.nhl_team_converter import NhlTeamConverter
 from server.nhlapi.model.nhl_team import Team, TeamStat
 
 
@@ -8,78 +9,54 @@ class NhlTeamService:
         pass
 
     def getAllTeams(self):
-        # json = HttpHelper.get('https://statsapi.web.nhl.com/api/v1/teams')
-        json = HttpHelper.get('https://statsapi.web.nhl.com/api/v1/teams?expand=team.stats')
-        teams = []
-        for item in json.get('teams'):
-            teams.append(Team(
-                id=item.get('id'),
-                name=item.get('name'),
-                abbreviation=item.get('abbreviation'),
-                teamStats=TeamStat(
-                    gamesPlayed=item.get('teamStats')[0].get('splits')[0].get('stat').get('gamesPlayed'),
-                    wins=item.get('teamStats')[0].get('splits')[0].get('stat').get('wins'),
-                    losses=item.get('teamStats')[0].get('splits')[0].get('stat').get('losses'),
-                    ot=item.get('teamStats')[0].get('splits')[0].get('stat').get('ot'),
-                    pts=item.get('teamStats')[0].get('splits')[0].get('stat').get('pts'),
-                    ptPctg=item.get('teamStats')[0].get('splits')[0].get('stat').get('ptPctg'),
-                    goalsPerGame=item.get('teamStats')[0].get('splits')[0].get('stat').get('goalsPerGame'),
-                    goalsAgainstPerGame=item.get('teamStats')[0].get('splits')[0].get('stat').get(
-                        'goalsAgainstPerGame'),
-                    evGGARatio=item.get('teamStats')[0].get('splits')[0].get('stat').get('evGGARatio'),
-                    powerPlayPercentage=item.get('teamStats')[0].get('splits')[0].get('stat').get(
-                        'powerPlayPercentage'),
-                    powerPlayGoals=item.get('teamStats')[0].get('splits')[0].get('stat').get('powerPlayGoals'),
-                    powerPlayGoalsAgainst=item.get('teamStats')[0].get('splits')[0].get('stat').get(
-                        'powerPlayGoalsAgainst'),
-                    powerPlayOpportunities=item.get('teamStats')[0].get('splits')[0].get('stat').get(
-                        'powerPlayOpportunities'),
-                    penaltyKillPercentage=item.get('teamStats')[0].get('splits')[0].get('stat').get(
-                        'penaltyKillPercentage'),
-                    shotsPerGame=item.get('teamStats')[0].get('splits')[0].get('stat').get('shotsPerGame'),
-                    shotsAllowed=item.get('teamStats')[0].get('splits')[0].get('stat').get('shotsAllowed'),
-                    winScoreFirst=item.get('teamStats')[0].get('splits')[0].get('stat').get('winScoreFirst'),
-                    winOppScoreFirst=item.get('teamStats')[0].get('splits')[0].get('stat').get('winOppScoreFirst'),
-                    winLeadFirstPer=item.get('teamStats')[0].get('splits')[0].get('stat').get('winLeadFirstPer'),
-                    winLeadSecondPer=item.get('teamStats')[0].get('splits')[0].get('stat').get('winLeadSecondPer'),
-                    winOutshootOpp=item.get('teamStats')[0].get('splits')[0].get('stat').get('winOutshootOpp'),
-                    winOutshotByOpp=item.get('teamStats')[0].get('splits')[0].get('stat').get('winOutshotByOpp'),
-                    faceOffsTaken=item.get('teamStats')[0].get('splits')[0].get('stat').get('faceOffsTaken'),
-                    faceOffsWon=item.get('teamStats')[0].get('splits')[0].get('stat').get('faceOffsWon'),
-                    faceOffsLost=item.get('teamStats')[0].get('splits')[0].get('stat').get('faceOffsLost'),
-                    faceOffWinPercentage=item.get('teamStats')[0].get('splits')[0].get('stat').get(
-                        'faceOffWinPercentage'),
-                    shootingPctg=item.get('teamStats')[0].get('splits')[0].get('stat').get('shootingPctg'),
-                    savePctg=item.get('teamStats')[0].get('splits')[0].get('stat').get('savePctg')
-                )
-            ))
-        return sorted(teams, key=lambda x: x.teamStats.pts, reverse=True)
+        json = HttpHelper.get('https://api-web.nhle.com/v1/standings/now').get("standings", None)
+        return [self.__get_team_stat(i) for i in json]
+
+    def __get_team_stat(self, team):
+        teamId = NhlTeamConverter.get_teamId_by_abr(team.get("teamAbbrev").get("default"))
+        teamStats = TeamStat(
+            gamesPlayed=team.get("gamesPlayed"),
+            wins=team.get("wins"),
+            losses=team.get("losses"),
+            ot=team.get("otLosses"),
+            pts=team.get("points"),
+            ptPctg=team.get("pointPctg"),
+            goalsPerGame=team.get("goalFor"),
+            goalsAgainstPerGame=team.get("goalsForPctg"),
+            evGGARatio=team.get("points"),
+            powerPlayPercentage=team.get("points"),
+            powerPlayGoals=team.get("points"),
+            powerPlayGoalsAgainst=team.get("points"),
+            powerPlayOpportunities=team.get("points"),
+            penaltyKillPercentage=team.get("points"),
+            shotsPerGame=team.get("points"),
+            shotsAllowed=team.get("points"),
+            winScoreFirst=team.get("points"),
+            winOppScoreFirst=team.get("points"),
+            winLeadFirstPer=team.get("points"),
+            winLeadSecondPer=team.get("points"),
+            winOutshootOpp=team.get("points"),
+            winOutshotByOpp=team.get("points"),
+            faceOffsTaken=team.get("points"),
+            faceOffsWon=team.get("points"),
+            faceOffsLost=team.get("points"),
+            faceOffWinPercentage=team.get("points"),
+            shootingPctg=team.get("points"),
+            savePctg=team.get("points"),
+        )
+        return Team(
+            id=teamId,
+            abbreviation=team.get("teamAbbrev").get("default"),
+            name=team.get("teamName").get("default"),
+            points=team.get("points"),
+            leagueRank=team.get("points"),
+            teamStats=teamStats
+        )
 
     def getAllTeamsForDraft(self):
-        json = HttpHelper.get('https://statsapi.web.nhl.com/api/v1/standings')
-        return self.__getTeamsFromAllDivision(json)
-
-    def __sortTeamsBy(self, teams):
-        return sorted(teams, key=lambda x: x.leagueRank, reverse=True)
-
-    def __getTeamsFromAllDivision(self, json):
-        teams = []
-        for item in json['records']:
-            teams += (self.__getAllTeamsPerDivision(item['teamRecords']))
-        return teams
-
-    def __getAllTeamsPerDivision(self, json):
-        teams = []
-        for item in json:
-            id = item['team']['id']
-            name = item['team']['name']
-            record = item['points']
-            leagueRank = item['leagueRank']
-
-            teams.append(Team(id=id, name=name, points=record, leagueRank=int(leagueRank)))
-        return teams
+        pass
 
 
 if __name__ == '__main__':
     teams = NhlTeamService().getAllTeams()
-    print(teams[0].teamStats.__dict__)
+    print([t.__dict__ for t in teams])

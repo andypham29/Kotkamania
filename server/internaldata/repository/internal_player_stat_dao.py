@@ -14,6 +14,7 @@ class InternalPlayerStatDao:
     def get_internal_all_players_stats_by_seasonId(self, seasonId):
         self.c.execute("SELECT * FROM internal_player_stat WHERE seasonId=?", (seasonId,))
         rows = self.c.fetchall()
+        self.conn.close()
         return [self.__row_to_object(row) for row in rows]
 
     def get_internal_players_stats_by_playerId_and_seasonId(self, playerId, seasonId):

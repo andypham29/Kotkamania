@@ -11,9 +11,9 @@ class FantasyNhlPlayerDao:
         # uri = 'server/internaldata/db/fantasy.db' if uri is None else uri
         uri = 'server/internaldata/db/internal.db' if uri is None else uri
         # uri = '../../server/internaldata/db/internal.db' if uri is None else uri
-        self.conn = sqlite3.connect(uri)
+        self.conn = sqlite3.connect(uri, timeout=20)
         self.c = self.conn.cursor()
-        self.year = NhlYearConverter.get_previous_season_by_year_removed(1)
+        self.year = NhlYearConverter.get_previous_season_by_year_removed(0)
 
     def initFantasySkaterTable(self):
         self.c.execute('''CREATE TABLE IF NOT EXISTS fantasy_nhl_player(
@@ -269,9 +269,19 @@ class FantasyNhlPlayerDao:
         self.conn.close()
 
     def updateFantasyGradeForFantasySkaterWithId(self, playerId, grade):
-        self.c.execute('''UPDATE fantasy_nhl_player SET
-        fantasyGrade = ?
-        WHERE playerId = ?''', (grade, playerId,))
+        try:
+            self.c.execute('''UPDATE fantasy_nhl_player SET
+            fantasyGrade = ?
+            WHERE playerId = ?''', (grade, playerId,))
+        finally:
+            self.conn.commit()
+            self.conn.close()
+
+    def bulkUpdateFantasyGradeForFantasySkaterWithId(self, players):
+        for player in players:
+            self.c.execute('''UPDATE fantasy_nhl_player SET
+            fantasyGrade = ?
+            WHERE playerId = ?''', (player.score, player.id,))
 
         self.conn.commit()
         self.conn.close()
@@ -312,6 +322,12 @@ class FantasyNhlPlayerDao:
 
     def removeTeamIdFromAllFantasySkates(self):
         self.c.execute('''UPDATE fantasy_nhl_player SET teamId = 0''')
+
+        self.conn.commit()
+        self.conn.close()
+
+    def deleteAllFantasySkatersWithNoTeam(self):
+        self.c.execute('''DELETE FROM fantasy_nhl_player WHERE teamId = 0''')
 
         self.conn.commit()
         self.conn.close()

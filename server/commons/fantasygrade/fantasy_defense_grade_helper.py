@@ -22,7 +22,7 @@ class FantasyDefenseGradeHelper:
         grade += defense_player.grade_hits * 5
         grade += defense_player.grade_blk * 5
 
-        grade = grade / 2000
+        grade = grade / 2075
         self.__print_player_stats(skaterFullName, defense_player, grade)
         return round(grade, 2)
 

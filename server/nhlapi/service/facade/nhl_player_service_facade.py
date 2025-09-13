@@ -26,7 +26,8 @@ class NHLPlayerServiceFacade:
 
         seasons = seasons if seasons else [season_minus4, season_minus3, season_minus2, season_minus1, season_current]
         player = self.nhlPlayerService.get_player_by_id(playerId)
-        print(player.playerDraftDetails.__dict__)
+        if player.playerDraftDetails:
+            print(player.playerDraftDetails.__dict__)
         if player.position == "G":
             stats = self.nhlPlayerStatService.get_goalie_stat_by_playerId_and_season(playerId, seasons)
         else:
@@ -37,6 +38,9 @@ class NHLPlayerServiceFacade:
                 if stat is None:
                     continue
                 stats.append(SeasonStat(seasonId, stat))
+
+        # if len(stats) == 0:
+        #     return player
 
         badge = self.fantasyPlayerService.getFantasySkaterById(playerId).badge
         player.stats = stats

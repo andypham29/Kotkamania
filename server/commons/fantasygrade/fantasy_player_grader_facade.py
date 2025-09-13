@@ -63,7 +63,9 @@ class FantasyPlayerGraderFacade:
         )
         print(
             f"[{player.skaterFullName}] {current_year - 2}{current_year - 1}:{grade_year3}  {current_year - 3}{current_year - 2}:{grade_year2}  {current_year - 4}{current_year - 3}:{grade_year1} ")
-        shotPct = fantasy_value_year3["shotPct"]
+        shotPct = fantasy_value_year3.get("shotPct", 0)
+        if shotPct is None:
+            shotPct = 0
 
         player_stat = InternalPlayerStatRepository().get_internal_players_stats_by_playerId_and_seasonId(
             player.playerId, current_year)
@@ -95,7 +97,8 @@ class FantasyPlayerGraderFacade:
             if player.positionCode == 'G':
                 stat = self.nhl_player_service_facade.get_player_by_playerId_and_seasons(player.playerId, [year]).stats
             else:
-                stat = NHLPlayerStatService().get_player_stat_by_playerId_and_seasons(player.playerId, [year])
+                # stat = NHLPlayerStatService().get_player_stat_by_playerId_and_seasons(player.playerId, [year])
+                stat = self.nhl_player_service_facade.get_player_by_playerId_and_seasons(player.playerId, [year]).stats
                 # if year == "20212022":
                 #     InternalPlayerStatRepository().save_internal_player_stats(p)
 

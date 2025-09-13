@@ -32,11 +32,15 @@ class FantasyScript:
 
         print("done")
 
+        return self
+
     def save_player_grade_for_forwards_to_excel(self):
         fantasy_players = self.fantasy_player_helper.get_all_fantasy_forward_from_internal_db()
         excel_helper = ExcelHelper("new_fantasy.xlsx")
         excel_helper.write_players_to_excel(sheet='all', players=fantasy_players)
         excel_helper.close()
+
+        return self
 
     async def save_player_grade_for_all_players_in_internal_db(self):
         fantasy_players = self.fantasy_player_helper.get_all_fantasy_player_from_internal_db()
@@ -44,6 +48,8 @@ class FantasyScript:
         for fantasy_player in fantasy_players:
             await asyncio.run(self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_player.id,
                                                                                      fantasy_player.score))
+
+        return self
 
     def save_player_badge_for_all_players_in_internal_db(self):
         fantasy_players = self.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodesWithStats(["L", "C", "R", "D"])
@@ -58,6 +64,8 @@ class FantasyScript:
             badge = badge_factory.get_badge_for_skater(player_stat, fantasy_player.positionCode)
             print(fantasy_player.skaterFullName, ": ", badge.__dict__, player_stat.__dict__)
             self.fantasy_nhl_player_service.updateFantasyBadgeForFantasySkaterByPlayerId(badge, fantasy_player.playerId)
+
+        return self
 
     def process_forward(self):
         fantasy_skaters = self.fantasy_player_helper.update_fantasy_grade_forward()
@@ -76,10 +84,10 @@ class FantasyScript:
     def process_defensemen(self):
         fantasy_defensemen = self.fantasy_player_helper.get_fantasy_defensemen()
         fantasy_defensemen.sort(key=lambda x: x.score, reverse=True)
-        self.fantasy_nhl_player_service.bulkUpdateFantasyGradeForFantasySkaterWithId(players=fantasy_defensemen)
-        # for fantasy_defenseman in fantasy_defensemen:
-        #     self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_defenseman.id,
-        #                                                                              fantasy_defenseman.score)
+        # self.fantasy_nhl_player_service.bulkUpdateFantasyGradeForFantasySkaterWithId(players=fantasy_defensemen)
+        for fantasy_defenseman in fantasy_defensemen:
+            self.fantasy_nhl_player_service.updateFantasyGradeForFantasySkaterWithId(fantasy_defenseman.id,
+                                                                                     fantasy_defenseman.score)
 
         # self.excel_helper.write_players_to_excel(sheet='defense', players=fantasy_defensemen)
         return self
@@ -97,6 +105,8 @@ class FantasyScript:
     def get_fantasy_grade_by_id(self, id):
         print(self.fantasy_player_helper.get_fantasy_grade_by_id(id).__dict__)
 
+        return self
+
     def close(self):
         print("closing excel")
         self.excel_helper.close()
@@ -107,10 +117,26 @@ class FantasyScript:
 
         print("done")
 
+        return self
+
     def cleanup(self):
         self.fantasy_nhl_player_service.removeTeamIdFromAllFantasySkates()
         self.save_fantasy_nhl_players()
         self.fantasy_nhl_player_service.deleteAllFantasySkatersWithNoTeam()
+
+        return self
+
+class FantasyScriptHandler:
+
+    def __init__(self):
+        self.fantasy_script = FantasyScript()
+
+    def process_new_season(self):
+        self.fantasy_script\
+            .save_fantasy_nhl_players()\
+            .process_forward() \
+            .process_defensemen() \
+            .save_stat()
 
 
 
@@ -124,8 +150,8 @@ if __name__ == '__main__':
     # FantasyScript().get_fantasy_grade_by_id(8478402)
     # FantasyScript().cleanup()
     FantasyScript() \
-        .process_forward()
-        # .close()
+        .process_goalies()\
+        .close()
 
     # FantasyScript().get_fantasy_grade_by_id(8476885)
     # FantasyScript().save_fantasy_nhl_players()

@@ -54,7 +54,8 @@ class FantasyDefenseGrade:
     def __calculate_grade_shotAttempt(self, player_stat):
         if player_stat.games == 0:
             return 0
-        shotPctIndex = round(-0.055 * (player_stat.shotPct / 12) ** 3 + 1.05, 2)
+        shot_pct = int(0 if player_stat.shotPct is None else player_stat.shotPct)
+        shotPctIndex = round(-0.055 * (shot_pct / 12) ** 3 + 1.05, 2)
         return ((player_stat.shots / player_stat.games) ** shotPctIndex) / 2
 
     def __calculate_grade_goals(self, player_stat):
@@ -130,8 +131,8 @@ class FantasyDefenseGrade:
             return 100
 
     def __calculate_grade_shotPct(self, player_stat):
-        shotPct = player_stat.shotPct
-        return 0.85 if shotPct <= 0.0 or not None else (shotPct / 100) ** -1 * 0.1
+        shot_pct = int(0 if player_stat.shotPct is None else player_stat.shotPct)
+        return 0.85 if shot_pct <= 0.0 or not None else (shot_pct / 100) ** -1 * 0.1
 
     def __calculate_grade_toi(self, player_stat):
         if player_stat.games == 0:

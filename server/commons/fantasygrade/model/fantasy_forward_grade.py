@@ -31,7 +31,8 @@ class FantasyForwardGrade:
         return min(range(len(percentile_stat_list)), key=lambda i: abs(percentile_stat_list[i] - stat)) + 10
 
     def shotPctIndex(self, player_stat):
-        index = round(-0.055 * (player_stat.shotPct / 12) ** 3 + 1.05, 2)
+        shot_pct = int(0 if player_stat.shotPct is None else player_stat.shotPct)
+        index = round(-0.055 * (shot_pct / 12) ** 3 + 1.05, 2)
         return index if index > 0 else 0.95
 
     def __scale_by_games_played(self, player_stat):
@@ -50,7 +51,8 @@ class FantasyForwardGrade:
     def __calculate_grade_shotAttempt(self, player_stat):
         if player_stat.games == 0:
             return 0
-        shotPctIndex = round(-0.055 * (player_stat.shotPct / 12) ** 3 + 1.05, 2)
+        shot_pct = int(0 if player_stat.shotPct is None else player_stat.shotPct)
+        shotPctIndex = round(-0.055 * (shot_pct/ 12) ** 3 + 1.05, 2)
         return ((player_stat.shots / player_stat.games) ** shotPctIndex) / 2
 
     def __calculate_grade_goals(self, player_stat):

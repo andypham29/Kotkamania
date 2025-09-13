@@ -30,7 +30,8 @@ class NHLPlayerService:
                       )
 
     def get_playerDraftDetails(self, draftDetail):
-        print(draftDetail.get("year", None))
+        if draftDetail is None:
+            return None
         return PlayerDraftDetails(
             year=draftDetail.get("year", None),
             teamAbbrev=draftDetail.get("teamAbbrev", None),

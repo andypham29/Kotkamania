@@ -1,6 +1,29 @@
 <script src="{{url_for('static', filename='cookiehandler.js')}}"></script>
 <script src="{{url_for('static', filename='fantasycookiehandler.js')}}"></script>
 <script>
+    const DEFAULT_WEIGHTS = {
+      G: 4.0,
+      A: 3.0,
+      P: 0.0,
+      SOG: 0.8,
+      PPP: 2.0,
+      HIT: 0.75,
+      BLK: 1.0,
+    };
+
+    function calcFantasyPoints(p) {
+    const score =
+        (p.stat.goals || 0) * DEFAULT_WEIGHTS.G +
+        (p.stat.assists || 0) * DEFAULT_WEIGHTS.A +
+        (p.stat.shots || 0) * DEFAULT_WEIGHTS.SOG +
+        (p.stat.powerPlayPoints || 0) * DEFAULT_WEIGHTS.PPP +
+        (p.stat.powerPlayGoals || 0) * DEFAULT_WEIGHTS.PPP +
+        (p.stat.hits || 0) * DEFAULT_WEIGHTS.HIT +
+        (p.stat.blocked || 0) * DEFAULT_WEIGHTS.BLK;
+
+        return score.toFixed(2)
+    }
+
     function togglePlayerRowById(data) {
         id = data[0]
         cookie_name = data[1]
@@ -142,8 +165,8 @@
                 "<th>Score</th>" +
                 "<th>Nhl Rank</th>" +
                 "<th>Yahoo Avg</th>" +
-                "<th>Avg Round</th>" +
                 "<th>Percent Drafted</th>" +
+                "<th>Fantasy Point</th>" +
                 `<th>GP</th>
                 <th>G</th>
                 <th>A</th>
@@ -271,8 +294,8 @@
                     `<td>${ fantasy_player.fantasyGrade }</td>` +
                     `<td>${ fantasy_player.nhlRank }</td>` +
                     `<td>${ fantasy_player.avgPick }</td>` +
-                    `<td>${ fantasy_player.avgRound }</td>` +
                     `<td>${ fantasy_player.percentDrafted }</td>` +
+                    `<td>${ calcFantasyPoints(fantasy_player) }</td>` +
                     `<td>${ fantasy_player.stat.games }</td>
                     <td>${ fantasy_player.stat.goals }</td>
                     <td>${ fantasy_player.stat.assists }</td>

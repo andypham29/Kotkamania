@@ -10,8 +10,8 @@ function sortTable(colIndex) {
   rows.shift()
   const ths = table.querySelectorAll("th");
 
-  // Toggle direction (default ascending)
-  sortDirection[colIndex] = !sortDirection[colIndex];
+  // Toggle direction (default descending)
+  sortDirection[colIndex] = sortDirection[colIndex];
   const isAsc = sortDirection[colIndex];
 
   // Reset header indicators

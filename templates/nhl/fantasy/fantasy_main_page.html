@@ -11,12 +11,12 @@ function sortTable(colIndex) {
   const ths = table.querySelectorAll("th");
 
   // Toggle direction (default descending)
-  sortDirection[colIndex] = sortDirection[colIndex];
-  const isAsc = sortDirection[colIndex];
+  sortDirection[colIndex] = !sortDirection[colIndex];
+  const isDesc = !sortDirection[colIndex];
 
   // Reset header indicators
   ths.forEach((th, i) => th.classList.remove("asc", "desc"));
-  ths[colIndex].classList.add(isAsc ? "asc" : "desc");
+  ths[colIndex].classList.add(isDesc ? "asc" : "desc");
 
   rows.sort((a, b) => {
     let aText = a.children[colIndex].innerText.trim();
@@ -26,9 +26,9 @@ function sortTable(colIndex) {
     let aNum = parseFloat(aText);
     let bNum = parseFloat(bText);
     if (!isNaN(aNum) && !isNaN(bNum)) {
-      return isAsc ? aNum - bNum : bNum - aNum;
+      return isDesc ? aNum - bNum : bNum - aNum;
     }
-    return isAsc ? aText.localeCompare(bText) : bText.localeCompare(aText);
+    return isDesc ? aText.localeCompare(bText) : bText.localeCompare(aText);
   });
 
   rows.forEach(row => tbody.appendChild(row));

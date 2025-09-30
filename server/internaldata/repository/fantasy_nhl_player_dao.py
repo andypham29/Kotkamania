@@ -296,6 +296,15 @@ class FantasyNhlPlayerDao:
         self.conn.commit()
         self.conn.close()
 
+    def updateYahooRankForFantasySkaterWithName(self, playerName, nhlRank):
+        print(playerName, ": ", nhlRank)
+        self.c.execute('''UPDATE fantasy_nhl_player SET
+        avgPick = ?
+        WHERE skaterFullName = ?''', (nhlRank, playerName,))
+
+        self.conn.commit()
+        self.conn.close()
+
     def updateFantasyYahooInfoForFantasySkater(self, yahoo_info):
         self.c.execute('''UPDATE fantasy_nhl_player SET
         yahooEligibility = ?,

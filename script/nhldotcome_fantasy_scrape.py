@@ -18,6 +18,18 @@ def hello():
                 '../server/internaldata/db/internal.db'
             ).updateNhlRankForFantasySkaterWithName(playerName, nhlRank)
 
+def hello2():
+    with open('espn_data.csv', newline='') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        for row in spamreader:
+            playerName = " ".join(row[1].split())
+            nhlRank = int(row[0])
+            # print(playerName[1:], ": ", nhlRank)
+            FantasyNhlPlayerDao(
+                '../server/internaldata/db/internal.db'
+            ).updateYahooRankForFantasySkaterWithName(playerName, nhlRank)
+
 
 if __name__ == '__main__':
     hello()
+    hello2()

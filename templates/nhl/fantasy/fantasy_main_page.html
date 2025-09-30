@@ -1,6 +1,40 @@
 <script src="{{url_for('static', filename='cookiehandler.js')}}"></script>
 <script src="{{url_for('static', filename='fantasycookiehandler.js')}}"></script>
 <script>
+let sortDirection = {}; // track per column
+
+function sortTable(colIndex) {
+  const table = document.getElementById("draft_table");
+  const tbody = table.querySelector("tbody");
+  const rows = Array.from(tbody.querySelectorAll("tr"));
+  rows.shift()
+  const ths = table.querySelectorAll("th");
+
+  // Toggle direction (default ascending)
+  sortDirection[colIndex] = !sortDirection[colIndex];
+  const isAsc = sortDirection[colIndex];
+
+  // Reset header indicators
+  ths.forEach((th, i) => th.classList.remove("asc", "desc"));
+  ths[colIndex].classList.add(isAsc ? "asc" : "desc");
+
+  rows.sort((a, b) => {
+    let aText = a.children[colIndex].innerText.trim();
+    let bText = b.children[colIndex].innerText.trim();
+
+    // Try to compare as numbers
+    let aNum = parseFloat(aText);
+    let bNum = parseFloat(bText);
+    if (!isNaN(aNum) && !isNaN(bNum)) {
+      return isAsc ? aNum - bNum : bNum - aNum;
+    }
+    return isAsc ? aText.localeCompare(bText) : bText.localeCompare(aText);
+  });
+
+  rows.forEach(row => tbody.appendChild(row));
+}
+</script>
+<script>
     const DEFAULT_WEIGHTS = {
       G: 4.0,
       A: 3.0,
@@ -167,7 +201,7 @@
                 "<th>ESPN Rank</th>" +
 <!--                "<th>Yahoo Avg</th>" +-->
                 "<th>Percent Drafted</th>" +
-                "<th>Fantasy Point</th>" +
+                "<th onclick=\"sortTable(8)\">Fantasy Point</th>" +
                 `<th>GP</th>
                 <th>G</th>
                 <th>A</th>

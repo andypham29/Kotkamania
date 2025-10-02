@@ -35,14 +35,25 @@ function sortTable(colIndex) {
 }
 </script>
 <script>
-    const DEFAULT_WEIGHTS = {
-      G: 4.0,
-      A: 3.0,
+<!--    const DEFAULT_WEIGHTS = {-->
+<!--      G: 4.0,-->
+<!--      A: 3.0,-->
+<!--      P: 0.0,-->
+<!--      SOG: 0.8,-->
+<!--      PPP: 2.0,-->
+<!--      HIT: 0.75,-->
+<!--      BLK: 1.0,-->
+<!--    };-->
+
+const DEFAULT_WEIGHTS = {
+      G: 2.1,
+      A: 2,
       P: 0.0,
-      SOG: 0.8,
-      PPP: 2.0,
-      HIT: 0.75,
-      BLK: 1.0,
+      SOG: 0.5,
+      PPP: 1,
+      HIT: 0.25,
+      BLK: 0.25,
+      PLUSMINUS: 0.1
     };
 
     function calcFantasyPoints(p) {
@@ -54,6 +65,7 @@ function sortTable(colIndex) {
         (p.stat.powerPlayGoals || 0) * DEFAULT_WEIGHTS.PPP +
         (p.stat.hits || 0) * DEFAULT_WEIGHTS.HIT +
         (p.stat.blocked || 0) * DEFAULT_WEIGHTS.BLK;
+        (p.stat.plusMinus || 0) * DEFAULT_WEIGHTS.PLUSMINUS;
 
         return score.toFixed(2)
     }

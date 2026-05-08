@@ -1,158 +1,149 @@
-import sqlite3
+from sqlalchemy.orm import Session
 
+from server.commons.db.database import DatabaseManager
 from server.internaldata.model.fantasy_player_streak_index import FantasyPlayerStreakIndex
+from server.internaldata.db.models import FantasyPlayerStreakIndexORM
 
 
 class FantasyPlayerStreakIndexDao:
 
     def __init__(self, uri=None):
-        uri = 'server/internaldata/db/fantasy.db' if uri is None else uri
-        self.conn = sqlite3.connect(uri)
-        self.c = self.conn.cursor()
+        self.uri = uri or 'server/internaldata/db/fantasy.db'
+
+    def _get_session(self) -> Session:
+        """Get a new database session"""
+        return DatabaseManager.get_session(self.uri)
 
     def initFantasyPlayerStreakIndexTable(self):
-        self.c.execute('''CREATE TABLE IF NOT EXISTS fantasy_streak(
-           playerId INTEGER PRIMARY KEY,
-        skaterFullName TEXT NOT NULL,
-        positionCode TEXT NOT NULL,
-        pts INTEGER NOT NULL,
-        toi DOUBLE NOT NULL,
-        pptoi DOUBLE NOT NULL,
-        streakIndex DOUBLE NOT NULL,
-        lastUpdated TEXT
-        );''')
-
-        self.conn.commit()
-        self.conn.close()
+        """Initialize fantasy streak index table"""
+        DatabaseManager.create_tables(
+            __import__('server.internaldata.db.models', fromlist=['Base']).Base,
+            self.uri
+        )
 
     def saveOrUpdateFantasyPlayerStreakIndex(self, fantasy_streak_info):
-        self.c.execute(
-            '''INSERT OR IGNORE INTO fantasy_streak (playerId, 
-            skaterFullName, 
-            positionCode, 
-            pts, 
-            toi, 
-            pptoi,
-            streakIndex,
-            lastUpdated
-            ) VALUES (?,?,?,?,?,?,?,?)''',
-            (fantasy_streak_info.playerId,
-             fantasy_streak_info.skaterFullName,
-             fantasy_streak_info.positionCode,
-             fantasy_streak_info.pts,
-             fantasy_streak_info.toi,
-             fantasy_streak_info.pptoi,
-             fantasy_streak_info.index,
-             fantasy_streak_info.lastUpdated
-             ))
+        """Save or update fantasy player streak index"""
+        session = self._get_session()
+        try:
+            existing = session.query(FantasyPlayerStreakIndexORM).filter_by(
+                playerId=fantasy_streak_info.playerId
+            ).first()
 
-        self.c.execute(
-            '''UPDATE fantasy_streak SET
-            skaterFullName = ifnull(?, skaterFullName), 
-            positionCode = ifnull(?, positionCode), 
-            pts = ifnull(?, pts), 
-            toi = ifnull(?, toi), 
-            pptoi = ifnull(?, pptoi),
-            streakIndex = ifnull(?, streakIndex),
-            lastUpdated = ifnull(?, lastUpdated)
-            WHERE playerId = ?''',
-            (fantasy_streak_info.skaterFullName,
-             fantasy_streak_info.positionCode,
-             fantasy_streak_info.pts,
-             fantasy_streak_info.toi,
-             fantasy_streak_info.pptoi,
-             fantasy_streak_info.index,
-             fantasy_streak_info.lastUpdated,
-             fantasy_streak_info.playerId,))
+            if existing:
+                existing.skaterFullName = fantasy_streak_info.skaterFullName
+                existing.positionCode = fantasy_streak_info.positionCode
+                existing.pts = fantasy_streak_info.pts
+                existing.toi = fantasy_streak_info.toi
+                existing.pptoi = fantasy_streak_info.pptoi
+                existing.streakIndex = fantasy_streak_info.index
+                existing.lastUpdated = fantasy_streak_info.lastUpdated
+            else:
+                new_record = FantasyPlayerStreakIndexORM(
+                    playerId=fantasy_streak_info.playerId,
+                    skaterFullName=fantasy_streak_info.skaterFullName,
+                    positionCode=fantasy_streak_info.positionCode,
+                    pts=fantasy_streak_info.pts,
+                    toi=fantasy_streak_info.toi,
+                    pptoi=fantasy_streak_info.pptoi,
+                    streakIndex=fantasy_streak_info.index,
+                    lastUpdated=fantasy_streak_info.lastUpdated
+                )
+                session.add(new_record)
 
-        self.conn.commit()
-        self.conn.close()
+            session.commit()
+        finally:
+            session.close()
 
     def getFantasyPlayerStreakIndex(self, playerId):
-        self.c.execute('''SELECT * FROM fantasy_streak WHERE playerId = ?''', (playerId,))
-
-        row = self.c.fetchone()
-
-        self.conn.close()
-        return self.__row_to_object(row)
+        """Get fantasy player streak index by player ID"""
+        session = self._get_session()
+        try:
+            row = session.query(FantasyPlayerStreakIndexORM).filter_by(
+                playerId=playerId
+            ).first()
+            return self.__row_to_object(row) if row else None
+        finally:
+            session.close()
 
     def getAllFantasyPlayerStreakIndexes(self):
-        self.c.execute('''SELECT * FROM fantasy_streak ORDER BY streakIndex DESC''')
-
-        records = self.c.fetchall()
-
-        list = []
-        for row in records:
-            fantasy_skater = self.__row_to_object(row)
-            list.append(fantasy_skater)
-
-        self.conn.close()
-
-        return list
+        """Get all fantasy player streak indexes ordered by streak index"""
+        session = self._get_session()
+        try:
+            records = session.query(FantasyPlayerStreakIndexORM).order_by(
+                FantasyPlayerStreakIndexORM.streakIndex.desc()
+            ).all()
+            return [self.__row_to_object(row) for row in records]
+        finally:
+            session.close()
 
     def getAllFantasyPlayerStreakIndexesByPositionCodes(self, positionCodes):
-        positionCodes[:] = [value for value in positionCodes if value in ['L', 'C', 'R', 'D']]
-        filter_parameters = str(positionCodes).replace('[', '(').replace(']', ')')
+        """Get fantasy player streak indexes by position codes"""
+        session = self._get_session()
+        try:
+            valid_positions = [p for p in positionCodes if p in ['L', 'C', 'R', 'D']]
 
-        query = f'''SELECT * FROM fantasy_streak 
-            WHERE positionCode IN {filter_parameters} ORDER BY streakIndex DESC'''
-        self.c.execute(query)
+            records = session.query(FantasyPlayerStreakIndexORM).filter(
+                FantasyPlayerStreakIndexORM.positionCode.in_(valid_positions)
+            ).order_by(FantasyPlayerStreakIndexORM.streakIndex.desc()).all()
 
-        records = self.c.fetchall()
-
-        list = []
-        for row in records:
-            fantasy_skater = self.__row_to_object(row)
-            list.append(fantasy_skater)
-
-        self.conn.close()
-
-        return list
+            return [self.__row_to_object(row) for row in records]
+        finally:
+            session.close()
 
     def getAllFantasyPlayerStreakIndexInPlayerIdList(self, playerIdList):
-        filter_parameters = str(playerIdList).replace('[', '(').replace(']', ')')
-
-        query = f'''SELECT * FROM fantasy_streak 
-            WHERE playerId IN {filter_parameters}'''
-
-        self.c.execute(query)
-
-        records = self.c.fetchall()
-
-        list = []
-        for row in records:
-            fantasy_skater = self.__row_to_object(row)
-            list.append(fantasy_skater)
-
-        self.conn.close()
-
-        return list
+        """Get fantasy player streak index for players in list"""
+        session = self._get_session()
+        try:
+            records = session.query(FantasyPlayerStreakIndexORM).filter(
+                FantasyPlayerStreakIndexORM.playerId.in_(playerIdList)
+            ).all()
+            return [self.__row_to_object(row) for row in records]
+        finally:
+            session.close()
 
     def getAllFantasySkatersBySearchName(self, name):
-        self.c.execute(f"SELECT * FROM fantasy_streak WHERE skaterFullName LIKE \'%{name}%\'")
-
-        records = self.c.fetchall()
-
-        list = []
-        for row in records:
-            fantasy_skater = self.__row_to_object(row)
-            list.append(fantasy_skater)
-
-        self.conn.close()
-
-        return list
+        """Search fantasy skaters by name"""
+        session = self._get_session()
+        try:
+            records = session.query(FantasyPlayerStreakIndexORM).filter(
+                FantasyPlayerStreakIndexORM.skaterFullName.like(f'%{name}%')
+            ).all()
+            return [self.__row_to_object(row) for row in records]
+        finally:
+            session.close()
 
     def deleteFantasySkaterById(self, playerId):
-        self.c.execute('''DELETE FROM fantasy_streak WHERE playerId=?''', (playerId,))
-
-        self.conn.commit()
-        self.conn.close()
+        """Delete fantasy skater by ID"""
+        session = self._get_session()
+        try:
+            session.query(FantasyPlayerStreakIndexORM).filter_by(
+                playerId=playerId
+            ).delete()
+            session.commit()
+        finally:
+            session.close()
 
     def deleteAllFantasySkaterStreak(self):
-        self.c.execute('''DELETE FROM fantasy_streak''')
+        """Delete all fantasy skater streaks"""
+        session = self._get_session()
+        try:
+            session.query(FantasyPlayerStreakIndexORM).delete()
+            session.commit()
+        finally:
+            session.close()
 
-        self.conn.commit()
-        self.conn.close()
-
-    def __row_to_object(self, row):
-        return FantasyPlayerStreakIndex(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+    @staticmethod
+    def __row_to_object(orm_row):
+        """Convert ORM object to domain model"""
+        if orm_row is None:
+            return None
+        return FantasyPlayerStreakIndex(
+            id=orm_row.playerId,
+            skaterFullName=orm_row.skaterFullName,
+            positionCode=orm_row.positionCode,
+            pts=orm_row.pts,
+            toi=orm_row.toi,
+            pptoi=orm_row.pptoi,
+            index=orm_row.streakIndex,
+            lastUpdated=orm_row.lastUpdated
+        )

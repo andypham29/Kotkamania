@@ -1,5 +1,7 @@
-class InternalPlayerInfo:
+from dataclasses import dataclass
 
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
+
+@dataclass
+class InternalPlayerInfo:
+    id: int
+    name: str

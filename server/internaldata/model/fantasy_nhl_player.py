@@ -1,47 +1,41 @@
+from dataclasses import dataclass, field
+from typing import Optional
 from server.commons.fantasybadge.model.fantasy_player_badge import FantasyPlayerBadge
 
 
+@dataclass
 class DisplayStat:
-
-    def __init__(self, assists=0, goals=0, points=0, games=0, shots=0,
-                 hits=0, blocked=0, plusMinus=0, powerPlayGoals=0, powerPlayPoints=0):
-        self.assists = assists
-        self.goals = goals
-        self.points = points
-        self.games = games
-        self.shots = shots
-        self.hits = hits
-        self.blocked = blocked
-        self.plusMinus = plusMinus
-        self.powerPlayGoals = powerPlayGoals
-        self.powerPlayPoints = powerPlayPoints
+    assists: int = 0
+    goals: int = 0
+    points: int = 0
+    games: int = 0
+    shots: int = 0
+    hits: int = 0
+    blocked: int = 0
+    plusMinus: int = 0
+    powerPlayGoals: int = 0
+    powerPlayPoints: int = 0
 
 
+@dataclass
 class FantasyNhlPlayer:
+    id: str = ""
+    skaterFullName: str = ""
+    positionCode: str = ""
+    teamId: str = ""
+    fantasyGrade: Optional[object] = None
+    yahooEligibility: Optional[object] = None
+    avgPick: Optional[object] = None
+    avgRound: Optional[object] = None
+    percentDrafted: Optional[object] = None
+    teamName: str = ""
+    nhlRank: Optional[object] = None
+    badge: Optional[FantasyPlayerBadge] = field(default=None, init=True)
+    stat: Optional[DisplayStat] = field(default=None, init=True)
 
-    def __init__(self, id="",
-                 skaterFullName="",
-                 positionCode="",
-                 teamId="",
-                 fantasyGrade=None,
-                 yahooEligibility=None,
-                 avgPick=None,
-                 avgRound=None,
-                 percentDrafted=None,
-                 teamName="",
-                 nhlRank=None,
-                 badge=None,
-                 stat=None):
-        self.playerId = id
-        self.skaterFullName = skaterFullName
-        self.positionCode = positionCode
-        self.teamId = teamId
-        self.fantasyGrade = fantasyGrade
-        self.yahooEligibility = yahooEligibility
-        self.avgPick = avgPick
-        self.avgRound = avgRound
-        self.percentDrafted = percentDrafted
-        self.teamName = teamName
-        self.nhlRank = nhlRank
-        self.badge = badge if badge else FantasyPlayerBadge()
-        self.stat = stat if stat else DisplayStat()
+    def __post_init__(self):
+        if self.badge is None:
+            self.badge = FantasyPlayerBadge()
+        if self.stat is None:
+            self.stat = DisplayStat()
+        self.playerId = self.id

@@ -1,15 +1,13 @@
+from dataclasses import dataclass, field
 from server.mockdraft.model.prospect import ProspectElite
 
+
+@dataclass
 class DraftPick:
-
-    def __init__(self, pick=0, team="", player=ProspectElite(), odds=0, list_ball=[], picked_ball=0, prospectlist=[]):
-        self.pick = pick
-        self.team = team
-        self.player = player
-        self.odds = odds
-        self.list_ball = list_ball
-        self.picked_ball = picked_ball
-        self.prospectlist = prospectlist
-
-    def __str__(self):
-        return str(self.__class__) + ": " + str(self.__dict__)
+    pick: int = 0
+    team: str = ""
+    player: ProspectElite = field(default_factory=ProspectElite)
+    odds: int = 0
+    list_ball: list = field(default_factory=list)
+    picked_ball: int = 0
+    prospectlist: list = field(default_factory=list)

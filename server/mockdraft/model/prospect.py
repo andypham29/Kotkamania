@@ -1,50 +1,47 @@
+from dataclasses import dataclass, field
+
+@dataclass
 class Prospect:
-
-    def __init__(self, id, rank, player_name, height, weight, position, team, league):
-        self.id = id
-        self.rank = rank
-        self.player_name = player_name
-        self.height = height
-        self.weight = weight
-        self.position = position
-        self.team = team
-        self.league = league
-
-    def __str__(self):
-        return str(self.__class__) + ": " + str(self.__dict__)
+    id: str
+    rank: str
+    player_name: str
+    height: str
+    weight: str
+    position: str
+    team: str
+    league: str
 
 
+
+@dataclass
 class ProspectElite:
+    id: str = ""
+    name: str = None
+    position: str = None
+    hp: str = None
+    fc: str = None
+    iss: str = None
+    mh: str = None
+    elite: str = None
+    league: str = None
+    team: str = None
+    gp: str = None
+    g: str = None
+    a: str = None
+    p: str = None
+    pim: str = None
+    grade: str = None
+    avg_rank: float = field(default=None, init=False)
 
-    def __init__(self, id="", name=None, position=None, hp=None, fc=None, iss=None, mh=None, elite=None, avg_rank=None,
-                 league=None, team=None, gp=None, g=None, a=None, p=None, pim=None, grade=None):
-        self.id = id
-        self.name = name
-        self.position = position
-        self.hp = hp
-        self.fc = fc
-        self.iss = iss
-        self.mh = mh
-        self.elite = elite
-        self.avg_rank = self.__get_avg_rank()
-        self.league = league
-        self.team = team
-        self.gp = gp
-        self.g = g
-        self.a = a
-        self.p = p
-        self.pim = pim
-        self.grade = None
+    def __post_init__(self):
+        self.avg_rank = self._get_avg_rank()
 
-    def __str__(self):
-        return str(self.__class__) + ": " + str(self.__dict__)
-
-    def __get_avg_rank(self):
+    def _get_avg_rank(self):
         total = 0
         count = 0
-        list = [self.hp, self.fc, self.iss, self.mh, self.elite]
+        list_items = [self.hp, self.fc, self.iss, self.mh, self.elite]
 
-        for item in list:
+        for item in list_items:
             if item is None or item == "-":
                 count += 1
                 total += 42

@@ -1,54 +1,58 @@
 import sqlite3
+import os
+from sqlalchemy.orm import Session
+
+from server.admin.db.models import NhlPlayerStatLogORM, Session as DBSession
 
 
 class InternalLogDao:
 
     def __init__(self, uri=None):
-        uri = 'server/admin/db/log.db' if uri is None else uri
-        self.conn = sqlite3.connect(uri)
-        self.c = self.conn.cursor()
+        # Note: uri parameter is kept for backward compatibility but not used
+        # The centralized database setup is used instead
+        pass
+
+    def _get_session(self) -> Session:
+        """Get a new database session"""
+        return DBSession()
 
     def initNhlPlayerStatLogTable(self):
-        self.c.execute('''CREATE TABLE IF NOT EXISTS nhl_player_stat_log(
-           id INTEGER PRIMARY KEY,
-        	date DATE NOT NULL UNIQUE,
-        	description TEXT,
-        	timeExecuted INTEGER
-        	)''')
-
-        self.conn.commit()
-        self.conn.close()
+        """Initialize NHL player stat log table"""
+        from server.admin.db.models import Base, engine
+        Base.metadata.create_all(engine)
 
     def getNhlPlayerStatLogByDate(self, date):
-        self.c.execute('''SELECT * FROM nhl_player_stat_log WHERE date = ?''', (date,))
-
-        row = self.c.fetchone()
-
-        self.conn.close()
-        return NhlPlayerStatLog(row[1], row[2], row[3])
+        session = DBSession()
+        try:
+            row = session.query(NhlPlayerStatLogORM).filter_by(date=date).first()
+            if not row:
+                return None
+            return NhlPlayerStatLog(row.date, row.description, row.timeExecuted)
+        finally:
+            session.close()
 
     def saveNhlPlayerStatLog(self, log):
-        self.c.execute(
-            '''INSERT INTO nhl_player_stat_log (
-            date, 
-            description,
-            timeExecuted) VALUES (?,?,?)''',
-            (log.date,
-             log.description,
-             log.timeExecuted,))
-
-        self.conn.commit()
-        self.conn.close()
+        session = DBSession()
+        try:
+            new_log = NhlPlayerStatLogORM(
+                date=log.date,
+                description=log.description,
+                timeExecuted=log.timeExecuted
+            )
+            session.add(new_log)
+            session.commit()
+        finally:
+            session.close()
 
     def updateNhlPlayerStatLog(self, log):
-        self.c.execute(
-            '''UPDATE nhl_player_stat_log SET
-            timeExecuted = ? 
-            WHERE date = ?''',
-            (log.timeExecuted,
-             log.date,))
-        self.conn.commit()
-        self.conn.close()
+        session = DBSession()
+        try:
+            existing = session.query(NhlPlayerStatLogORM).filter_by(date=log.date).first()
+            if existing:
+                existing.timeExecuted = log.timeExecuted
+                session.commit()
+        finally:
+            session.close()
 
 
 class NhlPlayerStatLog:

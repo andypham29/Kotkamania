@@ -1,25 +1,24 @@
+import os
 from sqlalchemy.orm import Session
 
-from server.commons.db.database import DatabaseManager
+from server.internaldata.db.models import FantasyPlayerStreakIndexORM, Base, Session as DBSession, engine
 from server.internaldata.model.fantasy_player_streak_index import FantasyPlayerStreakIndex
-from server.internaldata.db.models import FantasyPlayerStreakIndexORM
 
 
 class FantasyPlayerStreakIndexDao:
 
     def __init__(self, uri=None):
-        self.uri = uri or 'server/internaldata/db/fantasy.db'
+        # Note: uri parameter is kept for backward compatibility but not used
+        # The centralized database setup is used instead
+        pass
 
     def _get_session(self) -> Session:
         """Get a new database session"""
-        return DatabaseManager.get_session(self.uri)
+        return DBSession()
 
     def initFantasyPlayerStreakIndexTable(self):
         """Initialize fantasy streak index table"""
-        DatabaseManager.create_tables(
-            __import__('server.internaldata.db.models', fromlist=['Base']).Base,
-            self.uri
-        )
+        Base.metadata.create_all(engine)
 
     def saveOrUpdateFantasyPlayerStreakIndex(self, fantasy_streak_info):
         """Save or update fantasy player streak index"""

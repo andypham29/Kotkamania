@@ -1,6 +1,8 @@
-import sqlite3
+import os
+from sqlalchemy.orm import Session
 
 from server.mockdraft.model.prospect import ProspectElite
+from server.mockdraft.db.models import ProspectEliteORM, Base, Session as DBSession, engine
 from setting import Setting
 
 
@@ -8,178 +10,156 @@ class ProspectEliteDao:
 
     def __init__(self, year=Setting.NHL_YEAR):
         self.tablename = f"eliteprospect{year}"
-        self.conn = sqlite3.connect('server/mockdraft/db/eliteprospect.db')
-        self.c = self.conn.cursor()
 
     def initProspectEliteTable(self):
-        self.c.execute(f'''CREATE TABLE IF NOT EXISTS {self.tablename}(
-            id INTEGER PRIMARY KEY,
-            name VARCHAR NOT NULL UNIQUE,
-            position VARCHAR,
-            avg_rank VARCHAR,
-            hp VARCHAR,
-            fc VARCHAR,
-            iss VARCHAR,
-            mh VARCHAR,
-            elite VARCHAR,
-            league VARCHAR,
-            team VARCHAR,
-            gp VARCHAR,
-            g VARCHAR,
-            a VARCHAR,
-            p VARCHAR,
-            pim VARCHAR
-            )''')
-
-        self.conn.commit()
-        self.conn.close()
+        """Initialize elite prospect table"""
+        Base.metadata.create_all(engine)
 
     def getProspectById(self, id):
-        self.c.execute(f'''SELECT * FROM {self.tablename} WHERE id = ?''', (id,))
-
-        row = self.c.fetchone()
-
-        self.conn.close()
-        return ProspectElite(id=row[0], name=row[1], position=row[2], avg_rank=row[3], hp=row[4], fc=row[5], iss=row[6],
-                             mh=row[7], elite=row[8], league=row[9], team=row[10], gp=row[11], g=row[12], a=row[13],
-                             p=row[14], pim=row[15])
+        session = DBSession()
+        try:
+            row = session.query(ProspectEliteORM).filter_by(id=id).first()
+            if not row:
+                return None
+            return ProspectElite(id=row.id, name=row.name, position=row.position, avg_rank=row.avg_rank, hp=row.hp, fc=row.fc, iss=row.iss,
+                                 mh=row.mh, elite=row.elite, league=row.league, team=row.team, gp=row.gp, g=row.g, a=row.a,
+                                 p=row.p, pim=row.pim)
+        finally:
+            session.close()
 
     def getProspectByPosition(self, position, page):
-        query = f'''SELECT * FROM {self.tablename} WHERE position LIKE '%{position}%' ORDER BY CAST(avg_rank AS UNSIGNED) IS NULL ASC'''
+        session = DBSession()
+        try:
+            query = session.query(ProspectEliteORM).filter(
+                ProspectEliteORM.position.like(f'%{position}%')
+            ).order_by(ProspectEliteORM.avg_rank)
 
-        if int(page) > 0:
-            query += f'LIMIT 20*{page}, 20'
+            if int(page) > 0:
+                query = query.offset(20 * int(page)).limit(20)
 
-        print(query)
-        self.c.execute(query)
-        records = self.c.fetchall()
-        list = []
-        print("records", len(records))
-        for row in records:
-            prospect = ProspectElite(id=row[0], name=row[1], position=row[2], avg_rank=row[3], hp=row[4], fc=row[5],
-                                     iss=row[6], mh=row[7], elite=row[8], league=row[9], team=row[10], gp=row[11],
-                                     g=row[12], a=row[13], p=row[14], pim=row[15])
-            list.append(prospect)
+            records = query.all()
+            list_result = []
+            for row in records:
+                prospect = ProspectElite(id=row.id, name=row.name, position=row.position, avg_rank=row.avg_rank, hp=row.hp, fc=row.fc,
+                                         iss=row.iss, mh=row.mh, elite=row.elite, league=row.league, team=row.team, gp=row.gp,
+                                         g=row.g, a=row.a, p=row.p, pim=row.pim)
+                list_result.append(prospect)
 
-        self.conn.commit()
-        self.conn.close()
-
-        return list
+            return list_result
+        finally:
+            session.close()
 
     def getAllProspects(self):
-        self.c.execute(f'''SELECT * FROM {self.tablename}''')
-        records = self.c.fetchall()
+        session = DBSession()
+        try:
+            records = session.query(ProspectEliteORM).all()
 
-        list = []
-        for row in records:
-            prospect = ProspectElite(id=row[0], name=row[1], position=row[2], avg_rank=row[3], hp=row[4], fc=row[5],
-                                     iss=row[6], mh=row[7], elite=row[8], league=row[9], team=row[10], gp=row[11],
-                                     g=row[12], a=row[13], p=row[14], pim=row[15])
-            list.append(prospect)
+            list_result = []
+            for row in records:
+                prospect = ProspectElite(id=row.id, name=row.name, position=row.position, avg_rank=row.avg_rank, hp=row.hp, fc=row.fc,
+                                         iss=row.iss, mh=row.mh, elite=row.elite, league=row.league, team=row.team, gp=row.gp,
+                                         g=row.g, a=row.a, p=row.p, pim=row.pim)
+                list_result.append(prospect)
 
-        self.conn.commit()
-        self.conn.close()
-
-        return list
+            return list_result
+        finally:
+            session.close()
 
     def getAllProspectsWithRanking(self):
-        self.c.execute(f'''SELECT * FROM {self.tablename} WHERE
-            hp NOT LIKE '%-%' OR
-            fc NOT LIKE '%-%' OR
-            iss NOT LIKE '%-%' OR
-            mh NOT LIKE '%-%' OR
-            elite NOT LIKE '%-%'
-            ORDER BY CAST(avg_rank AS UNSIGNED) ASC
+        session = DBSession()
+        try:
+            from sqlalchemy import and_
 
-        ''')
-        records = self.c.fetchall()
+            records = session.query(ProspectEliteORM).filter(
+                and_(
+                    ProspectEliteORM.hp != None,
+                    ProspectEliteORM.fc != None,
+                    ProspectEliteORM.iss != None,
+                    ProspectEliteORM.mh != None,
+                    ProspectEliteORM.elite != None
+                )
+            ).order_by(ProspectEliteORM.avg_rank).all()
 
-        list = []
-        for row in records:
-            prospect = ProspectElite(id=row[0], name=row[1], position=row[2], avg_rank=row[3], hp=row[4], fc=row[5],
-                                     iss=row[6], mh=row[7], elite=row[8], league=row[9], team=row[10], gp=row[11],
-                                     g=row[12], a=row[13], p=row[14], pim=row[15])
-            list.append(prospect)
+            list_result = []
+            for row in records:
+                prospect = ProspectElite(id=row.id, name=row.name, position=row.position, avg_rank=row.avg_rank, hp=row.hp, fc=row.fc,
+                                         iss=row.iss, mh=row.mh, elite=row.elite, league=row.league, team=row.team, gp=row.gp,
+                                         g=row.g, a=row.a, p=row.p, pim=row.pim)
+                list_result.append(prospect)
 
-        self.conn.commit()
-        self.conn.close()
-
-        return list
+            return list_result
+        finally:
+            session.close()
 
     def getProspectsAtPage(self, page=1):
-        if int(page) < 1:
-            raise Exception("Error fetching prospects")
-        self.c.execute(
-            f'''SELECT * FROM {self.tablename} ORDER BY avg_rank IS NULL, CAST(avg_rank AS UNSIGNED) ASC LIMIT 20*{int(page) - 1},20''')
-        records = self.c.fetchall()
+        session = DBSession()
+        try:
+            if int(page) < 1:
+                raise Exception("Error fetching prospects")
 
-        list = []
-        for row in records:
-            prospect = ProspectElite(id=row[0], name=row[1], position=row[2], avg_rank=row[3], hp=row[4], fc=row[5],
-                                     iss=row[6], mh=row[7], elite=row[8], league=row[9], team=row[10], gp=row[11],
-                                     g=row[12], a=row[13], p=row[14], pim=row[15])
-            list.append(prospect)
+            records = session.query(ProspectEliteORM).order_by(
+                ProspectEliteORM.avg_rank
+            ).offset(20 * (int(page) - 1)).limit(20).all()
 
-        self.conn.commit()
-        self.conn.close()
+            list_result = []
+            for row in records:
+                prospect = ProspectElite(id=row.id, name=row.name, position=row.position, avg_rank=row.avg_rank, hp=row.hp, fc=row.fc,
+                                         iss=row.iss, mh=row.mh, elite=row.elite, league=row.league, team=row.team, gp=row.gp,
+                                         g=row.g, a=row.a, p=row.p, pim=row.pim)
+                list_result.append(prospect)
 
-        return list
+            return list_result
+        finally:
+            session.close()
 
     def insertOrUpdateProspectElite(self, prospect):
-        self.c.execute(
-            f'''INSERT OR IGNORE INTO {self.tablename} (name, position, hp, fc, iss, mh, elite, league, team, gp, g, a, p, pim) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
-            (prospect.name,
-             prospect.position,
-             prospect.hp,
-             prospect.fc,
-             prospect.iss,
-             prospect.mh,
-             prospect.elite,
-             prospect.league,
-             prospect.team,
-             prospect.gp,
-             prospect.g,
-             prospect.a,
-             prospect.p,
-             prospect.pim))
+        session = DBSession()
+        try:
+            existing = session.query(ProspectEliteORM).filter_by(name=prospect.name).first()
 
-        self.c.execute(f'''UPDATE {self.tablename} SET
-            hp = ifnull(?, hp),
-            fc = ifnull(?, fc),
-            iss = ifnull(?, iss),
-            mh = ifnull(?, mh),
-            elite = ifnull(?, elite),
-            league = ifnull(?, league),
-            team = ifnull(?, team),
-            gp = ifnull(?, gp),
-            g = ifnull(?, g),
-            a = ifnull(?, a),
-            p = ifnull(?, p),
-            pim = ifnull(?, pim)
-            WHERE name = ?''',
-                       (prospect.hp,
-                        prospect.fc,
-                        prospect.iss,
-                        prospect.mh,
-                        prospect.elite,
-                        prospect.league,
-                        prospect.team,
-                        prospect.gp,
-                        prospect.g,
-                        prospect.a,
-                        prospect.p,
-                        prospect.pim,
-                        prospect.name))
+            if existing:
+                existing.position = prospect.position
+                existing.hp = prospect.hp
+                existing.fc = prospect.fc
+                existing.iss = prospect.iss
+                existing.mh = prospect.mh
+                existing.elite = prospect.elite
+                existing.league = prospect.league
+                existing.team = prospect.team
+                existing.gp = prospect.gp
+                existing.g = prospect.g
+                existing.a = prospect.a
+                existing.p = prospect.p
+                existing.pim = prospect.pim
+            else:
+                new_prospect = ProspectEliteORM(
+                    name=prospect.name,
+                    position=prospect.position,
+                    hp=prospect.hp,
+                    fc=prospect.fc,
+                    iss=prospect.iss,
+                    mh=prospect.mh,
+                    elite=prospect.elite,
+                    league=prospect.league,
+                    team=prospect.team,
+                    gp=prospect.gp,
+                    g=prospect.g,
+                    a=prospect.a,
+                    p=prospect.p,
+                    pim=prospect.pim
+                )
+                session.add(new_prospect)
 
-        self.conn.commit()
-        self.conn.close()
+            session.commit()
+        finally:
+            session.close()
 
     def updateProspectEliteAvgRank(self, prospect):
-        self.c.execute(f'''UPDATE {self.tablename} SET
-            avg_rank = ?
-            WHERE name = ?''',
-                       (prospect.avg_rank,
-                        prospect.name))
-
-        self.conn.commit()
-        self.conn.close()
+        session = DBSession()
+        try:
+            existing = session.query(ProspectEliteORM).filter_by(name=prospect.name).first()
+            if existing:
+                existing.avg_rank = prospect.avg_rank
+                session.commit()
+        finally:
+            session.close()

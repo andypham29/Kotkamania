@@ -1,67 +1,64 @@
-import sqlite3
+import os
+from sqlalchemy.orm import Session
+
 from server.mockdraft.model.prospect import Prospect
+from server.mockdraft.db.models import ProspectORM, Base, Session as DBSession, engine
 
 
 class ProspectDao:
 
     def __init__(self):
-        self.conn = sqlite3.connect('server/mockdraft/db/example.db')
-        self.c = self.conn.cursor()
+        pass
 
     def initProspectTable(self):
-        self.c.execute('''CREATE TABLE IF NOT EXISTS prospects(
-            id INTEGER PRIMARY KEY,
-        	rank TEXT NOT NULL,
-        	player_name TEXT NOT NULL,
-        	height TEXT NOT NULL,
-        	weight TEXT NOT NULL,
-        	position TEXT NOT NULL,
-        	team TEXT NOT NULL,
-        	league TEXT NOT NULL)''')
-
-        self.conn.commit()
-        self.conn.close()
+        """Initialize prospect table"""
+        Base.metadata.create_all(engine)
 
     def createProspect(self, prospect):
-        self.c.execute(
-            '''INSERT INTO prospects (rank, player_name, height, weight, position, team, league) VALUES (?,?,?,?,?,?,?)''',
-            (prospect.rank,
-             prospect.player_name,
-             prospect.height,
-             prospect.weight,
-             prospect.position,
-             prospect.team,
-             prospect.league))
-
-        self.conn.commit()
-        self.conn.close()
+        session = DBSession()
+        try:
+            new_prospect = ProspectORM(
+                rank=prospect.rank,
+                player_name=prospect.player_name,
+                height=prospect.height,
+                weight=prospect.weight,
+                position=prospect.position,
+                team=prospect.team,
+                league=prospect.league
+            )
+            session.add(new_prospect)
+            session.commit()
+        finally:
+            session.close()
 
     def getProspectById(self, id):
-        self.c.execute('''SELECT * FROM prospects WHERE id = ?''', (id,))
-
-        row = self.c.fetchone()
-        # for row in rows:
-        #     print(row)
-
-        self.conn.close()
-        return Prospect(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+        session = DBSession()
+        try:
+            row = session.query(ProspectORM).filter_by(id=id).first()
+            if not row:
+                return None
+            return Prospect(row.id, row.rank, row.player_name, row.height, row.weight, row.position, row.team, row.league)
+        finally:
+            session.close()
 
     def getAllProspects(self):
-        self.c.execute('''SELECT * FROM prospects''')
+        session = DBSession()
+        try:
+            records = session.query(ProspectORM).all()
 
-        records = self.c.fetchall()
+            list_result = []
+            for row in records:
+                prospect = Prospect(row.id, row.rank, row.player_name, row.height, row.weight, row.position, row.team, row.league)
+                list_result.append(prospect)
 
-        list = []
-        for row in records:
-            prospect = Prospect(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
-            list.append(prospect)
-
-        self.conn.close()
-
-        return list
+            return list_result
+        finally:
+            session.close()
 
     def deleteProspectById(self, id):
-        self.c.execute('''DELETE FROM tasks WHERE id=?''', (id,))
-
-        self.conn.commit()
-        self.conn.close()
+        session = DBSession()
+        try:
+            session.query(ProspectORM).filter_by(id=id).delete()
+            session.commit()
+        finally:
+            session.close()

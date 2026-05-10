@@ -1,11 +1,32 @@
 """
 SQLAlchemy ORM models for the internal database
 """
+import os
+import sqlalchemy as sa
 from sqlalchemy import Column, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import scoped_session, sessionmaker
 from datetime import datetime
 
+# Create base for ORM models
 Base = declarative_base()
+
+# Database setup
+db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "internal.db"))
+os.makedirs(os.path.dirname(db_path), exist_ok=True)
+
+# Create engine
+engine = sa.create_engine(
+    f'sqlite:///{db_path}',
+    connect_args={'check_same_thread': False, 'timeout': 20},
+    echo=False
+)
+
+# Bind metadata to engine
+Base.metadata.bind = engine
+
+# Create scoped session
+Session = scoped_session(sessionmaker(bind=engine, expire_on_commit=False))
 
 
 class FantasyNhlPlayerORM(Base):

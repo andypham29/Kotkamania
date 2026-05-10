@@ -1,18 +1,19 @@
 from sqlalchemy.orm import Session
 
 from server.commons.helper.time_converter import TimeConverter
-from server.commons.db.database import DatabaseManager
+from server.internaldata.db.models import InternalPlayerStatORM, Session as DBSession
 from server.internaldata.model.internal_nhl_player_stat import InternalPlayerStat
-from server.internaldata.db.models import InternalPlayerStatORM
 
 
 class InternalPlayerStatDao:
     def __init__(self, uri=None):
-        self.uri = uri or 'server/internaldata/db/internal.db'
+        # Note: uri parameter is kept for backward compatibility but not used
+        # The centralized database setup is used instead
+        pass
 
     def _get_session(self) -> Session:
         """Get a new database session"""
-        return DatabaseManager.get_session(self.uri)
+        return DBSession()
 
     def get_internal_all_players_stats_by_seasonId(self, seasonId):
         """Get all player stats for a season"""

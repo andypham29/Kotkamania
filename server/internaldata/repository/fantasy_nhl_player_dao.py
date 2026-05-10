@@ -1,29 +1,27 @@
+import os
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
 from server.commons.fantasybadge.model.fantasy_player_badge import FantasyPlayerBadge
 from server.commons.helper.nhl_season_converter import NhlYearConverter
-from server.commons.db.database import DatabaseManager
 from server.internaldata.model.fantasy_nhl_player import FantasyNhlPlayer, DisplayStat
-from server.internaldata.db.models import FantasyNhlPlayerORM, InternalPlayerStatORM
+from server.internaldata.db.models import FantasyNhlPlayerORM, InternalPlayerStatORM, Base, Session as DBSession, engine
 
 
 class FantasyNhlPlayerDao:
 
     def __init__(self, uri=None):
-        self.uri = uri or 'server/internaldata/db/internal.db'
+        # Note: uri parameter is kept for backward compatibility but not used
+        # The centralized database setup is used instead
         self.year = NhlYearConverter.get_previous_season_by_year_removed(0)
 
     def _get_session(self) -> Session:
         """Get a new database session"""
-        return DatabaseManager.get_session(self.uri)
+        return DBSession()
 
     def initFantasySkaterTable(self):
         """Initialize fantasy_nhl_player table"""
-        DatabaseManager.create_tables(
-            __import__('server.internaldata.db.models', fromlist=['Base']).Base,
-            self.uri
-        )
+        Base.metadata.create_all(engine)
 
     def saveFantasySkater(self, fantasy_skater):
         """Save or update fantasy skater"""

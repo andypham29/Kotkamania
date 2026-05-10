@@ -18,12 +18,17 @@ class DatabaseManager:
     def get_engine(cls, uri: str = None):
         """Get or create SQLAlchemy engine for a database URI"""
         if uri is None:
-            uri = 'server/internaldata/db/internal.db'
+            # Construct absolute path to the default database file
+            db_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'server', 'internaldata', 'db')
+            uri = os.path.join(db_dir, 'internal.db')
 
         # Convert file path to SQLite URI if needed
         if not uri.startswith('sqlite://'):
-            # Normalize path separators
-            normalized_path = uri.replace('\\', '/').replace('../', '')
+            # Convert to absolute path if relative
+            if not os.path.isabs(uri):
+                uri = os.path.abspath(uri)
+            # Normalize path separators for SQLite URI (use forward slashes)
+            normalized_path = uri.replace('\\', '/')
             uri = f'sqlite:///{normalized_path}'
 
         if uri not in cls._instances:
@@ -41,7 +46,9 @@ class DatabaseManager:
     def get_session_factory(cls, uri: str = None):
         """Get or create SQLAlchemy session factory"""
         if uri is None:
-            uri = 'server/internaldata/db/internal.db'
+            # Construct absolute path to the default database file
+            db_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'server', 'internaldata', 'db')
+            uri = os.path.join(db_dir, 'internal.db')
 
         engine = cls.get_engine(uri)
 

@@ -28,12 +28,12 @@
             },
             success: function(response) {
                 const [year, month, day] = response.firstDay.split('-');
+                var first_day = parseInt(day)
+                var games = response.teams[0].games
                 var trHTML = "<tr>"
 
                 var game_counter = 0
                 for(var i=0; i<7; i++) {
-                    var first_day = parseInt(day)
-                    var games = response.teams[0].games
                     if(game_counter < games.length && games[game_counter].day === i){
                         trHTML = trHTML + `<td>${getDateCard(games[game_counter], month + "/"+ (first_day+i))}</td>`
                         game_counter++

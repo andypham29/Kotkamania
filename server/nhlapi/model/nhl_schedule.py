@@ -22,7 +22,7 @@ class Team:
 @dataclass
 class NhlGame:
     gamePk: int
-    day: str
+    day: int
     date: str
     homeTeam: 'TeamGameInfo'
     awayTeam: 'TeamGameInfo'

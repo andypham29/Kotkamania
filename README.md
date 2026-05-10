@@ -5,6 +5,7 @@
 
 `$ python -m virtualenv venv`
 
+### Install requirements
 `$ pip install -r requirements.txt`
 
 `$ cd venv/Scripts/`
@@ -13,6 +14,9 @@
 
 `$ pip freeze > requirements.txt (cd to root of project)`
 
+### Run the app
+
+`$ python app.py`
 
 ## API
 /api/prospects	

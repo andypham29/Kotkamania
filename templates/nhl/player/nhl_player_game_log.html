@@ -43,7 +43,7 @@
             clearGraph()
 
             $.ajax({
-            url: `https://api-web.nhle.com/v1/player/{playerId}/game-log/20242025/2`,
+            url: `/api/nhl/players/${playerId}/gamelog`,
             crossDomain: true,
             dataType: "json",
             error: function(response) {
@@ -53,7 +53,7 @@
                 player = response
                 var stats = ""
                 var games_shown = 5
-                if(player.gameLog != undefined){
+                if(player && player.length > 0){
                 if(!(position).localeCompare('G')) {
                         var goalieStats = "<tr>" +
                         "<th></th><th></th><th>RES</th><td>SV</td><td>SHA</td><td>SV%</td><td>SO</td><td>TOI</td>" +
@@ -95,13 +95,11 @@
                         "<th>SHOTS</th><th>HITS</th><th>BLKS</th>" +
                         "</tr>"
 
-                        player.stats[0].splits.slice(0, games_shown)
                          // chart
-                        getPlayerStatsGraph(player.stats[0].splits.map(item => item.stat.points))
+                        getPlayerStatsGraph(player.map(item => item.points))
 
-                        player.stats[0].splits.forEach(function(item){
-                            var opponent = item.opponent.name.split(" ")
-                            opponent = opponent[opponent.length - 1]
+                        player.forEach(function(item){
+                            var opponent = item.opponent
 
                             var date = item.date.split("-")
                             date = `${date[date.length - 2]}/${date[date.length - 1]}`

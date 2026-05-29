@@ -53,5 +53,5 @@ class NHLSkaterSummaryService:
 
 if __name__ == '__main__':
     import json
-    players = NHLSkaterSummaryService().getAllPlayers()
+    players = NHLSkaterSummaryService().getPlayersPerTeam(1)
     print(json.dumps(players[0].__dict__, indent=2))

@@ -46,5 +46,5 @@ class NHLSkaterRealtimeService:
 
 if __name__ == '__main__':
     import json
-    players = NHLSkaterRealtimeService().getAllPlayers()
+    players = NHLSkaterRealtimeService().getPlayersPerTeam(12)
     print(json.dumps(players[0].__dict__, indent=2))

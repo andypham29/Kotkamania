@@ -68,8 +68,35 @@
                     <button class="btn btn-sm btn-outline-dark" type="button" data-toggle="collapse" data-target="#fpAdvPanel">
                         Advanced <span class="badge badge-primary" id="fpAdvBadge" style="display:none;">0</span>
                     </button>
+                    <button class="btn btn-sm btn-outline-dark" type="button" data-toggle="collapse" data-target="#fpWeightsPanel">
+                        Weights <span class="badge badge-primary" id="fpWeightsBadge" style="display:none;">●</span>
+                    </button>
                     <button class="btn btn-sm btn-outline-secondary" id="fpCopyBtn" type="button">Copy</button>
                     <button class="btn btn-sm btn-outline-danger" id="fpClearBtn" type="button" style="display:none;">Clear list</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="collapse mb-3" id="fpWeightsPanel">
+        <div class="card">
+            <div class="card-header py-2 d-flex align-items-center">
+                <strong>Fantasy Point Weights</strong>
+                <small class="text-muted ml-2">Client-side — multipliers used to compute the FP column. Saved in your browser.</small>
+                <div class="ml-auto">
+                    <button class="btn btn-sm btn-outline-secondary" id="fpWeightsReset" type="button">Reset defaults</button>
+                    <button class="btn btn-sm btn-primary" id="fpWeightsApply" type="button">Apply</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Goals (G)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="G"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Assists (A)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="A"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Shots (SOG)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="SOG"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">PP Points (PPP)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="PPP"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Hits (HIT)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="HIT"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Blocks (BLK)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="BLK"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">+/- (PLUSMINUS)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="PLUSMINUS"></div>
                 </div>
             </div>
         </div>
@@ -143,7 +170,23 @@
         draftboard: "draftboard_fantasy_player"
     };
 
-    const WEIGHTS = { G: 2.1, A: 2, SOG: 0.5, PPP: 1, HIT: 0.25, BLK: 0.25, PLUSMINUS: 0.1 };
+    const DEFAULT_WEIGHTS = { G: 2.1, A: 2, SOG: 0.5, PPP: 1, HIT: 0.25, BLK: 0.25, PLUSMINUS: 0.1 };
+    const WEIGHTS_STORAGE_KEY = "fp_weights";
+
+    const loadWeights = () => {
+        try {
+            const raw = localStorage.getItem(WEIGHTS_STORAGE_KEY);
+            if (!raw) return { ...DEFAULT_WEIGHTS };
+            const saved = JSON.parse(raw) || {};
+            const out = { ...DEFAULT_WEIGHTS };
+            Object.keys(DEFAULT_WEIGHTS).forEach(k => {
+                if (typeof saved[k] === "number" && isFinite(saved[k])) out[k] = saved[k];
+            });
+            return out;
+        } catch (e) { return { ...DEFAULT_WEIGHTS }; }
+    };
+
+    const WEIGHTS = loadWeights();
 
     const state = {
         all:         [],
@@ -339,6 +382,29 @@
         }
     };
 
+    const isWeightsModified = () =>
+        Object.keys(DEFAULT_WEIGHTS).some(k => WEIGHTS[k] !== DEFAULT_WEIGHTS[k]);
+
+    const refreshWeightsBadge = () => {
+        const b = document.getElementById("fpWeightsBadge");
+        b.style.display = isWeightsModified() ? "" : "none";
+    };
+
+    const fillWeightsInputs = () => {
+        document.querySelectorAll("#fpWeightsPanel input[data-weight]").forEach(el => {
+            el.value = WEIGHTS[el.dataset.weight];
+        });
+    };
+
+    const applyWeightsFromInputs = () => {
+        document.querySelectorAll("#fpWeightsPanel input[data-weight]").forEach(el => {
+            const k = el.dataset.weight;
+            const v = parseFloat(el.value);
+            WEIGHTS[k] = isFinite(v) ? v : DEFAULT_WEIGHTS[k];
+        });
+        try { localStorage.setItem(WEIGHTS_STORAGE_KEY, JSON.stringify(WEIGHTS)); } catch (e) {}
+    };
+
     const refreshAdvBadge = () => {
         const n = Object.keys(state.percentiles).length;
         const b = document.getElementById("fpAdvBadge");
@@ -469,6 +535,28 @@
             });
         });
 
+        document.getElementById("fpWeightsApply").addEventListener("click", () => {
+            applyWeightsFromInputs();
+            refreshWeightsBadge();
+            toast(isWeightsModified() ? "Weights applied" : "Weights at defaults");
+            renderTable();
+        });
+
+        document.getElementById("fpWeightsReset").addEventListener("click", () => {
+            Object.keys(DEFAULT_WEIGHTS).forEach(k => { WEIGHTS[k] = DEFAULT_WEIGHTS[k]; });
+            try { localStorage.removeItem(WEIGHTS_STORAGE_KEY); } catch (e) {}
+            fillWeightsInputs();
+            refreshWeightsBadge();
+            toast("Weights reset");
+            renderTable();
+        });
+
+        document.querySelectorAll("#fpWeightsPanel input[data-weight]").forEach(el => {
+            el.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") { e.preventDefault(); document.getElementById("fpWeightsApply").click(); }
+            });
+        });
+
         document.addEventListener("keydown", (e) => {
             const tag = (e.target.tagName || "").toLowerCase();
             if (e.key === "/" && tag !== "input" && tag !== "textarea") {
@@ -478,7 +566,7 @@
         });
     };
 
-    $(document).ready(() => { wireEvents(); load(); });
+    $(document).ready(() => { wireEvents(); fillWeightsInputs(); refreshWeightsBadge(); load(); });
 })();
 </script>
 

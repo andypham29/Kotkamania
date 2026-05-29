@@ -1,0 +1,488 @@
+<script src="{{url_for('static', filename='cookiehandler.js')}}"></script>
+<script src="{{url_for('static', filename='fantasycookiehandler.js')}}"></script>
+
+<style>
+    /* Minimal additions — everything else comes from Bootstrap 4.5. */
+    #fpTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 2; cursor: pointer; user-select: none; white-space: nowrap; }
+    #fpTable thead th.no-sort { cursor: default; }
+    #fpTable thead th.asc::after  { content: " ▲"; color: #007bff; }
+    #fpTable thead th.desc::after { content: " ▼"; color: #007bff; }
+    .fp-table-wrap { max-height: 70vh; overflow: auto; }
+    .pos-chip { display:inline-block; padding:1px 7px; border-radius:10px; font-size:.72rem; font-weight:700; color:#fff; background:#6c757d; min-width:28px; text-align:center; }
+    .pos-chip.pos-C { background:#007bff; }
+    .pos-chip.pos-L { background:#28a745; }
+    .pos-chip.pos-R { background:#dc3545; }
+    .pos-chip.pos-D { background:#6f42c1; }
+    .pos-chip.pos-G { background:#ffc107; color:#212529; }
+    .fp-nullish { color:#adb5bd; font-style:italic; }
+    .fp-toast { position:fixed; bottom:1.5rem; right:1.5rem; z-index:1080; min-width:200px; display:none; }
+    .fp-toast.show { display:block; }
+</style>
+
+<div class="container-fluid py-3">
+    <div class="d-flex flex-wrap align-items-center mb-3">
+        <h3 class="mb-0 mr-3">Fantasy Players</h3>
+        <small class="text-muted">
+            Showing <strong id="fpVisibleCount">0</strong> of <strong id="fpTotalCount">0</strong>
+        </small>
+        <small class="text-muted ml-auto">
+            <span class="badge badge-warning">★ <span id="fpFavCount">0</span></span>
+            <span class="badge badge-info">👁 <span id="fpWatchCount">0</span></span>
+            <span class="badge badge-success">✓ <span id="fpDraftCount">0</span></span>
+        </small>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header bg-white">
+            <ul class="nav nav-tabs card-header-tabs" id="fpTabs">
+                <li class="nav-item"><a class="nav-link active" href="#" data-view="all">All <span class="badge badge-secondary ml-1" id="fpTabAll">0</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-view="favorite">★ Favorites <span class="badge badge-secondary ml-1" id="fpTabFav">0</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-view="watchlist">👁 Watchlist <span class="badge badge-secondary ml-1" id="fpTabWatch">0</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-view="draftboard">✓ Draftboard <span class="badge badge-secondary ml-1" id="fpTabDraft">0</span></a></li>
+            </ul>
+        </div>
+        <div class="card-body p-2">
+            <div class="d-flex flex-wrap align-items-center" style="gap: .5rem;">
+                <input id="fpSearchInput" type="text" class="form-control form-control-sm" placeholder="Search by name… (press / to focus)" autocomplete="off" style="width: 260px;">
+
+                <div class="btn-group-toggle" data-toggle="buttons" id="fpPositionPills">
+                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="C" autocomplete="off"> C</label>
+                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="L" autocomplete="off"> L</label>
+                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="R" autocomplete="off"> R</label>
+                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="D" autocomplete="off"> D</label>
+                    <label class="btn btn-sm btn-outline-secondary"><input type="checkbox" data-pos="G" autocomplete="off"> G</label>
+                </div>
+
+                <select class="form-control form-control-sm" id="fpSortSelect" style="width: auto;">
+                    <option value="score">Sort: Score</option>
+                    <option value="fp" selected>Sort: Fantasy Points</option>
+                    <option value="nhl">Sort: NHL Rank</option>
+                    <option value="espn">Sort: ESPN Avg Pick</option>
+                    <option value="goals">Sort: Goals</option>
+                    <option value="assists">Sort: Assists</option>
+                    <option value="points">Sort: Points</option>
+                    <option value="name">Sort: Name</option>
+                </select>
+
+                <div class="ml-auto">
+                    <button class="btn btn-sm btn-outline-dark" type="button" data-toggle="collapse" data-target="#fpAdvPanel">
+                        Advanced <span class="badge badge-primary" id="fpAdvBadge" style="display:none;">0</span>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" id="fpCopyBtn" type="button">Copy</button>
+                    <button class="btn btn-sm btn-outline-danger" id="fpClearBtn" type="button" style="display:none;">Clear list</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="collapse mb-3" id="fpAdvPanel">
+        <div class="card">
+            <div class="card-header py-2 d-flex align-items-center">
+                <strong>Percentile Filters</strong>
+                <small class="text-muted ml-2">Server-side filter — show players above the Nth percentile in any selected stat.</small>
+                <div class="ml-auto">
+                    <button class="btn btn-sm btn-outline-danger" id="fpAdvClear" type="button">Clear</button>
+                    <button class="btn btn-sm btn-primary" id="fpAdvApply" type="button">Apply</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Shots</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="shotPercentile" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Hits</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="hitPercentile" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Blocks</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="blockPercentile" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Goals</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="goalPercentile" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Assists</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="assistPercentile" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Points</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="pointPercentile" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">TOI</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="toiPercentile" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">PP TOI</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="pptoiPercentile" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">EV TOI</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="evtoiPercentile" placeholder="0-100"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="fp-table-wrap">
+            <table class="table table-sm table-hover mb-0" id="fpTable">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="no-sort">#</th>
+                        <th data-sort-key="name">Player</th>
+                        <th data-sort-key="team">Team</th>
+                        <th data-sort-key="position">Pos</th>
+                        <th data-sort-key="score">Score</th>
+                        <th data-sort-key="fp" class="desc">FP</th>
+                        <th data-sort-key="goals">G</th>
+                        <th data-sort-key="assists">A</th>
+                        <th data-sort-key="points">P</th>
+                        <th data-sort-key="shots">S</th>
+                        <th data-sort-key="hits">H</th>
+                        <th data-sort-key="blocked">B</th>
+                        <th data-sort-key="nhl">NHL</th>
+                        <th data-sort-key="espn">ESPN</th>
+                        <th class="no-sort">Lists</th>
+                    </tr>
+                </thead>
+                <tbody id="fpTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="toast fp-toast" id="fpToast" role="alert">
+    <div class="toast-body" id="fpToastBody"></div>
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    const COOKIES = {
+        favorite:   "favorite_fantasy_player",
+        watchlist:  "watchlist_fantasy_player",
+        draftboard: "draftboard_fantasy_player"
+    };
+
+    const WEIGHTS = { G: 2.1, A: 2, SOG: 0.5, PPP: 1, HIT: 0.25, BLK: 0.25, PLUSMINUS: 0.1 };
+
+    const state = {
+        all:         [],
+        view:        "all",
+        positions:   new Set(),
+        query:       "",
+        sortKey:     "fp",
+        sortDesc:    true,
+        percentiles: {},
+    };
+
+    const fpPoints = (p) => {
+        const s = p.stat || {};
+        return (
+            (s.goals           || 0) * WEIGHTS.G +
+            (s.assists         || 0) * WEIGHTS.A +
+            (s.shots           || 0) * WEIGHTS.SOG +
+            (s.powerPlayPoints || 0) * WEIGHTS.PPP +
+            (s.powerPlayGoals  || 0) * WEIGHTS.PPP +
+            (s.hits            || 0) * WEIGHTS.HIT +
+            (s.blocked         || 0) * WEIGHTS.BLK +
+            (s.plusMinus       || 0) * WEIGHTS.PLUSMINUS
+        );
+    };
+
+    const nullish = (v) =>
+        (v === null || v === undefined || v === "" || v === "null")
+            ? `<span class="fp-nullish">—</span>`
+            : v;
+
+    const positionChip = (code) => {
+        const c = (code || "").toUpperCase().split(",")[0];
+        const known = ['C','L','R','D','G'].indexOf(c) >= 0;
+        return `<span class="pos-chip ${known ? 'pos-' + c : ''}">${c || "?"}</span>`;
+    };
+
+    const cookieList = (name) => getPlayersInCookie(name).map(Number);
+    const isIn = (id, list) => list.indexOf(Number(id)) >= 0;
+
+    const toast = (msg) => {
+        document.getElementById("fpToastBody").textContent = msg;
+        const el = document.getElementById("fpToast");
+        el.classList.add("show");
+        clearTimeout(toast._t);
+        toast._t = setTimeout(() => el.classList.remove("show"), 1600);
+    };
+
+    const sortValue = (p, key) => {
+        const s = p.stat || {};
+        switch (key) {
+            case "name":     return (p.skaterFullName || "").toLowerCase();
+            case "team":     return (p.teamName || "").toLowerCase();
+            case "position": return (p.positionCode || "").toLowerCase();
+            case "score":    return (p.fantasyGrade == null) ? -Infinity : p.fantasyGrade;
+            case "fp":       return fpPoints(p);
+            case "goals":    return s.goals || 0;
+            case "assists":  return s.assists || 0;
+            case "points":   return s.points || 0;
+            case "shots":    return s.shots || 0;
+            case "hits":     return s.hits || 0;
+            case "blocked":  return s.blocked || 0;
+            case "nhl":      return (p.nhlRank == null) ? Infinity : p.nhlRank;
+            case "espn":     return (p.avgPick == null) ? Infinity : p.avgPick;
+            default:         return 0;
+        }
+    };
+
+    const compare = (a, b) => {
+        const av = sortValue(a, state.sortKey);
+        const bv = sortValue(b, state.sortKey);
+        if (typeof av === "string" || typeof bv === "string") {
+            const r = String(av).localeCompare(String(bv));
+            return state.sortDesc ? -r : r;
+        }
+        if (av < bv) return state.sortDesc ? 1 : -1;
+        if (av > bv) return state.sortDesc ? -1 : 1;
+        return (a.playerId || 0) - (b.playerId || 0);
+    };
+
+    const currentCookies = () => ({
+        fav:   cookieList(COOKIES.favorite),
+        watch: cookieList(COOKIES.watchlist),
+        draft: cookieList(COOKIES.draftboard)
+    });
+
+    const filteredPlayers = (cookies) => {
+        const q = state.query.trim().toLowerCase();
+        let list = state.all.slice();
+
+        if (state.view === "favorite")   list = list.filter(p => isIn(p.playerId, cookies.fav));
+        if (state.view === "watchlist")  list = list.filter(p => isIn(p.playerId, cookies.watch));
+        if (state.view === "draftboard") list = list.filter(p => isIn(p.playerId, cookies.draft));
+
+        if (state.positions.size > 0) {
+            list = list.filter(p => {
+                const elig = (p.yahooEligibility || p.positionCode || "").toUpperCase();
+                return Array.from(state.positions).some(pos => elig.indexOf(pos) >= 0);
+            });
+        }
+
+        if (q) list = list.filter(p => (p.skaterFullName || "").toLowerCase().indexOf(q) >= 0);
+
+        list.sort(compare);
+
+        if (state.view !== "all") {
+            const order = state.view === "favorite"  ? cookies.fav
+                        : state.view === "watchlist" ? cookies.watch
+                        : cookies.draft;
+            list.sort((a, b) => order.indexOf(Number(a.playerId)) - order.indexOf(Number(b.playerId)));
+        }
+
+        return list;
+    };
+
+    const renderRow = (p, idx, cookies) => {
+        const fp      = fpPoints(p).toFixed(1);
+        const elig    = (p.yahooEligibility || p.positionCode || "");
+        const onFav   = isIn(p.playerId, cookies.fav);
+        const onWatch = isIn(p.playerId, cookies.watch);
+        const onDraft = isIn(p.playerId, cookies.draft);
+        const s       = p.stat || {};
+
+        return `<tr data-id="${p.playerId}">
+            <td>${idx}</td>
+            <td><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${p.playerId})">${p.skaterFullName}</button></td>
+            <td><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${p.teamId})">${p.teamName || ""}</button></td>
+            <td>${positionChip(elig)}</td>
+            <td>${ nullish(p.fantasyGrade) }</td>
+            <td><strong>${fp}</strong></td>
+            <td>${ nullish(s.goals) }</td>
+            <td>${ nullish(s.assists) }</td>
+            <td>${ nullish(s.points) }</td>
+            <td>${ nullish(s.shots) }</td>
+            <td>${ nullish(s.hits) }</td>
+            <td>${ nullish(s.blocked) }</td>
+            <td>${ nullish(p.nhlRank) }</td>
+            <td>${ nullish(p.avgPick) }</td>
+            <td>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-sm ${onFav   ? 'btn-warning' : 'btn-outline-warning'}"  data-action="favorite"   data-id="${p.playerId}" title="Favorite">★</button>
+                    <button class="btn btn-sm ${onWatch ? 'btn-info'    : 'btn-outline-info'}"     data-action="watchlist"  data-id="${p.playerId}" title="Watchlist">👁</button>
+                    <button class="btn btn-sm ${onDraft ? 'btn-success' : 'btn-outline-success'}"  data-action="draftboard" data-id="${p.playerId}" title="Draftboard">✓</button>
+                </div>
+            </td>
+        </tr>`;
+    };
+
+    const renderEmpty = () => {
+        const msgs = {
+            all:        "No players match the current filters.",
+            favorite:   "No favorites yet. Click the ★ on any player to add one.",
+            watchlist:  "Your watchlist is empty. Click the 👁 to add a player.",
+            draftboard: "Draftboard is empty. Click the ✓ to add a player."
+        };
+        return `<tr><td colspan="15" class="text-center text-muted py-5">${msgs[state.view] || msgs.all}</td></tr>`;
+    };
+
+    const renderTable = () => {
+        const tbody   = document.getElementById("fpTableBody");
+        const cookies = currentCookies();
+        const visible = filteredPlayers(cookies);
+
+        tbody.innerHTML = visible.length === 0
+            ? renderEmpty()
+            : visible.map((p, i) => renderRow(p, i + 1, cookies)).join("");
+
+        document.getElementById("fpVisibleCount").textContent = visible.length;
+        document.getElementById("fpTotalCount").textContent   = state.all.length;
+        document.getElementById("fpFavCount").textContent     = cookies.fav.length;
+        document.getElementById("fpWatchCount").textContent   = cookies.watch.length;
+        document.getElementById("fpDraftCount").textContent   = cookies.draft.length;
+        document.getElementById("fpTabAll").textContent       = state.all.length;
+        document.getElementById("fpTabFav").textContent       = cookies.fav.length;
+        document.getElementById("fpTabWatch").textContent     = cookies.watch.length;
+        document.getElementById("fpTabDraft").textContent     = cookies.draft.length;
+
+        document.getElementById("fpClearBtn").style.display = (state.view === "all") ? "none" : "";
+
+        document.querySelectorAll("#fpTable thead th").forEach(th => {
+            th.classList.remove("asc", "desc");
+            if (th.dataset.sortKey === state.sortKey) th.classList.add(state.sortDesc ? "desc" : "asc");
+        });
+    };
+
+    const toggleCookie = (id, action) => {
+        const list = cookieList(COOKIES[action]);
+        if (isIn(id, list)) {
+            removePlayerInCookie(Number(id), COOKIES[action]);
+            toast(`Removed from ${action}`);
+        } else {
+            savePlayerInCookie(Number(id), COOKIES[action]);
+            toast(`Added to ${action}`);
+        }
+    };
+
+    const refreshAdvBadge = () => {
+        const n = Object.keys(state.percentiles).length;
+        const b = document.getElementById("fpAdvBadge");
+        b.textContent = n;
+        b.style.display = n > 0 ? "" : "none";
+    };
+
+    const collectPercentiles = () => {
+        const next = {};
+        document.querySelectorAll("#fpAdvPanel input[data-pct]").forEach(el => {
+            const v = el.value.trim();
+            if (v !== "") next[el.dataset.pct] = v;
+        });
+        state.percentiles = next;
+    };
+
+    const buildQuery = () => {
+        const params = Object.keys(state.percentiles)
+            .map(k => `${k}=${state.percentiles[k]}`);
+        return params.length ? `?${params.join("&")}` : "";
+    };
+
+    const load = () => {
+        const tbody = document.getElementById("fpTableBody");
+        tbody.innerHTML = `<tr><td colspan="15" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <div class="text-muted mt-2">Loading players…</div>
+        </td></tr>`;
+
+        $.ajax({
+            url: "/api/nhl/fantasy" + buildQuery(),
+            crossDomain: true,
+            dataType: "json",
+            type: "GET",
+            success: (resp) => {
+                state.all = Array.isArray(resp) ? resp : [];
+                renderTable();
+            },
+            error: (xhr) => {
+                tbody.innerHTML = `<tr><td colspan="15" class="text-center text-danger py-5">Failed to load players. (${xhr.status})</td></tr>`;
+            }
+        });
+    };
+
+    const wireEvents = () => {
+        document.getElementById("fpSearchInput").addEventListener("input", (e) => {
+            state.query = e.target.value;
+            renderTable();
+        });
+
+        document.getElementById("fpPositionPills").addEventListener("change", (e) => {
+            const input = e.target.closest("input[data-pos]");
+            if (!input) return;
+            const pos = input.dataset.pos;
+            if (input.checked) state.positions.add(pos);
+            else               state.positions.delete(pos);
+            renderTable();
+        });
+
+        document.getElementById("fpTabs").addEventListener("click", (e) => {
+            const link = e.target.closest("a.nav-link");
+            if (!link) return;
+            e.preventDefault();
+            state.view = link.dataset.view;
+            document.querySelectorAll("#fpTabs .nav-link").forEach(a => a.classList.remove("active"));
+            link.classList.add("active");
+            renderTable();
+        });
+
+        document.getElementById("fpSortSelect").addEventListener("change", (e) => {
+            state.sortKey  = e.target.value;
+            state.sortDesc = (state.sortKey !== "name");
+            renderTable();
+        });
+
+        document.querySelectorAll("#fpTable thead th[data-sort-key]").forEach(th => {
+            th.addEventListener("click", () => {
+                const key = th.dataset.sortKey;
+                if (state.sortKey === key) state.sortDesc = !state.sortDesc;
+                else { state.sortKey = key; state.sortDesc = (key !== "name"); }
+                document.getElementById("fpSortSelect").value = key;
+                renderTable();
+            });
+        });
+
+        document.getElementById("fpTableBody").addEventListener("click", (e) => {
+            const btn = e.target.closest("button[data-action]");
+            if (!btn) return;
+            toggleCookie(btn.dataset.id, btn.dataset.action);
+            renderTable();
+        });
+
+        document.getElementById("fpCopyBtn").addEventListener("click", () => {
+            const names = filteredPlayers(currentCookies()).map(p => p.skaterFullName).join("\n");
+            if (!names) { toast("Nothing to copy"); return; }
+            navigator.clipboard.writeText(names)
+                .then(() => toast(`Copied ${names.split("\n").length} names`))
+                .catch(() => toast("Copy failed"));
+        });
+
+        document.getElementById("fpClearBtn").addEventListener("click", () => {
+            if (state.view === "all") return;
+            if (!confirm(`Clear your entire ${state.view} list? This cannot be undone.`)) return;
+            setCookie(COOKIES[state.view], "");
+            toast(`${state.view} cleared`);
+            renderTable();
+        });
+
+        document.getElementById("fpAdvApply").addEventListener("click", () => {
+            collectPercentiles();
+            refreshAdvBadge();
+            const n = Object.keys(state.percentiles).length;
+            toast(n ? `Applied ${n} percentile filter${n === 1 ? "" : "s"}` : "Filters cleared");
+            load();
+        });
+
+        document.getElementById("fpAdvClear").addEventListener("click", () => {
+            document.querySelectorAll("#fpAdvPanel input[data-pct]").forEach(el => { el.value = ""; });
+            state.percentiles = {};
+            refreshAdvBadge();
+            toast("Filters cleared");
+            load();
+        });
+
+        document.querySelectorAll("#fpAdvPanel input[data-pct]").forEach(el => {
+            el.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") { e.preventDefault(); document.getElementById("fpAdvApply").click(); }
+            });
+        });
+
+        document.addEventListener("keydown", (e) => {
+            const tag = (e.target.tagName || "").toLowerCase();
+            if (e.key === "/" && tag !== "input" && tag !== "textarea") {
+                e.preventDefault();
+                document.getElementById("fpSearchInput").focus();
+            }
+        });
+    };
+
+    $(document).ready(() => { wireEvents(); load(); });
+})();
+</script>
+
+<!-- Modals reused from the existing fantasy module -->
+{% include 'nhl/player/nhl_player_page_modal.html' %}
+{% include 'nhl/fantasy/nhl_lineup_modal.html' %}
+{% include 'nhl/stats/nhl_stat_modal.html' %}

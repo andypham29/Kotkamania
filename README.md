@@ -1,5 +1,5 @@
 # [NHLMockDraft](https://nhlmockdraft2020.herokuapp.com/)
-
+deployed on [Render](https://dashboard.render.com/)
 ## Installation $ Setup
 `$ pip install virtualenv`
 

@@ -1,9 +1,9 @@
 from typing import Optional, List
 
 from domain.playerstat.model.nhl_player_stat import PlayerStat
-from infra.spi.nhlapi.nhl_skater_realtime_service import NHLSkaterRealtimeService
-from infra.spi.nhlapi.nhl_skater_summary_service import NHLSkaterSummaryService
-from infra.spi.nhlapi.nhl_skater_timeonice_service import NHLSkaterTimeOnIceService
+from infra.spi.nhlapi.nhlskater.nhl_skater_realtime_service import NHLSkaterRealtimeService
+from infra.spi.nhlapi.nhlskater.nhl_skater_summary_service import NHLSkaterSummaryService
+from infra.spi.nhlapi.nhlskater.nhl_skater_timeonice_service import NHLSkaterTimeOnIceService
 
 
 class NhlPlayerStatService:

@@ -4,13 +4,13 @@ from server.commons.helper.nhl_season_converter import NhlYearConverter
 from server.commons.helper.time_converter import TimeConverter
 
 
-class FantasyForwardGraderService:
+class FantasyDefenseGraderService:
 
     def __init__(self):
         self.nhl_player_stat_service = NhlPlayerStatCacheService()
         pass
 
-    def grade_forward(self,player_id,min_stat=None,max_stat=None):
+    def grade_defense(self,player_id,min_stat=None,max_stat=None):
         season_id = NhlYearConverter.get_current_season()
 
         player_stat = self.nhl_player_stat_service.get_stat_player_by_id(player_id, season_id)
@@ -22,13 +22,19 @@ class FantasyForwardGraderService:
         usage_score = self.__calculate_usage_score(player_stat, max_stat, min_stat)
         special_teams_score = self.__calculate_special_teams_score(player_stat, max_stat, min_stat)
 
-        forward_score = \
+        defense_score = \
           0.60 * offense_score + \
           0.40 * special_teams_score
           # 0.25 * play_driving_score + \
           # 0.20 * usage_score + \
 
-        return round(forward_score, 2)
+        return round(defense_score, 2)
+
+    def __get_max_stat(self, season_id):
+        return self.nhl_player_stat_service.get_all_max_stat(season_id)
+
+    def __get_min_stat(self, season_id):
+        return self.nhl_player_stat_service.get_all_min_stat(season_id)
 
     def __calculate_offense_score(self, player_stat: PlayerStat, max_stat, min_stat):
         norm_points60 = self.__normalize(

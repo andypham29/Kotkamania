@@ -52,7 +52,7 @@ tweepy==4.6.0
 typed-ast==1.5.4
 typing_extensions==4.1.1
 urllib3==1.26.12
-Werkzeug==2.0.3
+Werkzeug==3.1.6
 wrapt==1.14.1
 XlsxWriter==3.0.3
 zipp==3.6.0

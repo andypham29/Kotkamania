@@ -15,46 +15,39 @@ class DatabaseManager:
     _session_factories = {}
 
     @classmethod
-    def get_engine(cls, uri: str = None):
-        """Get or create SQLAlchemy engine for a database URI"""
+    def _normalize_uri(cls, uri: str = None) -> str:
         if uri is None:
-            # Construct absolute path to the default database file
-            db_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'server', 'internaldata', 'db')
+            # database.py lives at server/commons/db/; the DB lives at server/internaldata/db/internal.db
+            db_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'internaldata', 'db')
+            os.makedirs(db_dir, exist_ok=True)
             uri = os.path.join(db_dir, 'internal.db')
 
-        # Convert file path to SQLite URI if needed
-        if not uri.startswith('sqlite://'):
-            # Convert to absolute path if relative
-            if not os.path.isabs(uri):
-                uri = os.path.abspath(uri)
-            # Normalize path separators for SQLite URI (use forward slashes)
-            normalized_path = uri.replace('\\', '/')
-            uri = f'sqlite:///{normalized_path}'
+        if uri.startswith('sqlite://'):
+            return uri
+        if not os.path.isabs(uri):
+            uri = os.path.abspath(uri)
+        return f'sqlite:///{uri.replace(os.sep, "/")}'
 
+    @classmethod
+    def get_engine(cls, uri: str = None):
+        """Get or create SQLAlchemy engine for a database URI"""
+        uri = cls._normalize_uri(uri)
         if uri not in cls._instances:
-            # Use StaticPool for SQLite to avoid locking issues with multiple connections
             cls._instances[uri] = create_engine(
                 uri,
                 connect_args={'check_same_thread': False, 'timeout': 20},
                 poolclass=StaticPool,
-                echo=False  # Set to True for SQL debugging
+                echo=False,
             )
-
         return cls._instances[uri]
 
     @classmethod
     def get_session_factory(cls, uri: str = None):
         """Get or create SQLAlchemy session factory"""
-        if uri is None:
-            # Construct absolute path to the default database file
-            db_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'server', 'internaldata', 'db')
-            uri = os.path.join(db_dir, 'internal.db')
-
+        uri = cls._normalize_uri(uri)
         engine = cls.get_engine(uri)
-
         if uri not in cls._session_factories:
             cls._session_factories[uri] = sessionmaker(bind=engine, expire_on_commit=False)
-
         return cls._session_factories[uri]
 
     @classmethod

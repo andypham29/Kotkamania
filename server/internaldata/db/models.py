@@ -6,10 +6,12 @@ import sqlalchemy as sa
 from sqlalchemy import Column, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
-from datetime import datetime
+
+from server.commons.db import DatabaseManager
 
 # Create base for ORM models
 Base = declarative_base()
+DatabaseManager.create_tables(Base)
 
 # Database setup
 db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "internal.db"))

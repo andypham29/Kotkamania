@@ -1,7 +1,9 @@
 from dataclasses import fields
 from typing import List, Optional
 
-from domain.nhlplayerstat.model.nhl_player_stat import PlayerStat
+from sqlalchemy import func, Integer, cast, Float
+
+from domain.playerstat.model.nhl_player_stat import PlayerStat
 from server.internaldata.db.models import InternalPlayerStatORM, Session as DBSession
 
 # ORM columns that exist on `internal_player_stat` and overlap with PlayerStat.
@@ -56,6 +58,78 @@ class NhlPlayerStatRepository:
         finally:
             session.close()
 
+    def find_max_stat(self, season_id):
+        session = self._session()
+        try:
+            row = session.query(
+                func.max(cast(InternalPlayerStatORM.timeOnIce, Float)).label("timeOnIce"),
+                func.max(InternalPlayerStatORM.assists).label("assists"),
+                func.max(InternalPlayerStatORM.goals).label("goals"),
+                func.max(InternalPlayerStatORM.pim).label("pim"),
+                func.max(InternalPlayerStatORM.shots).label("shots"),
+                func.max(InternalPlayerStatORM.games).label("games"),
+                func.max(InternalPlayerStatORM.hits).label("hits"),
+                func.max(InternalPlayerStatORM.powerPlayGoals).label("powerPlayGoals"),
+                func.max(InternalPlayerStatORM.powerPlayPoints).label("powerPlayPoints"),
+                func.max(cast(InternalPlayerStatORM.powerPlayTimeOnIce, Float)).label("powerPlayTimeOnIce"),
+                func.max(cast(InternalPlayerStatORM.evenTimeOnIce, Float)).label("evenTimeOnIce"),
+                func.max(InternalPlayerStatORM.penaltyMinutes).label("penaltyMinutes"),
+                func.max(InternalPlayerStatORM.faceOffPct).label("faceOffPct"),
+                func.max(InternalPlayerStatORM.shotPct).label("shotPct"),
+                func.max(InternalPlayerStatORM.gameWinningGoals).label("gameWinningGoals"),
+                func.max(InternalPlayerStatORM.overTimeGoals).label("overTimeGoals"),
+                func.max(InternalPlayerStatORM.shortHandedGoals).label("shortHandedGoals"),
+                func.max(InternalPlayerStatORM.shortHandedPoints).label("shortHandedPoints"),
+                func.max(cast(InternalPlayerStatORM.shortHandedTimeOnIce, Float)).label("shortHandedTimeOnIce"),
+                func.max(InternalPlayerStatORM.blocked).label("blocked"),
+                func.max(InternalPlayerStatORM.plusMinus).label("plusMinus"),
+                func.max(InternalPlayerStatORM.points).label("points"),
+                func.max(InternalPlayerStatORM.shifts).label("shifts"),
+                func.max(cast(InternalPlayerStatORM.timeOnIcePerGame, Float)).label("timeOnIcePerGame"),
+                func.max(cast(InternalPlayerStatORM.evenTimeOnIcePerGame, Float)).label("evenTimeOnIcePerGame"),
+                func.max(cast(InternalPlayerStatORM.shortHandedTimeOnIcePerGame, Float)).label("shortHandedTimeOnIcePerGame"),
+                func.max(cast(InternalPlayerStatORM.powerPlayTimeOnIcePerGame, Float)).label("powerPlayTimeOnIcePerGame"),
+            ).filter(InternalPlayerStatORM.seasonId == season_id).one()
+            return self._to_domain(row)
+        finally:
+            session.close()
+
+    def find_min_stat(self, season_id):
+        session = self._session()
+        try:
+            row = session.query(
+                func.min(cast(InternalPlayerStatORM.timeOnIce, Float)).label("timeOnIce"),
+                func.min(InternalPlayerStatORM.assists).label("assists"),
+                func.min(InternalPlayerStatORM.goals).label("goals"),
+                func.min(InternalPlayerStatORM.pim).label("pim"),
+                func.min(InternalPlayerStatORM.shots).label("shots"),
+                func.min(InternalPlayerStatORM.games).label("games"),
+                func.min(InternalPlayerStatORM.hits).label("hits"),
+                func.min(InternalPlayerStatORM.powerPlayGoals).label("powerPlayGoals"),
+                func.min(InternalPlayerStatORM.powerPlayPoints).label("powerPlayPoints"),
+                func.min(cast(InternalPlayerStatORM.powerPlayTimeOnIce, Float)).label("powerPlayTimeOnIce"),
+                func.min(cast(InternalPlayerStatORM.evenTimeOnIce, Float)).label("evenTimeOnIce"),
+                func.min(cast(InternalPlayerStatORM.penaltyMinutes, Float)).label("penaltyMinutes"),
+                func.min(InternalPlayerStatORM.faceOffPct).label("faceOffPct"),
+                func.min(InternalPlayerStatORM.shotPct).label("shotPct"),
+                func.min(InternalPlayerStatORM.gameWinningGoals).label("gameWinningGoals"),
+                func.min(InternalPlayerStatORM.overTimeGoals).label("overTimeGoals"),
+                func.min(InternalPlayerStatORM.shortHandedGoals).label("shortHandedGoals"),
+                func.min(InternalPlayerStatORM.shortHandedPoints).label("shortHandedPoints"),
+                func.min(cast(InternalPlayerStatORM.shortHandedTimeOnIce, Float)).label("shortHandedTimeOnIce"),
+                func.min(InternalPlayerStatORM.blocked).label("blocked"),
+                func.min(InternalPlayerStatORM.plusMinus).label("plusMinus"),
+                func.min(InternalPlayerStatORM.points).label("points"),
+                func.min(InternalPlayerStatORM.shifts).label("shifts"),
+                func.min(cast(InternalPlayerStatORM.timeOnIcePerGame, Float)).label("timeOnIcePerGame"),
+                func.min(cast(InternalPlayerStatORM.evenTimeOnIcePerGame, Float)).label("evenTimeOnIcePerGame"),
+                func.min(cast(InternalPlayerStatORM.shortHandedTimeOnIcePerGame, Float)).label("shortHandedTimeOnIcePerGame"),
+                func.min(cast(InternalPlayerStatORM.powerPlayTimeOnIcePerGame, Float)).label("powerPlayTimeOnIcePerGame"),
+            ).filter(InternalPlayerStatORM.seasonId == season_id).one()
+            return self._to_domain(row)
+        finally:
+            session.close()
+
     # ---- helpers ----
     def _upsert(self, session, stat: PlayerStat) -> None:
         existing = session.query(InternalPlayerStatORM).filter_by(
@@ -75,4 +149,10 @@ class NhlPlayerStatRepository:
     def _to_domain(row) -> Optional[PlayerStat]:
         if row is None:
             return None
-        return PlayerStat(**{name: getattr(row, name) for name in _SHARED_FIELDS})
+        SKIP_FIELDS = {"id", "playerId", "seasonId"}
+
+        return PlayerStat(**{
+            name: getattr(row, name)
+            for name in _SHARED_FIELDS
+            if name not in SKIP_FIELDS
+        })

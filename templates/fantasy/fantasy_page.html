@@ -17,6 +17,8 @@
     .fp-nullish { color:#adb5bd; font-style:italic; }
     .fp-toast { position:fixed; bottom:1.5rem; right:1.5rem; z-index:1080; min-width:200px; display:none; }
     .fp-toast.show { display:block; }
+    #fpTable tbody tr.fp-row-highlight > td { background-color: #cbe1f4; }
+    #fpTable tbody tr.fp-row-highlight:hover > td { background-color: #bcdff8; }
 </style>
 
 <div class="container-fluid py-3">
@@ -38,7 +40,7 @@
                 <li class="nav-item"><a class="nav-link active" href="#" data-view="all">All <span class="badge badge-secondary ml-1" id="fpTabAll">0</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-view="favorite">★ Favorites <span class="badge badge-secondary ml-1" id="fpTabFav">0</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-view="watchlist">👁 Watchlist <span class="badge badge-secondary ml-1" id="fpTabWatch">0</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-view="draftboard">✓ Draftboard <span class="badge badge-secondary ml-1" id="fpTabDraft">0</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-view="draftboard">🗊 Draftboard <span class="badge badge-secondary ml-1" id="fpTabDraft">0</span></a></li>
             </ul>
         </div>
         <div class="card-body p-2">
@@ -167,7 +169,9 @@
     const COOKIES = {
         favorite:   "favorite_fantasy_player",
         watchlist:  "watchlist_fantasy_player",
-        draftboard: "draftboard_fantasy_player"
+        draftboard: "draftboard_fantasy_player",
+        highlight:  "highlight_fantasy_player",
+        picked:     "picked_fantasy_player"
     };
 
     const DEFAULT_WEIGHTS = { G: 2.1, A: 2, SOG: 0.5, PPP: 1, HIT: 0.25, BLK: 0.25, PLUSMINUS: 0.1 };
@@ -267,9 +271,11 @@
     };
 
     const currentCookies = () => ({
-        fav:   cookieList(COOKIES.favorite),
-        watch: cookieList(COOKIES.watchlist),
-        draft: cookieList(COOKIES.draftboard)
+        fav:       cookieList(COOKIES.favorite),
+        watch:     cookieList(COOKIES.watchlist),
+        draft:     cookieList(COOKIES.draftboard),
+        highlight: cookieList(COOKIES.highlight),
+        picked:    cookieList(COOKIES.picked)
     });
 
     const filteredPlayers = (cookies) => {
@@ -302,14 +308,17 @@
     };
 
     const renderRow = (p, idx, cookies) => {
-        const fp      = fpPoints(p).toFixed(1);
-        const elig    = (p.yahooEligibility || p.positionCode || "");
-        const onFav   = isIn(p.playerId, cookies.fav);
-        const onWatch = isIn(p.playerId, cookies.watch);
-        const onDraft = isIn(p.playerId, cookies.draft);
-        const s       = p.stat || {};
+        const fp            = fpPoints(p).toFixed(1);
+        const elig          = (p.yahooEligibility || p.positionCode || "");
+        const onFav         = isIn(p.playerId, cookies.fav);
+        const onWatch       = isIn(p.playerId, cookies.watch);
+        const onDraft       = isIn(p.playerId, cookies.draft);
+        const onHighlight   = isIn(p.playerId, cookies.highlight);
+        const onPicked      = isIn(p.playerId, cookies.picked);
+        const s             = p.stat || {};
+        const rowClasses    = [onHighlight ? "fp-row-highlight" : ""].filter(Boolean).join(" ");
 
-        return `<tr data-id="${p.playerId}">
+        return `<tr data-id="${p.playerId}" class="${rowClasses}">
             <td>${idx}</td>
             <td><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${p.playerId})">${p.skaterFullName}</button></td>
             <td><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${p.teamId})">${p.teamName || ""}</button></td>
@@ -326,9 +335,11 @@
             <td>${ nullish(p.avgPick) }</td>
             <td>
                 <div class="btn-group btn-group-sm">
-                    <button class="btn btn-sm ${onFav   ? 'btn-warning' : 'btn-outline-warning'}"  data-action="favorite"   data-id="${p.playerId}" title="Favorite">★</button>
-                    <button class="btn btn-sm ${onWatch ? 'btn-info'    : 'btn-outline-info'}"     data-action="watchlist"  data-id="${p.playerId}" title="Watchlist">👁</button>
-                    <button class="btn btn-sm ${onDraft ? 'btn-success' : 'btn-outline-success'}"  data-action="draftboard" data-id="${p.playerId}" title="Draftboard">✓</button>
+                    <button class="btn btn-sm ${onFav       ? 'btn-warning' : 'btn-outline-warning'}"  data-action="favorite"   data-id="${p.playerId}" title="Favorite">★</button>
+                    <button class="btn btn-sm ${onWatch     ? 'btn-info'    : 'btn-outline-info'}"     data-action="watchlist"  data-id="${p.playerId}" title="Watchlist">👁</button>
+                    <button class="btn btn-sm ${onDraft     ? 'btn-success' : 'btn-outline-success'}"  data-action="draftboard" data-id="${p.playerId}" title="Draftboard">🗊</button>
+                    <button class="btn btn-sm ${onHighlight ? 'btn-primary' : 'btn-outline-secondary'}"  data-action="highlight"  data-id="${p.playerId}" title="Highlight row">✓</button>
+                    <button class="btn btn-sm ${onPicked    ? 'btn-info' : 'btn-outline-primary'}"  data-action="picked"     data-id="${p.playerId}" title="Picked to my team">+</button>
                 </div>
             </td>
         </tr>`;

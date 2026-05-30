@@ -23,4 +23,5 @@ class FantasyTeamHelper:
 
 if __name__ == '__main__':
     a = NhlTeamService().getAllTeams()
-    print(FantasyTeamHelper().get_all_players_in_teams())
+    print(a)
+    # print(FantasyTeamHelper().get_all_players_in_teams())

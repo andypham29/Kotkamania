@@ -1,7 +1,10 @@
-class RosterPlayerInfo:
+from dataclasses import dataclass
+from typing import Optional
 
-    def __init__(self, playerId, fullName, position, jerseyNumber=None):
-        self.playerId = playerId
-        self.fullName = fullName
-        self.position = position
-        self.jerseyNumber = jerseyNumber
+
+@dataclass
+class RosterPlayerInfo:
+    playerId: int
+    fullName: str
+    position: str
+    jerseyNumber: Optional[int] = None

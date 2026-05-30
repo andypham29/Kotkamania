@@ -1,36 +1,39 @@
+from dataclasses import dataclass, field
 from server.commons.helper.nhl_team_converter import NhlTeamConverter
 
 
+@dataclass
 class Schedule:
-
-    def __init__(self, firstDay, lastDay, teams):
-        self.firstDay = firstDay
-        self.lastDay = lastDay
-        self.teams = teams
+    firstDay: str
+    lastDay: str
+    teams: list
 
 
+@dataclass
 class Team:
+    teamId: int
+    games: list
+    team: str = field(default="", init=False)
 
-    def __init__(self, teamId, games):
-        self.teamId = teamId
-        self.team = NhlTeamConverter.get_abbreviation_by_teamId(teamId)
-        self.games = games
+    def __post_init__(self):
+        self.team = NhlTeamConverter.get_abbreviation_by_teamId(self.teamId)
 
 
+@dataclass
 class NhlGame:
-
-    def __init__(self, gamePk, day, date, homeTeam, awayTeam):
-        self.gamePk = gamePk
-        self.day = day
-        self.date = date
-        self.homeTeam = homeTeam
-        self.awayTeam = awayTeam
+    gamePk: int
+    day: int
+    date: str
+    homeTeam: 'TeamGameInfo'
+    awayTeam: 'TeamGameInfo'
 
 
+@dataclass
 class TeamGameInfo:
+    teamId: int
+    teamName: str
+    score: int
+    abbreviation: str = field(default="", init=False)
 
-    def __init__(self, teamId, teamName, score):
-        self.teamId = teamId
-        self.abbreviation = NhlTeamConverter.get_abbreviation_by_teamId(teamId)
-        self.teamName = teamName
-        self.score = score
+    def __post_init__(self):
+        self.abbreviation = NhlTeamConverter.get_abbreviation_by_teamId(self.teamId)

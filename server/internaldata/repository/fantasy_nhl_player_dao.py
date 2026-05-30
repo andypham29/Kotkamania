@@ -1,357 +1,390 @@
-import sqlite3
+import os
+from sqlalchemy import and_, or_
+from sqlalchemy.orm import Session
 
 from server.commons.fantasybadge.model.fantasy_player_badge import FantasyPlayerBadge
 from server.commons.helper.nhl_season_converter import NhlYearConverter
 from server.internaldata.model.fantasy_nhl_player import FantasyNhlPlayer, DisplayStat
+from server.internaldata.db.models import FantasyNhlPlayerORM, InternalPlayerStatORM, Base, Session as DBSession, engine
 
 
 class FantasyNhlPlayerDao:
 
     def __init__(self, uri=None):
-        # uri = 'server/internaldata/db/fantasy.db' if uri is None else uri
-        uri = 'server/internaldata/db/internal.db' if uri is None else uri
-        # uri = '../../server/internaldata/db/internal.db' if uri is None else uri
-        self.conn = sqlite3.connect(uri, timeout=20)
-        self.c = self.conn.cursor()
+        # Note: uri parameter is kept for backward compatibility but not used
+        # The centralized database setup is used instead
         self.year = NhlYearConverter.get_previous_season_by_year_removed(0)
 
-    def initFantasySkaterTable(self):
-        self.c.execute('''CREATE TABLE IF NOT EXISTS fantasy_nhl_player(
-            playerId INTEGER PRIMARY KEY,
-            skaterFullName TEXT NOT NULL,
-            positionCode TEXT NOT NULL,
-            teamId INTEGER NOT NULL,
-            fantasyGrade DOUBLE,
-            yahooEligibility TEXT,
-            avgPick DOUBLE,
-            avgRound DOUBLE,
-            percentDrafted TEXT,
-            teamName TEXT NOT NULL,
-            nhlRank INTEGER,
-            scoring DOUBLE,
-            playmaking DOUBLE,
-            defense DOUBLE,
-            powerplay DOUBLE,
-            intangibles DOUBLE
-            )''')
+    def _get_session(self) -> Session:
+        """Get a new database session"""
+        return DBSession()
 
-        self.conn.commit()
-        self.conn.close()
+    def initFantasySkaterTable(self):
+        """Initialize fantasy_nhl_player table"""
+        Base.metadata.create_all(engine)
 
     def saveFantasySkater(self, fantasy_skater):
+        """Save or update fantasy skater"""
+        session = self._get_session()
+        try:
+            orm_record = session.query(FantasyNhlPlayerORM).filter_by(
+                playerId=fantasy_skater.playerId
+            ).first()
 
-        self.c.execute(
-            '''INSERT OR IGNORE INTO fantasy_nhl_player (playerId, 
-            skaterFullName, 
-            positionCode, 
-            teamId, 
-            teamName, 
-            fantasyGrade,
-            yahooEligibility,
-            avgPick,
-            avgRound,
-            percentDrafted,
-            nhlRank) VALUES (?,?,?,?,?,?,?,?,?,?,?)''',
-            (fantasy_skater.playerId,
-             fantasy_skater.skaterFullName,
-             fantasy_skater.positionCode,
-             fantasy_skater.teamId,
-             fantasy_skater.teamName,
-             fantasy_skater.fantasyGrade,
-             fantasy_skater.yahooEligibility,
-             fantasy_skater.avgPick,
-             fantasy_skater.avgRound,
-             fantasy_skater.percentDrafted,
-             fantasy_skater.nhlRank))
+            if orm_record:
+                # Update existing record
+                orm_record.skaterFullName = fantasy_skater.skaterFullName
+                orm_record.positionCode = fantasy_skater.positionCode
+                orm_record.teamId = fantasy_skater.teamId
+                orm_record.teamName = fantasy_skater.teamName
+                orm_record.fantasyGrade = fantasy_skater.fantasyGrade
+                orm_record.yahooEligibility = fantasy_skater.yahooEligibility
+                orm_record.avgPick = fantasy_skater.avgPick
+                orm_record.avgRound = fantasy_skater.avgRound
+                orm_record.percentDrafted = fantasy_skater.percentDrafted
+                orm_record.nhlRank = fantasy_skater.nhlRank
+            else:
+                # Create new record
+                orm_record = FantasyNhlPlayerORM(
+                    playerId=fantasy_skater.playerId,
+                    skaterFullName=fantasy_skater.skaterFullName,
+                    positionCode=fantasy_skater.positionCode,
+                    teamId=fantasy_skater.teamId,
+                    teamName=fantasy_skater.teamName,
+                    fantasyGrade=fantasy_skater.fantasyGrade,
+                    yahooEligibility=fantasy_skater.yahooEligibility,
+                    avgPick=fantasy_skater.avgPick,
+                    avgRound=fantasy_skater.avgRound,
+                    percentDrafted=fantasy_skater.percentDrafted,
+                    nhlRank=fantasy_skater.nhlRank
+                )
+                session.add(orm_record)
 
-        self.c.execute(
-            '''UPDATE fantasy_nhl_player SET
-            skaterFullName = ifnull(?, skaterFullName), 
-            positionCode = ifnull(?, positionCode), 
-            teamId = ifnull(?, teamId), 
-            teamName = ifnull(?, teamName), 
-            fantasyGrade = ifnull(?, fantasyGrade),
-            yahooEligibility = ifnull(?, yahooEligibility),
-            avgPick = ifnull(?, avgPick),
-            avgRound = ifnull(?, avgRound),
-            percentDrafted = ifnull(?, percentDrafted),
-            nhlRank = ifnull(?, nhlRank)
-            WHERE playerId = ?''',
-            (fantasy_skater.skaterFullName,
-             fantasy_skater.positionCode,
-             fantasy_skater.teamId,
-             fantasy_skater.teamName,
-             fantasy_skater.fantasyGrade,
-             fantasy_skater.yahooEligibility,
-             fantasy_skater.avgPick,
-             fantasy_skater.avgRound,
-             fantasy_skater.percentDrafted,
-             fantasy_skater.nhlRank,
-             fantasy_skater.playerId))
+            session.commit()
+        finally:
+            session.close()
 
-        self.conn.commit()
-        self.conn.close()
 
     def getFantasySkaterById(self, playerId):
-        self.c.execute('''SELECT * FROM fantasy_nhl_player WHERE playerId = ?''', (playerId,))
-
-        row = self.c.fetchone()
-
-        self.conn.close()
-        return self.__convert_to_model(row)
+        """Get fantasy skater by player ID"""
+        session = self._get_session()
+        try:
+            row = session.query(FantasyNhlPlayerORM).filter_by(
+                playerId=playerId
+            ).first()
+            return self.__convert_to_model(row) if row else None
+        finally:
+            session.close()
 
     def getAllFantasySkatersWithStat(self):
-        self.c.execute(f'''SELECT a.playerId, skaterFullName, positionCode, teamId, fantasyGrade, yahooEligibility, 
-            avgPick, avgRound, percentDrafted, teamName, nhlRank, scoring, playmaking, defense, powerplay, intangibles,
-            assists, goals, points, games, shots, hits, blocked, plusMinus, powerPlayGoals, powerPlayPoints 
-            FROM fantasy_nhl_player a
-            LEFT JOIN (SELECT * FROM internal_player_stat WHERE seasonId == {self.year}) b
-            USING(playerId)
-            ''')
+        """Get all fantasy skaters with their stats"""
+        session = self._get_session()
+        try:
+            from sqlalchemy import func
 
-        records = self.c.fetchall()
+            rows = session.query(FantasyNhlPlayerORM).outerjoin(
+                InternalPlayerStatORM,
+                and_(
+                    FantasyNhlPlayerORM.playerId == InternalPlayerStatORM.playerId,
+                    InternalPlayerStatORM.seasonId == self.year
+                )
+            ).all()
 
-        list = []
-        for row in records:
-            fantasy_skater = self.__convert_to_model_with_display_stat(row)
-            list.append(fantasy_skater)
+            result = []
+            for row in rows:
+                # Get associated stat if it exists
+                stat_row = session.query(InternalPlayerStatORM).filter(
+                    InternalPlayerStatORM.playerId == row.playerId,
+                    InternalPlayerStatORM.seasonId == self.year
+                ).first()
 
-        self.conn.close()
+                fantasy_skater = self.__convert_to_model_with_display_stat(row, stat_row)
+                result.append(fantasy_skater)
 
-        return list
+            return result
+        finally:
+            session.close()
 
     def getAllFantasySkatersByPositionCodesWithStats(self, positionCodes, offset):
-        positionCodes[:] = [value for value in positionCodes if value in ['L', 'C', 'R', 'D', 'G']]
-        filter_parameters = str(positionCodes).replace('[', '(').replace(']', ')')
+        """Get fantasy skaters by position codes with stats"""
+        session = self._get_session()
+        try:
+            # Filter position codes
+            valid_positions = [p for p in positionCodes if p in ['L', 'C', 'R', 'D', 'G']]
 
-        query = f'''SELECT a.playerId, skaterFullName, positionCode, teamId, fantasyGrade, yahooEligibility, 
-            avgPick, avgRound, percentDrafted, teamName, nhlRank, scoring, playmaking, defense, powerplay, intangibles, 
-            assists, goals, points, games, shots, hits, blocked, plusMinus, powerPlayGoals, powerPlayPoints 
-            FROM fantasy_nhl_player a
-            LEFT JOIN (SELECT * FROM internal_player_stat WHERE seasonId == {self.year}) b
-            USING(playerId)
-            WHERE positionCode IN {filter_parameters}'''
-        for position in positionCodes:
-            query += f" OR yahooEligibility LIKE '%{position}%'"
+            query = session.query(FantasyNhlPlayerORM).outerjoin(
+                InternalPlayerStatORM,
+                and_(
+                    FantasyNhlPlayerORM.playerId == InternalPlayerStatORM.playerId,
+                    InternalPlayerStatORM.seasonId == self.year
+                )
+            )
 
-        if offset is not None:
-            query += f"LIMIT 125 OFFSET {125 * offset}"
+            # Filter by position code or yahoo eligibility
+            query = query.filter(
+                or_(
+                    FantasyNhlPlayerORM.positionCode.in_(valid_positions),
+                    *[FantasyNhlPlayerORM.yahooEligibility.like(f'%{pos}%') for pos in valid_positions]
+                )
+            )
 
-        self.c.execute(query)
+            if offset is not None:
+                query = query.offset(125 * offset).limit(125)
 
-        records = self.c.fetchall()
+            rows = query.all()
 
-        list = []
-        for row in records:
-            fantasy_skater = self.__convert_to_model_with_display_stat(row)
-            list.append(fantasy_skater)
+            result = []
+            for row in rows:
+                stat_row = session.query(InternalPlayerStatORM).filter(
+                    InternalPlayerStatORM.playerId == row.playerId,
+                    InternalPlayerStatORM.seasonId == self.year
+                ).first()
+                fantasy_skater = self.__convert_to_model_with_display_stat(row, stat_row)
+                result.append(fantasy_skater)
 
-        self.conn.close()
+            return result
+        finally:
+            session.close()
 
-        return list
 
     def getAllFantasySkatersByPositionCodes(self, positionCodes, offset):
-        positionCodes[:] = [value for value in positionCodes if value in ['L', 'C', 'R', 'D', 'G']]
-        filter_parameters = str(positionCodes).replace('[', '(').replace(']', ')')
+        """Get fantasy skaters by position codes"""
+        session = self._get_session()
+        try:
+            valid_positions = [p for p in positionCodes if p in ['L', 'C', 'R', 'D', 'G']]
 
-        query = f'''SELECT a.playerId, skaterFullName, positionCode, teamId, fantasyGrade, yahooEligibility, 
-            avgPick, avgRound, percentDrafted, teamName, nhlRank, scoring, playmaking, defense, powerplay, intangibles, 
-            assists, goals, points, games, shots, hits, blocked, plusMinus, powerPlayGoals, powerPlayPoints 
-            WHERE positionCode IN {filter_parameters}'''
-        for position in positionCodes:
-            query += f" OR yahooEligibility LIKE '%{position}%'"
+            query = session.query(FantasyNhlPlayerORM).filter(
+                or_(
+                    FantasyNhlPlayerORM.positionCode.in_(valid_positions),
+                    *[FantasyNhlPlayerORM.yahooEligibility.like(f'%{pos}%') for pos in valid_positions]
+                )
+            )
 
-        if offset is not None:
-            query += f"LIMIT 125 OFFSET {125 * offset}"
-
-        self.c.execute(query)
-
-        records = self.c.fetchall()
-
-        list = []
-        for row in records:
-            fantasy_skater = self.__convert_to_model_with_display_stat(row)
-            list.append(fantasy_skater)
-
-        self.conn.close()
-
-        return list
+            rows = query.all()
+            return [self.__convert_to_model(row) for row in rows]
+        finally:
+            session.close()
 
     def getAllFantasySkaters(self):
-        self.c.execute('''SELECT * FROM fantasy_nhl_player WHERE fantasyGrade > 30''')  # temp
-
-        records = self.c.fetchall()
-
-        list = []
-        for row in records:
-            fantasy_skater = self.__convert_to_model(row)
-            list.append(fantasy_skater)
-
-        self.conn.close()
-
-        return list
-
-    def getAllFantasySkatersByPositionCodes(self, positionCodes, offset):
-        positionCodes[:] = [value for value in positionCodes if value in ['L', 'C', 'R', 'D', 'G']]
-        filter_parameters = str(positionCodes).replace('[', '(').replace(']', ')')
-
-        query = f'''SELECT * FROM fantasy_nhl_player 
-            WHERE positionCode IN {filter_parameters}'''
-        for position in positionCodes:
-            query += f" OR yahooEligibility LIKE '%{position}%'"
-        # query += f"LIMIT 125 OFFSET {125 * offset}"
-
-        self.c.execute(query)
-
-        records = self.c.fetchall()
-
-        list = []
-        for row in records:
-            fantasy_skater = self.__convert_to_model(row)
-            list.append(fantasy_skater)
-
-        self.conn.close()
-
-        return list
+        """Get all fantasy skaters with grade > 30"""
+        session = self._get_session()
+        try:
+            rows = session.query(FantasyNhlPlayerORM).filter(
+                FantasyNhlPlayerORM.fantasyGrade > 30
+            ).all()
+            return [self.__convert_to_model(row) for row in rows]
+        finally:
+            session.close()
 
     def getAllFantasySkatersInPlayerIdList(self, playerIdList):
-        # positionCodes[:] = [value for value in positionCodes if value in ['L', 'C', 'R', 'D', 'G']]
-        filter_parameters = str(playerIdList).replace('[', '(').replace(']', ')')
-
-        query = f'''SELECT * FROM fantasy_nhl_player 
-            WHERE positionCode IN {filter_parameters}'''
-
-        self.c.execute(query)
-
-        records = self.c.fetchall()
-
-        list = []
-        for row in records:
-            fantasy_skater = self.__convert_to_model(row)
-            list.append(fantasy_skater)
-
-        self.conn.close()
-
-        return list
+        """Get fantasy skaters in player ID list"""
+        session = self._get_session()
+        try:
+            rows = session.query(FantasyNhlPlayerORM).filter(
+                FantasyNhlPlayerORM.playerId.in_(playerIdList)
+            ).all()
+            return [self.__convert_to_model(row) for row in rows]
+        finally:
+            session.close()
 
     def getAllFantasySkatersByTeamId(self, teamId):
-        self.c.execute('''SELECT * FROM fantasy_nhl_player WHERE teamId=?''', (teamId,))
-
-        records = self.c.fetchall()
-
-        list = []
-        for row in records:
-            fantasy_skater = self.__convert_to_model(row)
-            list.append(fantasy_skater)
-
-        self.conn.close()
-
-        return list
+        """Get all fantasy skaters by team ID"""
+        session = self._get_session()
+        try:
+            rows = session.query(FantasyNhlPlayerORM).filter_by(
+                teamId=teamId
+            ).all()
+            return [self.__convert_to_model(row) for row in rows]
+        finally:
+            session.close()
 
     def getAllFantasySkatersBySearchName(self, name):
-        self.c.execute(f"SELECT * FROM fantasy_nhl_player WHERE skaterFullName LIKE \'%{name}%\'")
-
-        records = self.c.fetchall()
-
-        list = []
-        for row in records:
-            fantasy_skater = self.__convert_to_model(row)
-            list.append(fantasy_skater)
-
-        self.conn.close()
-
-        return list
+        """Search fantasy skaters by name"""
+        session = self._get_session()
+        try:
+            rows = session.query(FantasyNhlPlayerORM).filter(
+                FantasyNhlPlayerORM.skaterFullName.like(f'%{name}%')
+            ).all()
+            return [self.__convert_to_model(row) for row in rows]
+        finally:
+            session.close()
 
     def deleteFantasySkaterById(self, playerId):
-        self.c.execute('''DELETE FROM fantasy_nhl_player WHERE playerId=?''', (playerId,))
-
-        self.conn.commit()
-        self.conn.close()
+        """Delete fantasy skater by ID"""
+        session = self._get_session()
+        try:
+            session.query(FantasyNhlPlayerORM).filter_by(
+                playerId=playerId
+            ).delete()
+            session.commit()
+        finally:
+            session.close()
 
     def updateFantasyGradeForFantasySkaterWithId(self, playerId, grade):
+        """Update fantasy grade for a skater"""
+        session = self._get_session()
         try:
-            self.c.execute('''UPDATE fantasy_nhl_player SET
-            fantasyGrade = ?
-            WHERE playerId = ?''', (grade, playerId,))
+            session.query(FantasyNhlPlayerORM).filter_by(
+                playerId=playerId
+            ).update({'fantasyGrade': grade})
+            session.commit()
         finally:
-            self.conn.commit()
-            self.conn.close()
+            session.close()
 
     def bulkUpdateFantasyGradeForFantasySkaterWithId(self, players):
-        for player in players:
-            self.c.execute('''UPDATE fantasy_nhl_player SET
-            fantasyGrade = ?
-            WHERE playerId = ?''', (player.score, player.id,))
-
-        self.conn.commit()
-        self.conn.close()
+        """Bulk update fantasy grades"""
+        session = self._get_session()
+        try:
+            for player in players:
+                session.query(FantasyNhlPlayerORM).filter_by(
+                    playerId=player.id
+                ).update({'fantasyGrade': player.score})
+            session.commit()
+        finally:
+            session.close()
 
     def updateNhlRankForFantasySkaterWithName(self, playerName, nhlRank):
+        """Update NHL rank by player name"""
         print(playerName, ": ", nhlRank)
-        # self.c.execute('''UPDATE fantasy_nhl_player SET nhlRank = NULL''')
-        self.c.execute('''UPDATE fantasy_nhl_player SET
-        nhlRank = ?
-        WHERE skaterFullName = ?''', (nhlRank, playerName,))
-
-        self.conn.commit()
-        self.conn.close()
+        session = self._get_session()
+        try:
+            session.query(FantasyNhlPlayerORM).filter_by(
+                skaterFullName=playerName
+            ).update({'nhlRank': nhlRank})
+            session.commit()
+        finally:
+            session.close()
 
     def updateYahooRankForFantasySkaterWithName(self, playerName, nhlRank):
+        """Update Yahoo rank by player name"""
         print(playerName, ": ", nhlRank)
-        self.c.execute('''UPDATE fantasy_nhl_player SET
-        avgPick = ?
-        WHERE skaterFullName = ?''', (nhlRank, playerName,))
-
-        self.conn.commit()
-        self.conn.close()
+        session = self._get_session()
+        try:
+            session.query(FantasyNhlPlayerORM).filter_by(
+                skaterFullName=playerName
+            ).update({'avgPick': nhlRank})
+            session.commit()
+        finally:
+            session.close()
 
     def updateFantasyYahooInfoForFantasySkater(self, yahoo_info):
-        self.c.execute('''UPDATE fantasy_nhl_player SET
-        yahooEligibility = ?,
-        avgPick = ?,
-        avgRound = ?,
-        percentDrafted = ?
-        WHERE skaterFullName = ?''', (yahoo_info[1], yahoo_info[2], yahoo_info[3], yahoo_info[4], yahoo_info[0],))
-
-        self.conn.commit()
-        self.conn.close()
+        """Update Yahoo info for a skater"""
+        session = self._get_session()
+        try:
+            session.query(FantasyNhlPlayerORM).filter_by(
+                skaterFullName=yahoo_info[0]
+            ).update({
+                'yahooEligibility': yahoo_info[1],
+                'avgPick': yahoo_info[2],
+                'avgRound': yahoo_info[3],
+                'percentDrafted': yahoo_info[4]
+            })
+            session.commit()
+        finally:
+            session.close()
 
     def updateFantasyBadgeForFantasySkaterByPlayerId(self, fantasy_badge, playerId):
-        self.c.execute('''UPDATE fantasy_nhl_player SET
-        scoring = ?,
-        playmaking = ?,
-        defense = ?,
-        powerplay = ?,
-        intangibles = ?
-        WHERE playerId = ?''', (fantasy_badge.scoring, fantasy_badge.playmaking, fantasy_badge.defense,
-                                fantasy_badge.powerplay, fantasy_badge.intangibles, playerId,))
-
-        self.conn.commit()
-        self.conn.close()
+        """Update fantasy badge for a skater"""
+        session = self._get_session()
+        try:
+            session.query(FantasyNhlPlayerORM).filter_by(
+                playerId=playerId
+            ).update({
+                'scoring': fantasy_badge.scoring,
+                'playmaking': fantasy_badge.playmaking,
+                'defense': fantasy_badge.defense,
+                'powerplay': fantasy_badge.powerplay,
+                'intangibles': fantasy_badge.intangibles
+            })
+            session.commit()
+        finally:
+            session.close()
 
     def removeTeamIdFromAllFantasySkates(self):
-        self.c.execute('''UPDATE fantasy_nhl_player SET teamId = 0''')
-
-        self.conn.commit()
-        self.conn.close()
+        """Remove team ID from all fantasy skaters"""
+        session = self._get_session()
+        try:
+            session.query(FantasyNhlPlayerORM).update({'teamId': 0})
+            session.commit()
+        finally:
+            session.close()
 
     def deleteAllFantasySkatersWithNoTeam(self):
-        self.c.execute('''DELETE FROM fantasy_nhl_player WHERE teamId = 0''')
-
-        self.conn.commit()
-        self.conn.close()
+        """Delete all fantasy skaters with no team"""
+        session = self._get_session()
+        try:
+            session.query(FantasyNhlPlayerORM).filter_by(
+                teamId=0
+            ).delete()
+            session.commit()
+        finally:
+            session.close()
 
     @staticmethod
-    def __convert_to_model(row):
-        return FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6],
-                                row[7], row[8], row[9], row[10],
-                                badge=FantasyPlayerBadge(row[11], row[12], row[13], row[14], row[15]))
+    def __convert_to_model(orm_row):
+        """Convert ORM object to domain model"""
+        if orm_row is None:
+            return None
+        return FantasyNhlPlayer(
+            id=orm_row.playerId,
+            skaterFullName=orm_row.skaterFullName,
+            positionCode=orm_row.positionCode,
+            teamId=orm_row.teamId,
+            fantasyGrade=orm_row.fantasyGrade,
+            yahooEligibility=orm_row.yahooEligibility,
+            avgPick=orm_row.avgPick,
+            avgRound=orm_row.avgRound,
+            percentDrafted=orm_row.percentDrafted,
+            teamName=orm_row.teamName,
+            nhlRank=orm_row.nhlRank,
+            badge=FantasyPlayerBadge(
+                orm_row.scoring or 0,
+                orm_row.playmaking or 0,
+                orm_row.defense or 0,
+                orm_row.powerplay or 0,
+                orm_row.intangibles or 0
+            )
+        )
 
     @staticmethod
-    def __convert_to_model_with_display_stat(row):
-        return FantasyNhlPlayer(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10],
-                                badge=FantasyPlayerBadge(row[11], row[12], row[13], row[14], row[15]),
-                                stat=DisplayStat(
-                                    row[16], row[17], row[18], row[19], row[20],
-                                    row[21], row[22], row[23], row[24], row[25])
-                                )
+    def __convert_to_model_with_display_stat(orm_row, stat_row):
+        """Convert ORM objects to domain model with display stats"""
+        if orm_row is None:
+            return None
+
+        display_stat = None
+        if stat_row:
+            display_stat = DisplayStat(
+                assists=stat_row.assists or 0,
+                goals=stat_row.goals or 0,
+                points=stat_row.points or 0,
+                games=stat_row.games or 0,
+                shots=stat_row.shots or 0,
+                hits=stat_row.hits or 0,
+                blocked=stat_row.blocked or 0,
+                plusMinus=stat_row.plusMinus or 0,
+                powerPlayGoals=stat_row.powerPlayGoals or 0,
+                powerPlayPoints=stat_row.powerPlayPoints or 0
+            )
+
+        return FantasyNhlPlayer(
+            id=orm_row.playerId,
+            skaterFullName=orm_row.skaterFullName,
+            positionCode=orm_row.positionCode,
+            teamId=orm_row.teamId,
+            fantasyGrade=orm_row.fantasyGrade,
+            yahooEligibility=orm_row.yahooEligibility,
+            avgPick=orm_row.avgPick,
+            avgRound=orm_row.avgRound,
+            percentDrafted=orm_row.percentDrafted,
+            teamName=orm_row.teamName,
+            nhlRank=orm_row.nhlRank,
+            badge=FantasyPlayerBadge(
+                orm_row.scoring or 0,
+                orm_row.playmaking or 0,
+                orm_row.defense or 0,
+                orm_row.powerplay or 0,
+                orm_row.intangibles or 0
+            ),
+            stat=display_stat or DisplayStat()
+        )

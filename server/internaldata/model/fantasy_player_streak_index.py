@@ -1,18 +1,18 @@
-class FantasyPlayerStreakIndex:
+from dataclasses import dataclass
+from typing import Optional
 
-    def __init__(self, id="",
-                 skaterFullName="",
-                 positionCode="",
-                 pts=None,
-                 toi=None,
-                 pptoi=None,
-                 index=None,
-                 lastUpdated=None):
-        self.playerId = id
-        self.skaterFullName = skaterFullName
-        self.positionCode = positionCode
-        self.pts = pts
-        self.toi = toi
-        self.pptoi = pptoi
-        self.index = index
-        self.lastUpdated = lastUpdated
+
+@dataclass
+class FantasyPlayerStreakIndex:
+    id: str = ""
+    skaterFullName: str = ""
+    positionCode: str = ""
+    pts: Optional[float] = None
+    toi: Optional[float] = None
+    pptoi: Optional[float] = None
+    index: Optional[float] = None
+    lastUpdated: Optional[str] = None
+    playerId: str = ""
+
+    def __post_init__(self):
+        self.playerId = self.id

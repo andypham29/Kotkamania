@@ -1,9 +1,12 @@
 import sqlalchemy as sa
 from sqlalchemy import orm
 from sqlalchemy.ext.declarative import declarative_base
+import os
 
 base = declarative_base()
-engine = sa.create_engine('sqlite:///../../server/internaldata/db/internal.db', echo=True)
+db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../db/internal.db"))
+os.makedirs(os.path.dirname(db_path), exist_ok=True)
+engine = sa.create_engine(f'sqlite:///{db_path}', echo=True)
 base.metadata.bind = engine
 session = orm.scoped_session(orm.sessionmaker())(bind=engine)
 

@@ -56,3 +56,6 @@ class FantasyNhlPlayerService:
 
     def removeTeamIdFromAllFantasySkates(self):
         FantasyNhlPlayerDao(self.uri).removeTeamIdFromAllFantasySkates()
+
+    def deleteAllFantasySkatersWithNoTeam(self):
+        FantasyNhlPlayerDao(self.uri).deleteAllFantasySkatersWithNoTeam()

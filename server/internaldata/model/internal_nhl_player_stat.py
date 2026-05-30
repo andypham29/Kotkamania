@@ -1,41 +1,35 @@
-class InternalPlayerStat:
+from dataclasses import dataclass
+from typing import Optional
 
-    def __init__(self, playerId, seasonId, timeOnIce=None, assists=None, goals=None, pim=None, shots=None, games=None,
-                 hits=None,
-                 powerPlayGoals=None, powerPlayPoints=None,
-                 powerPlayTimeOnIce=None, evenTimeOnIce=None, penaltyMinutes=None, faceOffPct=None, shotPct=None,
-                 gameWinningGoals=None,
-                 overTimeGoals=None, shortHandedGoals=None, shortHandedPoints=None, shortHandedTimeOnIce=None,
-                 blocked=None, plusMinus=None,
-                 points=None, shifts=None, timeOnIcePerGame=None, evenTimeOnIcePerGame=None,
-                 shortHandedTimeOnIcePerGame=None,
-                 powerPlayTimeOnIcePerGame=None):
-        self.playerId = playerId
-        self.seasonId = seasonId
-        self.timeOnIce = timeOnIce
-        self.assists = assists
-        self.goals = goals
-        self.pim = pim
-        self.shots = shots
-        self.games = games
-        self.hits = hits
-        self.powerPlayGoals = powerPlayGoals
-        self.powerPlayPoints = powerPlayPoints
-        self.powerPlayTimeOnIce = powerPlayTimeOnIce
-        self.evenTimeOnIce = evenTimeOnIce
-        self.penaltyMinutes = penaltyMinutes
-        self.faceOffPct = faceOffPct
-        self.shotPct = shotPct
-        self.gameWinningGoals = gameWinningGoals
-        self.overTimeGoals = overTimeGoals
-        self.shortHandedGoals = shortHandedGoals
-        self.shortHandedPoints = shortHandedPoints
-        self.shortHandedTimeOnIce = shortHandedTimeOnIce
-        self.blocked = blocked
-        self.plusMinus = plusMinus
-        self.points = points
-        self.shifts = shifts
-        self.timeOnIcePerGame = timeOnIcePerGame
-        self.evenTimeOnIcePerGame = evenTimeOnIcePerGame
-        self.shortHandedTimeOnIcePerGame = shortHandedTimeOnIcePerGame
-        self.powerPlayTimeOnIcePerGame = powerPlayTimeOnIcePerGame
+
+@dataclass
+class InternalPlayerStat:
+    playerId: int
+    seasonId: int
+    timeOnIce: Optional[str] = None
+    assists: Optional[int] = None
+    goals: Optional[int] = None
+    pim: Optional[int] = None
+    shots: Optional[int] = None
+    games: Optional[int] = None
+    hits: Optional[int] = None
+    powerPlayGoals: Optional[int] = None
+    powerPlayPoints: Optional[int] = None
+    powerPlayTimeOnIce: Optional[str] = None
+    evenTimeOnIce: Optional[str] = None
+    penaltyMinutes: Optional[int] = None
+    faceOffPct: Optional[float] = None
+    shotPct: Optional[float] = None
+    gameWinningGoals: Optional[int] = None
+    overTimeGoals: Optional[int] = None
+    shortHandedGoals: Optional[int] = None
+    shortHandedPoints: Optional[int] = None
+    shortHandedTimeOnIce: Optional[str] = None
+    blocked: Optional[int] = None
+    plusMinus: Optional[int] = None
+    points: Optional[int] = None
+    shifts: Optional[int] = None
+    timeOnIcePerGame: Optional[str] = None
+    evenTimeOnIcePerGame: Optional[str] = None
+    shortHandedTimeOnIcePerGame: Optional[str] = None
+    powerPlayTimeOnIcePerGame: Optional[str] = None

@@ -45,9 +45,6 @@ class NhlTeamConverter:
     @staticmethod
     def get_teamId_by_abr(abr):
         try:
-            # TODO remove when UTAH
-            if abr == "ARI":
-                return 56
             for key, val in NhlTeamConverter.options.items():
                 if val == abr:
                     return key

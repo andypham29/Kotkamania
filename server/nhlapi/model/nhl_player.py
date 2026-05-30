@@ -1,107 +1,95 @@
-class Player:
-
-    def __init__(self, playerId, fullName, position, teamId, team, primaryNumber, birthDate, currentAge, birthCity,
-                 birthCountry, height, weight, shootCatches, stats=None, badge=None, playerDraftDetails=None):
-        self.playerId = playerId
-        self.fullName = fullName
-        self.position = position
-        self.teamId = teamId
-        self.team = team
-        self.primaryNumber = primaryNumber
-        self.birthDate = birthDate
-        self.currentAge = currentAge
-        self.birthCity = birthCity
-        self.birthCountry = birthCountry
-        self.height = height
-        self.weight = weight
-        self.shootCatches = shootCatches
-        self.stats = stats
-        self.badge = badge
-        self.playerDraftDetails = playerDraftDetails
+from dataclasses import dataclass, field
+from typing import Optional, List
 
 
+@dataclass
 class PlayerDraftDetails:
-
-    def __init__(self, year, teamAbbrev, draftRound, pickInRound, overallPick):
-        self.year = year
-        self.teamAbbrev = teamAbbrev
-        self.draftRound = draftRound
-        self.pickInRound = pickInRound
-        self.overallPick = overallPick
+    year: int
+    teamAbbrev: str
+    draftRound: int
+    pickInRound: int
+    overallPick: int
 
 
-class SeasonStat:
-
-    def __init__(self, season, stat):
-        self.season = season
-        self.stat = stat
-
-
+@dataclass
 class PlayerStat:
-
-    def __init__(self, timeOnIce=None, assists=None, goals=None, pim=None, shots=None, games=None, hits=None,
-                 powerPlayGoals=None, powerPlayPoints=None,
-                 powerPlayTimeOnIce=None, evenTimeOnIce=None, penaltyMinutes=None, faceOffPct=None, shotPct=None,
-                 gameWinningGoals=None,
-                 overTimeGoals=None, shortHandedGoals=None, shortHandedPoints=None, shortHandedTimeOnIce=None,
-                 blocked=None, plusMinus=None,
-                 points=None, shifts=None, timeOnIcePerGame=None, evenTimeOnIcePerGame=None,
-                 shortHandedTimeOnIcePerGame=None,
-                 powerPlayTimeOnIcePerGame=None):
-        self.timeOnIce = timeOnIce
-        self.assists = assists
-        self.goals = goals
-        self.pim = pim
-        self.shots = shots
-        self.games = games
-        self.hits = hits
-        self.powerPlayGoals = powerPlayGoals
-        self.powerPlayPoints = powerPlayPoints
-        self.powerPlayTimeOnIce = powerPlayTimeOnIce
-        self.evenTimeOnIce = evenTimeOnIce
-        self.penaltyMinutes = penaltyMinutes
-        self.faceOffPct = faceOffPct
-        self.shotPct = 0 if shotPct is None else shotPct
-        self.gameWinningGoals = gameWinningGoals
-        self.overTimeGoals = overTimeGoals
-        self.shortHandedGoals = shortHandedGoals
-        self.shortHandedPoints = shortHandedPoints
-        self.shortHandedTimeOnIce = shortHandedTimeOnIce
-        self.blocked = blocked
-        self.plusMinus = plusMinus
-        self.points = points
-        self.shifts = shifts
-        self.timeOnIcePerGame = timeOnIcePerGame
-        self.evenTimeOnIcePerGame = evenTimeOnIcePerGame
-        self.shortHandedTimeOnIcePerGame = shortHandedTimeOnIcePerGame
-        self.powerPlayTimeOnIcePerGame = powerPlayTimeOnIcePerGame
+    timeOnIce: Optional[str] = None
+    assists: Optional[int] = None
+    goals: Optional[int] = None
+    pim: Optional[int] = None
+    shots: Optional[int] = None
+    games: Optional[int] = None
+    hits: Optional[int] = None
+    powerPlayGoals: Optional[int] = None
+    powerPlayPoints: Optional[int] = None
+    powerPlayTimeOnIce: Optional[str] = None
+    evenTimeOnIce: Optional[str] = None
+    penaltyMinutes: Optional[int] = None
+    faceOffPct: Optional[float] = None
+    shotPct: float = 0.0
+    gameWinningGoals: Optional[int] = None
+    overTimeGoals: Optional[int] = None
+    shortHandedGoals: Optional[int] = None
+    shortHandedPoints: Optional[int] = None
+    shortHandedTimeOnIce: Optional[str] = None
+    blocked: Optional[int] = None
+    plusMinus: Optional[int] = None
+    points: Optional[int] = None
+    shifts: Optional[int] = None
+    timeOnIcePerGame: Optional[str] = None
+    evenTimeOnIcePerGame: Optional[str] = None
+    shortHandedTimeOnIcePerGame: Optional[str] = None
+    powerPlayTimeOnIcePerGame: Optional[str] = None
 
 
+@dataclass
 class GoalieStat:
-    def __init__(self, timeOnIce, ot, shutouts, ties, wins, losses, saves, powerPlaySaves, shortHandedSaves,
-                 evenSaves, shortHandedShots, evenShots, powerPlayShots, savePercentage, goalAgainstAverage,
-                 games, gamesStarted, shotsAgainst, goalsAgainst, timeOnIcePerGame, powerPlaySavePercentage,
-                 shortHandedSavePercentage, evenStrengthSavePercentage):
-        self.timeOnIce = timeOnIce
-        self.ot = ot
-        self.shutouts = shutouts
-        self.ties = ties
-        self.wins = wins
-        self.losses = losses
-        self.saves = saves
-        self.powerPlaySaves = powerPlaySaves
-        self.shortHandedSaves = shortHandedSaves
-        self.evenSaves = evenSaves
-        self.shortHandedShots = shortHandedShots
-        self.evenShots = evenShots
-        self.powerPlayShots = powerPlayShots
-        self.savePercentage = savePercentage
-        self.goalAgainstAverage = goalAgainstAverage
-        self.games = games
-        self.gamesStarted = gamesStarted
-        self.shotsAgainst = shotsAgainst
-        self.goalsAgainst = goalsAgainst
-        self.timeOnIcePerGame = timeOnIcePerGame
-        self.powerPlaySavePercentage = powerPlaySavePercentage
-        self.shortHandedSavePercentage = shortHandedSavePercentage
-        self.evenStrengthSavePercentage = evenStrengthSavePercentage
+    timeOnIce: str
+    ot: int
+    shutouts: int
+    ties: int
+    wins: int
+    losses: int
+    saves: int
+    powerPlaySaves: int
+    shortHandedSaves: int
+    evenSaves: int
+    shortHandedShots: int
+    evenShots: int
+    powerPlayShots: int
+    savePercentage: float
+    goalAgainstAverage: float
+    games: int
+    gamesStarted: int
+    shotsAgainst: int
+    goalsAgainst: int
+    timeOnIcePerGame: str
+    powerPlaySavePercentage: float
+    shortHandedSavePercentage: float
+    evenStrengthSavePercentage: float
+
+
+@dataclass
+class SeasonStat:
+    season: str
+    stat: PlayerStat | GoalieStat
+
+
+@dataclass
+class Player:
+    playerId: int
+    fullName: str
+    position: str
+    teamId: int
+    team: str
+    primaryNumber: Optional[str]
+    birthDate: str
+    currentAge: int
+    birthCity: str
+    birthCountry: str
+    height: str
+    weight: int
+    shootCatches: str
+    stats: List[SeasonStat] = field(default_factory=list)
+    badge: Optional[str] = None
+    playerDraftDetails: Optional[PlayerDraftDetails] = None

@@ -1,32 +1,31 @@
-class LeaderPlayer:
+from dataclasses import dataclass
 
-    def __init__(self, assists, evGoals, evPoints, faceoffWinPct, gameWinningGoals, gamesPlayed, goals, lastName,
-                 otGoals, penaltyMinutes, playerId, plusMinus, points, pointsPerGame, positionCode, ppGoals, ppPoints,
-                 seasonId, shGoals, shPoints, shootingPct, shootsCatches, shots, skaterFullName, teamAbbrevs,
-                 timeOnIcePerGame):
-        self.assists = assists
-        self.evGoals = evGoals
-        self.evPoints = evPoints
-        self.faceoffWinPct = faceoffWinPct
-        self.gameWinningGoals = gameWinningGoals
-        self.gamesPlayed = gamesPlayed
-        self.goals = goals
-        self.lastName = lastName
-        self.otGoals = otGoals
-        self.penaltyMinutes = penaltyMinutes
-        self.playerId = playerId
-        self.plusMinus = plusMinus
-        self.points = points
-        self.pointsPerGame = pointsPerGame
-        self.positionCode = positionCode
-        self.ppGoals = ppGoals
-        self.ppPoints = ppPoints
-        self.seasonId = seasonId
-        self.shGoals = shGoals
-        self.shPoints = shPoints
-        self.shootingPct = shootingPct
-        self.shootsCatches = shootsCatches
-        self.shots = shots
-        self.skaterFullName = skaterFullName
-        self.teamAbbrevs = teamAbbrevs
-        self.timeOnIcePerGame = timeOnIcePerGame
+
+@dataclass
+class LeaderPlayer:
+    assists: int
+    evGoals: int
+    evPoints: int
+    faceoffWinPct: float
+    gameWinningGoals: int
+    gamesPlayed: int
+    goals: int
+    lastName: str
+    otGoals: int
+    penaltyMinutes: int
+    playerId: int
+    plusMinus: int
+    points: int
+    pointsPerGame: float
+    positionCode: str
+    ppGoals: int
+    ppPoints: int
+    seasonId: int
+    shGoals: int
+    shPoints: int
+    shootingPct: float
+    shootsCatches: str
+    shots: int
+    skaterFullName: str
+    teamAbbrevs: str
+    timeOnIcePerGame: str

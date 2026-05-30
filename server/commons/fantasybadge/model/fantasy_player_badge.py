@@ -1,8 +1,10 @@
-class FantasyPlayerBadge:
+from dataclasses import dataclass
 
-    def __init__(self, scoring=0, playmaking=0, defense=0, powerplay=0, intangibles=0):
-        self.scoring = scoring
-        self.playmaking = playmaking
-        self.defense = defense
-        self.powerplay = powerplay
-        self.intangibles = intangibles
+
+@dataclass
+class FantasyPlayerBadge:
+    scoring: int = 0
+    playmaking: int = 0
+    defense: int = 0
+    powerplay: int = 0
+    intangibles: int = 0

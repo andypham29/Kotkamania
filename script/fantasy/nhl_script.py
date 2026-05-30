@@ -1,3 +1,4 @@
+import os
 import asyncio
 
 from script.fantasy.facade.fantasy_player_grade_facade import FantasyPlayerGradeFacade
@@ -13,9 +14,13 @@ from server.nhlapi.service.nhl_statsmisc_service import NHLStatMiscService
 
 class FantasyScript:
 
-    def __init__(self, fantasy_player_helper=FantasyPlayerGradeFacade('../../server/internaldata/db/internal.db'),
-                 excel_helper=ExcelHelper(),
-                 fantasy_nhl_player_service=FantasyNhlPlayerService('../../server/internaldata/db/internal.db')):
+    def __init__(self, fantasy_player_helper=None, excel_helper=ExcelHelper(),
+                 fantasy_nhl_player_service=None):
+        self.db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../server/internaldata/db/internal.db'))
+        if fantasy_player_helper is None:
+            fantasy_player_helper = FantasyPlayerGradeFacade(uri=self.db_path)
+        if fantasy_nhl_player_service is None:
+            fantasy_nhl_player_service = FantasyNhlPlayerService(uri=self.db_path)
         self.fantasy_player_helper = fantasy_player_helper
         self.excel_helper = excel_helper
         self.fantasy_nhl_player_service = fantasy_nhl_player_service
@@ -54,7 +59,7 @@ class FantasyScript:
     def save_player_badge_for_all_players_in_internal_db(self):
         fantasy_players = self.fantasy_nhl_player_service.getAllFantasySkatersWithPositionCodesWithStats(["L", "C", "R", "D"])
         badge_factory = FantasyPlayerBadgeFactory()
-        player_stat_service = InternalPlayerStatService("../../server/internaldata/db/internal.db")
+        player_stat_service = InternalPlayerStatService(self.db_path)
         # fantasy_players = self.fantasy_player_helper.get_fantasy_goalie()
         for fantasy_player in fantasy_players:
             player_stat = player_stat_service\
@@ -74,7 +79,7 @@ class FantasyScript:
 
         print("start updating in sqlite")
         for fantasy_skater in fantasy_skaters:
-            FantasyNhlPlayerService('../../server/internaldata/db/internal.db').updateFantasyGradeForFantasySkaterWithId(fantasy_skater.id,
+            FantasyNhlPlayerService(self.db_path).updateFantasyGradeForFantasySkaterWithId(fantasy_skater.id,
                                                                                      fantasy_skater.score)
 
         # self.excel_helper.write_players_to_excel(sheet='forward', players=fantasy_skaters)
@@ -148,13 +153,17 @@ if __name__ == '__main__':
 
     # FantasyScript().get_fantasy_grade_by_id(8477934)
     # FantasyScript().get_fantasy_grade_by_id(8478402)
+
     # FantasyScript().cleanup()
+    # FantasyScript().save_fantasy_nhl_players()
     FantasyScript() \
-        .process_goalies()\
+        .process_forward() \
         .close()
 
+    # .process_defensemen() \
+        # .process_goalies()\
+
     # FantasyScript().get_fantasy_grade_by_id(8476885)
-    # FantasyScript().save_fantasy_nhl_players()
     # FantasyScript().save_player_grade_for_all_players_in_internal_db()
     # FantasyScript().save_player_badge_for_all_players_in_internal_db()
     # FantasyScript().save_player_grade_for_forwards_to_excel()

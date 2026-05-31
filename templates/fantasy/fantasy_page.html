@@ -144,6 +144,7 @@
                         <th data-sort-key="position">Pos</th>
                         <th data-sort-key="score">Score</th>
                         <th data-sort-key="fp" class="desc">FP</th>
+                        <th class="no-sort">GP</th>
                         <th data-sort-key="goals">G</th>
                         <th data-sort-key="assists">A</th>
                         <th data-sort-key="points">P</th>
@@ -337,6 +338,7 @@
             <td>${positionChip(elig)}</td>
             <td>${ nullish(p.fantasyGrade) }</td>
             <td><strong>${fp}</strong></td>
+            <td>${ nullish(s.games) }</td>
             <td>${ nullish(s.goals) }</td>
             <td>${ nullish(s.assists) }</td>
             <td>${ nullish(s.points) }</td>

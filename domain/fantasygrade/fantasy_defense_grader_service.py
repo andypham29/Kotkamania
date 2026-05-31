@@ -1,3 +1,4 @@
+from domain.fantasygrade.fantasy_forward_grader_service import FantasyForwardGraderService
 from domain.playerstat.model.nhl_player_stat import PlayerStat
 from domain.playerstat.nhl_player_stat_cache_service import NhlPlayerStatCacheService
 from server.commons.helper.nhl_season_converter import NhlYearConverter
@@ -10,17 +11,21 @@ class FantasyDefenseGraderService:
         self.nhl_player_stat_service = NhlPlayerStatCacheService()
         pass
 
-    def grade_defense(self,player_id,min_stat=None,max_stat=None):
+    def grade_defense(self,player_id, player_name, min_stat=None, max_stat=None):
         season_id = NhlYearConverter.get_current_season()
 
         player_stat = self.nhl_player_stat_service.get_stat_player_by_id(player_id, season_id)
         max_stat = self.nhl_player_stat_service.get_all_max_stat(season_id) if max_stat is None else max_stat
         min_stat = self.nhl_player_stat_service.get_all_min_stat(season_id) if min_stat is None else min_stat
 
-        offense_score = self.__calculate_offense_score(player_stat, max_stat, min_stat)
-        play_driving_score = self.__calculate_play_driving_score(player_stat, max_stat, min_stat)
-        usage_score = self.__calculate_usage_score(player_stat, max_stat, min_stat)
-        special_teams_score = self.__calculate_special_teams_score(player_stat, max_stat, min_stat)
+        try:
+            offense_score = self.__calculate_offense_score(player_stat, max_stat, min_stat)
+            play_driving_score = self.__calculate_play_driving_score(player_stat, max_stat, min_stat)
+            usage_score = self.__calculate_usage_score(player_stat, max_stat, min_stat)
+            special_teams_score = self.__calculate_special_teams_score(player_stat, max_stat, min_stat)
+        except Exception as e:
+            print(f"[{player_name}] Error occurred while grading defense: {str(e)}")
+            return 0
 
         defense_score = \
           0.60 * offense_score + \
@@ -111,6 +116,9 @@ class FantasyDefenseGraderService:
 
 
     def __normalize(self, value, max_v, min_v, reverse=False):
+        value = value if value else 0
+        if max_v == min_v:
+            return 0
         if reverse:
             return 100 * (max_v - float(value)) / (max_v - min_v)
         return 100 * (float(value) - min_v) / (max_v - min_v)
@@ -119,5 +127,5 @@ class FantasyDefenseGraderService:
         return getattr(stat, stat_name, 0) / int(stat.timeOnIce) * 60
 
 if __name__ == '__main__':
-    grader = FantasyForwardGraderService()
-    print(grader.grade_forward(8477492))
+    grader = FantasyDefenseGraderService()
+    print(grader.grade_defense(8477492, "John Doe"))

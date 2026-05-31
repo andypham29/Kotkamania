@@ -20,6 +20,14 @@ class NhlPlayerStatRepository:
         return DBSession()
 
     # ---- reads ----
+    def find_all(self, season_id: int) -> list[PlayerStat | None]:
+        session = self._session()
+        try:
+            rows = session.query(InternalPlayerStatORM).filter_by(seasonId=season_id).all()
+            return [self._to_domain(row) for row in rows]
+        finally:
+            session.close()
+
     def find_by_player_id(self, player_id: int, season_id: int) -> Optional[PlayerStat]:
         session = self._session()
         try:

@@ -1,7 +1,10 @@
 import os
+from typing import List
+
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
+from domain.fantasyplayer.model.fantasy_nhl_player import FantasyPlayerUpdateQuery
 from infra.spi.sqlite.fantasyplayer.model.sqlite_fantasy_nhl_player import SqliteFantasyNhlPlayer, SqliteDisplayStat
 from server.commons.fantasybadge.model.fantasy_player_badge import FantasyPlayerBadge
 from server.commons.helper.nhl_season_converter import NhlYearConverter
@@ -240,15 +243,17 @@ class FantasyPlayerRepository:
         finally:
             session.close()
 
-    def bulkUpdateFantasyGrade(self, players):
+    def bulkUpdateFantasyGrade(self, players: List[FantasyPlayerUpdateQuery]):
         """Bulk update fantasy grades"""
         session = self._get_session()
         try:
             for player in players:
                 session.query(FantasyNhlPlayerORM).filter_by(
-                    playerId=player.id
+                    playerId=player.player_id
                 ).update({'fantasyGrade': player.score})
             session.commit()
+        except Exception as e:
+            print(f"Error occurred while bulk updating fantasy grades: {str(e)}")
         finally:
             session.close()
 

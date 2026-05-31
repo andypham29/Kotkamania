@@ -10,17 +10,24 @@ class FantasyForwardGraderService:
         self.nhl_player_stat_service = NhlPlayerStatCacheService()
         pass
 
-    def grade_forward(self,player_id,min_stat=None,max_stat=None):
+    def grade_forward(self,player_id, player_name, min_stat=None, max_stat=None):
         season_id = NhlYearConverter.get_current_season()
 
         player_stat = self.nhl_player_stat_service.get_stat_player_by_id(player_id, season_id)
+        if player_stat is None:
+            print(f"[{player_name}] Player stat not found for player_id: {player_id}")
+            return None
         max_stat = self.nhl_player_stat_service.get_all_max_stat(season_id) if max_stat is None else max_stat
         min_stat = self.nhl_player_stat_service.get_all_min_stat(season_id) if min_stat is None else min_stat
 
-        offense_score = self.__calculate_offense_score(player_stat, max_stat, min_stat)
-        play_driving_score = self.__calculate_play_driving_score(player_stat, max_stat, min_stat)
-        usage_score = self.__calculate_usage_score(player_stat, max_stat, min_stat)
-        special_teams_score = self.__calculate_special_teams_score(player_stat, max_stat, min_stat)
+        try:
+            offense_score = self.__calculate_offense_score(player_stat, max_stat, min_stat)
+            play_driving_score = self.__calculate_play_driving_score(player_stat, max_stat, min_stat)
+            usage_score = self.__calculate_usage_score(player_stat, max_stat, min_stat)
+            special_teams_score = self.__calculate_special_teams_score(player_stat, max_stat, min_stat)
+        except Exception as e:
+            print(f"[{player_name}] Error occurred while grading forward: {str(e)}")
+            return None
 
         forward_score = \
           0.60 * offense_score + \
@@ -105,6 +112,9 @@ class FantasyForwardGraderService:
 
 
     def __normalize(self, value, max_v, min_v, reverse=False):
+        value = value if value else 0
+        if max_v == min_v:
+            return 0
         if reverse:
             return 100 * (max_v - float(value)) / (max_v - min_v)
         return 100 * (float(value) - min_v) / (max_v - min_v)
@@ -114,4 +124,4 @@ class FantasyForwardGraderService:
 
 if __name__ == '__main__':
     grader = FantasyForwardGraderService()
-    print(grader.grade_forward(8477492))
+    print(grader.grade_forward(8479772, "John Doe"))

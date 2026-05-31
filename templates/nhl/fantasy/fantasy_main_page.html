@@ -187,9 +187,8 @@ const DEFAULT_WEIGHTS = {
         if(row.rowIndex > 1) {
             parent.insertBefore(row, sibling)
             var playerId1 = row.id
-            var playerId2 = sibling.id
-            console.log(`${cookiename}: moving ${playerId1} with ${playerId2}`)
-            moveUpPlayerInCookie(playerId1, playerId2, cookiename)
+            console.log(`${cookiename}: moving ${playerId1} up`)
+            moveUpPlayerInCookie(playerId1, cookiename)
         }
     }
 

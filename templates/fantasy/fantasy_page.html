@@ -19,6 +19,8 @@
     .fp-toast.show { display:block; }
     #fpTable tbody tr.fp-row-highlight > td { background-color: #cbe1f4; }
     #fpTable tbody tr.fp-row-highlight:hover > td { background-color: #bcdff8; }
+    .fp-reorder { display:inline-flex; flex-direction:column; line-height:1; margin-left:.35rem; vertical-align:middle; }
+    .fp-reorder button { padding:0 .25rem; font-size:.65rem; line-height:1; }
 </style>
 
 <div class="container-fluid py-3">
@@ -41,6 +43,7 @@
                 <li class="nav-item"><a class="nav-link" href="#" data-view="favorite">★ Favorites <span class="badge badge-secondary ml-1" id="fpTabFav">0</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-view="watchlist">👁 Watchlist <span class="badge badge-secondary ml-1" id="fpTabWatch">0</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="#" data-view="draftboard">🗊 Draftboard <span class="badge badge-secondary ml-1" id="fpTabDraft">0</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-view="picked">＋ My Team <span class="badge badge-secondary ml-1" id="fpTabPicked">0</span></a></li>
             </ul>
         </div>
         <div class="card-body p-2">
@@ -285,6 +288,7 @@
         if (state.view === "favorite")   list = list.filter(p => isIn(p.playerId, cookies.fav));
         if (state.view === "watchlist")  list = list.filter(p => isIn(p.playerId, cookies.watch));
         if (state.view === "draftboard") list = list.filter(p => isIn(p.playerId, cookies.draft));
+        if (state.view === "picked")     list = list.filter(p => isIn(p.playerId, cookies.picked));
 
         if (state.positions.size > 0) {
             list = list.filter(p => {
@@ -298,16 +302,17 @@
         list.sort(compare);
 
         if (state.view !== "all") {
-            const order = state.view === "favorite"  ? cookies.fav
-                        : state.view === "watchlist" ? cookies.watch
-                        : cookies.draft;
+            const order = state.view === "favorite"   ? cookies.fav
+                        : state.view === "watchlist"  ? cookies.watch
+                        : state.view === "draftboard" ? cookies.draft
+                        : cookies.picked;
             list.sort((a, b) => order.indexOf(Number(a.playerId)) - order.indexOf(Number(b.playerId)));
         }
 
         return list;
     };
 
-    const renderRow = (p, idx, cookies) => {
+    const renderRow = (p, idx, total, cookies) => {
         const fp            = fpPoints(p).toFixed(1);
         const elig          = (p.yahooEligibility || p.positionCode || "");
         const onFav         = isIn(p.playerId, cookies.fav);
@@ -318,8 +323,15 @@
         const s             = p.stat || {};
         const rowClasses    = [onHighlight ? "fp-row-highlight" : ""].filter(Boolean).join(" ");
 
+        const reorder = (state.view === "draftboard")
+            ? `<span class="fp-reorder">
+                  <button class="btn btn-sm btn-outline-secondary" data-action="moveup"   data-id="${p.playerId}" ${idx === 1     ? "disabled" : ""} title="Move up">▲</button>
+                  <button class="btn btn-sm btn-outline-secondary" data-action="movedown" data-id="${p.playerId}" ${idx === total ? "disabled" : ""} title="Move down">▼</button>
+               </span>`
+            : "";
+
         return `<tr data-id="${p.playerId}" class="${rowClasses}">
-            <td>${idx}</td>
+            <td>${idx}${reorder}</td>
             <td><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${p.playerId})">${p.skaterFullName}</button></td>
             <td><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${p.teamId})">${p.teamName || ""}</button></td>
             <td>${positionChip(elig)}</td>
@@ -350,7 +362,8 @@
             all:        "No players match the current filters.",
             favorite:   "No favorites yet. Click the ★ on any player to add one.",
             watchlist:  "Your watchlist is empty. Click the 👁 to add a player.",
-            draftboard: "Draftboard is empty. Click the ✓ to add a player."
+            draftboard: "Draftboard is empty. Click the ✓ to add a player.",
+            picked:     "Your team is empty. Click the ＋ on any player to add them to your team."
         };
         return `<tr><td colspan="15" class="text-center text-muted py-5">${msgs[state.view] || msgs.all}</td></tr>`;
     };
@@ -362,7 +375,7 @@
 
         tbody.innerHTML = visible.length === 0
             ? renderEmpty()
-            : visible.map((p, i) => renderRow(p, i + 1, cookies)).join("");
+            : visible.map((p, i) => renderRow(p, i + 1, visible.length, cookies)).join("");
 
         document.getElementById("fpVisibleCount").textContent = visible.length;
         document.getElementById("fpTotalCount").textContent   = state.all.length;
@@ -373,6 +386,7 @@
         document.getElementById("fpTabFav").textContent       = cookies.fav.length;
         document.getElementById("fpTabWatch").textContent     = cookies.watch.length;
         document.getElementById("fpTabDraft").textContent     = cookies.draft.length;
+        document.getElementById("fpTabPicked").textContent    = cookies.picked.length;
 
         document.getElementById("fpClearBtn").style.display = (state.view === "all") ? "none" : "";
 
@@ -504,7 +518,15 @@
         document.getElementById("fpTableBody").addEventListener("click", (e) => {
             const btn = e.target.closest("button[data-action]");
             if (!btn) return;
-            toggleCookie(btn.dataset.id, btn.dataset.action);
+            const action = btn.dataset.action;
+            const id     = Number(btn.dataset.id);
+            if (action === "moveup") {
+                moveUpPlayerInCookie(id, COOKIES.draftboard);
+            } else if (action === "movedown") {
+                moveDownPlayerInCookie(id, COOKIES.draftboard);
+            } else {
+                toggleCookie(id, action);
+            }
             renderTable();
         });
 

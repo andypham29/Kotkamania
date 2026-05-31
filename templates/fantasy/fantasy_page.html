@@ -1,5 +1,6 @@
 <script src="{{url_for('static', filename='cookiehandler.js')}}"></script>
 <script src="{{url_for('static', filename='fantasycookiehandler.js')}}"></script>
+<script src="{{url_for('static', filename='variableparser.js')}}"></script>
 
 <style>
     /* Minimal additions — everything else comes from Bootstrap 4.5. */
@@ -219,11 +220,6 @@
             (s.plusMinus       || 0) * WEIGHTS.PLUSMINUS
         );
     };
-
-    const nullish = (v) =>
-        (v === null || v === undefined || v === "" || v === "null")
-            ? `<span class="fp-nullish">—</span>`
-            : v;
 
     const positionChip = (code) => {
         const c = (code || "").toUpperCase().split(",")[0];

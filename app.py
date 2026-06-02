@@ -7,6 +7,7 @@ from domain.gamelog.gamelog_service import GameLogService
 from server.admin.service.facade.admin_facade import AdminFacade
 from server.internaldata.service.facade.fantasy_nhl_player_facade import FantasyNhlPlayerFacade
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
+from domain.fantasyplayer.fantasy_player_service import FantasyPlayerService as DomainFantasyPlayerService
 from server.internaldata.service.fantasy_player_streak_index_service import FantasyPlayerStreakIndexService
 from server.mockdraft.service.facade.mockdraft_selector_service_facade import MockDraftSelectorServiceFacade
 from server.mockdraft.service.prospect_elite_service import ProspectEliteService
@@ -197,14 +198,8 @@ def getNhlStatsSkater():
 
 @app.route('/api/nhl/fantasyV2')
 def getNhlFantasyPlayersV2():
-    if request.args.get('team') is not None:
-        response = FantasyPlayerService().getAllFantasySkatersWithTeamId(request.args.get('team'))
-    elif request.args.get('playerName') is not None:
-        response = FantasyPlayerService().getAllFantasySkatersBySearchName(request.args.get('playerName'))
-
-    else:
-        response = FantasyPlayerService().getAllFantasySkaters()
-
+    """Return fantasy players with percentiles calculated from their stat values."""
+    response = DomainFantasyPlayerService().getAllFantasySkaters()
     return makeHttpResponse(response)
 
 @app.route('/api/nhl/fantasy')

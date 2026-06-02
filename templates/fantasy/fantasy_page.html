@@ -210,14 +210,14 @@
     const fpPoints = (p) => {
         const s = p.stat || {};
         return (
-            (s.goals           || 0) * WEIGHTS.G +
-            (s.assists         || 0) * WEIGHTS.A +
-            (s.shots           || 0) * WEIGHTS.SOG +
-            (s.powerPlayPoints || 0) * WEIGHTS.PPP +
-            (s.powerPlayGoals  || 0) * WEIGHTS.PPP +
-            (s.hits            || 0) * WEIGHTS.HIT +
-            (s.blocked         || 0) * WEIGHTS.BLK +
-            (s.plusMinus       || 0) * WEIGHTS.PLUSMINUS
+            (s.goals.value           || 0) * WEIGHTS.G +
+            (s.assists.value         || 0) * WEIGHTS.A +
+            (s.shots.value           || 0) * WEIGHTS.SOG +
+            (s.powerPlayPoints.value || 0) * WEIGHTS.PPP +
+            (s.powerPlayGoals.value  || 0) * WEIGHTS.PPP +
+            (s.hits.value            || 0) * WEIGHTS.HIT +
+            (s.blocked.value         || 0) * WEIGHTS.BLK +
+            (s.plusMinus.value       || 0) * WEIGHTS.PLUSMINUS
         );
     };
 
@@ -246,12 +246,12 @@
             case "position": return (p.positionCode || "").toLowerCase();
             case "score":    return (p.fantasyGrade == null) ? -Infinity : p.fantasyGrade;
             case "fp":       return fpPoints(p);
-            case "goals":    return s.goals || 0;
-            case "assists":  return s.assists || 0;
-            case "points":   return s.points || 0;
-            case "shots":    return s.shots || 0;
-            case "hits":     return s.hits || 0;
-            case "blocked":  return s.blocked || 0;
+            case "goals":    return s.goals.value || 0;
+            case "assists":  return s.assists.value || 0;
+            case "points":   return s.points.value || 0;
+            case "shots":    return s.shots.value || 0;
+            case "hits":     return s.hits.value || 0;
+            case "blocked":  return s.blocked.value || 0;
             case "nhl":      return (p.nhlRank == null) ? Infinity : p.nhlRank;
             case "espn":     return (p.avgPick == null) ? Infinity : p.avgPick;
             default:         return 0;
@@ -334,13 +334,13 @@
             <td>${positionChip(elig)}</td>
             <td>${ nullish(p.fantasyGrade) }</td>
             <td><strong>${fp}</strong></td>
-            <td>${ nullish(s.games) }</td>
-            <td>${ nullish(s.goals) }</td>
-            <td>${ nullish(s.assists) }</td>
-            <td>${ nullish(s.points) }</td>
-            <td>${ nullish(s.shots) }</td>
-            <td>${ nullish(s.hits) }</td>
-            <td>${ nullish(s.blocked) }</td>
+            <td>${ nullish(s.games.value) }</td>
+            <td>${ nullish(s.goals.value) }</td>
+            <td>${ nullish(s.assists.value) }</td>
+            <td>${ nullish(s.points.value) }</td>
+            <td>${ nullish(s.shots.value) }</td>
+            <td>${ nullish(s.hits.value) }</td>
+            <td>${ nullish(s.blocked.value) }</td>
             <td>${ nullish(p.nhlRank) }</td>
             <td>${ nullish(p.avgPick) }</td>
             <td>
@@ -458,7 +458,7 @@
         </td></tr>`;
 
         $.ajax({
-            url: "/api/nhl/fantasy" + buildQuery(),
+            url: "/api/nhl/fantasyV2" + buildQuery(),
             crossDomain: true,
             dataType: "json",
             type: "GET",

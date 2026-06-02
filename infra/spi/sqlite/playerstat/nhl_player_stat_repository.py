@@ -1,9 +1,9 @@
 from dataclasses import fields
 from typing import List, Optional
 
-from sqlalchemy import func, Integer, cast, Float
+from sqlalchemy import func, cast, Float
 
-from domain.playerstat.model.nhl_player_stat import PlayerStat
+from infra.spi.sqlite.playerstat.model.nhl_player_stat import PlayerStat
 from server.internaldata.db.models import InternalPlayerStatORM, Session as DBSession
 
 # ORM columns that exist on `internal_player_stat` and overlap with PlayerStat.

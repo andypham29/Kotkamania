@@ -88,6 +88,41 @@ class InternalPlayerStatORM(Base):
     shortHandedTimeOnIcePerGame = Column(String)
     powerPlayTimeOnIcePerGame = Column(String)
 
+class InternalPlayerStatPercentileORM(Base):
+    """ORM model for internal_player_stat table"""
+    __tablename__ = 'internal_player_stat_percentile'
+
+    id = Column(Integer, primary_key=True)
+    playerId = Column(Integer, nullable=False)
+    seasonId = Column(Integer, nullable=False)
+    timeOnIce = Column(Integer)
+    assists = Column(Integer)
+    goals = Column(Integer)
+    pim = Column(Integer)
+    shots = Column(Integer)
+    games = Column(Integer)
+    hits = Column(Integer)
+    powerPlayGoals = Column(Integer)
+    powerPlayPoints = Column(Integer)
+    powerPlayTimeOnIce = Column(Integer)
+    evenTimeOnIce = Column(Integer)
+    penaltyMinutes = Column(Integer)
+    faceOffPct = Column(Integer)
+    shotPct = Column(Integer)
+    gameWinningGoals = Column(Integer)
+    overTimeGoals = Column(Integer)
+    shortHandedGoals = Column(Integer)
+    shortHandedPoints = Column(Integer)
+    shortHandedTimeOnIce = Column(Integer)
+    blocked = Column(Integer)
+    plusMinus = Column(Integer)
+    points = Column(Integer)
+    shifts = Column(Integer)
+    timeOnIcePerGame = Column(Integer)
+    evenTimeOnIcePerGame = Column(Integer)
+    shortHandedTimeOnIcePerGame = Column(Integer)
+    powerPlayTimeOnIcePerGame = Column(Integer)
+
 
 class FantasyPlayerStreakIndexORM(Base):
     """ORM model for fantasy_streak table"""
@@ -101,4 +136,9 @@ class FantasyPlayerStreakIndexORM(Base):
     pptoi = Column(Float, nullable=False)
     streakIndex = Column(Float, nullable=False)
     lastUpdated = Column(String)
+
+
+# Create all tables if they don't exist (after all ORM classes are defined)
+Base.metadata.create_all(engine)
+
 

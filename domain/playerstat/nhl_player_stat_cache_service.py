@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from domain.playerstat.model.nhl_player_stat import PlayerStat
+from infra.spi.sqlite.playerstat.model.nhl_player_stat import PlayerStat
 from infra.spi.sqlite.playerstat.nhl_player_stat_repository import NhlPlayerStatRepository
 
 

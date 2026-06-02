@@ -75,3 +75,13 @@ These are typically invoked manually or via the admin endpoint (`/admin/script/<
 - **Cookies vs localStorage on the frontend:** persistent player-list state → cookies (use `fantasycookiehandler.js`); UI tuning knobs → `localStorage`.
 - **Scripts are not request-path code.** Keep heavy scraping/IO out of Flask routes.
 - **SQLite is the only datastore.** No migrations framework is in place; schema changes are handled manually.
+
+<!-- Agent behavior: do not read legacy server/ files by default -->
+- **Avoid reading or ingesting `server/` when adding code.** The `server/` directory is legacy/transitional and can contain large, tightly-coupled modules. When creating or modifying code, agents should not scan or read files under `server/` by default. Only access or change `server/` files when the user explicitly requests it or when a change must be made to maintain backward compatibility. This reduces accidental edits, speeds up analysis, and keeps agents focused on the preferred `domain/` + `infra/` architecture.
+
+## Machine-readable ignore file
+
+Note: `AGENT.md` is documentation and does not automatically restrict tools or code-search utilities. To make the exclusion policy enforceable by tooling, this repository provides a machine-readable ignore file named `.agentignore` at the repo root. All automated agents and scripts should respect `.agentignore` when enumerating files to read or modify.
+
+Typical entries in `.agentignore` include legacy or large folders that agents should avoid by default (for example `server/`, virtual environments, caches, and large data files). If you are writing an agent or a script, consult `.agentignore` and skip any matching paths unless the user requests otherwise.
+

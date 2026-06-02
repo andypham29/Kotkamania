@@ -2,6 +2,7 @@ import json
 
 from flask import Flask, request, render_template, make_response
 
+from domain.fantasyplayer.fantasy_player_service import FantasyPlayerService
 from domain.gamelog.gamelog_service import GameLogService
 from server.admin.service.facade.admin_facade import AdminFacade
 from server.internaldata.service.facade.fantasy_nhl_player_facade import FantasyNhlPlayerFacade
@@ -194,6 +195,17 @@ def getNhlStatsSkater():
                    + NHLStatsLeaderService().getAllPlayers(start=401, end=500)
     return makeHttpResponse(response)
 
+@app.route('/api/nhl/fantasyV2')
+def getNhlFantasyPlayersV2():
+    if request.args.get('team') is not None:
+        response = FantasyPlayerService().getAllFantasySkatersWithTeamId(request.args.get('team'))
+    elif request.args.get('playerName') is not None:
+        response = FantasyPlayerService().getAllFantasySkatersBySearchName(request.args.get('playerName'))
+
+    else:
+        response = FantasyPlayerService().getAllFantasySkaters()
+
+    return makeHttpResponse(response)
 
 @app.route('/api/nhl/fantasy')
 def getNhlFantasyPlayers():

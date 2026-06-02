@@ -1,26 +1,142 @@
-from typing import List
-
-from domain.fantasyplayer.model.fantasy_nhl_player import FantasyPlayerUpdateQuery
+from domain.fantasyplayer.model.fantasy_nhl_player import FantasyNhlPlayer, DisplayStat, StatValue
 from infra.spi.sqlite.fantasyplayer.fantasy_player_repository import FantasyPlayerRepository
-from server.commons.fantasyplayer.model.fantasy_player import FantasyPlayer
+from infra.spi.sqlite.playerstat.nhl_player_stat_repository import NhlPlayerStatRepository
+from infra.spi.sqlite.playerstatpercentile.nhl_player_stat_repository import NhlPlayerStatPercentileRepository
+from server.commons.helper.nhl_season_converter import NhlYearConverter
 
 
 class FantasyPlayerService:
 
     def __init__(self):
         self.fantasy_player_repository = FantasyPlayerRepository()
+        self.nhl_player_stat_repository = NhlPlayerStatRepository()
+        self.nhl_player_stat_percentile_repository = NhlPlayerStatPercentileRepository()
 
-    def create_fantasy_player(self, fantasy_player):
-        return self.fantasy_player_repository.saveFantasySkater(fantasy_player)
+    def getAllFantasySkaters(self):
+        """Return list of FantasyNhlPlayer with stats and percentiles populated."""
+        players = self.fantasy_player_repository.getAllFantasySkaters()
+        season_id = NhlYearConverter.get_previous_season_by_year_removed(0)
 
-    def get_fantasy_player(self, player_id):
-        return self.fantasy_player_repository.getFantasySkaterById(player_id)
+        result = []
+        for player in players:
+            # Fetch raw stats for this player and season
+            player_stat = self.nhl_player_stat_repository.find_by_player_id(
+                player.id, season_id)
 
-    def update_fantasy_players(self, players: List[FantasyPlayerUpdateQuery]):
-        return self.fantasy_player_repository.bulkUpdateFantasyGrade(players)
+            # Fetch percentile stats for this player and season
+            player_percentile = self.nhl_player_stat_percentile_repository.find_by_player_id(
+                player.id, season_id)
 
-    def delete_fantasy_player(self, player_id):
-        return self.fantasy_player_repository.deleteFantasySkaterById(player_id)
+            # Build domain model FantasyNhlPlayer with DisplayStat
+            fantasy_player = self._build_fantasy_nhl_player(player, player_stat, player_percentile)
+            result.append(fantasy_player)
 
-    def delete_all(self):
-        return self.fantasy_player_repository.deleteAllFantasySkater()
+        return result
+
+    def getAllFantasySkatersBySearchName(self, name):
+        """Return list of FantasyNhlPlayer matching name with stats and percentiles populated."""
+        players = self.fantasy_player_repository.getAllFantasySkatersBySearchName(name)
+        season_id = NhlYearConverter.get_previous_season_by_year_removed(0)
+
+        result = []
+        for player in players:
+            # Fetch raw stats for this player and season
+            player_stat = self.nhl_player_stat_repository.find_by_player_id(
+                player.id, season_id)
+
+            # Fetch percentile stats for this player and season
+            player_percentile = self.nhl_player_stat_percentile_repository.find_by_player_id(
+                player.id, season_id)
+
+            # Build domain model FantasyNhlPlayer with DisplayStat
+            fantasy_player = self._build_fantasy_nhl_player(player, player_stat, player_percentile)
+            result.append(fantasy_player)
+
+        return result
+
+    def getAllFantasySkatersWithTeamId(self, team_id):
+        """Return list of FantasyNhlPlayer for given team with stats and percentiles populated."""
+        players = self.fantasy_player_repository.getAllFantasySkatersByTeamId(team_id)
+        season_id = NhlYearConverter.get_previous_season_by_year_removed(0)
+
+        result = []
+        for player in players:
+            # Fetch raw stats for this player and season
+            player_stat = self.nhl_player_stat_repository.find_by_player_id(
+                player.id, season_id)
+
+            # Fetch percentile stats for this player and season
+            player_percentile = self.nhl_player_stat_percentile_repository.find_by_player_id(
+                player.id, season_id)
+
+            # Build domain model FantasyNhlPlayer with DisplayStat
+            fantasy_player = self._build_fantasy_nhl_player(player, player_stat, player_percentile)
+            result.append(fantasy_player)
+
+        return result
+
+    def _build_fantasy_nhl_player(self, sqlite_player, player_stat, player_percentile) -> FantasyNhlPlayer:
+        """Build a FantasyNhlPlayer from repo data, enriching with stat values and percentiles."""
+        try:
+            player_id = int(sqlite_player.id)
+        except (ValueError, AttributeError, TypeError):
+            player_id = sqlite_player.id
+
+        # Extract stat values (raw counts from player_stat)
+        stat_value = {
+            'assists': player_stat.assists or 0 if player_stat else 0,
+            'goals': player_stat.goals or 0 if player_stat else 0,
+            'points': player_stat.points or 0 if player_stat else 0,
+            'games': player_stat.games or 0 if player_stat else 0,
+            'shots': player_stat.shots or 0 if player_stat else 0,
+            'hits': player_stat.hits or 0 if player_stat else 0,
+            'blocked': player_stat.blocked or 0 if player_stat else 0,
+            'plusMinus': player_stat.plusMinus or 0 if player_stat else 0,
+            'powerPlayGoals': player_stat.powerPlayGoals or 0 if player_stat else 0,
+            'powerPlayPoints': player_stat.powerPlayPoints or 0 if player_stat else 0,
+        }
+
+        # Extract percentile values
+        stat_percentile = {
+            'assists': player_percentile.assists if player_percentile else None,
+            'goals': player_percentile.goals if player_percentile else None,
+            'points': player_percentile.points if player_percentile else None,
+            'games': player_percentile.games if player_percentile else None,
+            'shots': player_percentile.shots if player_percentile else None,
+            'hits': player_percentile.hits if player_percentile else None,
+            'blocked': player_percentile.blocked if player_percentile else None,
+            'plusMinus': player_percentile.plusMinus if player_percentile else None,
+            'powerPlayGoals': player_percentile.powerPlayGoals if player_percentile else None,
+            'powerPlayPoints': player_percentile.powerPlayPoints if player_percentile else None,
+        }
+
+        # Build DisplayStat with StatValue objects
+        display_stat = DisplayStat(
+            assists=StatValue(stat_value['assists'], stat_percentile['assists']),
+            goals=StatValue(stat_value['goals'], stat_percentile['goals']),
+            points=StatValue(stat_value['points'], stat_percentile['points']),
+            games=StatValue(stat_value['games'], stat_percentile['games']),
+            shots=StatValue(stat_value['shots'], stat_percentile['shots']),
+            hits=StatValue(stat_value['hits'], stat_percentile['hits']),
+            blocked=StatValue(stat_value['blocked'], stat_percentile['blocked']),
+            plusMinus=StatValue(stat_value['plusMinus'], stat_percentile['plusMinus']),
+            powerPlayGoals=StatValue(stat_value['powerPlayGoals'], stat_percentile['powerPlayGoals']),
+            powerPlayPoints=StatValue(stat_value['powerPlayPoints'], stat_percentile['powerPlayPoints'])
+        )
+
+        # Build and return FantasyNhlPlayer
+        return FantasyNhlPlayer(
+            id=sqlite_player.id,
+            skaterFullName=sqlite_player.skaterFullName,
+            positionCode=sqlite_player.positionCode,
+            teamId=sqlite_player.teamId,
+            fantasyGrade=sqlite_player.fantasyGrade,
+            yahooEligibility=sqlite_player.yahooEligibility,
+            avgPick=sqlite_player.avgPick,
+            avgRound=sqlite_player.avgRound,
+            percentDrafted=sqlite_player.percentDrafted,
+            teamName=sqlite_player.teamName,
+            nhlRank=sqlite_player.nhlRank,
+            badge=sqlite_player.badge,
+            stat=display_stat
+        )

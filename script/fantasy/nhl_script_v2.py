@@ -3,23 +3,24 @@ from typing import List
 from domain.fantasygrade.fantasy_defense_grader_service import FantasyDefenseGraderService
 from domain.fantasygrade.fantasy_forward_grader_service import FantasyForwardGraderService
 from domain.fantasyplayer.fantasy_player_service import FantasyPlayerService
-from domain.fantasyplayer.model.fantasy_nhl_player import FantasyPlayerUpdateQuery, FantasyNhlPlayer
-from domain.playerstat.model.nhl_player_stat import PlayerStat
+from domain.fantasyplayer.model.fantasy_nhl_player import FantasyPlayerUpdateQuery
+from domain.playerstatpercentile.nhl_player_stat_percentile_calculator import NhlPlayerStatPercentileCalculator
+from infra.spi.sqlite.playerstat.model.nhl_player_stat import PlayerStat
 from domain.playerstat.nhl_player_stat_cache_service import NhlPlayerStatCacheService
-from domain.playerstat.nhl_player_stat_service import NhlPlayerStatService
+from domain.playerstat.nhl_player_stat_facade import NhlPlayerStatFacade
 from infra.spi.nhlapi.nhl_team_roster_provider import NhlTeamRosterProvider
 from infra.spi.nhlapi.nhl_team_service import NhlTeamService
-from server.commons.fantasyplayer.model import fantasy_player
-from server.commons.fantasyplayer.model.fantasy_player import FantasyPlayer
+from infra.spi.sqlite.fantasyplayer.fantasy_player_repository import FantasyPlayerRepository
+from infra.spi.sqlite.playerstatpercentile.nhl_player_stat_repository import NhlPlayerStatPercentileRepository
 from server.commons.helper.nhl_season_converter import NhlYearConverter
 from server.commons.helper.nhl_team_converter import NhlTeamConverter
-from server.nhlapi.model.nhl_player import Player
 
 
 class MasterScript:
     def __init__(self):
         self.nhl_script = NhlScriptV2()
         self.fantasy_grader = FantasyPlayerGraderScript()
+        self.percentile_script = PercentileScript()
 
     def run(self):
         # self.nhl_script.save_all_players()
@@ -29,16 +30,18 @@ class MasterScript:
     def run_score(self):
         self.fantasy_grader.grade_all_players()
 
+    def run_percentile(self):
+        self.percentile_script.calculate_percentile_for_all_players()
+
 
 class NhlScriptV2:
     """Script to refresh player stats team-by-team and bulk-save into the SQLite cache."""
-
     def __init__(self):
         self.nhl_team_service = NhlTeamService()
-        self.stat_facade = NhlPlayerStatService()
+        self.stat_facade = NhlPlayerStatFacade()
         self.cache_service = NhlPlayerStatCacheService()
         self.fantasy_grader = FantasyPlayerGraderScript()
-        self.fantasy_player_service = FantasyPlayerService()
+        self.fantasy_player_repository = FantasyPlayerRepository()
         self.nhl_team_roster_provider = NhlTeamRosterProvider()
 
     def get_players_stat_from_franchise(self, franchise_id: int, season_id: int) -> List[PlayerStat]:
@@ -72,11 +75,11 @@ class NhlScriptV2:
                 fantasy_player.teamId = team_id
                 fantasy_player.teamName = team_name
 
-                self.fantasy_player_service.create_fantasy_player(fantasy_player)
+                self.fantasy_player_repository.create_fantasy_player(fantasy_player)
                 print(f"[{team_name}] Inserting fantasy player into the database: {fantasy_player.skaterFullName}")
 
     def reset_fantasy_players_table(self):
-        self.fantasy_player_service.delete_all()
+        self.fantasy_player_repository.delete_all()
         print("Deleted all fantasy players from the database.")
 
 
@@ -117,6 +120,32 @@ class FantasyPlayerGraderScript:
 
         self.fantasy_player_service.update_fantasy_players(queries)
 
+class PercentileScript:
+    def __init__(self):
+        self.nhl_team_roster_provider = NhlTeamRosterProvider()
+        self.fantasy_player_service = FantasyPlayerService()
+        self.percentile_calculator = NhlPlayerStatPercentileCalculator()
+        self.percentile_player_repository = NhlPlayerStatPercentileRepository()
+
+
+    def calculate_percentile_for_all_players(self, season_id: int = None):
+        season_id = season_id or NhlYearConverter.get_current_season()
+        for team_id in NhlTeamConverter.get_all_teamIds():
+            try:
+                print(f"Calculating percentile for players for team: {team_id}")
+                forwards = self.nhl_team_roster_provider.get_roster_player_infos_forward(team_id, season_id)
+                defenses = self.nhl_team_roster_provider.get_roster_player_infos_defense(team_id, season_id)
+
+                for player in forwards + defenses:
+                    self._calculate_percentile(player.id, season_id)
+            except Exception as e:
+                print(f"Error occurred saving percentiles for players for team {team_id}: {str(e)}")
+
+    def _calculate_percentile(self, player_id: int, season_id: int):
+        percentile = self.percentile_calculator.calculate(player_id=player_id, season_id=season_id)
+        print(f"Calculated percentile for player {player_id} in season {season_id}: {percentile}")
+        if percentile is not None:
+            self.percentile_player_repository.save(percentile)
 
 if __name__ == '__main__':
     # NhlScriptV2().get_all_players()
@@ -126,4 +155,5 @@ if __name__ == '__main__':
     # NhlScriptV2().get_all_players("20212022")
 
     # MasterScript().run()
-    MasterScript().run_score()
+    # MasterScript().run_score()
+    MasterScript().run_percentile()

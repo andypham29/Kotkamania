@@ -349,7 +349,7 @@
                </span>`
             : "";
 
-        return `<tr data-id="${p.playerId}" class="${rowClasses}">
+        return `<tr data-id="${p.playerId}" class="${rowClasses}" style="cursor:pointer;" data-action="highlight" title="Click to highlight">
             <td>${idx}${reorder}</td>
             <td><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${p.playerId})">${p.skaterFullName}</button></td>
             <td><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${p.teamId})">${p.teamName || ""}</button></td>
@@ -370,7 +370,6 @@
                     <button class="btn btn-sm ${onFav       ? 'btn-warning' : 'btn-outline-warning'}"  data-action="favorite"   data-id="${p.playerId}" title="Favorite">★</button>
                     <button class="btn btn-sm ${onWatch     ? 'btn-info'    : 'btn-outline-info'}"     data-action="watchlist"  data-id="${p.playerId}" title="Watchlist">👁</button>
                     <button class="btn btn-sm ${onDraft     ? 'btn-success' : 'btn-outline-success'}"  data-action="draftboard" data-id="${p.playerId}" title="Draftboard">🗊</button>
-                    <button class="btn btn-sm ${onHighlight ? 'btn-primary' : 'btn-outline-secondary'}"  data-action="highlight"  data-id="${p.playerId}" title="Highlight row">✓</button>
                     <button class="btn btn-sm ${onPicked    ? 'btn-info' : 'btn-outline-primary'}"  data-action="picked"     data-id="${p.playerId}" title="Picked to my team">+</button>
                 </div>
             </td>
@@ -557,17 +556,24 @@
 
         document.getElementById("fpTableBody").addEventListener("click", (e) => {
             const btn = e.target.closest("button[data-action]");
-            if (!btn) return;
-            const action = btn.dataset.action;
-            const id     = Number(btn.dataset.id);
-            if (action === "moveup") {
-                moveUpPlayerInCookie(id, COOKIES.draftboard);
-            } else if (action === "movedown") {
-                moveDownPlayerInCookie(id, COOKIES.draftboard);
-            } else {
-                toggleCookie(id, action);
+            if (btn) {
+                const action = btn.dataset.action;
+                const id     = Number(btn.dataset.id);
+                if (action === "moveup") {
+                    moveUpPlayerInCookie(id, COOKIES.draftboard);
+                } else if (action === "movedown") {
+                    moveDownPlayerInCookie(id, COOKIES.draftboard);
+                } else {
+                    toggleCookie(id, action);
+                }
+                renderTable();
+                return;
             }
-            renderTable();
+            const row = e.target.closest("tr[data-action='highlight']");
+            if (row) {
+                toggleCookie(Number(row.dataset.id), "highlight");
+                renderTable();
+            }
         });
 
         document.getElementById("fpCopyBtn").addEventListener("click", () => {

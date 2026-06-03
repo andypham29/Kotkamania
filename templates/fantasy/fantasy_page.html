@@ -70,6 +70,10 @@
                     <option value="name">Sort: Name</option>
                 </select>
 
+                <select class="form-control form-control-sm" id="fpTeamSelect" style="width: auto;">
+                    <option value="">Team: All</option>
+                </select>
+
                 <div class="ml-auto">
                     <button class="btn btn-sm btn-outline-dark" type="button" data-toggle="collapse" data-target="#fpAdvPanel">
                         Advanced <span class="badge badge-primary" id="fpAdvBadge" style="display:none;">0</span>
@@ -112,7 +116,7 @@
         <div class="card">
             <div class="card-header py-2 d-flex align-items-center">
                 <strong>Percentile Filters</strong>
-                <small class="text-muted ml-2">Server-side filter — show players above the Nth percentile in any selected stat.</small>
+                <small class="text-muted ml-2">Client-side filter — show players with stat percentile at or above each selected threshold.</small>
                 <div class="ml-auto">
                     <button class="btn btn-sm btn-outline-danger" id="fpAdvClear" type="button">Clear</button>
                     <button class="btn btn-sm btn-primary" id="fpAdvApply" type="button">Apply</button>
@@ -120,15 +124,15 @@
             </div>
             <div class="card-body">
                 <div class="form-row">
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Shots</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="shotPercentile" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Hits</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="hitPercentile" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Blocks</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="blockPercentile" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Goals</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="goalPercentile" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Assists</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="assistPercentile" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Points</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="pointPercentile" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">TOI</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="toiPercentile" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">PP TOI</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="pptoiPercentile" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">EV TOI</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="evtoiPercentile" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Shots</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="shots" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Hits</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="hits" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Blocks</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="blocked" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Goals</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="goals" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Assists</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="assists" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Points</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="points" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">+/-</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="plusMinus" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">PP Goals</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="powerPlayGoals" placeholder="0-100"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">PP Points</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="powerPlayPoints" placeholder="0-100"></div>
                 </div>
             </div>
         </div>
@@ -201,6 +205,7 @@
         all:         [],
         view:        "all",
         positions:   new Set(),
+        teamId:      "",
         query:       "",
         sortKey:     "fp",
         sortDesc:    true,
@@ -295,6 +300,23 @@
         }
 
         if (q) list = list.filter(p => (p.skaterFullName || "").toLowerCase().indexOf(q) >= 0);
+
+        if (state.teamId) {
+            list = list.filter(p => String(p.teamId) === state.teamId);
+        }
+
+        const pctKeys = Object.keys(state.percentiles);
+        if (pctKeys.length > 0) {
+            list = list.filter(p => {
+                const stats = p.stat || {};
+                return pctKeys.every((statKey) => {
+                    const threshold = state.percentiles[statKey];
+                    const raw = stats[statKey] && stats[statKey].percentile;
+                    const percentile = Number(raw);
+                    return Number.isFinite(percentile) && percentile >= threshold;
+                });
+            });
+        }
 
         list.sort(compare);
 
@@ -439,15 +461,29 @@
         const next = {};
         document.querySelectorAll("#fpAdvPanel input[data-pct]").forEach(el => {
             const v = el.value.trim();
-            if (v !== "") next[el.dataset.pct] = v;
+            if (v === "") return;
+            const n = Number(v);
+            if (!Number.isFinite(n)) return;
+            next[el.dataset.pct] = Math.max(0, Math.min(100, n));
         });
         state.percentiles = next;
     };
 
-    const buildQuery = () => {
-        const params = Object.keys(state.percentiles)
-            .map(k => `${k}=${state.percentiles[k]}`);
-        return params.length ? `?${params.join("&")}` : "";
+    const populateTeamSelect = () => {
+        const sel = document.getElementById("fpTeamSelect");
+        const prev = state.teamId;
+        const byId = new Map();
+        state.all.forEach(p => {
+            const id = String(p.teamId || "");
+            if (!id || byId.has(id)) return;
+            byId.set(id, p.teamName || id);
+        });
+        const teams = Array.from(byId.entries())
+            .sort((a, b) => a[1].localeCompare(b[1]));
+        sel.innerHTML = '<option value="">Team: All</option>' +
+            teams.map(([id, name]) => `<option value="${id}">${name}</option>`).join("");
+        if (prev && byId.has(prev)) sel.value = prev;
+        else { sel.value = ""; state.teamId = ""; }
     };
 
     const load = () => {
@@ -458,12 +494,13 @@
         </td></tr>`;
 
         $.ajax({
-            url: "/api/nhl/fantasyV2" + buildQuery(),
+            url: "/api/nhl/fantasyV2",
             crossDomain: true,
             dataType: "json",
             type: "GET",
             success: (resp) => {
                 state.all = Array.isArray(resp) ? resp : [];
+                populateTeamSelect();
                 renderTable();
             },
             error: (xhr) => {
@@ -500,6 +537,11 @@
         document.getElementById("fpSortSelect").addEventListener("change", (e) => {
             state.sortKey  = e.target.value;
             state.sortDesc = (state.sortKey !== "name");
+            renderTable();
+        });
+
+        document.getElementById("fpTeamSelect").addEventListener("change", (e) => {
+            state.teamId = e.target.value;
             renderTable();
         });
 
@@ -549,7 +591,7 @@
             refreshAdvBadge();
             const n = Object.keys(state.percentiles).length;
             toast(n ? `Applied ${n} percentile filter${n === 1 ? "" : "s"}` : "Filters cleared");
-            load();
+            renderTable();
         });
 
         document.getElementById("fpAdvClear").addEventListener("click", () => {
@@ -557,7 +599,7 @@
             state.percentiles = {};
             refreshAdvBadge();
             toast("Filters cleared");
-            load();
+            renderTable();
         });
 
         document.querySelectorAll("#fpAdvPanel input[data-pct]").forEach(el => {

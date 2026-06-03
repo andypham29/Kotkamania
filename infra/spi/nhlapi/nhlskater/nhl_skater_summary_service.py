@@ -1,7 +1,7 @@
 from dataclasses import fields
 
 from helper.http_helper import HttpHelper
-from infra.spi.nhlapi.model.nhl_skater_summary import SkaterSummary
+from infra.spi.nhlapi.nhlskater.model.nhl_skater_summary import SkaterSummary
 from server.commons.helper.nhl_season_converter import NhlYearConverter
 
 _SUMMARY_FIELDS = {f.name for f in fields(SkaterSummary)}

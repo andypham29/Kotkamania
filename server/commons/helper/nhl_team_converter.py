@@ -55,3 +55,7 @@ class NhlTeamConverter:
     @staticmethod
     def get_all_teamIds():
         return NhlTeamConverter.options.keys()
+
+    @staticmethod
+    def get_all_team_abr():
+        return NhlTeamConverter.options.values()

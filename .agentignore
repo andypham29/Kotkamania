@@ -1,0 +1,24 @@
+# Paths and patterns for automated agents to ignore by default
+
+# Legacy server code (do not read/write unless explicitly requested)
+server/
+
+# Python virtual envs
+.venv/
+venv/
+__pycache__/
+
+# Large data and caches
+data.json
+data1.json
+nhl_data.csv
+espn_data.csv
+script/fantasy/fantasy.xlsx
+
+# IDE configs
+.idea/
+.vscode/
+
+# node modules
+node_modules/
+

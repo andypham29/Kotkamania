@@ -1,7 +1,7 @@
 from dataclasses import fields
 
 from helper.http_helper import HttpHelper
-from infra.spi.nhlapi.model.nhl_skater_realtime import SkaterRealtime
+from infra.spi.nhlapi.nhlskater.model.nhl_skater_realtime import SkaterRealtime
 from server.commons.helper.nhl_season_converter import NhlYearConverter
 
 _REALTIME_FIELDS = {f.name for f in fields(SkaterRealtime)}

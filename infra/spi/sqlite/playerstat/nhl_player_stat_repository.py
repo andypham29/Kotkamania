@@ -1,9 +1,9 @@
 from dataclasses import fields
 from typing import List, Optional
 
-from sqlalchemy import func, Integer, cast, Float
+from sqlalchemy import func, cast, Float
 
-from domain.playerstat.model.nhl_player_stat import PlayerStat
+from infra.spi.sqlite.playerstat.model.nhl_player_stat import PlayerStat
 from server.internaldata.db.models import InternalPlayerStatORM, Session as DBSession
 
 # ORM columns that exist on `internal_player_stat` and overlap with PlayerStat.
@@ -20,6 +20,14 @@ class NhlPlayerStatRepository:
         return DBSession()
 
     # ---- reads ----
+    def find_all(self, season_id: int) -> list[PlayerStat | None]:
+        session = self._session()
+        try:
+            rows = session.query(InternalPlayerStatORM).filter_by(seasonId=season_id).all()
+            return [self._to_domain(row) for row in rows]
+        finally:
+            session.close()
+
     def find_by_player_id(self, player_id: int, season_id: int) -> Optional[PlayerStat]:
         session = self._session()
         try:

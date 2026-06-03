@@ -76,22 +76,26 @@ function addDraftBoardListPlayerById (id) {
     }
 }
 
-function moveUpPlayerInCookie(playerId1, playerId2, cookie_name) {
-
+function moveUpPlayerInCookie(playerId, cookie_name) {
     var cookies = getCookie(cookie_name)
-    var json = {}
     var newProspects = (cookies == "") ? [] : JSON.parse(cookies)
 
-    var playerId1_position = newProspects.indexOf(parseInt(playerId1))
-    var playerId2_position = newProspects.indexOf(parseInt(playerId2))
-
-    if (playerId2_position >= 0 && playerId2_position >= 0) {
-       // remove playerId1
-       newProspects.splice(playerId1_position, 1)
-       // move playerId1 above playerId2
-       newProspects.splice(playerId2_position, 0, parseInt(playerId1));
+    var pos = newProspects.indexOf(parseInt(playerId))
+    if (pos > 0) {
+        newProspects.splice(pos, 1)
+        newProspects.splice(pos - 1, 0, parseInt(playerId))
+        setCookie(cookie_name, JSON.stringify(newProspects))
     }
+}
 
-    json = newProspects
-    setCookie(cookie_name, JSON.stringify(json))
+function moveDownPlayerInCookie(playerId, cookie_name) {
+    var cookies = getCookie(cookie_name)
+    var newProspects = (cookies == "") ? [] : JSON.parse(cookies)
+
+    var pos = newProspects.indexOf(parseInt(playerId))
+    if (pos >= 0 && pos < newProspects.length - 1) {
+        newProspects.splice(pos, 1)
+        newProspects.splice(pos + 1, 0, parseInt(playerId))
+        setCookie(cookie_name, JSON.stringify(newProspects))
+    }
 }

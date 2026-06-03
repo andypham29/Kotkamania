@@ -1,12 +1,12 @@
 from typing import Optional, List
 
-from domain.playerstat.model.nhl_player_stat import PlayerStat
-from infra.spi.nhlapi.nhl_skater_realtime_service import NHLSkaterRealtimeService
-from infra.spi.nhlapi.nhl_skater_summary_service import NHLSkaterSummaryService
-from infra.spi.nhlapi.nhl_skater_timeonice_service import NHLSkaterTimeOnIceService
+from infra.spi.sqlite.playerstat.model.nhl_player_stat import PlayerStat
+from infra.spi.nhlapi.nhlskater.nhl_skater_realtime_service import NHLSkaterRealtimeService
+from infra.spi.nhlapi.nhlskater.nhl_skater_summary_service import NHLSkaterSummaryService
+from infra.spi.nhlapi.nhlskater.nhl_skater_timeonice_service import NHLSkaterTimeOnIceService
 
 
-class NhlPlayerStatService:
+class NhlPlayerStatFacade:
     """
     Facade for building comprehensive NHL player statistics by combining data
     from multiple NHL API services: Realtime, Summary, and TimeOnIce.
@@ -190,7 +190,7 @@ if __name__ == '__main__':
     from dataclasses import asdict
     import json
 
-    facade = NhlPlayerStatService()
+    facade = NhlPlayerStatFacade()
     season_id = 20252026
     franchise_id = 6  # Boston Bruins
     stats = facade.get_all_players_from_franchise(franchise_id, season_id)

@@ -64,12 +64,12 @@
                         player.stats.forEach(function(item){
                             goalieStats += "<tr>" +
                             `<td>${item.season}</td>` +
-                            `<td>${item.stat.games}</td>` +
-                            `<td>${item.stat.goalAgainstAverage}</td>` +
-                            `<td>${item.stat.savePercentage}</td>` +
-                            `<td>${item.stat.wins}</td>` +
-                            `<td>${item.stat.losses}</td>` +
-                            `<td>${item.stat.shutouts}</td>` +
+                            `<td>${nullish(item.stat.games)}</td>` +
+                            `<td>${nullish(item.stat.goalAgainstAverage)}</td>` +
+                            `<td>${nullish(item.stat.savePercentage)}</td>` +
+                            `<td>${nullish(item.stat.wins)}</td>` +
+                            `<td>${nullish(item.stat.losses)}</td>` +
+                            `<td>${nullish(item.stat.shutouts)}</td>` +
                             "</tr>"
                         })
 
@@ -85,22 +85,22 @@
                         "</tr>"
                         player.stats.forEach(function(item){
                             playerStats += `<tr><td>${item.season}</td>` +
-                            `<td>${item.stat.games}</td>` +
-                            `<td>${item.stat.goals}</td>` +
-                            `<td>${item.stat.assists}</td>` +
-                            `<td>${item.stat.points}</td>` +
-                            `<td>${item.stat.pim}</td>` +
-                            `<td>${item.stat.plusMinus}</td>` +
-                            `<td>${item.stat.powerPlayGoals}</td>` +
+                            `<td>${nullish(item.stat.games)}</td>` +
+                            `<td>${nullish(item.stat.goals)}</td>` +
+                            `<td>${nullish(item.stat.assists)}</td>` +
+                            `<td>${nullish(item.stat.points)}</td>` +
+                            `<td>${nullish(item.stat.pim)}</td>` +
+                            `<td>${nullish(item.stat.plusMinus)}</td>` +
+                            `<td>${nullish(item.stat.powerPlayGoals)}</td>` +
 <!--                            `<td>${item.stat.powerPlayPoints - item.stat.powerPlayGoals}</td>` +-->
-                            `<td>${item.stat.powerPlayPoints}</td>` +
-                            `<td>${item.stat.timeOnIcePerGame}</td>` +
-                            `<td>${item.stat.evenTimeOnIcePerGame}</td>` +
-                            `<td>${item.stat.shortHandedTimeOnIcePerGame}</td>` +
-                            `<td>${item.stat.powerPlayTimeOnIcePerGame}</td>` +
-                            `<td>${item.stat.shots}</td>` +
-                            `<td>${item.stat.hits}</td>` +
-                            `<td>${item.stat.blocked}</td>` +
+                            `<td>${nullish(item.stat.powerPlayPoints)}</td>` +
+                            `<td>${nullish(timeFromSeconds(item.stat.timeOnIcePerGame))}</td>` +
+                            `<td>${nullish(timeFromSeconds(item.stat.evenTimeOnIcePerGame))}</td>` +
+                            `<td>${nullish(timeFromSeconds(item.stat.shortHandedTimeOnIcePerGame))}</td>` +
+                            `<td>${nullish(timeFromSeconds(item.stat.powerPlayTimeOnIcePerGame))}</td>` +
+                            `<td>${nullish(item.stat.shots)}</td>` +
+                            `<td>${nullish(item.stat.hits)}</td>` +
+                            `<td>${nullish(item.stat.blocked)}</td>` +
                             "</tr>"
                         })
 

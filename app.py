@@ -2,10 +2,12 @@ import json
 
 from flask import Flask, request, render_template, make_response
 
-from domain.gamelog.service.gamelog_service import GameLogService
+from domain.fantasyplayer.fantasy_player_service import FantasyPlayerService
+from domain.gamelog.gamelog_service import GameLogService
 from server.admin.service.facade.admin_facade import AdminFacade
 from server.internaldata.service.facade.fantasy_nhl_player_facade import FantasyNhlPlayerFacade
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
+from domain.fantasyplayer.fantasy_player_service import FantasyPlayerService as DomainFantasyPlayerService
 from server.internaldata.service.fantasy_player_streak_index_service import FantasyPlayerStreakIndexService
 from server.mockdraft.service.facade.mockdraft_selector_service_facade import MockDraftSelectorServiceFacade
 from server.mockdraft.service.prospect_elite_service import ProspectEliteService
@@ -194,39 +196,11 @@ def getNhlStatsSkater():
                    + NHLStatsLeaderService().getAllPlayers(start=401, end=500)
     return makeHttpResponse(response)
 
-
 @app.route('/api/nhl/fantasy')
 def getNhlFantasyPlayers():
-    # if request.args.get('streak').lower() == 'true':
-    # response = FantasyNhlPlayerFacade().getAllFantasySkatersOnHotStreak()
-    if request.args.get('team') is not None:
-        response = FantasyNhlPlayerService().getAllFantasySkatersWithTeamId(request.args.get('team'))
-    elif request.args.get('playerName') is not None:
-        response = FantasyNhlPlayerService().getAllFantasySkatersBySearchName(request.args.get('playerName'))
-
-    else:
-        positions = request.args.getlist('position')
-        min_game = request.args.get('minGame')
-        percentile_shot = request.args.get('shotPercentile')
-        percentile_hit = request.args.get('hitPercentile')
-        percentile_block = request.args.get('blockPercentile')
-        percentile_goal = request.args.get('goalPercentile')
-        percentile_assist = request.args.get('assistPercentile')
-        percentile_point = request.args.get('pointPercentile')
-        percentile_toi = request.args.get('toiPercentile')
-        percentile_pptoi = request.args.get('pptoiPercentile')
-        percentile_evtoi = request.args.get('evtoiPercentile')
-        response = FantasyNhlPlayerFacade().getAllFantasySkaters(positions, min_game, percentile_shot,
-                                                                 percentile_hit,
-                                                                 percentile_block,
-                                                                 percentile_goal,
-                                                                 percentile_assist,
-                                                                 percentile_point,
-                                                                 percentile_toi,
-                                                                 percentile_pptoi,
-                                                                 percentile_evtoi)
+    """Return fantasy players with percentiles calculated from their stat values."""
+    response = DomainFantasyPlayerService().getAllFantasySkaters()
     return makeHttpResponse(response)
-
 
 @app.route('/api/nhl/fantasy/streak')
 def getNhlFantasyPlayerStreaks():

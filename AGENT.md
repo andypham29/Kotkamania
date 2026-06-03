@@ -4,74 +4,132 @@ Guide for AI agents working on this repository. Read this before making non-triv
 
 ## What this project is
 
-A tool for tracking NHL hockey stats, calculating fantasy points for players, and ranking them based on performance to support fantasy drafting and roster decisions. Players are scored from raw stats (goals, assists, shots, PP points, hits, blocks, +/-) using configurable weights, then surfaced through ranked lists, filters, and watchlists/draftboards.
+A **Python monolith** for tracking NHL hockey stats, calculating fantasy points, and ranking players to support fantasy drafting and roster decisions. Players are scored from raw stats (goals, assists, shots, PP points, hits, blocks, +/-) using configurable weights, then surfaced through ranked lists, filters, and watchlists/draftboards.
 
-## Components
+**Stack**
 
-The project has three top-level concerns:
+| Layer | Technology |
+|-------|------------|
+| Backend | Python **Flask** (`app.py`, `wsgi.py`), local **SQLite** (`identifier.sqlite`) |
+| Frontend | **HTML**, **JavaScript**, **CSS**, **Bootstrap 4.5**, **jQuery** — no build step, no SPA framework |
+| Data jobs | Standalone scripts under `script/` (scrapers, fantasy prep) |
 
-1. **Backend** — Python Flask app served from `app.py` / `wsgi.py`, persisting to a local **SQLite** database (`identifier.sqlite`). Exposes both HTML routes (server-rendered templates) and JSON APIs (e.g. `/api/nhl/fantasy`).
-2. **Frontend** — Pure HTML/CSS/JS with **jQuery** and Bootstrap 4.5. No build step, no framework. Templates live in `templates/`, client assets in `static/`.
-3. **Scripts** — Standalone scrapers / data-prep utilities under `script/` (e.g. `elite_scrape.py`, `nhldotcome_fantasy_scrape.py`, `prospect_scrape.py`, `yahoo_eligibility_scrape.py`). These populate or refresh data used by the app.
+Templates live in `templates/`; static assets in `static/`. Flask serves server-rendered pages and JSON APIs (e.g. `/api/nhl/fantasy`, `/api/nhl/fantasyV2`).
 
-## Backend architecture — hexagonal refactor in progress
+## Architecture — hexagonal (ports & adapters)
 
-The backend is **mid-refactor toward a full hexagonal (ports & adapters) architecture**. The end-state goal is full hexa; the current codebase is mixed.
+This codebase follows **hexagonal architecture**. Treat that as the source of truth for where code belongs and how dependencies flow.
 
-Layout reflects this transition:
+```mermaid
+flowchart TB
+  subgraph inbound["Inbound (HTTP)"]
+    APP["app.py — Flask routes"]
+  end
+  subgraph core["Application core"]
+    DOM["domain/ — facades & services"]
+  end
+  subgraph outbound["Outbound adapters"]
+    SPI["infra/spi/ — granular SPI modules"]
+  end
+  FE["templates/ + static/ — browser UI"]
+  LEG["server/ — legacy (frozen)"]
 
-- `domain/` — pure domain layer (the target shape). Contains business models and services that do not depend on Flask, SQLite, or external HTTP.
-  - `domain/gamelog/{model,service}/`
-  - `domain/nhlplayerstat/{model,...}/`
-  - `domain/fantasygrade.py`
-- `infra/` — adapters.
-  - `infra/rest/` — inbound/REST adapters (sparse so far).
-  - `infra/spi/nhlapi/` — outbound adapters calling the public NHL API (gamelog, skater summary, realtime, time-on-ice).
-  - `infra/spi/sqlite/` — outbound adapters for SQLite persistence.
-- `server/` — **legacy / transitional layer** still using the older facade+service+repository pattern. Modules here (`admin/`, `commons/`, `internaldata/`, `mockdraft/`, `nhlapi/`, `twitterapi/`) are the next candidates to migrate into `domain/` + `infra/`.
-- `helper/` — small cross-cutting utilities (e.g. `http_helper.py`).
-- `app.py` — Flask entrypoint; wires routes to facades/services from both the new and legacy layers.
-- `setting.py` — config (API keys, etc.).
+  FE --> APP
+  APP --> DOM
+  APP -.->|"existing routes only"| LEG
+  DOM --> SPI
+  SPI --> NHL["NHL API"]
+  SPI --> DB["SQLite"]
+  SPI --> SCR["Scrapers / files"]
+```
 
-**Guidance for new backend code:** prefer placing new business logic in `domain/` with adapters in `infra/spi/...`. When extending `server/...` code, keep changes minimal and consistent with that module's existing style — but flag opportunities to migrate it.
+**Dependency rule:** `domain/` must not import Flask, `app.py`, or `server/`. Domain code orchestrates use cases and may depend on `infra/spi/` adapters (and small shared helpers like `helper/`). `app.py` is the **composition root**: it wires HTTP to domain facades/services and returns JSON or rendered templates.
+
+### `domain/` — facades for the UI
+
+**Always implement business logic in `domain/` first.** Start with a facade or service class that **aggregates ports** (SPI adapters from `infra/spi/`) and **exposes domain-specific dataclasses** — not raw API/DB shapes. Wire HTTP in `app.py` only after that type exists.
+
+The domain layer exposes **facades and services** that `app.py` calls. These types shape what the frontend receives (aggregated player stats, fantasy lists, gamelogs, grades, etc.) without knowing about HTTP or SQLite details.
+
+Current modules (grow by feature, not by copy-pasting legacy `server/` patterns):
+
+| Path | Role |
+|------|------|
+| `domain/fantasyplayer/` | Fantasy player queries and models |
+| `domain/fantasygrade/` | Forward/defense grading; `fantasy_grader_facade.py` |
+| `domain/gamelog/` | Player game logs |
+| `domain/playerstat/` | Combined NHL skater stats; `nhl_player_stat_facade.py` |
+| `domain/playerstatpercentile/` | Percentile calculations |
+| `domain/nhlteam/` | Team-related domain (when used) |
+
+**New features:** add or extend a facade/service under `domain/`, then register a route or API handler in `app.py` that calls it. Prefer facades when a use case composes multiple SPI calls (see `domain/playerstat/nhl_player_stat_facade.py`).
+
+### `infra/spi/` — many small outbound adapters
+
+**SPI** (service provider interface) adapters live under `infra/spi/`. Keep them **granular**: one adapter (or small folder) per external concern — a single NHL endpoint family, one repository table, one scrape source, etc. Do not fold unrelated I/O into one large “god” adapter.
+
+| Path | Role |
+|------|------|
+| `infra/spi/nhlapi/` | Public NHL API (gamelog, team, roster; `nhlskater/` for summary, realtime, TOI) |
+| `infra/spi/sqlite/` | SQLite repositories and row models (`fantasyplayer/`, `playerstat/`, `playerstatpercentile/`) |
+| `infra/spi/hockeyreference/` | Hockey Reference scrape adapters |
+| `infra/rest/` | Optional inbound REST adapters (sparse today; most HTTP stays in `app.py`) |
+
+Domain services inject or construct SPI types as needed. Repositories map DB/API DTOs; domain holds business rules and composition.
+
+### `server/` — legacy (do not modify)
+
+`server/` is the **legacy** layer from an older facade + service + repository layout (`admin/`, `commons/`, `internaldata/`, `mockdraft/`, `nhlapi/`, `twitterapi/`). It remains wired in `app.py` for some routes until migrated.
+
+**Policy for agents:**
+
+- **Do not modify any file under `server/`.** No edits, refactors, or “small fixes” there unless the user **explicitly** asks to change legacy code.
+- **Do not read or search `server/` by default** when implementing new behavior — use `domain/` + `infra/spi/` instead. Only open `server/` when the user names it or you must understand an existing route you are not allowed to change yet.
+- **Do not add new dependencies on `server/`** from new domain or infra code. New work migrates *away* from `server/`, not deeper into it.
+
+`app.py` may still import legacy facades for backward compatibility; over time, routes should switch to `domain/` entry points only.
+
+### Other backend paths
+
+- `helper/` — cross-cutting utilities (e.g. `http_helper.py`).
+- `setting.py` — configuration (API keys, etc.).
+- `script/` — offline scrapers and data prep (not on the request hot path).
 
 ## Frontend
 
-- `templates/` — Jinja2 templates. Top-level `index.html` is the shell; feature pages are in subfolders:
-  - `templates/fantasy/` — fantasy players table, scoring, filters, weights panel.
-  - `templates/nhl/` — NHL player / team / stat / lineup pages and modals.
-  - `templates/draftcenter/`, `templates/draftsimulator/`, `templates/prospectlist/`, `templates/prospectpage/`, `templates/news/`.
-  - `templates/nav.html`, `logo.html`, `logoname.html` — chrome.
-- `static/` — JS and CSS.
-  - `cookiehandler.js` — generic `getCookie` / `setCookie` helpers.
-  - `fantasycookiehandler.js` — fantasy-specific list cookies (favorites, watchlist, draftboard, etc.) on top of `cookiehandler.js`.
-  - `chartjshandler.js`, `envvariables.js`, `styles/`.
+- `templates/` — Jinja2. `index.html` is the shell; feature pages in subfolders:
+  - `templates/fantasy/` — fantasy table, scoring, filters, weights
+  - `templates/nhl/` — player, team, stat, lineup pages
+  - `templates/draftcenter/`, `draftsimulator/`, `prospectlist/`, `prospectpage/`, `news/`
+  - `nav.html`, `logo.html`, `logoname.html` — chrome
+- `static/` — `cookiehandler.js`, `fantasycookiehandler.js`, `chartjshandler.js`, `envvariables.js`, `styles/`
 
-**Frontend conventions:**
-- Plain JS in IIFEs inside the template `<script>` block is the norm — see `templates/fantasy/fantasy_page.html` for the canonical pattern (state object, `renderTable`, `wireEvents`, jQuery `$.ajax` for data).
-- Persistent client state goes in cookies via the `fantasycookiehandler.js` helpers; ephemeral UI prefs (e.g. fantasy weights) go in `localStorage`.
-- No bundler. Keep dependencies inline or via CDN/`static/`.
+**Conventions**
+
+- Plain JS in IIFEs inside template `<script>` blocks — see `templates/fantasy/fantasy_page.html` (state object, `renderTable`, `wireEvents`, jQuery `$.ajax`).
+- Persistent list state → cookies via `fantasycookiehandler.js`; UI prefs (e.g. weights) → `localStorage`.
+- No bundler, no React/Vue. CDN + `static/` only.
 
 ## Scripts
 
-`script/` contains data-collection jobs run outside the request cycle:
-
-- `elite_scrape.py`, `nhldotcome_fantasy_scrape.py`, `prospect_scrape.py`, `yahoo_eligibility_scrape.py` — scrapers feeding the SQLite DB or JSON files (`data.json`, `player.json`, `nhl_data.csv`, `espn_data.csv`).
-- `script/fantasy/` — fantasy-specific data prep.
-- `playground.py` — ad-hoc experimentation; do not rely on it.
-
-These are typically invoked manually or via the admin endpoint (`/admin/script/<offset>` in `app.py`), not on every request.
+`script/` — jobs outside the request cycle (`elite_scrape.py`, `nhldotcome_fantasy_scrape.py`, `prospect_scrape.py`, `yahoo_eligibility_scrape.py`, `script/fantasy/`). Often triggered manually or via `/admin/script/<offset>` in `app.py`. Keep heavy I/O out of Flask route handlers.
 
 ## Running
 
-- Python deps: `requirements.txt`. Runtime pinned in `runtime.txt`.
-- Local dev: `python app.py` (Flask app object is `app` in `app.py`; `wsgi.py` is the production entrypoint via the `Procfile`).
-- DB: `identifier.sqlite` in repo root — treat as developer-local data, not source of truth.
+- Dependencies: `requirements.txt`; runtime: `runtime.txt`
+- Local: `python app.py` (`app` in `app.py`; production: `wsgi.py` / `Procfile`)
+- DB: `identifier.sqlite` at repo root — developer-local; no migration framework (schema changes are manual)
 
 ## Working principles for agents
 
-- **Respect the hexa direction.** New backend features should land in `domain/` + `infra/`, not in `server/`, unless extending existing legacy code is genuinely simpler for the task at hand.
-- **Don't introduce a frontend framework or build step.** Match the existing jQuery + vanilla-JS-in-templates style.
-- **Cookies vs localStorage on the frontend:** persistent player-list state → cookies (use `fantasycookiehandler.js`); UI tuning knobs → `localStorage`.
-- **Scripts are not request-path code.** Keep heavy scraping/IO out of Flask routes.
-- **SQLite is the only datastore.** No migrations framework is in place; schema changes are handled manually.
+1. **Domain first.** New behavior starts in `domain/`: aggregate ports, return domain dataclasses; then add SPI adapters if needed; last, expose via `app.py`.
+2. **`server/` is frozen.** No modifications unless the user explicitly requests legacy changes.
+3. **Facades face the frontend.** What pages and APIs need should be composed in `domain/` facades/services; `app.py` stays thin (parse request, call domain, `makeHttpResponse` / `render_template`).
+4. **Granular SPIs.** Split new adapters by data source or API surface; mirror existing folder naming (`infra/spi/nhlapi/nhlskater/`, `infra/spi/sqlite/fantasyplayer/`).
+5. **Monolith frontend rules.** jQuery + vanilla JS in templates; Bootstrap 4.5; no frontend framework or build pipeline.
+6. **Cookies vs localStorage.** Player lists → cookies; tuning knobs → `localStorage`.
+7. **SQLite only** for app persistence in new code paths unless the user specifies otherwise.
+
+## Machine-readable ignore file
+
+`AGENT.md` does not enforce tool behavior by itself. Respect **`.agentignore`** at the repo root when enumerating files to read or modify. It includes `server/`, virtualenvs, caches, and large data files. Skip ignored paths unless the user says otherwise.

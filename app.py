@@ -196,44 +196,11 @@ def getNhlStatsSkater():
                    + NHLStatsLeaderService().getAllPlayers(start=401, end=500)
     return makeHttpResponse(response)
 
-@app.route('/api/nhl/fantasyV2')
-def getNhlFantasyPlayersV2():
+@app.route('/api/nhl/fantasy')
+def getNhlFantasyPlayers():
     """Return fantasy players with percentiles calculated from their stat values."""
     response = DomainFantasyPlayerService().getAllFantasySkaters()
     return makeHttpResponse(response)
-
-@app.route('/api/nhl/fantasy')
-def getNhlFantasyPlayers():
-    # if request.args.get('streak').lower() == 'true':
-    # response = FantasyNhlPlayerFacade().getAllFantasySkatersOnHotStreak()
-    if request.args.get('team') is not None:
-        response = FantasyNhlPlayerService().getAllFantasySkatersWithTeamId(request.args.get('team'))
-    elif request.args.get('playerName') is not None:
-        response = FantasyNhlPlayerService().getAllFantasySkatersBySearchName(request.args.get('playerName'))
-
-    else:
-        positions = request.args.getlist('position')
-        min_game = request.args.get('minGame')
-        percentile_shot = request.args.get('shotPercentile')
-        percentile_hit = request.args.get('hitPercentile')
-        percentile_block = request.args.get('blockPercentile')
-        percentile_goal = request.args.get('goalPercentile')
-        percentile_assist = request.args.get('assistPercentile')
-        percentile_point = request.args.get('pointPercentile')
-        percentile_toi = request.args.get('toiPercentile')
-        percentile_pptoi = request.args.get('pptoiPercentile')
-        percentile_evtoi = request.args.get('evtoiPercentile')
-        response = FantasyNhlPlayerFacade().getAllFantasySkaters(positions, min_game, percentile_shot,
-                                                                 percentile_hit,
-                                                                 percentile_block,
-                                                                 percentile_goal,
-                                                                 percentile_assist,
-                                                                 percentile_point,
-                                                                 percentile_toi,
-                                                                 percentile_pptoi,
-                                                                 percentile_evtoi)
-    return makeHttpResponse(response)
-
 
 @app.route('/api/nhl/fantasy/streak')
 def getNhlFantasyPlayerStreaks():

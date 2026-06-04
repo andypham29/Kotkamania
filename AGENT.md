@@ -70,7 +70,7 @@ Current modules (grow by feature, not by copy-pasting legacy `server/` patterns)
 
 | Path | Role |
 |------|------|
-| `infra/spi/nhlapi/` | Public NHL API (gamelog, team, roster; `nhlskater/` for summary, realtime, TOI) |
+| `infra/spi/nhlapi/` | Public NHL API (gamelog, team, roster; `nhlskater/` for summary, realtime, TOI, puck possession, shot attempt count) |
 | `infra/spi/sqlite/` | SQLite repositories and row models (`fantasyplayer/`, `playerstat/`, `playerstatpercentile/`) |
 | `infra/spi/hockeyreference/` | Hockey Reference scrape adapters |
 | `infra/rest/` | Optional inbound REST adapters (sparse today; most HTTP stays in `app.py`) |
@@ -129,6 +129,62 @@ Domain services inject or construct SPI types as needed. Repositories map DB/API
 5. **Monolith frontend rules.** jQuery + vanilla JS in templates; Bootstrap 4.5; no frontend framework or build pipeline.
 6. **Cookies vs localStorage.** Player lists → cookies; tuning knobs → `localStorage`.
 7. **SQLite only** for app persistence in new code paths unless the user specifies otherwise.
+
+## Adding a direct NHL API adapter (`infra/spi/nhlapi/`)
+
+Use when the user provides an NHL API URL and wants a new SPI service + model. Adapters call the public NHL API only; domain facades compose them later.
+
+### Folder placement
+
+| API pattern | Location |
+|-------------|----------|
+| `api.nhle.com/stats/rest/en/skater/...` | `infra/spi/nhlapi/nhlskater/` + `nhlskater/model/` |
+| `api.nhle.com/stats/rest/en/goalie/...` | `infra/spi/nhlapi/nhlskater/` (or `nhlgoalie/` if many endpoints) |
+| `api.nhle.com/stats/rest/en/team` | `infra/spi/nhlapi/` (e.g. `nhl_team_service.py`) |
+| `api-web.nhle.com/v1/...` | `infra/spi/nhlapi/` (e.g. `nhl_gamelog_service.py`) |
+
+### Naming
+
+| Artifact | Pattern | Example |
+|----------|---------|---------|
+| Model file | `nhl_<entity>_<feature>.py` | `nhl_skater_puckpossession.py` |
+| Model class | `Skater<Feature>` | `SkaterPuckPossession` |
+| Service file | `nhl_<entity>_<feature>_service.py` | `nhl_skater_puckpossession_service.py` |
+| Service class | `NHL<Feature>Service` | `NHLSkaterPuckPossessionService` |
+| Field set | `_<FEATURE>_FIELDS` from `dataclasses.fields` | `_PUCKPOSSESSION_FIELDS` |
+| Mapper | **`__to_model(self, row: dict)`** on new services | Filters JSON keys to dataclass fields |
+
+Older services may use `__to_summary`, `__to_timeonice`, etc.; new adapters use `__to_model` only.
+
+### Checklist
+
+1. Get the canonical URL from the user (including `sort`, `cayenneExp`, `gameTypeId`, `seasonId` if present).
+2. Smoke-test: stats REST returns `{"data": [ {...}, ... ], "total": N }`.
+3. Create `model/nhl_*.py`: `@dataclass`, one `Optional` field per API key (names must match JSON camelCase exactly).
+4. Create `*_service.py`: copy paging methods from `nhl_skater_timeonice_service.py`, swap path segment and `sort`, use `HttpHelper.get(url)["data"]`, map with `__to_model`.
+5. Add `if __name__ == '__main__':` to print `players[0].__dict__` via `json.dumps`.
+6. Wire `domain/` only when the user asks.
+
+### `__to_model` pattern
+
+```python
+_FIELDS = {f.name for f in fields(SkaterYourFeature)}
+
+def __to_model(self, row: dict) -> SkaterYourFeature:
+    return SkaterYourFeature(**{k: v for k, v in row.items() if k in _FIELDS})
+```
+
+### Stats REST defaults
+
+- `start` / `limit` as strings in the URL.
+- `seasonId`: default `NhlYearConverter.get_current_season()`; cayenne `seasonId<={id} and seasonId>={id}`.
+- `gameTypeId=2` for regular season unless specified otherwise.
+- Team filter: `franchiseId={id}` in `cayenneExp`.
+
+### Reference implementation
+
+- Puck possession: `nhl_skater_puckpossession_service.py` → API path `puckPossessions`, sort `satPct`
+- Shot attempt count: `nhl_skater_shotattemptcount_service.py` → API path `summaryshooting`, sort `satFor`
 
 ## Machine-readable ignore file
 

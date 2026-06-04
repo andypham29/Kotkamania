@@ -8,7 +8,7 @@
     #fpTable thead th.no-sort { cursor: default; }
     #fpTable thead th.asc::after  { content: " ▲"; color: #007bff; }
     #fpTable thead th.desc::after { content: " ▼"; color: #007bff; }
-    .fp-table-wrap { max-height: 70vh; overflow: auto; }
+    .fp-table-wrap { overflow: auto; height: 100%; }
     .pos-chip { display:inline-block; padding:1px 7px; border-radius:10px; font-size:.72rem; font-weight:700; color:#fff; background:#6c757d; min-width:28px; text-align:center; }
     .pos-chip.pos-C { background:#007bff; }
     .pos-chip.pos-L { background:#28a745; }
@@ -18,10 +18,201 @@
     .fp-nullish { color:#adb5bd; font-style:italic; }
     .fp-toast { position:fixed; bottom:1.5rem; right:1.5rem; z-index:1080; min-width:200px; display:none; }
     .fp-toast.show { display:block; }
+    #fpTable tbody tr.fp-row-clickable { cursor: pointer; }
+    #fpTable tbody tr > td.fp-lists-col { background-color: #fff; }
+    #fpTable tbody tr:hover > td { background-color: rgba(0, 0, 0, .075); }
     #fpTable tbody tr.fp-row-highlight > td { background-color: #cbe1f4; }
     #fpTable tbody tr.fp-row-highlight:hover > td { background-color: #bcdff8; }
-    .fp-reorder { display:inline-flex; flex-direction:column; line-height:1; margin-left:.35rem; vertical-align:middle; }
-    .fp-reorder button { padding:0 .25rem; font-size:.65rem; line-height:1; }
+    .fp-reorder {
+        display: inline-flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 3px;
+        margin-left: .25rem;
+        vertical-align: middle;
+        user-select: none;
+    }
+    .fp-reorder-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        padding: 0;
+        font-size: .72rem;
+        line-height: 1;
+        border-radius: 4px;
+        border: 1px solid #ced4da;
+        background: linear-gradient(180deg, #fff 0%, #f1f3f5 100%);
+        color: #495057;
+        cursor: pointer;
+        touch-action: manipulation;
+        transition: background .12s, border-color .12s, color .12s, box-shadow .12s;
+    }
+    .fp-reorder-btn:hover:not(:disabled) {
+        border-color: #adb5bd;
+        background: #e9ecef;
+    }
+    .fp-reorder-btn:active:not(:disabled),
+    .fp-reorder-btn.fp-reorder-active {
+        border-color: #0056b3;
+        background: #007bff;
+        color: #fff;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+    }
+    .fp-reorder-btn:disabled {
+        opacity: .35;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+    #fpSideTable .fp-reorder-col { width: 3.5rem; padding-left: .25rem; padding-right: 0; }
+    .fp-split-stack {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 11rem);
+        min-height: 420px;
+    }
+    .fp-split-top {
+        flex: 7 1 0;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: .5rem;
+    }
+    .fp-split-top > .card { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; margin-bottom: 0; }
+    .fp-split-bottom {
+        flex: 3 1 0;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    .fp-side-panel { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; margin-bottom: 0; }
+    .fp-side-panel .card-body { overflow: auto; flex: 1 1 auto; min-height: 0; }
+    #fpSideTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 1; white-space: nowrap; font-size: .75rem; }
+    #fpSideTable td, #fpSideTable th { padding: .2rem .35rem; font-size: .8rem; white-space: nowrap; }
+    #fpSideTable .fp-side-name-col { max-width: 12rem; overflow: hidden; text-overflow: ellipsis; }
+    #fpSideTable .fp-stat-col { text-align: right; color: #495057; }
+    #fpSideTable .fp-side-remove-col {
+        min-width: 2.5rem;
+        width: 2.5rem;
+        text-align: right;
+        padding-left: 1rem;
+        padding-right: .65rem;
+        position: sticky;
+        right: 0;
+        z-index: 1;
+        background: #fff;
+        box-shadow: -6px 0 8px -6px rgba(0, 0, 0, .12);
+    }
+    #fpSideTable thead .fp-side-remove-col {
+        z-index: 2;
+        background: #f8f9fa;
+    }
+    #fpSideTable tbody tr > td.fp-side-remove-col { background-color: #fff; }
+    #fpSideTable tbody tr:hover > td { background-color: rgba(0, 0, 0, .075); }
+    .fp-side-remove-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        padding: 0;
+        font-size: 1rem;
+        line-height: 1;
+        border-radius: 4px;
+        border: 1px solid #f5c6cb;
+        background: #fff;
+        color: #dc3545;
+        cursor: pointer;
+        touch-action: manipulation;
+    }
+    .fp-side-remove-btn:hover {
+        background: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+    }
+    #fpTable .fp-lists-col {
+        min-width: 9rem;
+        width: 9rem;
+        text-align: right;
+        padding-left: 1.25rem;
+        padding-right: .65rem;
+        position: sticky;
+        right: 0;
+        z-index: 1;
+        background: #fff;
+        box-shadow: -6px 0 8px -6px rgba(0, 0, 0, .12);
+    }
+    #fpTable thead .fp-lists-col {
+        z-index: 3;
+        background: #f8f9fa;
+    }
+    .fp-list-hdr {
+        display: inline-flex;
+        gap: 3px;
+        font-size: .7rem;
+        opacity: .55;
+        letter-spacing: .02em;
+        justify-content: flex-end;
+        width: 100%;
+    }
+    .fp-list-actions {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 3px;
+        flex-wrap: nowrap;
+        width: 100%;
+        margin-left: auto;
+    }
+    .fp-list-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.65rem;
+        height: 1.65rem;
+        padding: 0;
+        font-size: .78rem;
+        line-height: 1;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+        background: #fff;
+        color: #6c757d;
+        cursor: pointer;
+        touch-action: manipulation;
+        transition: transform .1s, background .12s, border-color .12s, color .12s, box-shadow .12s;
+    }
+    .fp-list-btn:hover {
+        transform: translateY(-1px);
+        border-color: #adb5bd;
+        box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+    .fp-list-btn:active { transform: translateY(0); }
+    .fp-list-btn.is-on { color: #fff; font-weight: 700; box-shadow: inset 0 1px 2px rgba(0,0,0,.12); }
+    .fp-list-btn.fp-list-favorite.is-on { background: #e0a800; border-color: #d39e00; }
+    .fp-list-btn.fp-list-watchlist.is-on { background: #138496; border-color: #117a8b; }
+    .fp-list-btn.fp-list-draftboard.is-on { background: #218838; border-color: #1e7e34; }
+    .fp-list-btn.fp-list-picked.is-on { background: #0056b3; border-color: #004085; }
+    .fp-list-btn.fp-list-highlight.is-on { background: #5a6268; border-color: #545b62; }
+    .fp-list-btn.fp-pulse { animation: fp-list-pulse .35s ease; }
+    @keyframes fp-list-pulse {
+        0% { transform: scale(1); }
+        40% { transform: scale(1.18); }
+        100% { transform: scale(1); }
+    }
+    .fp-side-panel.fp-flash {
+        animation: fp-panel-flash .7s ease;
+    }
+    @keyframes fp-panel-flash {
+        0%, 100% { box-shadow: none; }
+        35% { box-shadow: 0 0 0 3px rgba(0, 123, 255, .45); }
+    }
+    @media (max-width: 767.98px) {
+        .fp-split-stack { height: auto; min-height: 0; }
+        .fp-split-top, .fp-split-bottom { flex: none; }
+        .fp-split-top .fp-table-wrap { max-height: 55vh; }
+        .fp-side-panel .card-body { max-height: 28vh; }
+    }
 </style>
 
 <div class="container-fluid py-3">
@@ -38,15 +229,6 @@
     </div>
 
     <div class="card mb-3">
-        <div class="card-header bg-white">
-            <ul class="nav nav-tabs card-header-tabs" id="fpTabs">
-                <li class="nav-item"><a class="nav-link active" href="#" data-view="all">All <span class="badge badge-secondary ml-1" id="fpTabAll">0</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-view="favorite">★ Favorites <span class="badge badge-secondary ml-1" id="fpTabFav">0</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-view="watchlist">👁 Watchlist <span class="badge badge-secondary ml-1" id="fpTabWatch">0</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-view="draftboard">🗊 Draftboard <span class="badge badge-secondary ml-1" id="fpTabDraft">0</span></a></li>
-                <li class="nav-item"><a class="nav-link" href="#" data-view="picked">＋ My Team <span class="badge badge-secondary ml-1" id="fpTabPicked">0</span></a></li>
-            </ul>
-        </div>
         <div class="card-body p-2">
             <div class="d-flex flex-wrap align-items-center" style="gap: .5rem;">
                 <input id="fpSearchInput" type="text" class="form-control form-control-sm" placeholder="Search by name… (press / to focus)" autocomplete="off" style="width: 260px;">
@@ -82,7 +264,6 @@
                         Weights <span class="badge badge-primary" id="fpWeightsBadge" style="display:none;">●</span>
                     </button>
                     <button class="btn btn-sm btn-outline-secondary" id="fpCopyBtn" type="button">Copy</button>
-                    <button class="btn btn-sm btn-outline-danger" id="fpClearBtn" type="button" style="display:none;">Clear list</button>
                 </div>
             </div>
         </div>
@@ -138,31 +319,78 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="fp-table-wrap">
-            <table class="table table-sm table-hover mb-0" id="fpTable">
-                <thead class="thead-light">
-                    <tr>
-                        <th class="no-sort">#</th>
-                        <th data-sort-key="name">Player</th>
-                        <th data-sort-key="team">Team</th>
-                        <th data-sort-key="position">Pos</th>
-                        <th data-sort-key="score">Score</th>
-                        <th data-sort-key="fp" class="desc">FP</th>
-                        <th class="no-sort">GP</th>
-                        <th data-sort-key="goals">G</th>
-                        <th data-sort-key="assists">A</th>
-                        <th data-sort-key="points">P</th>
-                        <th data-sort-key="shots">S</th>
-                        <th data-sort-key="hits">H</th>
-                        <th data-sort-key="blocked">B</th>
-                        <th data-sort-key="nhl">NHL</th>
-                        <th data-sort-key="espn">ESPN</th>
-                        <th class="no-sort">Lists</th>
-                    </tr>
-                </thead>
-                <tbody id="fpTableBody"></tbody>
-            </table>
+    <div class="fp-split-stack">
+        <div class="fp-split-top">
+            <div class="card">
+                <div class="fp-table-wrap">
+                    <table class="table table-sm table-hover mb-0" id="fpTable">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="no-sort">#</th>
+                                <th data-sort-key="name">Player</th>
+                                <th data-sort-key="team">Team</th>
+                                <th data-sort-key="position">Pos</th>
+                                <th data-sort-key="score">Score</th>
+                                <th data-sort-key="fp" class="desc">FP</th>
+                                <th class="no-sort">GP</th>
+                                <th data-sort-key="goals">G</th>
+                                <th data-sort-key="assists">A</th>
+                                <th data-sort-key="points">P</th>
+                                <th data-sort-key="shots">S</th>
+                                <th data-sort-key="hits">H</th>
+                                <th data-sort-key="blocked">B</th>
+                                <th data-sort-key="nhl">NHL</th>
+                                <th data-sort-key="espn">ESPN</th>
+                                <th class="no-sort fp-lists-col"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="fpTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="fp-split-bottom">
+            <div class="card fp-side-panel">
+                <div class="card-header bg-white py-2">
+                    <div class="d-flex flex-wrap align-items-center">
+                        <ul class="nav nav-tabs card-header-tabs border-0 flex-nowrap mb-0 mr-3" id="fpTabs">
+                            <li class="nav-item"><a class="nav-link py-1" href="#" data-view="favorite">★ Favorites <span class="badge badge-secondary ml-1" id="fpTabFav">0</span></a></li>
+                            <li class="nav-item"><a class="nav-link py-1" href="#" data-view="watchlist">👁 Watchlist <span class="badge badge-secondary ml-1" id="fpTabWatch">0</span></a></li>
+                            <li class="nav-item"><a class="nav-link active py-1" href="#" data-view="draftboard">🗊 Draftboard <span class="badge badge-secondary ml-1" id="fpTabDraft">0</span></a></li>
+                            <li class="nav-item"><a class="nav-link py-1" href="#" data-view="picked">＋ My Team <span class="badge badge-secondary ml-1" id="fpTabPicked">0</span></a></li>
+                        </ul>
+                        <strong class="small mb-0" id="fpSideTitle">Draftboard</strong>
+                        <span class="text-muted small ml-2">(<span id="fpSideCount">0</span>)</span>
+                        <div class="ml-auto">
+                            <button class="btn btn-sm btn-outline-secondary py-0" id="fpSideCopyBtn" type="button" title="Copy names">Copy</button>
+                            <button class="btn btn-sm btn-outline-danger py-0" id="fpClearBtn" type="button">Clear</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm table-hover mb-0" id="fpSideTable">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="no-sort">#</th>
+                                <th class="fp-reorder-col no-sort" id="fpSideReorderHead" title="Draftboard order">⇅</th>
+                                <th>Player</th>
+                                <th>Team</th>
+                                <th>Pos</th>
+                                <th class="fp-stat-col">GP</th>
+                                <th class="fp-stat-col">G</th>
+                                <th class="fp-stat-col">A</th>
+                                <th class="fp-stat-col">P</th>
+                                <th class="fp-stat-col">S</th>
+                                <th class="fp-stat-col">H</th>
+                                <th class="fp-stat-col">B</th>
+                                <th class="no-sort fp-side-remove-col"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="fpSideTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -201,9 +429,24 @@
 
     const WEIGHTS = loadWeights();
 
+    const SIDE_VIEW_LABELS = {
+        favorite:   "Favorites",
+        watchlist:  "Watchlist",
+        draftboard: "Draftboard",
+        picked:     "My Team",
+        highlight:  "Highlight"
+    };
+
+    const LIST_ACTIONS = [
+        { action: "favorite",   icon: "★", label: "Favorites" },
+        { action: "watchlist",  icon: "👁", label: "Watchlist" },
+        { action: "draftboard", icon: "🗊", label: "Draftboard" },
+        { action: "picked",     icon: "＋", label: "My Team" }
+    ];
+
     const state = {
         all:         [],
-        view:        "all",
+        sideView:    "draftboard",
         positions:   new Set(),
         teamId:      "",
         query:       "",
@@ -283,14 +526,29 @@
         picked:    cookieList(COOKIES.picked)
     });
 
+    const playerById = () => {
+        if (!playerById._map) {
+            playerById._map = new Map();
+            state.all.forEach(p => playerById._map.set(Number(p.playerId), p));
+        }
+        return playerById._map;
+    };
+
+    const invalidatePlayerMap = () => { playerById._map = null; };
+
+    const sideListIds = (cookies) => {
+        switch (state.sideView) {
+            case "favorite":   return cookies.fav;
+            case "watchlist":  return cookies.watch;
+            case "draftboard": return cookies.draft;
+            case "picked":     return cookies.picked;
+            default:           return [];
+        }
+    };
+
     const filteredPlayers = (cookies) => {
         const q = state.query.trim().toLowerCase();
         let list = state.all.slice();
-
-        if (state.view === "favorite")   list = list.filter(p => isIn(p.playerId, cookies.fav));
-        if (state.view === "watchlist")  list = list.filter(p => isIn(p.playerId, cookies.watch));
-        if (state.view === "draftboard") list = list.filter(p => isIn(p.playerId, cookies.draft));
-        if (state.view === "picked")     list = list.filter(p => isIn(p.playerId, cookies.picked));
 
         if (state.positions.size > 0) {
             list = list.filter(p => {
@@ -319,38 +577,42 @@
         }
 
         list.sort(compare);
-
-        if (state.view !== "all") {
-            const order = state.view === "favorite"   ? cookies.fav
-                        : state.view === "watchlist"  ? cookies.watch
-                        : state.view === "draftboard" ? cookies.draft
-                        : cookies.picked;
-            list.sort((a, b) => order.indexOf(Number(a.playerId)) - order.indexOf(Number(b.playerId)));
-        }
-
         return list;
+    };
+
+    const listActionOn = (action, id, cookies) => {
+        switch (action) {
+            case "favorite":   return isIn(id, cookies.fav);
+            case "watchlist":  return isIn(id, cookies.watch);
+            case "draftboard": return isIn(id, cookies.draft);
+            case "picked":     return isIn(id, cookies.picked);
+            case "highlight":  return isIn(id, cookies.highlight);
+            default:           return false;
+        }
+    };
+
+    const renderListActions = (p, cookies) => {
+        const id = p.playerId;
+        const buttons = LIST_ACTIONS.map(({ action, icon, label }) => {
+            const on = listActionOn(action, id, cookies);
+            const verb = on ? "Remove from" : "Add to";
+            return `<button type="button" class="fp-list-btn fp-list-${action} ${on ? "is-on" : ""}"
+                data-action="${action}" data-id="${id}"
+                aria-pressed="${on}" aria-label="${label}"
+                title="${verb} ${label}">${icon}</button>`;
+        }).join("");
+        return `<div class="fp-list-actions" role="group" aria-label="Player lists">${buttons}</div>`;
     };
 
     const renderRow = (p, idx, total, cookies) => {
         const fp            = fpPoints(p).toFixed(1);
         const elig          = (p.yahooEligibility || p.positionCode || "");
-        const onFav         = isIn(p.playerId, cookies.fav);
-        const onWatch       = isIn(p.playerId, cookies.watch);
-        const onDraft       = isIn(p.playerId, cookies.draft);
         const onHighlight   = isIn(p.playerId, cookies.highlight);
-        const onPicked      = isIn(p.playerId, cookies.picked);
         const s             = p.stat || {};
         const rowClasses    = [onHighlight ? "fp-row-highlight" : ""].filter(Boolean).join(" ");
 
-        const reorder = (state.view === "draftboard")
-            ? `<span class="fp-reorder">
-                  <button class="btn btn-sm btn-outline-secondary" data-action="moveup"   data-id="${p.playerId}" ${idx === 1     ? "disabled" : ""} title="Move up">▲</button>
-                  <button class="btn btn-sm btn-outline-secondary" data-action="movedown" data-id="${p.playerId}" ${idx === total ? "disabled" : ""} title="Move down">▼</button>
-               </span>`
-            : "";
-
-        return `<tr data-id="${p.playerId}" class="${rowClasses}" style="cursor:pointer;" data-action="highlight" title="Click to highlight">
-            <td>${idx}${reorder}</td>
+        return `<tr data-id="${p.playerId}" class="fp-row-clickable ${rowClasses}" title="Click row to highlight">
+            <td>${idx}</td>
             <td><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${p.playerId})">${p.skaterFullName}</button></td>
             <td><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${p.teamId})">${p.teamName || ""}</button></td>
             <td>${positionChip(elig)}</td>
@@ -365,26 +627,148 @@
             <td>${ nullish(s.blocked.value) }</td>
             <td>${ nullish(p.nhlRank) }</td>
             <td>${ nullish(p.avgPick) }</td>
-            <td>
-                <div class="btn-group btn-group-sm">
-                    <button class="btn btn-sm ${onFav       ? 'btn-warning' : 'btn-outline-warning'}"  data-action="favorite"   data-id="${p.playerId}" title="Favorite">★</button>
-                    <button class="btn btn-sm ${onWatch     ? 'btn-info'    : 'btn-outline-info'}"     data-action="watchlist"  data-id="${p.playerId}" title="Watchlist">👁</button>
-                    <button class="btn btn-sm ${onDraft     ? 'btn-success' : 'btn-outline-success'}"  data-action="draftboard" data-id="${p.playerId}" title="Draftboard">🗊</button>
-                    <button class="btn btn-sm ${onPicked    ? 'btn-info' : 'btn-outline-primary'}"  data-action="picked"     data-id="${p.playerId}" title="Picked to my team">+</button>
-                </div>
+            <td class="fp-lists-col">${renderListActions(p, cookies)}</td>
+        </tr>`;
+    };
+
+    const renderEmpty = () =>
+        `<tr><td colspan="15" class="text-center text-muted py-5">No players match the current filters.</td></tr>`;
+
+    const renderSideRow = (p, id, idx, total) => {
+        const s       = (p && p.stat) || {};
+        const reorderCell = (state.sideView === "draftboard")
+            ? `<td class="fp-reorder-col">
+                  <span class="fp-reorder" role="group" aria-label="Reorder">
+                      <button type="button" class="fp-reorder-btn" data-side-action="moveup" data-id="${id}" ${idx === 1     ? "disabled" : ""} title="Move up (hold to repeat)" aria-label="Move up">▲</button>
+                      <button type="button" class="fp-reorder-btn" data-side-action="movedown" data-id="${id}" ${idx === total ? "disabled" : ""} title="Move down (hold to repeat)" aria-label="Move down">▼</button>
+                  </span>
+               </td>`
+            : `<td class="fp-reorder-col" style="display:none"></td>`;
+        const label = (p && p.skaterFullName) || `Player #${id}`;
+        const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
+        const teamId = p && p.teamId;
+        const teamName = (p && p.teamName) || "";
+        const stat  = (key) => `<td class="fp-stat-col">${nullish(s[key] && s[key].value)}</td>`;
+        const teamCell = teamId
+            ? `<button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${teamId})">${teamName}</button>`
+            : `<span class="fp-nullish">—</span>`;
+        return `<tr data-side-id="${id}">
+            <td class="text-muted">${idx}</td>
+            ${reorderCell}
+            <td class="fp-side-name-col">
+                <button type="button" class="btn btn-link btn-sm p-0 text-left" data-side-action="open" data-id="${id}" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})">${label}</button>
+            </td>
+            <td>${teamCell}</td>
+            <td>${positionChip(elig)}</td>
+            ${stat("games")}
+            ${stat("goals")}
+            ${stat("assists")}
+            ${stat("points")}
+            ${stat("shots")}
+            ${stat("hits")}
+            ${stat("blocked")}
+            <td class="fp-side-remove-col">
+                <button type="button" class="fp-side-remove-btn" data-side-action="remove" data-id="${id}" title="Remove from list" aria-label="Remove from list">×</button>
             </td>
         </tr>`;
     };
 
-    const renderEmpty = () => {
-        const msgs = {
-            all:        "No players match the current filters.",
-            favorite:   "No favorites yet. Click the ★ on any player to add one.",
-            watchlist:  "Your watchlist is empty. Click the 👁 to add a player.",
-            draftboard: "Draftboard is empty. Click the ✓ to add a player.",
-            picked:     "Your team is empty. Click the ＋ on any player to add them to your team."
+    const renderSideList = (cookies) => {
+        const tbody   = document.getElementById("fpSideTableBody");
+        const ids     = sideListIds(cookies);
+        const byId    = playerById();
+        const title   = SIDE_VIEW_LABELS[state.sideView] || "Saved list";
+        const emptyMsgs = {
+            favorite:   "No favorites yet. Click ★ on a player in the table.",
+            watchlist:  "Watchlist is empty. Click 👁 on a player.",
+            draftboard: "Draftboard is empty. Click 🗊 on a player.",
+            picked:     "My Team is empty. Click ＋ on a player."
         };
-        return `<tr><td colspan="15" class="text-center text-muted py-5">${msgs[state.view] || msgs.all}</td></tr>`;
+
+        document.getElementById("fpSideTitle").textContent = title;
+        document.getElementById("fpSideCount").textContent = ids.length;
+
+        if (ids.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="13" class="text-center text-muted small py-3">${emptyMsgs[state.sideView] || "List is empty."}</td></tr>`;
+            syncSideReorderColumn();
+            return;
+        }
+
+        tbody.innerHTML = ids.map((id, i) => {
+            const p = byId.get(Number(id));
+            return renderSideRow(p, id, i + 1, ids.length);
+        }).join("");
+        syncSideReorderColumn();
+    };
+
+    const syncSideReorderColumn = () => {
+        const show = state.sideView === "draftboard";
+        const head = document.getElementById("fpSideReorderHead");
+        if (head) head.style.display = show ? "" : "none";
+        document.querySelectorAll("#fpSideTable .fp-reorder-col").forEach(el => {
+            el.style.display = show ? "" : "none";
+        });
+    };
+
+    const REORDER_HOLD_DELAY_MS = 380;
+    const REORDER_HOLD_REPEAT_MS = 110;
+    let reorderHold = null;
+
+    const draftReorderStep = (playerId, dir) => {
+        if (state.sideView !== "draftboard") return false;
+        const list = cookieList(COOKIES.draftboard);
+        const pos = list.indexOf(Number(playerId));
+        if (pos < 0) return false;
+        if (dir === "up" && pos > 0) {
+            moveUpPlayerInCookie(playerId, COOKIES.draftboard);
+            renderTable();
+            return true;
+        }
+        if (dir === "down" && pos < list.length - 1) {
+            moveDownPlayerInCookie(playerId, COOKIES.draftboard);
+            renderTable();
+            return true;
+        }
+        return false;
+    };
+
+    const stopReorderHold = () => {
+        if (!reorderHold) return;
+        if (reorderHold.delayId) clearTimeout(reorderHold.delayId);
+        if (reorderHold.intervalId) clearInterval(reorderHold.intervalId);
+        reorderHold = null;
+    };
+
+    const startReorderHold = (playerId, dir) => {
+        stopReorderHold();
+        const tick = () => {
+            if (!draftReorderStep(playerId, dir)) stopReorderHold();
+        };
+        if (!tick()) return;
+        reorderHold = { playerId, dir, delayId: null, intervalId: null };
+        reorderHold.delayId = setTimeout(() => {
+            if (!reorderHold) return;
+            reorderHold.intervalId = setInterval(tick, REORDER_HOLD_REPEAT_MS);
+        }, REORDER_HOLD_DELAY_MS);
+    };
+
+    const wireDraftReorderHold = () => {
+        const body = document.getElementById("fpSideTableBody");
+        body.addEventListener("pointerdown", (e) => {
+            const btn = e.target.closest("[data-side-action='moveup'], [data-side-action='movedown']");
+            if (!btn || btn.disabled || state.sideView !== "draftboard") return;
+            e.preventDefault();
+            btn.classList.add("fp-reorder-active");
+            const dir = btn.dataset.sideAction === "moveup" ? "up" : "down";
+            startReorderHold(Number(btn.dataset.id), dir);
+        });
+        const endHold = () => {
+            stopReorderHold();
+            document.querySelectorAll(".fp-reorder-btn.fp-reorder-active").forEach(b => b.classList.remove("fp-reorder-active"));
+        };
+        document.addEventListener("pointerup", endHold);
+        document.addEventListener("pointercancel", endHold);
+        window.addEventListener("blur", endHold);
     };
 
     const renderTable = () => {
@@ -398,16 +782,8 @@
 
         document.getElementById("fpVisibleCount").textContent = visible.length;
         document.getElementById("fpTotalCount").textContent   = state.all.length;
-        document.getElementById("fpFavCount").textContent     = cookies.fav.length;
-        document.getElementById("fpWatchCount").textContent   = cookies.watch.length;
-        document.getElementById("fpDraftCount").textContent   = cookies.draft.length;
-        document.getElementById("fpTabAll").textContent       = state.all.length;
-        document.getElementById("fpTabFav").textContent       = cookies.fav.length;
-        document.getElementById("fpTabWatch").textContent     = cookies.watch.length;
-        document.getElementById("fpTabDraft").textContent     = cookies.draft.length;
-        document.getElementById("fpTabPicked").textContent    = cookies.picked.length;
-
-        document.getElementById("fpClearBtn").style.display = (state.view === "all") ? "none" : "";
+        refreshListCounts(cookies);
+        renderSideList(cookies);
 
         document.querySelectorAll("#fpTable thead th").forEach(th => {
             th.classList.remove("asc", "desc");
@@ -415,15 +791,76 @@
         });
     };
 
-    const toggleCookie = (id, action) => {
-        const list = cookieList(COOKIES[action]);
-        if (isIn(id, list)) {
-            removePlayerInCookie(Number(id), COOKIES[action]);
-            toast(`Removed from ${action}`);
-        } else {
-            savePlayerInCookie(Number(id), COOKIES[action]);
-            toast(`Added to ${action}`);
+    const refreshListCounts = (cookies) => {
+        document.getElementById("fpFavCount").textContent   = cookies.fav.length;
+        document.getElementById("fpWatchCount").textContent = cookies.watch.length;
+        document.getElementById("fpDraftCount").textContent = cookies.draft.length;
+        document.getElementById("fpTabFav").textContent     = cookies.fav.length;
+        document.getElementById("fpTabWatch").textContent   = cookies.watch.length;
+        document.getElementById("fpTabDraft").textContent   = cookies.draft.length;
+        document.getElementById("fpTabPicked").textContent = cookies.picked.length;
+    };
+
+    const switchSideView = (view) => {
+        if (!SIDE_VIEW_LABELS[view]) return;
+        state.sideView = view;
+        document.querySelectorAll("#fpTabs .nav-link").forEach(a => {
+            a.classList.toggle("active", a.dataset.view === view);
+        });
+        document.getElementById("fpSideTitle").textContent = SIDE_VIEW_LABELS[view];
+        syncSideReorderColumn();
+    };
+
+    const flashSidePanel = () => {
+        const panel = document.querySelector(".fp-side-panel");
+        if (!panel) return;
+        panel.classList.remove("fp-flash");
+        void panel.offsetWidth;
+        panel.classList.add("fp-flash");
+        panel.addEventListener("animationend", () => panel.classList.remove("fp-flash"), { once: true });
+    };
+
+    const updatePlayerListButtons = (playerId, cookies) => {
+        const row = document.querySelector(`#fpTableBody tr[data-id="${playerId}"]`);
+        const p   = playerById().get(Number(playerId));
+        if (!row || !p) return;
+        const cell = row.querySelector(".fp-lists-col");
+        if (cell) cell.innerHTML = renderListActions(p, cookies);
+        row.classList.toggle("fp-row-highlight", listActionOn("highlight", playerId, cookies));
+    };
+
+    const pulseListButton = (btn) => {
+        if (!btn) return;
+        btn.classList.remove("fp-pulse");
+        void btn.offsetWidth;
+        btn.classList.add("fp-pulse");
+        btn.addEventListener("animationend", () => btn.classList.remove("fp-pulse"), { once: true });
+    };
+
+    const handleListAction = (id, action, btn) => {
+        const cookies = currentCookies();
+        const wasOn   = listActionOn(action, id, cookies);
+        const p       = playerById().get(Number(id));
+        const name    = (p && p.skaterFullName) || "Player";
+        const label   = SIDE_VIEW_LABELS[action] || action;
+
+        if (wasOn) removePlayerInCookie(Number(id), COOKIES[action]);
+        else       savePlayerInCookie(Number(id), COOKIES[action]);
+
+        const updated = currentCookies();
+        refreshListCounts(updated);
+        updatePlayerListButtons(id, updated);
+
+        if (action !== "highlight") {
+            renderSideList(updated);
+            if (!wasOn) {
+                switchSideView(action);
+                flashSidePanel();
+            }
         }
+
+        pulseListButton(btn);
+        toast(wasOn ? `Removed ${name} from ${label}` : `Added ${name} to ${label}`);
     };
 
     const isWeightsModified = () =>
@@ -499,6 +936,7 @@
             type: "GET",
             success: (resp) => {
                 state.all = Array.isArray(resp) ? resp : [];
+                invalidatePlayerMap();
                 populateTeamSelect();
                 renderTable();
             },
@@ -527,11 +965,31 @@
             const link = e.target.closest("a.nav-link");
             if (!link) return;
             e.preventDefault();
-            state.view = link.dataset.view;
+            state.sideView = link.dataset.view;
             document.querySelectorAll("#fpTabs .nav-link").forEach(a => a.classList.remove("active"));
             link.classList.add("active");
             renderTable();
         });
+
+        document.getElementById("fpSideTableBody").addEventListener("click", (e) => {
+            const btn = e.target.closest("[data-side-action]");
+            if (!btn) return;
+            const action = btn.dataset.sideAction;
+            const id     = Number(btn.dataset.id);
+            if (action === "open") {
+                if (typeof loadPlayerModal === "function") loadPlayerModal(id);
+                return;
+            }
+            if (action === "remove") {
+                removePlayerInCookie(id, COOKIES[state.sideView]);
+                toast(`Removed from ${state.sideView}`);
+                renderTable();
+                return;
+            }
+            if (action === "moveup" || action === "movedown") return;
+        });
+
+        wireDraftReorderHold();
 
         document.getElementById("fpSortSelect").addEventListener("change", (e) => {
             state.sortKey  = e.target.value;
@@ -555,25 +1013,16 @@
         });
 
         document.getElementById("fpTableBody").addEventListener("click", (e) => {
-            const btn = e.target.closest("button[data-action]");
+            const btn = e.target.closest(".fp-list-btn[data-action]");
             if (btn) {
-                const action = btn.dataset.action;
-                const id     = Number(btn.dataset.id);
-                if (action === "moveup") {
-                    moveUpPlayerInCookie(id, COOKIES.draftboard);
-                } else if (action === "movedown") {
-                    moveDownPlayerInCookie(id, COOKIES.draftboard);
-                } else {
-                    toggleCookie(id, action);
-                }
-                renderTable();
+                e.stopPropagation();
+                handleListAction(Number(btn.dataset.id), btn.dataset.action, btn);
                 return;
             }
-            const row = e.target.closest("tr[data-action='highlight']");
-            if (row) {
-                toggleCookie(Number(row.dataset.id), "highlight");
-                renderTable();
-            }
+            if (e.target.closest("button, a")) return;
+            const row = e.target.closest("tr[data-id]");
+            if (!row) return;
+            handleListAction(Number(row.dataset.id), "highlight", null);
         });
 
         document.getElementById("fpCopyBtn").addEventListener("click", () => {
@@ -585,11 +1034,24 @@
         });
 
         document.getElementById("fpClearBtn").addEventListener("click", () => {
-            if (state.view === "all") return;
-            if (!confirm(`Clear your entire ${state.view} list? This cannot be undone.`)) return;
-            setCookie(COOKIES[state.view], "");
-            toast(`${state.view} cleared`);
+            const label = SIDE_VIEW_LABELS[state.sideView] || state.sideView;
+            if (!confirm(`Clear your entire ${label} list? This cannot be undone.`)) return;
+            setCookie(COOKIES[state.sideView], "");
+            toast(`${label} cleared`);
             renderTable();
+        });
+
+        document.getElementById("fpSideCopyBtn").addEventListener("click", () => {
+            const cookies = currentCookies();
+            const byId    = playerById();
+            const names   = sideListIds(cookies).map(id => {
+                const p = byId.get(Number(id));
+                return (p && p.skaterFullName) || `Player #${id}`;
+            }).join("\n");
+            if (!names) { toast("Nothing to copy"); return; }
+            navigator.clipboard.writeText(names)
+                .then(() => toast(`Copied ${names.split("\n").length} names`))
+                .catch(() => toast("Copy failed"));
         });
 
         document.getElementById("fpAdvApply").addEventListener("click", () => {
@@ -645,7 +1107,13 @@
         });
     };
 
-    $(document).ready(() => { wireEvents(); fillWeightsInputs(); refreshWeightsBadge(); load(); });
+    $(document).ready(() => {
+        wireEvents();
+        fillWeightsInputs();
+        refreshWeightsBadge();
+        syncSideReorderColumn();
+        load();
+    });
 })();
 </script>
 

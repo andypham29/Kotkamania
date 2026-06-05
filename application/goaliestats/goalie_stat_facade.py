@@ -19,4 +19,5 @@ class GoalieStatFacade:
         stats = self.nhl_goalie_summary_service.getAllGoalies()
 
         for stat in stats:
+            # TODO: calculate percentile for each stat before saving
             self.goalie_stat_service.save(stat.to_application())

@@ -24,6 +24,14 @@ class GoalieStatRepository:
         finally:
             session.close()
 
+    def find_all_by_season_id(self, season_id: int) -> List[GoalieStat]:
+        session = self._session()
+        try:
+            rows = session.query(GoalieStatTable).filter_by(seasonId=season_id).all()
+            return [self._to_application(row) for row in rows]
+        finally:
+            session.close()
+
     def find_by_player_id(self, player_id: int) -> Optional[GoalieStat]:
         session = self._session()
         try:

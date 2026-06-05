@@ -1,6 +1,7 @@
 from typing import List
 
 import script
+from application.goaliegrade.fantasy_goalie_grader_service import FantasyGoalieGraderService
 from application.goaliestats.goalie_stat_facade import GoalieStatFacade
 from application.goaliestats.goalie_stat_service import GoalieStatService
 from domain.fantasygrade.fantasy_defense_grader_service import FantasyDefenseGraderService
@@ -39,6 +40,7 @@ class MasterScript:
 
     def run_goalie(self):
         self.goalie_script.save_all_goalies_stats()
+        self.goalie_script.grade_all_goalies()
 
 
 class NhlScriptV2:
@@ -95,7 +97,7 @@ class FantasyPlayerGraderScript:
         self.fantasy_forward_grader_service = FantasyForwardGraderService()
         self.fantasy_defense_grader_service = FantasyDefenseGraderService()
         self.nhl_team_roster_provider = NhlTeamRosterProvider()
-        self.fantasy_player_service = FantasyPlayerService()
+        self.fantasy_player_repository = FantasyPlayerRepository()
 
     def grade_all_players(self, season_id: int = None):
         season_id = season_id or NhlYearConverter.get_current_season()
@@ -117,7 +119,7 @@ class FantasyPlayerGraderScript:
             self.fantasy_defense_grader_service.grade_defense(player.id, player.full_name())
         ) for player in players]
 
-        self.fantasy_player_service.update_fantasy_players(queries)
+        self.fantasy_player_.update_fantasy_players(queries)
 
     def grade_all_forwards(self, players):
         queries =[FantasyPlayerUpdateQuery(
@@ -125,7 +127,7 @@ class FantasyPlayerGraderScript:
             self.fantasy_forward_grader_service.grade_forward(player.id, player.full_name())
         ) for player in players]
 
-        self.fantasy_player_service.update_fantasy_players(queries)
+        self.fantasy_player_.update_fantasy_players(queries)
 
 class PercentileScript:
     def __init__(self):
@@ -156,13 +158,22 @@ class PercentileScript:
 
 class GoalieScript:
     def __init__(self):
-        self.fantasy_player_service = FantasyPlayerService()
+        self.fantasy_player_repository = FantasyPlayerRepository()
         self.goalie_stat_service = GoalieStatService()
         self.goalie_stat_facade = GoalieStatFacade()
+        self.fantasy_goalie_grader_service = FantasyGoalieGraderService()
 
     def save_all_goalies_stats(self, season_id: int = None):
         self.goalie_stat_facade.save_all_goalie_stats()
         print("Done saving all goalie stats.")
+
+    def grade_all_goalies(self, season_id: int = None):
+        goalie_stats = self.goalie_stat_service.get_all_stats()
+        for stat in goalie_stats:
+            grade = self.fantasy_goalie_grader_service.grade_goalie(stat)
+            self.fantasy_player_repository.updateFantasyGradeForFantasySkaterWithId(stat.playerId, grade)
+
+    print("Done grading all goalie stats.")
 
 if __name__ == '__main__':
     # NhlScriptV2().get_all_players()

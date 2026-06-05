@@ -172,7 +172,7 @@ class FantasyPlayerRepository:
         session = self._get_session()
         try:
             rows = (session.query(FantasyNhlPlayerORM)
-                    # .filter(FantasyNhlPlayerORM.fantasyGrade > 30)
+                    .filter(FantasyNhlPlayerORM.fantasyGrade > 30)
                     .all())
             return [self.__convert_to_model(row) for row in rows]
         finally:

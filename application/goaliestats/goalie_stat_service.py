@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 from application.goaliestats.model.goalie_stat import GoalieStat
 from infra.spi.sqlite.goaliestat.goalie_stat_repository import GoalieStatRepository
 
@@ -10,8 +12,8 @@ class GoalieStatService:
     def save(self, stat: GoalieStat):
         self.goalie_stat_repository.save(stat)
 
-    def get_all_stats(self):
+    def get_all_stats(self) -> List[GoalieStat]:
         return self.goalie_stat_repository.find_all()
 
-    def get_stat_by_playerid(self, player_id: int):
+    def get_stat_by_playerid(self, player_id: int) -> Optional[GoalieStat]:
         return self.goalie_stat_repository.find_by_player_id(player_id)

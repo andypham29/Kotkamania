@@ -157,10 +157,9 @@ class NhlPlayerStatRepository:
     def _to_domain(row) -> Optional[PlayerStat]:
         if row is None:
             return None
-        SKIP_FIELDS = {"id", "playerId", "seasonId"}
 
         return PlayerStat(**{
             name: getattr(row, name)
             for name in _SHARED_FIELDS
-            if name not in SKIP_FIELDS
+            if name != "id"
         })

@@ -46,6 +46,7 @@ def index_by_player_id(records: Iterable[T | None]) -> dict[int, T]:
             indexed[int(player_id)] = record
     return indexed
 
+
 @dataclass
 class DisplayGoalieStat:
     assists: StatValue = field(default_factory=StatValue)
@@ -163,8 +164,14 @@ class FantasyNhlPlayer:
     def __post_init__(self):
         if self.badge is None:
             self.badge = FantasyPlayerBadge()
-        if self.stat is None:
-            self.stat = DisplayStat()
+        if self.positionCode == "G":
+            self.stat = None
+            if self.goalieStat is None:
+                self.goalieStat = DisplayGoalieStat()
+        else:
+            self.goalieStat = None
+            if self.stat is None:
+                self.stat = DisplayStat()
         self.playerId = self.id
 
     @classmethod

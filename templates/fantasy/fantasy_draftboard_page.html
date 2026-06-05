@@ -41,11 +41,11 @@
     #fpDraftTable .fp-side-name-col { max-width: 14rem; overflow: hidden; text-overflow: ellipsis; }
     #fpDraftTable .fp-stat-col { text-align: right; color: #495057; min-width: 2.25rem; padding-left: .5rem; padding-right: .5rem; }
     #fpDraftTable thead th.fp-stat-col { font-size: .8rem; }
-    #fpDraftTable .fp-side-remove-col {
-        min-width: 2.5rem;
-        width: 2.5rem;
-        text-align: right;
-        padding-left: 1rem;
+    #fpDraftTable .fp-side-draft-col {
+        min-width: 3.25rem;
+        width: 3.25rem;
+        text-align: center;
+        padding-left: .5rem;
         padding-right: .65rem;
         position: sticky;
         right: 0;
@@ -53,37 +53,48 @@
         background: #fff;
         box-shadow: -6px 0 8px -6px rgba(0, 0, 0, .12);
     }
-    #fpDraftTable thead .fp-side-remove-col {
+    #fpDraftTable thead .fp-side-draft-col {
         z-index: 2;
         background: #f8f9fa;
     }
-    #fpDraftTable tbody tr > td.fp-side-remove-col { background-color: #fff; }
+    #fpDraftTable tbody tr > td.fp-side-draft-col { background-color: #fff; }
     #fpDraftTable tbody tr:hover > td { background-color: rgba(0, 0, 0, .075); }
-    .fp-side-remove-btn {
+    .fp-side-draft-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 1.5rem;
-        height: 1.5rem;
+        width: 1.65rem;
+        height: 1.65rem;
         padding: 0;
-        font-size: 1rem;
+        font-size: .78rem;
         line-height: 1;
-        border-radius: 4px;
-        border: 1px solid #f5c6cb;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
         background: #fff;
-        color: #dc3545;
+        color: #6c757d;
         cursor: pointer;
         touch-action: manipulation;
     }
-    .fp-side-remove-btn:hover {
-        background: #dc3545;
-        border-color: #dc3545;
+    .fp-side-draft-btn:hover {
+        border-color: #e8590c;
+        color: #e8590c;
+    }
+    .fp-side-draft-btn.is-on {
+        background: #e8590c;
+        border-color: #d9480f;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,.12);
+    }
+    .fp-side-draft-btn.is-on:hover {
+        background: #d9480f;
+        border-color: #c4410d;
         color: #fff;
     }
     #fpDraftTable tbody tr.fp-side-row-drafted > td { background-color: #fff4e6; }
     #fpDraftTable tbody tr.fp-side-row-drafted:hover > td { background-color: #ffe8cc; }
-    #fpDraftTable tbody tr.fp-side-row-drafted > td.fp-side-remove-col { background-color: #fff4e6; }
-    #fpDraftTable tbody tr.fp-side-row-drafted:hover > td.fp-side-remove-col { background-color: #ffe8cc; }
+    #fpDraftTable tbody tr.fp-side-row-drafted > td.fp-side-draft-col { background-color: #fff4e6; }
+    #fpDraftTable tbody tr.fp-side-row-drafted:hover > td.fp-side-draft-col { background-color: #ffe8cc; }
     #fpDraftTable .fp-list-labels-col {
         min-width: 3.5rem;
         text-align: center;
@@ -172,7 +183,7 @@
                         <th class="fp-stat-col">H</th>
                         <th class="fp-stat-col">B</th>
                         <th class="no-sort fp-list-labels-col" title="Favorites / Watchlist"></th>
-                        <th class="no-sort fp-side-remove-col"></th>
+                        <th class="no-sort fp-side-draft-col" title="Mark as drafted"></th>
                     </tr>
                 </thead>
                 <tbody id="fpDraftTableBody"></tbody>
@@ -314,8 +325,8 @@
             <td>${positionChip(elig)}</td>
             ${statCells}
             <td class="fp-list-labels-col">${renderListLabels(id, fav, watch)}</td>
-            <td class="fp-side-remove-col">
-                <button type="button" class="fp-side-remove-btn" data-side-action="remove" data-id="${id}" title="Remove from draftboard" aria-label="Remove from draftboard">×</button>
+            <td class="fp-side-draft-col">
+                <button type="button" class="fp-side-draft-btn ${onDrafted ? "is-on" : ""}" data-side-action="drafted" data-id="${id}" aria-pressed="${onDrafted}" title="${onDrafted ? "Unmark as drafted" : "Mark as drafted"}" aria-label="${onDrafted ? "Unmark as drafted" : "Mark as drafted"}">✔</button>
             </td>
         </tr>`;
     };
@@ -475,11 +486,15 @@
 
     const wireEvents = () => {
         document.getElementById("fpDraftTableBody").addEventListener("click", (e) => {
-            const btn = e.target.closest("[data-side-action='remove']");
+            const btn = e.target.closest("[data-side-action='drafted']");
             if (!btn) return;
             const id = Number(btn.dataset.id);
-            removePlayerInCookie(id, COOKIE_DRAFTBOARD);
-            toast("Removed from Draftboard");
+            const wasOn = isIn(id, draftedIds());
+            const byId = playerById();
+            const name = (byId.get(id) && byId.get(id).skaterFullName) || `Player #${id}`;
+            if (wasOn) removePlayerInCookie(id, COOKIE_DRAFTED);
+            else       savePlayerInCookie(id, COOKIE_DRAFTED);
+            toast(wasOn ? `${name} returned to the pool` : `${name} drafted`);
             renderDraftboard();
         });
 

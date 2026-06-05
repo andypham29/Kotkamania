@@ -12,7 +12,7 @@ T = TypeVar("T")
 @dataclass
 class StatValue:
     """Container for a single stat value and its percentile."""
-    value: int = 0
+    value: int | float = 0
     percentile: Optional[float] = None
 
 
@@ -25,12 +25,24 @@ def _to_int(value: Any) -> int:
         return 0
 
 
+def _to_float(value: Any) -> float:
+    if value is None:
+        return 0.0
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
+
+
 def _stat_value_from_spi(
     stat_source: Any | None,
     percentile_source: Any | None,
     field_name: str,
+    *,
+    as_float: bool = False,
 ) -> StatValue:
-    value = _to_int(getattr(stat_source, field_name, None) if stat_source else None)
+    raw = getattr(stat_source, field_name, None) if stat_source else None
+    value = _to_float(raw) if as_float else _to_int(raw)
     percentile = getattr(percentile_source, field_name, None) if percentile_source else None
     return StatValue(value, percentile)
 
@@ -47,36 +59,35 @@ def index_by_player_id(records: Iterable[T | None]) -> dict[int, T]:
     return indexed
 
 
+_GOALIE_FLOAT_FIELDS = frozenset({"goalsAgainstAverage", "savePct"})
+
+
 @dataclass
 class DisplayGoalieStat:
     assists: StatValue = field(default_factory=StatValue)
     gamesPlayed: StatValue = field(default_factory=StatValue)
     gamesStarted: StatValue = field(default_factory=StatValue)
-    goalieFullName: StatValue = field(default_factory=StatValue)
     goals: StatValue = field(default_factory=StatValue)
     goalsAgainst: StatValue = field(default_factory=StatValue)
     goalsAgainstAverage: StatValue = field(default_factory=StatValue)
-    lastName: StatValue = field(default_factory=StatValue)
     losses: StatValue = field(default_factory=StatValue)
     otLosses: StatValue = field(default_factory=StatValue)
     penaltyMinutes: StatValue = field(default_factory=StatValue)
-    playerId: StatValue = field(default_factory=StatValue)
     points: StatValue = field(default_factory=StatValue)
     savePct: StatValue = field(default_factory=StatValue)
     saves: StatValue = field(default_factory=StatValue)
-    seasonId: StatValue = field(default_factory=StatValue)
-    shootsCatches: StatValue = field(default_factory=StatValue)
-    shotsAgainst: StatValue = field(default_factory=StatValue)
     shutouts: StatValue = field(default_factory=StatValue)
-    teamAbbrevs: StatValue = field(default_factory=StatValue)
-    ties: StatValue = field(default_factory=StatValue)
-    timeOnIce: StatValue = field(default_factory=StatValue)
     wins: StatValue = field(default_factory=StatValue)
 
     @classmethod
     def from_spi(cls, goalie_stat: Any | None = None, goalie_percentile: Any | None = None) -> "DisplayGoalieStat":
         return cls(**{
-            name: _stat_value_from_spi(goalie_stat, goalie_percentile, name)
+            name: _stat_value_from_spi(
+                goalie_stat,
+                goalie_percentile,
+                name,
+                as_float=name in _GOALIE_FLOAT_FIELDS,
+            )
             for name in (f.name for f in fields(cls))
         })
 

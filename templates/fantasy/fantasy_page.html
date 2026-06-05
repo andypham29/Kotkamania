@@ -73,7 +73,7 @@
         min-height: 420px;
     }
     .fp-split-top {
-        flex: 7 1 0;
+        flex: 6 1 0;
         min-height: 0;
         display: flex;
         flex-direction: column;
@@ -81,7 +81,7 @@
     }
     .fp-split-top > .card { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; margin-bottom: 0; }
     .fp-split-bottom {
-        flex: 3 1 0;
+        flex: 4 1 0;
         min-height: 0;
         display: flex;
         flex-direction: column;
@@ -444,6 +444,27 @@
         { action: "picked",     icon: "＋", label: "My Team" }
     ];
 
+    const SKATER_STAT_COLS = [
+        { key: "games",   sortKey: null,      label: "GP", noSort: true },
+        { key: "goals",   sortKey: "goals",   label: "G" },
+        { key: "assists", sortKey: "assists", label: "A" },
+        { key: "points",  sortKey: "points",  label: "P" },
+        { key: "shots",   sortKey: "shots",   label: "S" },
+        { key: "hits",    sortKey: "hits",    label: "H" },
+        { key: "blocked", sortKey: "blocked", label: "B" }
+    ];
+
+    const GOALIE_STAT_COLS = [
+        { key: "gamesPlayed",         sortKey: "gp",       label: "GP",  noSort: true },
+        { key: "goalsAgainstAverage", sortKey: "gaa",      label: "GAA", format: "gaa" },
+        { key: "savePct",             sortKey: "svpct",    label: "SV%", format: "svpct" },
+        { key: "wins",                sortKey: "wins",     label: "W" },
+        { key: "losses",              sortKey: "losses",   label: "L" },
+        { key: "shutouts",            sortKey: "shutouts", label: "SO" }
+    ];
+
+    const SKATER_SORT_KEYS = new Set(["goals", "assists", "points", "shots", "hits", "blocked"]);
+
     const state = {
         all:         [],
         sideView:    "draftboard",
@@ -455,17 +476,86 @@
         percentiles: {},
     };
 
+    const statValue = (s, key) => s && s[key] && s[key].value;
+    const statNum   = (s, key) => statValue(s, key) || 0;
+
+    const isGoalieView   = () => state.positions.size === 1 && state.positions.has("G");
+    const activeStatCols = () => isGoalieView() ? GOALIE_STAT_COLS : SKATER_STAT_COLS;
+    const mainColCount   = () => 6 + activeStatCols().length + 3;
+    const sideColCount   = () => 5 + activeStatCols().length + 1;
+
+    const getPlayerStatBag = (p) => {
+        if (!p) return {};
+        return isGoalieView() ? (p.goalieStat || {}) : (p.stat || {});
+    };
+
+    const formatStatCell = (s, col) => {
+        const v = statValue(s, col.key);
+        if (col.format === "gaa") {
+            return nullish(v == null || v === "" ? v : Number(v).toFixed(2));
+        }
+        if (col.format === "svpct") {
+            if (v == null || v === "") return nullish(v);
+            const n = Number(v);
+            if (!Number.isFinite(n)) return nullish(null);
+            const dec = n > 1 ? n / 100 : n;
+            return nullish(dec.toFixed(3).substring(1));
+        }
+        return nullish(v);
+    };
+
+    const buildStatHeaderCells = (cols) => cols.map(col => {
+        const cls = col.noSort ? "no-sort" : "";
+        const sortAttr = col.sortKey ? ` data-sort-key="${col.sortKey}"` : "";
+        return `<th class="${cls}"${sortAttr}>${col.label}</th>`;
+    }).join("");
+
+    const syncStatHeaders = () => {
+        const cols = activeStatCols();
+        const mainHead = document.querySelector("#fpTable thead tr");
+        if (mainHead) {
+            mainHead.innerHTML =
+                `<th class="no-sort">#</th>` +
+                `<th data-sort-key="name">Player</th>` +
+                `<th data-sort-key="team">Team</th>` +
+                `<th data-sort-key="position">Pos</th>` +
+                `<th data-sort-key="score">Score</th>` +
+                `<th data-sort-key="fp"${state.sortKey === "fp" ? ` class="${state.sortDesc ? "desc" : "asc"}"` : ""}>FP</th>` +
+                buildStatHeaderCells(cols) +
+                `<th data-sort-key="nhl">NHL</th>` +
+                `<th data-sort-key="espn">ESPN</th>` +
+                `<th class="no-sort fp-lists-col"></th>`;
+        }
+        const sideHead = document.querySelector("#fpSideTable thead tr");
+        if (sideHead) {
+            sideHead.innerHTML =
+                `<th class="no-sort">#</th>` +
+                `<th class="fp-reorder-col no-sort" id="fpSideReorderHead" title="Draftboard order">⇅</th>` +
+                `<th>Player</th>` +
+                `<th>Team</th>` +
+                `<th>Pos</th>` +
+                buildStatHeaderCells(cols.map(col => ({ ...col, sortKey: null, noSort: true }))) +
+                `<th class="no-sort fp-side-remove-col"></th>`;
+        }
+        if (isGoalieView() && SKATER_SORT_KEYS.has(state.sortKey)) {
+            state.sortKey = "score";
+            state.sortDesc = true;
+            const sortSel = document.getElementById("fpSortSelect");
+            if (sortSel) sortSel.value = "score";
+        }
+    };
+
     const fpPoints = (p) => {
         const s = p.stat || {};
         return (
-            (s.goals.value           || 0) * WEIGHTS.G +
-            (s.assists.value         || 0) * WEIGHTS.A +
-            (s.shots.value           || 0) * WEIGHTS.SOG +
-            (s.powerPlayPoints.value || 0) * WEIGHTS.PPP +
-            (s.powerPlayGoals.value  || 0) * WEIGHTS.PPP +
-            (s.hits.value            || 0) * WEIGHTS.HIT +
-            (s.blocked.value         || 0) * WEIGHTS.BLK +
-            (s.plusMinus.value       || 0) * WEIGHTS.PLUSMINUS
+            statNum(s, "goals")           * WEIGHTS.G +
+            statNum(s, "assists")         * WEIGHTS.A +
+            statNum(s, "shots")           * WEIGHTS.SOG +
+            statNum(s, "powerPlayPoints") * WEIGHTS.PPP +
+            statNum(s, "powerPlayGoals")  * WEIGHTS.PPP +
+            statNum(s, "hits")            * WEIGHTS.HIT +
+            statNum(s, "blocked")         * WEIGHTS.BLK +
+            statNum(s, "plusMinus")       * WEIGHTS.PLUSMINUS
         );
     };
 
@@ -487,19 +577,27 @@
     };
 
     const sortValue = (p, key) => {
-        const s = p.stat || {};
+        const s  = p.stat || {};
+        const gs = p.goalieStat || {};
         switch (key) {
             case "name":     return (p.skaterFullName || "").toLowerCase();
             case "team":     return (p.teamName || "").toLowerCase();
             case "position": return (p.positionCode || "").toLowerCase();
             case "score":    return (p.fantasyGrade == null) ? -Infinity : p.fantasyGrade;
             case "fp":       return fpPoints(p);
-            case "goals":    return s.goals.value || 0;
-            case "assists":  return s.assists.value || 0;
-            case "points":   return s.points.value || 0;
-            case "shots":    return s.shots.value || 0;
-            case "hits":     return s.hits.value || 0;
-            case "blocked":  return s.blocked.value || 0;
+            case "goals":    return statNum(s, "goals");
+            case "assists":  return statNum(s, "assists");
+            case "points":   return statNum(s, "points");
+            case "shots":    return statNum(s, "shots");
+            case "hits":     return statNum(s, "hits");
+            case "blocked":  return statNum(s, "blocked");
+            case "gp":       return statNum(gs, "gamesPlayed");
+            case "gaa":      return (gs.goalsAgainstAverage && gs.goalsAgainstAverage.value != null)
+                ? gs.goalsAgainstAverage.value : Infinity;
+            case "svpct":    return statNum(gs, "savePct");
+            case "wins":     return statNum(gs, "wins");
+            case "losses":   return statNum(gs, "losses");
+            case "shutouts": return statNum(gs, "shutouts");
             case "nhl":      return (p.nhlRank == null) ? Infinity : p.nhlRank;
             case "espn":     return (p.avgPick == null) ? Infinity : p.avgPick;
             default:         return 0;
@@ -608,7 +706,8 @@
         const fp            = fpPoints(p).toFixed(1);
         const elig          = (p.yahooEligibility || p.positionCode || "");
         const onHighlight   = isIn(p.playerId, cookies.highlight);
-        const s             = p.stat || {};
+        const s             = getPlayerStatBag(p);
+        const statCells     = activeStatCols().map(col => `<td>${formatStatCell(s, col)}</td>`).join("");
         const rowClasses    = [onHighlight ? "fp-row-highlight" : ""].filter(Boolean).join(" ");
 
         return `<tr data-id="${p.playerId}" class="fp-row-clickable ${rowClasses}" title="Click row to highlight">
@@ -618,13 +717,7 @@
             <td>${positionChip(elig)}</td>
             <td>${ nullish(p.fantasyGrade) }</td>
             <td><strong>${fp}</strong></td>
-            <td>${ nullish(s.games.value) }</td>
-            <td>${ nullish(s.goals.value) }</td>
-            <td>${ nullish(s.assists.value) }</td>
-            <td>${ nullish(s.points.value) }</td>
-            <td>${ nullish(s.shots.value) }</td>
-            <td>${ nullish(s.hits.value) }</td>
-            <td>${ nullish(s.blocked.value) }</td>
+            ${statCells}
             <td>${ nullish(p.nhlRank) }</td>
             <td>${ nullish(p.avgPick) }</td>
             <td class="fp-lists-col">${renderListActions(p, cookies)}</td>
@@ -632,10 +725,13 @@
     };
 
     const renderEmpty = () =>
-        `<tr><td colspan="15" class="text-center text-muted py-5">No players match the current filters.</td></tr>`;
+        `<tr><td colspan="${mainColCount()}" class="text-center text-muted py-5">No players match the current filters.</td></tr>`;
 
     const renderSideRow = (p, id, idx, total) => {
-        const s       = (p && p.stat) || {};
+        const s       = getPlayerStatBag(p);
+        const statCells = activeStatCols().map(col =>
+            `<td class="fp-stat-col">${formatStatCell(s, col)}</td>`
+        ).join("");
         const reorderCell = (state.sideView === "draftboard")
             ? `<td class="fp-reorder-col">
                   <span class="fp-reorder" role="group" aria-label="Reorder">
@@ -648,7 +744,6 @@
         const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
         const teamId = p && p.teamId;
         const teamName = (p && p.teamName) || "";
-        const stat  = (key) => `<td class="fp-stat-col">${nullish(s[key] && s[key].value)}</td>`;
         const teamCell = teamId
             ? `<button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${teamId})">${teamName}</button>`
             : `<span class="fp-nullish">—</span>`;
@@ -660,13 +755,7 @@
             </td>
             <td>${teamCell}</td>
             <td>${positionChip(elig)}</td>
-            ${stat("games")}
-            ${stat("goals")}
-            ${stat("assists")}
-            ${stat("points")}
-            ${stat("shots")}
-            ${stat("hits")}
-            ${stat("blocked")}
+            ${statCells}
             <td class="fp-side-remove-col">
                 <button type="button" class="fp-side-remove-btn" data-side-action="remove" data-id="${id}" title="Remove from list" aria-label="Remove from list">×</button>
             </td>
@@ -689,7 +778,7 @@
         document.getElementById("fpSideCount").textContent = ids.length;
 
         if (ids.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="13" class="text-center text-muted small py-3">${emptyMsgs[state.sideView] || "List is empty."}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="${sideColCount()}" class="text-center text-muted small py-3">${emptyMsgs[state.sideView] || "List is empty."}</td></tr>`;
             syncSideReorderColumn();
             return;
         }
@@ -772,6 +861,7 @@
     };
 
     const renderTable = () => {
+        syncStatHeaders();
         const tbody   = document.getElementById("fpTableBody");
         const cookies = currentCookies();
         const visible = filteredPlayers(cookies);
@@ -924,7 +1014,7 @@
 
     const load = () => {
         const tbody = document.getElementById("fpTableBody");
-        tbody.innerHTML = `<tr><td colspan="15" class="text-center py-5">
+        tbody.innerHTML = `<tr><td colspan="${mainColCount()}" class="text-center py-5">
             <div class="spinner-border text-primary" role="status"></div>
             <div class="text-muted mt-2">Loading players…</div>
         </td></tr>`;
@@ -941,7 +1031,7 @@
                 renderTable();
             },
             error: (xhr) => {
-                tbody.innerHTML = `<tr><td colspan="15" class="text-center text-danger py-5">Failed to load players. (${xhr.status})</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${mainColCount()}" class="text-center text-danger py-5">Failed to load players. (${xhr.status})</td></tr>`;
             }
         });
     };
@@ -1002,14 +1092,15 @@
             renderTable();
         });
 
-        document.querySelectorAll("#fpTable thead th[data-sort-key]").forEach(th => {
-            th.addEventListener("click", () => {
-                const key = th.dataset.sortKey;
-                if (state.sortKey === key) state.sortDesc = !state.sortDesc;
-                else { state.sortKey = key; state.sortDesc = (key !== "name"); }
-                document.getElementById("fpSortSelect").value = key;
-                renderTable();
-            });
+        document.querySelector("#fpTable thead").addEventListener("click", (e) => {
+            const th = e.target.closest("th[data-sort-key]");
+            if (!th) return;
+            const key = th.dataset.sortKey;
+            if (state.sortKey === key) state.sortDesc = !state.sortDesc;
+            else { state.sortKey = key; state.sortDesc = (key !== "name"); }
+            const sortSel = document.getElementById("fpSortSelect");
+            if (sortSel && sortSel.querySelector(`option[value="${key}"]`)) sortSel.value = key;
+            renderTable();
         });
 
         document.getElementById("fpTableBody").addEventListener("click", (e) => {

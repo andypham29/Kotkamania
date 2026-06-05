@@ -119,7 +119,8 @@ class FantasyPlayerGraderScript:
             self.fantasy_defense_grader_service.grade_defense(player.id, player.full_name())
         ) for player in players]
 
-        self.fantasy_player_.update_fantasy_players(queries)
+        for query in queries:
+            self.fantasy_player_repository.updateFantasyGradeForFantasySkaterWithId(query.player_id, query.score)
 
     def grade_all_forwards(self, players):
         queries =[FantasyPlayerUpdateQuery(
@@ -127,7 +128,9 @@ class FantasyPlayerGraderScript:
             self.fantasy_forward_grader_service.grade_forward(player.id, player.full_name())
         ) for player in players]
 
-        self.fantasy_player_.update_fantasy_players(queries)
+        for query in queries:
+            self.fantasy_player_repository.updateFantasyGradeForFantasySkaterWithId(query.player_id, query.score)
+
 
 class PercentileScript:
     def __init__(self):

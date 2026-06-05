@@ -9,10 +9,7 @@ from infra.spi.sqlite.playerstat.nhl_player_stat_repository import NhlPlayerStat
 from infra.spi.sqlite.playerstatpercentile.nhl_player_stat_repository import NhlPlayerStatPercentileRepository
 from server.commons.helper.nhl_season_converter import NhlYearConverter
 
-_NON_PERCENTILED_GOALIE_FIELDS = {"goalieFullName", "lastName", "shootsCatches", "teamAbbrevs", "playerId", "seasonId"}
-_NUMERIC_GOALIE_FIELDS = tuple(
-    field.name for field in fields(DisplayGoalieStat) if field.name not in _NON_PERCENTILED_GOALIE_FIELDS
-)
+_NUMERIC_GOALIE_FIELDS = tuple(field.name for field in fields(DisplayGoalieStat))
 
 
 class DomainFantasyPlayerFacade:
@@ -97,5 +94,5 @@ class DomainFantasyPlayerFacade:
 if __name__ == "__main__":
     facade = DomainFantasyPlayerFacade()
     players = facade.getAllFantasySkaters()
-    # print([player for player in players if player.positionCode == 'G'])
-    print([player for player in players if player.positionCode == 'L'])
+    print([player for player in players if player.positionCode == 'G'])
+    # print([player for player in players if player.positionCode == 'L'])

@@ -4,7 +4,7 @@ from typing import List, Optional
 from sqlalchemy import func, cast, Float
 
 from infra.spi.sqlite.playerstat.model.nhl_player_stat import PlayerStat
-from server.internaldata.db.models import InternalPlayerStatORM, Session as DBSession
+from infra.spi.sqlite.models import InternalPlayerStatORM, Session as DBSession
 
 # ORM columns that exist on `internal_player_stat` and overlap with PlayerStat.
 # We pre-compute the intersection so we can copy fields generically.

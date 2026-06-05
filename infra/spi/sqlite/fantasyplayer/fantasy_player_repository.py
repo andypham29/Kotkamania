@@ -1,4 +1,3 @@
-import os
 from typing import List
 
 from sqlalchemy import and_, or_
@@ -8,7 +7,7 @@ from domain.fantasyplayer.model.fantasy_nhl_player import FantasyPlayerUpdateQue
 from infra.spi.sqlite.fantasyplayer.model.sqlite_fantasy_nhl_player import SqliteFantasyNhlPlayer, SqliteDisplayStat
 from server.commons.fantasybadge.model.fantasy_player_badge import FantasyPlayerBadge
 from server.commons.helper.nhl_season_converter import NhlYearConverter
-from server.internaldata.db.models import FantasyNhlPlayerORM, InternalPlayerStatORM, Base, Session as DBSession, engine
+from infra.spi.sqlite.models import FantasyNhlPlayerORM, InternalPlayerStatORM, Base, Session as DBSession, engine
 
 
 class FantasyPlayerRepository:
@@ -172,9 +171,9 @@ class FantasyPlayerRepository:
         """Get all fantasy skaters with grade > 30"""
         session = self._get_session()
         try:
-            rows = session.query(FantasyNhlPlayerORM).filter(
-                FantasyNhlPlayerORM.fantasyGrade > 30
-            ).all()
+            rows = (session.query(FantasyNhlPlayerORM)
+                    # .filter(FantasyNhlPlayerORM.fantasyGrade > 30)
+                    .all())
             return [self.__convert_to_model(row) for row in rows]
         finally:
             session.close()

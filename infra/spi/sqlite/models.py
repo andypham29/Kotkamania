@@ -14,7 +14,7 @@ Base = declarative_base()
 DatabaseManager.create_tables(Base)
 
 # Database setup
-db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "internal.db"))
+db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../server/internaldata/db/internal.db"))
 os.makedirs(os.path.dirname(db_path), exist_ok=True)
 
 # Create engine
@@ -137,6 +137,34 @@ class FantasyPlayerStreakIndexORM(Base):
     streakIndex = Column(Float, nullable=False)
     lastUpdated = Column(String)
 
+
+class GoalieStatTable(Base):
+    __tablename__ = "internal_goalie_stat"
+
+    id = Column(Integer, primary_key=True)
+    playerId = Column(Integer, nullable=False)
+    seasonId = Column(Integer, nullable=False)
+    assists = Column(Integer)
+    gamesPlayed = Column(Integer)
+    gamesStarted = Column(Integer)
+    goalieFullName = Column(String)
+    goals = Column(Integer)
+    goalsAgainst = Column(Integer)
+    goalsAgainstAverage = Column(Float)
+    lastName = Column(String)
+    losses = Column(Integer)
+    otLosses = Column(Integer)
+    penaltyMinutes = Column(Integer)
+    points = Column(Integer)
+    savePct = Column(Float)
+    saves = Column(Integer)
+    shootsCatches = Column(String)
+    shotsAgainst = Column(Integer)
+    shutouts = Column(Integer)
+    teamAbbrevs = Column(String)
+    ties = Column(Integer)
+    timeOnIce = Column(Integer)
+    wins = Column(Integer)
 
 # Create all tables if they don't exist (after all ORM classes are defined)
 Base.metadata.create_all(engine)

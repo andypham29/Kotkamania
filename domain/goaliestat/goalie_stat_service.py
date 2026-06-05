@@ -1,13 +1,10 @@
-from application.goaliestats.model.goalie_stat import GoalieStat
+from domain.goaliestat.model.domain_goalie_stat import DomainGoalieStat
 
 
 class GoalieStatService:
 
     def __init__(self):
         self.goalie_stat_repository = None
-
-    def save(self, stat: GoalieStat):
-        self.goalie_stat_repository.save(stat)
 
     def get_all_stats(self):
         return self.goalie_stat_repository.find_all()

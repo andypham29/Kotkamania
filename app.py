@@ -2,8 +2,10 @@ import json
 
 from flask import Flask, request, render_template, make_response
 
+from domain.fantasyplayer.fantasy_player_facade import DomainFantasyPlayerFacade
 from domain.fantasyplayer.fantasy_player_service import FantasyPlayerService
 from domain.gamelog.gamelog_service import GameLogService
+from domain.goaliestat.model.domain_goalie_stat import DomainGoalieStat
 from server.admin.service.facade.admin_facade import AdminFacade
 from server.internaldata.service.facade.fantasy_nhl_player_facade import FantasyNhlPlayerFacade
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
@@ -199,7 +201,7 @@ def getNhlStatsSkater():
 @app.route('/api/nhl/fantasy')
 def getNhlFantasyPlayers():
     """Return fantasy players with percentiles calculated from their stat values."""
-    response = DomainFantasyPlayerService().getAllFantasySkaters()
+    response = DomainFantasyPlayerFacade().getAllFantasySkaters()
     return makeHttpResponse(response)
 
 @app.route('/api/nhl/fantasy/streak')

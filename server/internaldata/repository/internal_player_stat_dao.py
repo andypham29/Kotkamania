@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from server.commons.helper.time_converter import TimeConverter
-from server.internaldata.db.models import InternalPlayerStatORM, Session as DBSession
+from infra.spi.sqlite.models import InternalPlayerStatORM, Session as DBSession
 from server.internaldata.model.internal_nhl_player_stat import InternalPlayerStat
 
 

@@ -1,11 +1,10 @@
-import os
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
 from server.commons.fantasybadge.model.fantasy_player_badge import FantasyPlayerBadge
 from server.commons.helper.nhl_season_converter import NhlYearConverter
 from server.internaldata.model.fantasy_nhl_player import FantasyNhlPlayer, DisplayStat
-from server.internaldata.db.models import FantasyNhlPlayerORM, InternalPlayerStatORM, Base, Session as DBSession, engine
+from infra.spi.sqlite.models import FantasyNhlPlayerORM, InternalPlayerStatORM, Base, Session as DBSession, engine
 
 
 class FantasyNhlPlayerDao:

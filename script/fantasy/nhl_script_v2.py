@@ -1,5 +1,8 @@
 from typing import List
 
+import script
+from application.goaliestats.goalie_stat_facade import GoalieStatFacade
+from application.goaliestats.goalie_stat_service import GoalieStatService
 from domain.fantasygrade.fantasy_defense_grader_service import FantasyDefenseGraderService
 from domain.fantasygrade.fantasy_forward_grader_service import FantasyForwardGraderService
 from domain.fantasyplayer.fantasy_player_service import FantasyPlayerService
@@ -21,6 +24,7 @@ class MasterScript:
         self.nhl_script = NhlScriptV2()
         self.fantasy_grader = FantasyPlayerGraderScript()
         self.percentile_script = PercentileScript()
+        self.goalie_script = GoalieScript()
 
     def run(self):
         # self.nhl_script.save_all_players()
@@ -32,6 +36,9 @@ class MasterScript:
 
     def run_percentile(self):
         self.percentile_script.calculate_percentile_for_all_players()
+
+    def run_goalie(self):
+        self.goalie_script.save_all_goalies_stats()
 
 
 class NhlScriptV2:
@@ -147,6 +154,16 @@ class PercentileScript:
         if percentile is not None:
             self.percentile_player_repository.save(percentile)
 
+class GoalieScript:
+    def __init__(self):
+        self.fantasy_player_service = FantasyPlayerService()
+        self.goalie_stat_service = GoalieStatService()
+        self.goalie_stat_facade = GoalieStatFacade()
+
+    def save_all_goalies_stats(self, season_id: int = None):
+        self.goalie_stat_facade.save_all_goalie_stats()
+        print("Done saving all goalie stats.")
+
 if __name__ == '__main__':
     # NhlScriptV2().get_all_players()
     # NhlScriptV2().get_all_players("20242025")
@@ -154,6 +171,8 @@ if __name__ == '__main__':
     # NhlScriptV2().get_all_players("20222023")
     # NhlScriptV2().get_all_players("20212022")
 
-    # MasterScript().run()
-    # MasterScript().run_score()
-    MasterScript().run_percentile()
+    script = MasterScript()
+    # script.run()
+    # script.run_score()
+    # script.run_percentile()
+    script.run_goalie()

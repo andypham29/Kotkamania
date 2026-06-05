@@ -2,7 +2,7 @@ from dataclasses import fields
 from typing import List, Optional
 
 from infra.spi.sqlite.playerstatpercentile.model.nhl_player_stat_percentile import PlayerStatPercentile
-from server.internaldata.db.models import InternalPlayerStatPercentileORM, Session as DBSession
+from infra.spi.sqlite.models import InternalPlayerStatPercentileORM, Session as DBSession
 
 # ORM columns that exist on `internal_player_stat_percentile` and overlap with PlayerStatPercentile.
 # We pre-compute the intersection so we can copy fields generically.

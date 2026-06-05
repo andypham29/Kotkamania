@@ -3,7 +3,7 @@ from typing import Optional
 
 
 @dataclass
-class GoalieSummary:
+class GoalieStat:
     assists: Optional[int] = None
     gamesPlayed: Optional[int] = None
     gamesStarted: Optional[int] = None

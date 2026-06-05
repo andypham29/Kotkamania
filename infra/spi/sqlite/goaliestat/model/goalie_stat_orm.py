@@ -2,11 +2,10 @@ from dataclasses import dataclass, fields
 from typing import Optional
 
 from application.goaliestats.model.goalie_stat import GoalieStat
-from domain.goaliestat.model.domain_goalie_stat import DomainGoalieStat
 
 
 @dataclass
-class GoalieSummary:
+class GoalieStatORM:
     assists: Optional[int] = None
     gamesPlayed: Optional[int] = None
     gamesStarted: Optional[int] = None
@@ -31,8 +30,9 @@ class GoalieSummary:
     timeOnIce: Optional[int] = None
     wins: Optional[int] = None
 
-    def to_domain(self) -> DomainGoalieStat:
-        return DomainGoalieStat(**{f.name: getattr(self, f.name) for f in fields(DomainGoalieStat)})
+    @classmethod
+    def from_application(cls, stat: GoalieStat) -> "GoalieStatORM":
+        return cls(**{f.name: getattr(stat, f.name) for f in fields(cls)})
 
     def to_application(self) -> GoalieStat:
         return GoalieStat(**{f.name: getattr(self, f.name) for f in fields(GoalieStat)})

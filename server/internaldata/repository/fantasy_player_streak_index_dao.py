@@ -1,7 +1,6 @@
-import os
 from sqlalchemy.orm import Session
 
-from server.internaldata.db.models import FantasyPlayerStreakIndexORM, Base, Session as DBSession, engine
+from infra.spi.sqlite.models import FantasyPlayerStreakIndexORM, Base, Session as DBSession, engine
 from server.internaldata.model.fantasy_player_streak_index import FantasyPlayerStreakIndex
 
 

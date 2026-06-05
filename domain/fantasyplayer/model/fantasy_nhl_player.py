@@ -1,6 +1,12 @@
-from dataclasses import dataclass, field
-from typing import Optional, Dict, Any
+from dataclasses import dataclass, field, fields
+from typing import Any, Dict, Iterable, Optional, TypeVar
+
+from infra.spi.sqlite.fantasyplayer.model.sqlite_fantasy_nhl_player import SqliteFantasyNhlPlayer
+from infra.spi.sqlite.playerstat.model.nhl_player_stat import PlayerStat
+from infra.spi.sqlite.playerstatpercentile.model.nhl_player_stat_percentile import PlayerStatPercentile
 from server.commons.fantasybadge.model.fantasy_player_badge import FantasyPlayerBadge
+
+T = TypeVar("T")
 
 
 @dataclass
@@ -8,6 +14,70 @@ class StatValue:
     """Container for a single stat value and its percentile."""
     value: int = 0
     percentile: Optional[float] = None
+
+
+def _to_int(value: Any) -> int:
+    if value is None:
+        return 0
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _stat_value_from_spi(
+    stat_source: Any | None,
+    percentile_source: Any | None,
+    field_name: str,
+) -> StatValue:
+    value = _to_int(getattr(stat_source, field_name, None) if stat_source else None)
+    percentile = getattr(percentile_source, field_name, None) if percentile_source else None
+    return StatValue(value, percentile)
+
+
+def index_by_player_id(records: Iterable[T | None]) -> dict[int, T]:
+    """Index SPI records by playerId for O(1) lookup when assembling players."""
+    indexed: dict[int, T] = {}
+    for record in records:
+        if record is None:
+            continue
+        player_id = getattr(record, "playerId", None)
+        if player_id is not None:
+            indexed[int(player_id)] = record
+    return indexed
+
+@dataclass
+class DisplayGoalieStat:
+    assists: StatValue = field(default_factory=StatValue)
+    gamesPlayed: StatValue = field(default_factory=StatValue)
+    gamesStarted: StatValue = field(default_factory=StatValue)
+    goalieFullName: StatValue = field(default_factory=StatValue)
+    goals: StatValue = field(default_factory=StatValue)
+    goalsAgainst: StatValue = field(default_factory=StatValue)
+    goalsAgainstAverage: StatValue = field(default_factory=StatValue)
+    lastName: StatValue = field(default_factory=StatValue)
+    losses: StatValue = field(default_factory=StatValue)
+    otLosses: StatValue = field(default_factory=StatValue)
+    penaltyMinutes: StatValue = field(default_factory=StatValue)
+    playerId: StatValue = field(default_factory=StatValue)
+    points: StatValue = field(default_factory=StatValue)
+    savePct: StatValue = field(default_factory=StatValue)
+    saves: StatValue = field(default_factory=StatValue)
+    seasonId: StatValue = field(default_factory=StatValue)
+    shootsCatches: StatValue = field(default_factory=StatValue)
+    shotsAgainst: StatValue = field(default_factory=StatValue)
+    shutouts: StatValue = field(default_factory=StatValue)
+    teamAbbrevs: StatValue = field(default_factory=StatValue)
+    ties: StatValue = field(default_factory=StatValue)
+    timeOnIce: StatValue = field(default_factory=StatValue)
+    wins: StatValue = field(default_factory=StatValue)
+
+    @classmethod
+    def from_spi(cls, goalie_stat: Any | None = None, goalie_percentile: Any | None = None) -> "DisplayGoalieStat":
+        return cls(**{
+            name: _stat_value_from_spi(goalie_stat, goalie_percentile, name)
+            for name in (f.name for f in fields(cls))
+        })
 
 
 @dataclass
@@ -61,6 +131,17 @@ class DisplayStat:
                 except Exception:
                     setattr(self, field_name, StatValue(0, None))
 
+    @classmethod
+    def from_spi(
+        cls,
+        player_stat: PlayerStat | None = None,
+        player_percentile: PlayerStatPercentile | None = None,
+    ) -> "DisplayStat":
+        return cls(**{
+            name: _stat_value_from_spi(player_stat, player_percentile, name)
+            for name in (f.name for f in fields(cls))
+        })
+
 
 @dataclass
 class FantasyNhlPlayer:
@@ -77,6 +158,7 @@ class FantasyNhlPlayer:
     nhlRank: Optional[object] = None
     badge: Optional[FantasyPlayerBadge] = field(default=None, init=True)
     stat: Optional[DisplayStat] = field(default=None, init=True)
+    goalieStat: Optional[DisplayGoalieStat] = field(default=None, init=True)
 
     def __post_init__(self):
         if self.badge is None:
@@ -84,6 +166,41 @@ class FantasyNhlPlayer:
         if self.stat is None:
             self.stat = DisplayStat()
         self.playerId = self.id
+
+    @classmethod
+    def from_spi(
+        cls,
+        player: SqliteFantasyNhlPlayer,
+        player_stat: PlayerStat | None = None,
+        player_percentile: PlayerStatPercentile | None = None,
+        goalie_stat: Any | None = None,
+        goalie_percentile: Any | None = None,
+    ) -> "FantasyNhlPlayer":
+        is_goalie = player.positionCode == "G"
+        return cls(
+            id=player.id,
+            skaterFullName=player.skaterFullName,
+            positionCode=player.positionCode,
+            teamId=player.teamId,
+            fantasyGrade=player.fantasyGrade,
+            yahooEligibility=player.yahooEligibility,
+            avgPick=player.avgPick,
+            avgRound=player.avgRound,
+            percentDrafted=player.percentDrafted,
+            teamName=player.teamName,
+            nhlRank=player.nhlRank,
+            badge=player.badge,
+            stat=None if is_goalie else DisplayStat.from_spi(player_stat, player_percentile),
+            goalieStat=DisplayGoalieStat.from_spi(goalie_stat, goalie_percentile) if is_goalie else None,
+        )
+
+    @staticmethod
+    def resolve_player_id(player: SqliteFantasyNhlPlayer) -> int | None:
+        try:
+            return int(player.id)
+        except (TypeError, ValueError):
+            return None
+
 
 @dataclass
 class FantasyPlayerUpdateQuery:

@@ -1,0 +1,544 @@
+<script src="{{url_for('static', filename='cookiehandler.js')}}"></script>
+<script src="{{url_for('static', filename='fantasycookiehandler.js')}}"></script>
+<script src="{{url_for('static', filename='variableparser.js')}}"></script>
+
+<style>
+    .fp-nullish { color:#adb5bd; font-style:italic; }
+    .fp-toast { position:fixed; bottom:1.5rem; right:1.5rem; z-index:1080; min-width:200px; display:none; }
+    .fp-toast.show { display:block; }
+    .pos-chip { display:inline-block; padding:1px 7px; border-radius:10px; font-size:.72rem; font-weight:700; color:#fff; background:#6c757d; min-width:28px; text-align:center; }
+    .pos-chip.pos-C { background:#007bff; }
+    .pos-chip.pos-L { background:#28a745; }
+    .pos-chip.pos-R { background:#dc3545; }
+    .pos-chip.pos-D { background:#6f42c1; }
+    .pos-chip.pos-G { background:#ffc107; color:#212529; }
+    .fp-draftboard-wrap {
+        max-width: 960px;
+        margin: 0 auto;
+    }
+    .fp-draftboard-panel .card-body {
+        overflow: auto;
+        max-height: calc(100vh - 14rem);
+        min-height: 320px;
+    }
+    #fpDraftTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 1; white-space: nowrap; font-size: .75rem; }
+    #fpDraftTable td, #fpDraftTable th { padding: .2rem .35rem; font-size: .8rem; white-space: nowrap; }
+    #fpDraftTable .fp-drag-col { width: 2.5rem; padding-right: 0; color: #adb5bd; }
+    #fpDraftTable .fp-drag-handle {
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+        letter-spacing: -2px;
+        font-size: .85rem;
+        line-height: 1;
+        padding: 2px 4px;
+        border-radius: 3px;
+    }
+    #fpDraftTable .fp-drag-handle:hover { color: #495057; background: #e9ecef; }
+    #fpDraftTable .fp-drag-handle:active { cursor: grabbing; }
+    #fpDraftTable tbody tr.fp-dragging { opacity: .45; }
+    #fpDraftTable tbody tr.fp-drag-over > td { box-shadow: inset 0 2px 0 #007bff; }
+    #fpDraftTable .fp-side-name-col { max-width: 14rem; overflow: hidden; text-overflow: ellipsis; }
+    #fpDraftTable .fp-stat-col { text-align: right; color: #495057; min-width: 2.25rem; padding-left: .5rem; padding-right: .5rem; }
+    #fpDraftTable thead th.fp-stat-col { font-size: .8rem; }
+    #fpDraftTable .fp-side-remove-col {
+        min-width: 2.5rem;
+        width: 2.5rem;
+        text-align: right;
+        padding-left: 1rem;
+        padding-right: .65rem;
+        position: sticky;
+        right: 0;
+        z-index: 1;
+        background: #fff;
+        box-shadow: -6px 0 8px -6px rgba(0, 0, 0, .12);
+    }
+    #fpDraftTable thead .fp-side-remove-col {
+        z-index: 2;
+        background: #f8f9fa;
+    }
+    #fpDraftTable tbody tr > td.fp-side-remove-col { background-color: #fff; }
+    #fpDraftTable tbody tr:hover > td { background-color: rgba(0, 0, 0, .075); }
+    .fp-side-remove-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        padding: 0;
+        font-size: 1rem;
+        line-height: 1;
+        border-radius: 4px;
+        border: 1px solid #f5c6cb;
+        background: #fff;
+        color: #dc3545;
+        cursor: pointer;
+        touch-action: manipulation;
+    }
+    .fp-side-remove-btn:hover {
+        background: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+    }
+    #fpDraftTable tbody tr.fp-side-row-drafted > td { background-color: #fff4e6; }
+    #fpDraftTable tbody tr.fp-side-row-drafted:hover > td { background-color: #ffe8cc; }
+    #fpDraftTable tbody tr.fp-side-row-drafted > td.fp-side-remove-col { background-color: #fff4e6; }
+    #fpDraftTable tbody tr.fp-side-row-drafted:hover > td.fp-side-remove-col { background-color: #ffe8cc; }
+    #fpDraftTable .fp-list-labels-col {
+        min-width: 3.5rem;
+        text-align: center;
+        padding-left: .35rem;
+        padding-right: .35rem;
+    }
+    .fp-list-labels {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+    }
+    .fp-list-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.65rem;
+        height: 1.65rem;
+        font-size: .78rem;
+        line-height: 1;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,.12);
+    }
+    .fp-list-badge.fp-list-favorite { background: #e0a800; border-color: #d39e00; }
+    .fp-list-badge.fp-list-watchlist { background: #138496; border-color: #117a8b; }
+</style>
+
+<div class="container-fluid py-3 fp-draftboard-wrap">
+    <div class="d-flex flex-wrap align-items-center mb-3">
+        <h3 class="mb-0 mr-3">🗊 Draftboard</h3>
+        <small class="text-muted">
+            Showing <strong id="fpVisibleCount">0</strong> of <strong id="fpTotalCount">0</strong>
+        </small>
+        <small class="text-muted ml-auto">
+            Drag rows to reorder
+        </small>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body p-2">
+            <div class="d-flex flex-wrap align-items-center" style="gap: .5rem;">
+                <input id="fpSearchInput" type="text" class="form-control form-control-sm" placeholder="Search by name… (press / to focus)" autocomplete="off" style="width: 220px;">
+
+                <select class="form-control form-control-sm" id="fpTeamSelect" style="width: auto;">
+                    <option value="">Team: All</option>
+                </select>
+
+                <div class="btn-group-toggle" data-toggle="buttons" id="fpPositionPills">
+                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="C" autocomplete="off"> C</label>
+                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="L" autocomplete="off"> L</label>
+                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="R" autocomplete="off"> R</label>
+                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="D" autocomplete="off"> D</label>
+                    <label class="btn btn-sm btn-outline-secondary"><input type="checkbox" data-pos="G" autocomplete="off"> G</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card fp-draftboard-panel">
+        <div class="card-header bg-white py-2">
+            <div class="d-flex flex-wrap align-items-center">
+                <strong class="small mb-0">Draftboard</strong>
+                <div class="ml-auto">
+                    <button class="btn btn-sm btn-outline-secondary py-0" id="fpCopyBtn" type="button" title="Copy names">Copy</button>
+                    <button class="btn btn-sm btn-outline-danger py-0" id="fpClearBtn" type="button">Clear</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-sm table-hover mb-0" id="fpDraftTable">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="no-sort fp-drag-col"></th>
+                        <th class="no-sort">#</th>
+                        <th>Player</th>
+                        <th>Team</th>
+                        <th>Pos</th>
+                        <th class="fp-stat-col">GP</th>
+                        <th class="fp-stat-col">G</th>
+                        <th class="fp-stat-col">A</th>
+                        <th class="fp-stat-col">P</th>
+                        <th class="fp-stat-col">S</th>
+                        <th class="fp-stat-col">H</th>
+                        <th class="fp-stat-col">B</th>
+                        <th class="no-sort fp-list-labels-col" title="Favorites / Watchlist"></th>
+                        <th class="no-sort fp-side-remove-col"></th>
+                    </tr>
+                </thead>
+                <tbody id="fpDraftTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="toast fp-toast" id="fpToast" role="alert">
+    <div class="toast-body" id="fpToastBody"></div>
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    const COOKIE_DRAFTBOARD = "draftboard_fantasy_player";
+    const COOKIE_DRAFTED    = "drafted_fantasy_player";
+    const COOKIE_FAVORITE   = "favorite_fantasy_player";
+    const COOKIE_WATCHLIST  = "watchlist_fantasy_player";
+
+    const SKATER_STAT_COLS = [
+        { key: "games",   label: "GP" },
+        { key: "goals",   label: "G" },
+        { key: "assists", label: "A" },
+        { key: "points",  label: "P" },
+        { key: "shots",   label: "S" },
+        { key: "hits",    label: "H" },
+        { key: "blocked", label: "B" }
+    ];
+
+    const sideColCount = () => 5 + SKATER_STAT_COLS.length + 1;
+
+    const state = {
+        all: [],
+        draggedId: null,
+        positions: new Set(),
+        nameQuery: "",
+        teamId: ""
+    };
+
+    const statValue = (s, key) => s && s[key] && s[key].value;
+    const cookieList = (name) => getPlayersInCookie(name).map(Number);
+    const isIn = (id, list) => list.indexOf(Number(id)) >= 0;
+
+    const toast = (msg) => {
+        document.getElementById("fpToastBody").textContent = msg;
+        const el = document.getElementById("fpToast");
+        el.classList.add("show");
+        clearTimeout(toast._t);
+        toast._t = setTimeout(() => el.classList.remove("show"), 1600);
+    };
+
+    const positionChip = (code) => {
+        const c = (code || "").toUpperCase().split(",")[0];
+        const known = ["C", "L", "R", "D", "G"].indexOf(c) >= 0;
+        return `<span class="pos-chip ${known ? "pos-" + c : ""}">${c || "?"}</span>`;
+    };
+
+    const formatStatCell = (s, col) => nullish(statValue(s, col.key));
+
+    const playerById = () => {
+        if (!playerById._map) {
+            playerById._map = new Map();
+            state.all.forEach(p => playerById._map.set(Number(p.playerId), p));
+        }
+        return playerById._map;
+    };
+
+    const invalidatePlayerMap = () => { playerById._map = null; };
+
+    const draftIds = () => cookieList(COOKIE_DRAFTBOARD);
+    const draftedIds = () => cookieList(COOKIE_DRAFTED);
+
+    const hasActiveFilters = () =>
+        state.positions.size > 0 ||
+        state.nameQuery.trim() !== "" ||
+        state.teamId !== "";
+
+    const matchesFilters = (p) => {
+        if (!p) return false;
+
+        if (state.positions.size > 0) {
+            const elig = (p.yahooEligibility || p.positionCode || "").toUpperCase();
+            if (!Array.from(state.positions).some(pos => elig.indexOf(pos) >= 0)) return false;
+        }
+
+        const nameQ = state.nameQuery.trim().toLowerCase();
+        if (nameQ && (p.skaterFullName || "").toLowerCase().indexOf(nameQ) < 0) return false;
+
+        if (state.teamId && String(p.teamId) !== state.teamId) return false;
+
+        return true;
+    };
+
+    const filteredDraftIds = () => {
+        const ids = draftIds();
+        const byId = playerById();
+        return ids.filter(id => matchesFilters(byId.get(Number(id))));
+    };
+
+    const renderListLabels = (id, fav, watch) => {
+        const parts = [];
+        if (isIn(id, fav)) {
+            parts.push('<span class="fp-list-badge fp-list-favorite" title="On Favorites">★</span>');
+        }
+        if (isIn(id, watch)) {
+            parts.push('<span class="fp-list-badge fp-list-watchlist" title="On Watchlist">👁</span>');
+        }
+        return parts.length
+            ? `<span class="fp-list-labels">${parts.join("")}</span>`
+            : `<span class="fp-nullish"></span>`;
+    };
+
+    const renderSideRow = (p, id, idx, drafted, fav, watch) => {
+        const s = (p && p.stat) || {};
+        const statCells = SKATER_STAT_COLS.map(col =>
+            `<td class="fp-stat-col">${formatStatCell(s, col)}</td>`
+        ).join("");
+        const onDrafted = isIn(id, drafted);
+        const rowClasses = onDrafted ? "fp-side-row-drafted" : "";
+        const label = (p && p.skaterFullName) || `Player #${id}`;
+        const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
+        const teamId = p && p.teamId;
+        const teamName = (p && p.teamName) || "";
+        const teamCell = teamId
+            ? `<button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${teamId})">${teamName}</button>`
+            : `<span class="fp-nullish">—</span>`;
+
+        return `<tr data-side-id="${id}" class="${rowClasses}">
+            <td class="fp-drag-col">
+                <span class="fp-drag-handle" draggable="true" title="Drag to reorder" aria-label="Drag to reorder">⋮⋮</span>
+            </td>
+            <td class="text-muted fp-rank-col">${idx}</td>
+            <td class="fp-side-name-col">
+                <button type="button" class="btn btn-link btn-sm p-0 text-left" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})">${label}</button>
+            </td>
+            <td>${teamCell}</td>
+            <td>${positionChip(elig)}</td>
+            ${statCells}
+            <td class="fp-list-labels-col">${renderListLabels(id, fav, watch)}</td>
+            <td class="fp-side-remove-col">
+                <button type="button" class="fp-side-remove-btn" data-side-action="remove" data-id="${id}" title="Remove from draftboard" aria-label="Remove from draftboard">×</button>
+            </td>
+        </tr>`;
+    };
+
+    const orderFromDom = () =>
+        [...document.querySelectorAll("#fpDraftTableBody tr[data-side-id]")]
+            .map(tr => Number(tr.dataset.sideId));
+
+    const saveDraftOrderFromDom = () => {
+        const fullIds = draftIds();
+        const visibleIds = orderFromDom();
+
+        let newOrder;
+        if (!hasActiveFilters()) {
+            newOrder = visibleIds;
+        } else {
+            const visibleSet = new Set(visibleIds);
+            const visibleQueue = visibleIds.slice();
+            newOrder = fullIds.map(id => (visibleSet.has(id) ? visibleQueue.shift() : id));
+        }
+
+        setPlayersOrderInCookie(newOrder, COOKIE_DRAFTBOARD);
+        renderDraftboard();
+    };
+
+    const clearDragOver = () => {
+        document.querySelectorAll("#fpDraftTableBody tr.fp-drag-over").forEach(tr => {
+            tr.classList.remove("fp-drag-over");
+        });
+    };
+
+    const populateTeamSelect = () => {
+        const sel = document.getElementById("fpTeamSelect");
+        const prev = state.teamId;
+        const byId = new Map();
+        state.all.forEach(p => {
+            const id = String(p.teamId || "");
+            if (!id || byId.has(id)) return;
+            byId.set(id, p.teamName || id);
+        });
+        const teams = Array.from(byId.entries())
+            .sort((a, b) => a[1].localeCompare(b[1]));
+        sel.innerHTML = '<option value="">Team: All</option>' +
+            teams.map(([id, name]) => `<option value="${id}">${name}</option>`).join("");
+        if (prev && byId.has(prev)) sel.value = prev;
+        else { sel.value = ""; state.teamId = ""; }
+    };
+
+    const renderDraftboard = () => {
+        const tbody = document.getElementById("fpDraftTableBody");
+        const allIds = draftIds();
+        const ids = filteredDraftIds();
+        const drafted = draftedIds();
+        const fav     = cookieList(COOKIE_FAVORITE);
+        const watch   = cookieList(COOKIE_WATCHLIST);
+        const byId  = playerById();
+
+        document.getElementById("fpVisibleCount").textContent = ids.length;
+        document.getElementById("fpTotalCount").textContent   = allIds.length;
+
+        if (allIds.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="${sideColCount()}" class="text-center text-muted small py-4">Draftboard is empty. Add players on <a href="/nhl/fantasy">Fantasy Home</a>.</td></tr>`;
+            return;
+        }
+
+        if (ids.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="${sideColCount()}" class="text-center text-muted small py-4">No players match the current filters.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = ids.map((id) => {
+            const p = byId.get(Number(id));
+            const rank = allIds.indexOf(Number(id)) + 1;
+            return renderSideRow(p, id, rank, drafted, fav, watch);
+        }).join("");
+    };
+
+    const wireDragAndDrop = () => {
+        const body = document.getElementById("fpDraftTableBody");
+
+        body.addEventListener("dragstart", (e) => {
+            const handle = e.target.closest(".fp-drag-handle");
+            if (!handle) { e.preventDefault(); return; }
+            const row = handle.closest("tr[data-side-id]");
+            if (!row) { e.preventDefault(); return; }
+            state.draggedId = row.dataset.sideId;
+            e.dataTransfer.effectAllowed = "move";
+            e.dataTransfer.setData("text/plain", state.draggedId);
+            row.classList.add("fp-dragging");
+        });
+
+        body.addEventListener("dragend", (e) => {
+            const row = e.target.closest("tr[data-side-id]");
+            if (row) row.classList.remove("fp-dragging");
+            clearDragOver();
+            if (state.draggedId) {
+                saveDraftOrderFromDom();
+                state.draggedId = null;
+            }
+        });
+
+        body.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = "move";
+            const row = e.target.closest("tr[data-side-id]");
+            if (!row || row.dataset.sideId === state.draggedId) return;
+
+            const dragRow = body.querySelector(`tr[data-side-id="${state.draggedId}"]`);
+            if (!dragRow) return;
+
+            clearDragOver();
+            row.classList.add("fp-drag-over");
+
+            const rect = row.getBoundingClientRect();
+            const after = e.clientY > rect.top + rect.height / 2;
+            if (after) {
+                if (row.nextSibling !== dragRow) body.insertBefore(dragRow, row.nextSibling);
+            } else {
+                if (row !== dragRow.nextSibling) body.insertBefore(dragRow, row);
+            }
+        });
+
+        body.addEventListener("dragleave", (e) => {
+            const row = e.target.closest("tr[data-side-id]");
+            if (row) row.classList.remove("fp-drag-over");
+        });
+
+        body.addEventListener("drop", (e) => {
+            e.preventDefault();
+            clearDragOver();
+        });
+    };
+
+    const load = () => {
+        const tbody = document.getElementById("fpDraftTableBody");
+        tbody.innerHTML = `<tr><td colspan="${sideColCount()}" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <div class="text-muted mt-2">Loading draftboard…</div>
+        </td></tr>`;
+
+        $.ajax({
+            url: "/api/nhl/fantasy",
+            crossDomain: true,
+            dataType: "json",
+            type: "GET",
+            success: (resp) => {
+                state.all = Array.isArray(resp) ? resp : [];
+                invalidatePlayerMap();
+                populateTeamSelect();
+                renderDraftboard();
+            },
+            error: (xhr) => {
+                tbody.innerHTML = `<tr><td colspan="${sideColCount()}" class="text-center text-danger py-5">Failed to load players. (${xhr.status})</td></tr>`;
+            }
+        });
+    };
+
+    const wireEvents = () => {
+        document.getElementById("fpDraftTableBody").addEventListener("click", (e) => {
+            const btn = e.target.closest("[data-side-action='remove']");
+            if (!btn) return;
+            const id = Number(btn.dataset.id);
+            removePlayerInCookie(id, COOKIE_DRAFTBOARD);
+            toast("Removed from Draftboard");
+            renderDraftboard();
+        });
+
+        wireDragAndDrop();
+
+        document.getElementById("fpCopyBtn").addEventListener("click", () => {
+            const byId  = playerById();
+            const names = filteredDraftIds().map(id => {
+                const p = byId.get(Number(id));
+                return (p && p.skaterFullName) || `Player #${id}`;
+            }).join("\n");
+            if (!names) { toast("Nothing to copy"); return; }
+            navigator.clipboard.writeText(names)
+                .then(() => toast(`Copied ${names.split("\n").length} names`))
+                .catch(() => toast("Copy failed"));
+        });
+
+        document.getElementById("fpSearchInput").addEventListener("input", (e) => {
+            state.nameQuery = e.target.value;
+            renderDraftboard();
+        });
+
+        document.getElementById("fpTeamSelect").addEventListener("change", (e) => {
+            state.teamId = e.target.value;
+            renderDraftboard();
+        });
+
+        document.getElementById("fpPositionPills").addEventListener("change", (e) => {
+            const input = e.target.closest("input[data-pos]");
+            if (!input) return;
+            const pos = input.dataset.pos;
+            if (input.checked) state.positions.add(pos);
+            else               state.positions.delete(pos);
+            renderDraftboard();
+        });
+
+        document.addEventListener("keydown", (e) => {
+            const tag = (e.target.tagName || "").toLowerCase();
+            if (e.key === "/" && tag !== "input" && tag !== "textarea") {
+                e.preventDefault();
+                document.getElementById("fpSearchInput").focus();
+            }
+        });
+
+        document.getElementById("fpClearBtn").addEventListener("click", () => {
+            if (!confirm("Clear your entire Draftboard list? This cannot be undone.")) return;
+            setCookie(COOKIE_DRAFTBOARD, "");
+            toast("Draftboard cleared");
+            renderDraftboard();
+        });
+    };
+
+    $(document).ready(() => {
+        wireEvents();
+        load();
+    });
+})();
+</script>
+
+{% include 'nhl/player/nhl_player_page_modal.html' %}
+{% include 'nhl/fantasy/nhl_lineup_modal.html' %}
+{% include 'nhl/stats/nhl_stat_modal.html' %}

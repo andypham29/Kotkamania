@@ -99,3 +99,7 @@ function moveDownPlayerInCookie(playerId, cookie_name) {
         setCookie(cookie_name, JSON.stringify(newProspects))
     }
 }
+
+function setPlayersOrderInCookie(ids, cookie_name) {
+    setCookie(cookie_name, JSON.stringify(ids.map(function (id) { return parseInt(id, 10); })))
+}

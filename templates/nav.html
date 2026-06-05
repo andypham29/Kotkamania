@@ -19,15 +19,7 @@
                     <!--                    <li><a class="nav-item nav-link" href="/nhl/fantasy">NHL Fantasy <span-->
                     <!--                            class="fantasybadge fantasybadge-primary">new</span></a></li>-->
                     <!--                    <li>-->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link  dropdown-toggle" data-toggle="dropdown" href="/nhl/fantasy"> Fantasy <span
-                                class="badge badge-primary">new</span></a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/nhl/fantasy"> Fantasy Home</a></li>
-                            <li><a class="dropdown-item" href="/nhl/fantasy/streak"> Fantasy Hot Streak</a></li>
-                        </ul>
-                    </li>
-                    </li>
+                    <li class="nav-item dropdown"><a class="nav-link  dropdown-toggle" data-toggle="dropdown" href="/nhl/fantasy"> Fantasy</a></li>
                 </ul>
                 <ul class="nav navbar-nav ml-auto">
                     <li>
@@ -43,6 +35,9 @@
     </nav>
     {% if (page=="nhl_roster" or page=="nhl_stats_skater") %}
     {% include 'nhl/nhl_nav.html' %}
+    {% endif %}
+    {% if (page=="nhl_fantasy" or page=="nhl_fantasy_draftboard" or page=="nhl_fantasy_streak") %}
+    {% include 'fantasy/fantasy_nav.html' %}
     {% endif %}
     {% if (page=="nhl_fantasy_streak") %}
     {% include 'nhl/fantasy/streak/fantasy_hot_streak_menu.html' %}

@@ -73,6 +73,9 @@
             {% if (page=="nhl_fantasy") %}
             <td>{% include 'fantasy/fantasy_page.html' %}</td>
             {% endif %}
+            {% if (page=="nhl_fantasy_draftboard") %}
+            <td>{% include 'fantasy/fantasy_draftboard_page.html' %}</td>
+            {% endif %}
             {% if (page=="nhl_fantasy_streak") %}
             <td>{% include 'nhl/fantasy/streak/fantasy_player_on_streak.html' %}</td>
             {% endif %}

@@ -85,6 +85,11 @@ def nhl_fantasy_streak():
     return render_template("index.html", page="nhl_fantasy_streak")
 
 
+@app.route('/nhl/fantasy/draftboard')
+def nhl_fantasy_draftboard():
+    return render_template("index.html", page="nhl_fantasy_draftboard")
+
+
 @app.route('/nhl/players')
 def nhl_players():
     return render_template("index.html", page="nhl_player")

@@ -26,6 +26,7 @@ flowchart TB
     APP["app.py — Flask routes"]
   end
   subgraph core["Application core"]
+    APP_LAYER["application/ — services & models (user-provided)"]
     DOM["domain/ — facades & services"]
   end
   subgraph outbound["Outbound adapters"]
@@ -36,8 +37,10 @@ flowchart TB
 
   FE --> APP
   APP --> DOM
+  APP --> APP_LAYER
   APP -.->|"existing routes only"| LEG
   DOM --> SPI
+  APP_LAYER --> SPI
   SPI --> NHL["NHL API"]
   SPI --> DB["SQLite"]
   SPI --> SCR["Scrapers / files"]
@@ -64,6 +67,18 @@ Current modules (grow by feature, not by copy-pasting legacy `server/` patterns)
 
 **New features:** add or extend a facade/service under `domain/`, then register a route or API handler in `app.py` that calls it. Prefer facades when a use case composes multiple SPI calls (see `domain/playerstat/nhl_player_stat_facade.py`).
 
+### `application/` — business services (user may supply)
+
+`application/` holds **use-case services and domain models** the user defines. A service typically depends on a repository port (often left as `None` until the SPI exists) and works with plain `@dataclass` types — not DB/API shapes.
+
+| Path | Role |
+|------|------|
+| `application/goaliestats/` | Goalie season stats; `GoalieStatService`, `GoalieStat` |
+
+**When the user provides an `application/` service:** implement the **outbound SPI** under `infra/spi/` yourself. Do not put persistence or HTTP in `application/`. Wire the repository in the service constructor (or from `app.py` as composition root) once the SPI exists.
+
+Example: `application/goaliestats/GoalieStatService` calls `save` / `find_all` / `find_by_player_id` on a repository → you implement a **SQLite** repository at `infra/spi/sqlite/goaliestat/` and add the table ORM class to `infra/spi/sqlite/models.py`. The user will state the SPI technology explicitly (e.g. `sqlite`, `nhlapi`); use that folder under `infra/spi/`.
+
 ### `infra/spi/` — many small outbound adapters
 
 **SPI** (service provider interface) adapters live under `infra/spi/`. Keep them **granular**: one adapter (or small folder) per external concern — a single NHL endpoint family, one repository table, one scrape source, etc. Do not fold unrelated I/O into one large “god” adapter.
@@ -71,11 +86,49 @@ Current modules (grow by feature, not by copy-pasting legacy `server/` patterns)
 | Path | Role |
 |------|------|
 | `infra/spi/nhlapi/` | Public NHL API (gamelog, team, roster; `nhlskater/` for summary, realtime, TOI, puck possession, shot attempt count) |
-| `infra/spi/sqlite/` | SQLite repositories and row models (`fantasyplayer/`, `playerstat/`, `playerstatpercentile/`) |
+| `infra/spi/sqlite/models.py` | Shared SQLite engine, `Session`, and **all** SQLAlchemy ORM table classes (`GoalieStatORM`, `InternalPlayerStatORM`, …) |
+| `infra/spi/sqlite/<feature>/` | Per-feature repositories only (`fantasyplayer/`, `playerstat/`, `goaliestat/`, …) |
 | `infra/spi/hockeyreference/` | Hockey Reference scrape adapters |
 | `infra/rest/` | Optional inbound REST adapters (sparse today; most HTTP stays in `app.py`) |
 
-Domain services inject or construct SPI types as needed. Repositories map DB/API DTOs; domain holds business rules and composition.
+Domain and `application/` services inject or construct SPI types as needed. Repositories map between persistence/API shapes and application/domain dataclasses; business rules stay in `application/` or `domain/`.
+
+### `infra/spi/sqlite/models.py` — SQLite ORM tables
+
+**All new SQLite ORM table classes go in `infra/spi/sqlite/models.py`.** That file owns the engine, `Base`, `Session`, and `create_all`. Do **not** add per-feature `model/*_orm.py` files or duplicate `db.py` engines for new tables.
+
+| Rule | Detail |
+|------|--------|
+| Class name | `{ApplicationModel}ORM` (e.g. `GoalieStat` → `GoalieStatORM`) |
+| Table name | `internal_<feature>` snake_case (e.g. `internal_goalie_stat`) |
+| Columns | Same field names as the application/domain dataclass unless the user specifies otherwise |
+| Repository | Lives under `infra/spi/sqlite/<feature>/`; imports `GoalieStatORM` and `Session` from `infra.spi.sqlite.models` |
+
+Repositories map ORM rows ↔ application/domain dataclasses on read/write. Conversion helpers (`from_application`, `to_application`) belong on the repository or as small private methods — not as separate ORM dataclass files.
+
+### Implementing SPI from an `application/` service
+
+Use this workflow when the user hands you a service under `application/` (with or without a stub repository) and asks for an SPI.
+
+1. **Read the application model and service** — method names, parameters, and return types define the repository contract (e.g. `GoalieStat`, `save`, `find_all`, `find_by_player_id`).
+2. **Use the SPI technology the user names** — e.g. `sqlite` → `infra/spi/sqlite/<feature>/`, `nhlapi` → `infra/spi/nhlapi/...`. If they do not name one, ask; do not guess for new work.
+3. **SPI persistence model** — unless the user specifies a different field set, the SQLite ORM class uses the **same field names and types** as the `application/` model.
+4. **ORM suffix** — add a SQLAlchemy mapped class named **`{ApplicationModel}ORM`** to **`infra/spi/sqlite/models.py`** (e.g. `GoalieStat` → `GoalieStatORM`). Do not create a separate ORM file under the feature folder.
+5. **Repository** — implement the port the service expects under `infra/spi/sqlite/<feature>/`; map `GoalieStatORM` rows ↔ `GoalieStat` on read/write. Mirror existing SQLite repos (`infra/spi/sqlite/playerstat/nhl_player_stat_repository.py`): session handling, upsert, filter by `playerId` / `seasonId` when present.
+6. **Wire the service** — set `self.<repository> = ...` in `GoalieStatService.__init__` (default to the new repository class) unless the user wants composition only in `app.py`.
+
+| Layer | Type | Example |
+|-------|------|---------|
+| `application/.../model/` | Application dataclass | `GoalieStat` |
+| `infra/spi/sqlite/models.py` | SQLAlchemy ORM table class | `GoalieStatORM` |
+| `infra/spi/sqlite/<feature>/` | Repository | `GoalieStatRepository` |
+
+**Goalie stats reference (expected layout when user asks for SQLite SPI):**
+
+- Service: `application/goaliestats/goalie_stat_service.py` — `GoalieStatService`
+- Application model: `application/goaliestats/model/goalie_stat.py` — `GoalieStat`
+- ORM table: `infra/spi/sqlite/models.py` — `GoalieStatORM` (`internal_goalie_stat`)
+- Repository: `infra/spi/sqlite/goaliestat/goalie_stat_repository.py` — `GoalieStatRepository`
 
 ### `server/` — legacy (do not modify)
 
@@ -122,13 +175,14 @@ Domain services inject or construct SPI types as needed. Repositories map DB/API
 
 ## Working principles for agents
 
-1. **Domain first.** New behavior starts in `domain/`: aggregate ports, return domain dataclasses; then add SPI adapters if needed; last, expose via `app.py`.
+1. **Domain or application first.** New behavior starts in `domain/` or `application/` (user may supply the latter). Aggregate ports, return application/domain dataclasses; then add SPI adapters under `infra/spi/<technology>/`; last, expose via `app.py`.
 2. **`server/` is frozen.** No modifications unless the user explicitly requests legacy changes.
 3. **Facades face the frontend.** What pages and APIs need should be composed in `domain/` facades/services; `app.py` stays thin (parse request, call domain, `makeHttpResponse` / `render_template`).
 4. **Granular SPIs.** Split new adapters by data source or API surface; mirror existing folder naming (`infra/spi/nhlapi/nhlskater/`, `infra/spi/sqlite/fantasyplayer/`).
 5. **Monolith frontend rules.** jQuery + vanilla JS in templates; Bootstrap 4.5; no frontend framework or build pipeline.
 6. **Cookies vs localStorage.** Player lists → cookies; tuning knobs → `localStorage`.
 7. **SQLite only** for app persistence in new code paths unless the user specifies otherwise.
+8. **SPI from application.** If the user gives you an `application/` service, implement the matching SPI in `infra/spi/` using the technology they specify; default SPI fields to match the application model; for SQLite, add the ORM table class to **`infra/spi/sqlite/models.py`** with an **`ORM`** suffix.
 
 ## Adding a direct NHL API adapter (`infra/spi/nhlapi/`)
 

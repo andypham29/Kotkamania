@@ -193,6 +193,15 @@
     .fp-list-btn.fp-list-watchlist.is-on { background: #138496; border-color: #117a8b; }
     .fp-list-btn.fp-list-draftboard.is-on { background: #218838; border-color: #1e7e34; }
     .fp-list-btn.fp-list-picked.is-on { background: #0056b3; border-color: #004085; }
+    .fp-list-btn.fp-list-drafted.is-on { background: #e8590c; border-color: #d9480f; }
+    #fpTabs .nav-link[data-view="picked"].active { color: #0056b3; border-color: #0056b3 #0056b3 #fff; font-weight: 600; }
+    #fpTabs .nav-link[data-view="drafted"].active { color: #e8590c; border-color: #e8590c #e8590c #fff; font-weight: 600; }
+    .fp-side-panel.fp-side-myteam .card-header { border-top: 3px solid #0056b3; }
+    .fp-side-panel.fp-side-drafted .card-header { border-top: 3px solid #e8590c; }
+    #fpSideTable tbody tr.fp-side-row-drafted > td { background-color: #fff4e6; }
+    #fpSideTable tbody tr.fp-side-row-drafted:hover > td { background-color: #ffe8cc; }
+    #fpSideTable tbody tr.fp-side-row-drafted > td.fp-side-remove-col { background-color: #fff4e6; }
+    #fpSideTable tbody tr.fp-side-row-drafted:hover > td.fp-side-remove-col { background-color: #ffe8cc; }
     .fp-list-btn.fp-list-highlight.is-on { background: #5a6268; border-color: #545b62; }
     .fp-list-btn.fp-pulse { animation: fp-list-pulse .35s ease; }
     @keyframes fp-list-pulse {
@@ -359,6 +368,7 @@
                             <li class="nav-item"><a class="nav-link py-1" href="#" data-view="watchlist">👁 Watchlist <span class="badge badge-secondary ml-1" id="fpTabWatch">0</span></a></li>
                             <li class="nav-item"><a class="nav-link active py-1" href="#" data-view="draftboard">🗊 Draftboard <span class="badge badge-secondary ml-1" id="fpTabDraft">0</span></a></li>
                             <li class="nav-item"><a class="nav-link py-1" href="#" data-view="picked">＋ My Team <span class="badge badge-secondary ml-1" id="fpTabPicked">0</span></a></li>
+                            <li class="nav-item"><a class="nav-link py-1" href="#" data-view="drafted">✔ Drafted <span class="badge badge-secondary ml-1" id="fpTabDrafted">0</span></a></li>
                         </ul>
                         <strong class="small mb-0" id="fpSideTitle">Draftboard</strong>
                         <span class="text-muted small ml-2">(<span id="fpSideCount">0</span>)</span>
@@ -408,7 +418,8 @@
         watchlist:  "watchlist_fantasy_player",
         draftboard: "draftboard_fantasy_player",
         highlight:  "highlight_fantasy_player",
-        picked:     "picked_fantasy_player"
+        picked:     "picked_fantasy_player",
+        drafted:    "drafted_fantasy_player"
     };
 
     const DEFAULT_WEIGHTS = { G: 2.1, A: 2, SOG: 0.5, PPP: 1, HIT: 0.25, BLK: 0.25, PLUSMINUS: 0.1 };
@@ -434,6 +445,7 @@
         watchlist:  "Watchlist",
         draftboard: "Draftboard",
         picked:     "My Team",
+        drafted:    "Drafted",
         highlight:  "Highlight"
     };
 
@@ -441,7 +453,8 @@
         { action: "favorite",   icon: "★", label: "Favorites" },
         { action: "watchlist",  icon: "👁", label: "Watchlist" },
         { action: "draftboard", icon: "🗊", label: "Draftboard" },
-        { action: "picked",     icon: "＋", label: "My Team" }
+        { action: "picked",     icon: "＋", label: "My Team" },
+        { action: "drafted",    icon: "✔", label: "Drafted" }
     ];
 
     const SKATER_STAT_COLS = [
@@ -621,7 +634,8 @@
         watch:     cookieList(COOKIES.watchlist),
         draft:     cookieList(COOKIES.draftboard),
         highlight: cookieList(COOKIES.highlight),
-        picked:    cookieList(COOKIES.picked)
+        picked:    cookieList(COOKIES.picked),
+        drafted:   cookieList(COOKIES.drafted)
     });
 
     const playerById = () => {
@@ -640,6 +654,7 @@
             case "watchlist":  return cookies.watch;
             case "draftboard": return cookies.draft;
             case "picked":     return cookies.picked;
+            case "drafted":    return cookies.drafted;
             default:           return [];
         }
     };
@@ -647,6 +662,8 @@
     const filteredPlayers = (cookies) => {
         const q = state.query.trim().toLowerCase();
         let list = state.all.slice();
+
+        list = list.filter(p => !isIn(p.playerId, cookies.drafted));
 
         if (state.positions.size > 0) {
             list = list.filter(p => {
@@ -684,6 +701,7 @@
             case "watchlist":  return isIn(id, cookies.watch);
             case "draftboard": return isIn(id, cookies.draft);
             case "picked":     return isIn(id, cookies.picked);
+            case "drafted":    return isIn(id, cookies.drafted);
             case "highlight":  return isIn(id, cookies.highlight);
             default:           return false;
         }
@@ -727,11 +745,14 @@
     const renderEmpty = () =>
         `<tr><td colspan="${mainColCount()}" class="text-center text-muted py-5">No players match the current filters.</td></tr>`;
 
-    const renderSideRow = (p, id, idx, total) => {
+    const renderSideRow = (p, id, idx, total, cookies) => {
         const s       = getPlayerStatBag(p);
         const statCells = activeStatCols().map(col =>
             `<td class="fp-stat-col">${formatStatCell(s, col)}</td>`
         ).join("");
+        const onDrafted = isIn(id, cookies.drafted);
+        const rowClasses = (onDrafted && state.sideView !== "picked" && state.sideView !== "drafted")
+            ? "fp-side-row-drafted" : "";
         const reorderCell = (state.sideView === "draftboard")
             ? `<td class="fp-reorder-col">
                   <span class="fp-reorder" role="group" aria-label="Reorder">
@@ -747,7 +768,7 @@
         const teamCell = teamId
             ? `<button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${teamId})">${teamName}</button>`
             : `<span class="fp-nullish">—</span>`;
-        return `<tr data-side-id="${id}">
+        return `<tr data-side-id="${id}" class="${rowClasses}">
             <td class="text-muted">${idx}</td>
             ${reorderCell}
             <td class="fp-side-name-col">
@@ -771,11 +792,13 @@
             favorite:   "No favorites yet. Click ★ on a player in the table.",
             watchlist:  "Watchlist is empty. Click 👁 on a player.",
             draftboard: "Draftboard is empty. Click 🗊 on a player.",
-            picked:     "My Team is empty. Click ＋ on a player."
+            picked:     "My Team is empty. Click ＋ on a player.",
+            drafted:    "No drafted players yet. Click ✔ on a player in the table."
         };
 
         document.getElementById("fpSideTitle").textContent = title;
         document.getElementById("fpSideCount").textContent = ids.length;
+        syncSidePanelTheme();
 
         if (ids.length === 0) {
             tbody.innerHTML = `<tr><td colspan="${sideColCount()}" class="text-center text-muted small py-3">${emptyMsgs[state.sideView] || "List is empty."}</td></tr>`;
@@ -785,9 +808,16 @@
 
         tbody.innerHTML = ids.map((id, i) => {
             const p = byId.get(Number(id));
-            return renderSideRow(p, id, i + 1, ids.length);
+            return renderSideRow(p, id, i + 1, ids.length, cookies);
         }).join("");
         syncSideReorderColumn();
+    };
+
+    const syncSidePanelTheme = () => {
+        const panel = document.querySelector(".fp-side-panel");
+        if (!panel) return;
+        panel.classList.toggle("fp-side-myteam", state.sideView === "picked");
+        panel.classList.toggle("fp-side-drafted", state.sideView === "drafted");
     };
 
     const syncSideReorderColumn = () => {
@@ -889,6 +919,7 @@
         document.getElementById("fpTabWatch").textContent   = cookies.watch.length;
         document.getElementById("fpTabDraft").textContent   = cookies.draft.length;
         document.getElementById("fpTabPicked").textContent = cookies.picked.length;
+        document.getElementById("fpTabDrafted").textContent = cookies.drafted.length;
     };
 
     const switchSideView = (view) => {
@@ -898,6 +929,7 @@
             a.classList.toggle("active", a.dataset.view === view);
         });
         document.getElementById("fpSideTitle").textContent = SIDE_VIEW_LABELS[view];
+        syncSidePanelTheme();
         syncSideReorderColumn();
     };
 
@@ -937,8 +969,26 @@
         if (wasOn) removePlayerInCookie(Number(id), COOKIES[action]);
         else       savePlayerInCookie(Number(id), COOKIES[action]);
 
+        if (action === "picked" && !wasOn && !listActionOn("drafted", id, cookies)) {
+            savePlayerInCookie(Number(id), COOKIES.drafted);
+        }
+
         const updated = currentCookies();
         refreshListCounts(updated);
+
+        if (action === "drafted" || action === "picked") {
+            renderTable();
+            pulseListButton(btn);
+            if (action === "drafted") {
+                toast(wasOn ? `${name} returned to the pool` : `${name} drafted`);
+                if (!wasOn) { switchSideView("drafted"); flashSidePanel(); }
+            } else {
+                toast(wasOn ? `Removed ${name} from ${label}` : `Added ${name} to ${label}`);
+                if (!wasOn) { switchSideView("picked"); flashSidePanel(); }
+            }
+            return;
+        }
+
         updatePlayerListButtons(id, updated);
 
         if (action !== "highlight") {
@@ -1072,7 +1122,8 @@
             }
             if (action === "remove") {
                 removePlayerInCookie(id, COOKIES[state.sideView]);
-                toast(`Removed from ${state.sideView}`);
+                const viewLabel = SIDE_VIEW_LABELS[state.sideView] || state.sideView;
+                toast(state.sideView === "drafted" ? "Player returned to the pool" : `Removed from ${viewLabel}`);
                 renderTable();
                 return;
             }

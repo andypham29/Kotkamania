@@ -271,7 +271,7 @@
                         Advanced <span class="badge badge-primary" id="fpAdvBadge" style="display:none;">0</span>
                     </button>
                     <button class="btn btn-sm btn-outline-dark" type="button" data-toggle="collapse" data-target="#fpWeightsPanel">
-                        Weights <span class="badge badge-primary" id="fpWeightsBadge" style="display:none;">●</span>
+                        Weights <span class="badge badge-primary" id="fpWeightsBadge" style="display:none;"></span>
                     </button>
                     <button class="btn btn-sm btn-outline-secondary" id="fpCopyBtn" type="button">Copy</button>
                 </div>
@@ -290,6 +290,7 @@
                 </div>
             </div>
             <div class="card-body">
+                <h6 class="text-muted mb-2">Skaters</h6>
                 <div class="form-row">
                     <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Goals (G)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="G"></div>
                     <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Assists (A)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="A"></div>
@@ -298,6 +299,14 @@
                     <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Hits (HIT)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="HIT"></div>
                     <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Blocks (BLK)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="BLK"></div>
                     <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">+/- (PLUSMINUS)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="PLUSMINUS"></div>
+                </div>
+                <hr class="my-2">
+                <h6 class="text-muted mb-2">Goalies</h6>
+                <div class="form-row">
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Wins (WIN)</label><input type="number" step="0.05" class="form-control form-control-sm" data-goalie-weight="WIN"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Goals Against (GA)</label><input type="number" step="0.05" class="form-control form-control-sm" data-goalie-weight="GA"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Saves (SV)</label><input type="number" step="0.05" class="form-control form-control-sm" data-goalie-weight="SAVES"></div>
+                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Shutouts (SO)</label><input type="number" step="0.05" class="form-control form-control-sm" data-goalie-weight="SO"></div>
                 </div>
             </div>
         </div>
@@ -424,22 +433,39 @@
     };
 
     const DEFAULT_WEIGHTS = { G: 2.1, A: 2, SOG: 0.5, PPP: 1, HIT: 0.25, BLK: 0.25, PLUSMINUS: 0.1 };
+    const DEFAULT_GOALIE_WEIGHTS = { WIN: 5, GA: -1.5, SAVES: 0.3, SO: 2 };
+
+    // const DEFAULT_WEIGHTS = { G: 6, A: 4, SOG: 0.8, PPP: 2, HIT: 0.75, BLK: 1, PLUSMINUS: 0 };
+    // const DEFAULT_GOALIE_WEIGHTS = { WIN: 5, GA: -3, SAVES: 0.6, SO: 1 };
     const WEIGHTS_STORAGE_KEY = "fp_weights";
 
     const loadWeights = () => {
+        const skater = { ...DEFAULT_WEIGHTS };
+        const goalie = { ...DEFAULT_GOALIE_WEIGHTS };
         try {
             const raw = localStorage.getItem(WEIGHTS_STORAGE_KEY);
-            if (!raw) return { ...DEFAULT_WEIGHTS };
+            if (!raw) return { skater, goalie };
             const saved = JSON.parse(raw) || {};
-            const out = { ...DEFAULT_WEIGHTS };
             Object.keys(DEFAULT_WEIGHTS).forEach(k => {
-                if (typeof saved[k] === "number" && isFinite(saved[k])) out[k] = saved[k];
+                if (typeof saved[k] === "number" && isFinite(saved[k])) skater[k] = saved[k];
             });
-            return out;
-        } catch (e) { return { ...DEFAULT_WEIGHTS }; }
+            const savedGoalie = saved.goalie || {};
+            Object.keys(DEFAULT_GOALIE_WEIGHTS).forEach(k => {
+                if (typeof savedGoalie[k] === "number" && isFinite(savedGoalie[k])) goalie[k] = savedGoalie[k];
+            });
+        } catch (e) { /* use defaults */ }
+        return { skater, goalie };
     };
 
-    const WEIGHTS = loadWeights();
+    const loadedWeights = loadWeights();
+    const WEIGHTS = loadedWeights.skater;
+    const GOALIE_WEIGHTS = loadedWeights.goalie;
+
+    const saveWeightsToStorage = () => {
+        try {
+            localStorage.setItem(WEIGHTS_STORAGE_KEY, JSON.stringify({ ...WEIGHTS, goalie: { ...GOALIE_WEIGHTS } }));
+        } catch (e) {}
+    };
 
     const SIDE_VIEW_LABELS = {
         favorite:   "Favorites",
@@ -562,7 +588,18 @@
         }
     };
 
+    const isGoaliePlayer = (p) => (p.positionCode || "").toUpperCase() === "G";
+
     const fpPoints = (p) => {
+        if (isGoaliePlayer(p)) {
+            const gs = p.goalieStat || {};
+            return (
+                statNum(gs, "wins")         * GOALIE_WEIGHTS.WIN +
+                statNum(gs, "goalsAgainst") * GOALIE_WEIGHTS.GA +
+                statNum(gs, "saves")        * GOALIE_WEIGHTS.SAVES +
+                statNum(gs, "shutouts")     * GOALIE_WEIGHTS.SO
+            );
+        }
         const s = p.stat || {};
         return (
             statNum(s, "goals")           * WEIGHTS.G +
@@ -1007,7 +1044,8 @@
     };
 
     const isWeightsModified = () =>
-        Object.keys(DEFAULT_WEIGHTS).some(k => WEIGHTS[k] !== DEFAULT_WEIGHTS[k]);
+        Object.keys(DEFAULT_WEIGHTS).some(k => WEIGHTS[k] !== DEFAULT_WEIGHTS[k]) ||
+        Object.keys(DEFAULT_GOALIE_WEIGHTS).some(k => GOALIE_WEIGHTS[k] !== DEFAULT_GOALIE_WEIGHTS[k]);
 
     const refreshWeightsBadge = () => {
         const b = document.getElementById("fpWeightsBadge");
@@ -1018,6 +1056,9 @@
         document.querySelectorAll("#fpWeightsPanel input[data-weight]").forEach(el => {
             el.value = WEIGHTS[el.dataset.weight];
         });
+        document.querySelectorAll("#fpWeightsPanel input[data-goalie-weight]").forEach(el => {
+            el.value = GOALIE_WEIGHTS[el.dataset.goalieWeight];
+        });
     };
 
     const applyWeightsFromInputs = () => {
@@ -1026,7 +1067,12 @@
             const v = parseFloat(el.value);
             WEIGHTS[k] = isFinite(v) ? v : DEFAULT_WEIGHTS[k];
         });
-        try { localStorage.setItem(WEIGHTS_STORAGE_KEY, JSON.stringify(WEIGHTS)); } catch (e) {}
+        document.querySelectorAll("#fpWeightsPanel input[data-goalie-weight]").forEach(el => {
+            const k = el.dataset.goalieWeight;
+            const v = parseFloat(el.value);
+            GOALIE_WEIGHTS[k] = isFinite(v) ? v : DEFAULT_GOALIE_WEIGHTS[k];
+        });
+        saveWeightsToStorage();
     };
 
     const refreshAdvBadge = () => {
@@ -1228,6 +1274,7 @@
 
         document.getElementById("fpWeightsReset").addEventListener("click", () => {
             Object.keys(DEFAULT_WEIGHTS).forEach(k => { WEIGHTS[k] = DEFAULT_WEIGHTS[k]; });
+            Object.keys(DEFAULT_GOALIE_WEIGHTS).forEach(k => { GOALIE_WEIGHTS[k] = DEFAULT_GOALIE_WEIGHTS[k]; });
             try { localStorage.removeItem(WEIGHTS_STORAGE_KEY); } catch (e) {}
             fillWeightsInputs();
             refreshWeightsBadge();
@@ -1235,7 +1282,7 @@
             renderTable();
         });
 
-        document.querySelectorAll("#fpWeightsPanel input[data-weight]").forEach(el => {
+        document.querySelectorAll("#fpWeightsPanel input[data-weight], #fpWeightsPanel input[data-goalie-weight]").forEach(el => {
             el.addEventListener("keydown", (e) => {
                 if (e.key === "Enter") { e.preventDefault(); document.getElementById("fpWeightsApply").click(); }
             });

@@ -91,7 +91,8 @@
     #fpSideTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 1; white-space: nowrap; font-size: .75rem; }
     #fpSideTable td, #fpSideTable th { padding: .2rem .35rem; font-size: .8rem; white-space: nowrap; }
     #fpSideTable .fp-side-name-col { max-width: 12rem; overflow: hidden; text-overflow: ellipsis; }
-    #fpSideTable .fp-stat-col { text-align: right; color: #495057; }
+    #fpSideTable .fp-stat-col { text-align: right; color: #495057; min-width: 2.25rem; padding-left: .5rem; padding-right: .5rem; }
+    #fpSideTable thead th.fp-stat-col { font-size: .8rem; }
     #fpSideTable .fp-side-remove-col {
         min-width: 2.5rem;
         width: 2.5rem;
@@ -517,10 +518,13 @@
         return nullish(v);
     };
 
-    const buildStatHeaderCells = (cols) => cols.map(col => {
-        const cls = col.noSort ? "no-sort" : "";
+    const buildStatHeaderCells = (cols, side = false) => cols.map(col => {
+        const cls = [
+            col.noSort ? "no-sort" : "",
+            side ? "fp-stat-col" : ""
+        ].filter(Boolean).join(" ");
         const sortAttr = col.sortKey ? ` data-sort-key="${col.sortKey}"` : "";
-        return `<th class="${cls}"${sortAttr}>${col.label}</th>`;
+        return `<th${cls ? ` class="${cls}"` : ""}${sortAttr}>${col.label}</th>`;
     }).join("");
 
     const syncStatHeaders = () => {
@@ -547,7 +551,7 @@
                 `<th>Player</th>` +
                 `<th>Team</th>` +
                 `<th>Pos</th>` +
-                buildStatHeaderCells(cols.map(col => ({ ...col, sortKey: null, noSort: true }))) +
+                buildStatHeaderCells(cols.map(col => ({ ...col, sortKey: null, noSort: true })), true) +
                 `<th class="no-sort fp-side-remove-col"></th>`;
         }
         if (isGoalieView() && SKATER_SORT_KEYS.has(state.sortKey)) {
@@ -976,16 +980,18 @@
         const updated = currentCookies();
         refreshListCounts(updated);
 
+        const shouldSwitchTab = !wasOn && action !== "highlight" && SIDE_VIEW_LABELS[action];
+        if (shouldSwitchTab) switchSideView(action);
+
         if (action === "drafted" || action === "picked") {
             renderTable();
             pulseListButton(btn);
             if (action === "drafted") {
                 toast(wasOn ? `${name} returned to the pool` : `${name} drafted`);
-                if (!wasOn) { switchSideView("drafted"); flashSidePanel(); }
             } else {
                 toast(wasOn ? `Removed ${name} from ${label}` : `Added ${name} to ${label}`);
-                if (!wasOn) { switchSideView("picked"); flashSidePanel(); }
             }
+            if (shouldSwitchTab) flashSidePanel();
             return;
         }
 
@@ -993,14 +999,11 @@
 
         if (action !== "highlight") {
             renderSideList(updated);
-            if (!wasOn) {
-                switchSideView(action);
-                flashSidePanel();
-            }
         }
 
         pulseListButton(btn);
         toast(wasOn ? `Removed ${name} from ${label}` : `Added ${name} to ${label}`);
+        if (shouldSwitchTab) flashSidePanel();
     };
 
     const isWeightsModified = () =>
@@ -1105,9 +1108,7 @@
             const link = e.target.closest("a.nav-link");
             if (!link) return;
             e.preventDefault();
-            state.sideView = link.dataset.view;
-            document.querySelectorAll("#fpTabs .nav-link").forEach(a => a.classList.remove("active"));
-            link.classList.add("active");
+            switchSideView(link.dataset.view);
             renderTable();
         });
 

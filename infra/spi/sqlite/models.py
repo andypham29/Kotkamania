@@ -2,8 +2,10 @@
 SQLAlchemy ORM models for the internal database
 """
 import os
+from datetime import datetime
+
 import sqlalchemy as sa
-from sqlalchemy import Column, Integer, String, Float, DateTime
+from sqlalchemy import Column, Integer, String, Float, DateTime, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
@@ -136,6 +138,17 @@ class FantasyPlayerStreakIndexORM(Base):
     pptoi = Column(Float, nullable=False)
     streakIndex = Column(Float, nullable=False)
     lastUpdated = Column(String)
+
+
+class DomainDraftboardORM(Base):
+    """ORM model for internal_draftboard table."""
+    __tablename__ = 'internal_draftboard'
+
+    id = Column(String, primary_key=True)
+    favorites = Column(JSON, nullable=False, default=list)
+    watchlist = Column(JSON, nullable=False, default=list)
+    draftboard = Column(JSON, nullable=False, default=list)
+    createdAt = Column(DateTime, nullable=False, default=datetime.utcnow)
 
 
 class GoalieStatTable(Base):

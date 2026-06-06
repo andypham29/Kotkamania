@@ -2,10 +2,12 @@ import json
 
 from flask import Flask, request, render_template, make_response
 
+from domain.draftboard.draftboard_service import DraftboardService
 from domain.fantasyplayer.fantasy_player_facade import DomainFantasyPlayerFacade
 from domain.fantasyplayer.fantasy_player_service import FantasyPlayerService
 from domain.gamelog.gamelog_service import GameLogService
 from domain.goaliestat.model.domain_goalie_stat import DomainGoalieStat
+from infra.rest.draftboard_routes import init_draftboard_routes
 from server.admin.service.facade.admin_facade import AdminFacade
 from server.internaldata.service.facade.fantasy_nhl_player_facade import FantasyNhlPlayerFacade
 from server.internaldata.service.fantasy_nhl_player_service import FantasyNhlPlayerService
@@ -218,6 +220,9 @@ def getNhlFantasyPlayerStreaks():
         response = FantasyPlayerStreakIndexService().getAllFantasyPlayerStreakIndexes()
     return makeHttpResponse(response)
 
+# Draftboard REST adapter
+draftboard_bp = init_draftboard_routes(DraftboardService())
+app.register_blueprint(draftboard_bp)
 
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support

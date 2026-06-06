@@ -3,7 +3,7 @@ from typing import Optional
 from domain.draftboard.model.domain_draftboard import DomainDraftboard
 from infra.spi.sqlite.models import DomainDraftboardORM, Session as DBSession
 
-_DOMAIN_FIELDS = ('id', 'favorites', 'watchlist', 'draftboard')
+_DOMAIN_FIELDS = ('id', 'favorites', 'watchlist', 'draftboard', 'drafted')
 
 
 class DraftboardRepository:

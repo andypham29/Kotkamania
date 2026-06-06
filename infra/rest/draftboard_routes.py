@@ -21,8 +21,7 @@ def init_draftboard_routes(service):
         except Exception:
             raise BadRequest("Invalid JSON")
 
-        draftboard = DomainDraftboard.from_dict(payload)
-        service.save(draftboard)
+        draftboard = service.save(DomainDraftboard.from_dict(payload))
         return jsonify({"status": "ok", "id": draftboard.id}), 201
 
     return draftboard_bp

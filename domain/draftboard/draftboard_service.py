@@ -10,8 +10,9 @@ class DraftboardService:
     def __init__(self):
         self.repository = DraftboardRepository()
 
-    def save(self, payload: dict) -> DomainDraftboard:
-        draftboard = DomainDraftboard(id=generate_id(), **payload)
+    def save(self, draftboard: DomainDraftboard) -> DomainDraftboard:
+        if not draftboard.id:
+            draftboard.id = generate_id()
         self.repository.save(draftboard)
         return draftboard
 

@@ -148,6 +148,7 @@ class DomainDraftboardORM(Base):
     favorites = Column(JSON, nullable=False, default=list)
     watchlist = Column(JSON, nullable=False, default=list)
     draftboard = Column(JSON, nullable=False, default=list)
+    drafted = Column(JSON, nullable=False, default=list)
     createdAt = Column(DateTime, nullable=False, default=datetime.utcnow)
 
 
@@ -181,5 +182,20 @@ class GoalieStatTable(Base):
 
 # Create all tables if they don't exist (after all ORM classes are defined)
 Base.metadata.create_all(engine)
+
+
+def _migrate_internal_draftboard() -> None:
+    with engine.begin() as conn:
+        rows = conn.execute(sa.text("PRAGMA table_info(internal_draftboard)")).fetchall()
+        if not rows:
+            return
+        columns = {row[1] for row in rows}
+        if "drafted" not in columns:
+            conn.execute(sa.text(
+                "ALTER TABLE internal_draftboard ADD COLUMN drafted JSON NOT NULL DEFAULT '[]'"
+            ))
+
+
+_migrate_internal_draftboard()
 
 

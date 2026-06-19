@@ -217,6 +217,73 @@
         0%, 100% { box-shadow: none; }
         35% { box-shadow: 0 0 0 3px rgba(0, 123, 255, .45); }
     }
+    .fp-roster-summary { line-height: 1.6; }
+    .fp-roster-summary .badge { font-weight: 600; font-size: .72rem; }
+    .fp-settings-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, .45);
+        z-index: 1040;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity .25s ease, visibility .25s ease;
+    }
+    .fp-settings-backdrop.fp-open {
+        opacity: 1;
+        visibility: visible;
+    }
+    .fp-settings-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: min(480px, 94vw);
+        height: 100vh;
+        z-index: 1050;
+        background: #fff;
+        box-shadow: -4px 0 24px rgba(0, 0, 0, .18);
+        transform: translateX(100%);
+        transition: transform .28s ease;
+        display: flex;
+        flex-direction: column;
+    }
+    .fp-settings-drawer.fp-open {
+        transform: translateX(0);
+    }
+    .fp-settings-drawer-header {
+        flex-shrink: 0;
+        padding: .85rem 1rem;
+        border-bottom: 1px solid #dee2e6;
+        display: flex;
+        align-items: center;
+        background: #f8f9fa;
+    }
+    .fp-settings-drawer-header h5 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 600;
+    }
+    .fp-settings-drawer-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 1rem;
+    }
+    .fp-settings-pane { display: none; }
+    .fp-settings-pane.fp-active { display: block; }
+    .fp-settings-pane > .card {
+        border: none;
+        box-shadow: none;
+        margin-bottom: 0;
+    }
+    .fp-settings-pane > .card > .card-header {
+        background: transparent;
+        border-bottom: none;
+        padding: 0 0 .75rem;
+    }
+    .fp-settings-pane > .card > .card-body {
+        padding: 0;
+    }
+    body.fp-settings-open { overflow: hidden; }
     @media (max-width: 767.98px) {
         .fp-split-stack { height: auto; min-height: 0; }
         .fp-split-top, .fp-split-bottom { flex: none; }
@@ -268,72 +335,13 @@
                 </select>
 
                 <div class="ml-auto">
-                    <button class="btn btn-sm btn-outline-dark" type="button" data-toggle="collapse" data-target="#fpAdvPanel">
+                    <button class="btn btn-sm btn-outline-dark fp-settings-toggle" type="button" data-fp-settings="fpAdvPanel" data-fp-settings-title="Advanced Filters">
                         Advanced <span class="badge badge-primary" id="fpAdvBadge" style="display:none;">0</span>
                     </button>
-                    <button class="btn btn-sm btn-outline-dark" type="button" data-toggle="collapse" data-target="#fpWeightsPanel">
-                        Weights <span class="badge badge-primary" id="fpWeightsBadge" style="display:none;"></span>
+                    <button class="btn btn-sm btn-outline-dark fp-settings-toggle" type="button" data-fp-settings="fpLeaguePanel" data-fp-settings-title="League Settings">
+                        League <span class="badge badge-primary" id="fpLeagueBadge" style="display:none;"></span>
                     </button>
                     <button class="btn btn-sm btn-outline-secondary" id="fpCopyBtn" type="button">Copy</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="collapse mb-3" id="fpWeightsPanel">
-        <div class="card">
-            <div class="card-header py-2 d-flex align-items-center">
-                <strong>Fantasy Point Weights</strong>
-                <small class="text-muted ml-2">Client-side — multipliers used to compute the FP column. Saved in your browser.</small>
-                <div class="ml-auto">
-                    <button class="btn btn-sm btn-outline-secondary" id="fpWeightsReset" type="button">Reset defaults</button>
-                    <button class="btn btn-sm btn-primary" id="fpWeightsApply" type="button">Apply</button>
-                </div>
-            </div>
-            <div class="card-body">
-                <h6 class="text-muted mb-2">Skaters</h6>
-                <div class="form-row">
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Goals (G)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="G"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Assists (A)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="A"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Shots (SOG)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="SOG"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">PP Points (PPP)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="PPP"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Hits (HIT)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="HIT"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Blocks (BLK)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="BLK"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">+/- (PLUSMINUS)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="PLUSMINUS"></div>
-                </div>
-                <hr class="my-2">
-                <h6 class="text-muted mb-2">Goalies</h6>
-                <div class="form-row">
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Wins (WIN)</label><input type="number" step="0.05" class="form-control form-control-sm" data-goalie-weight="WIN"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Goals Against (GA)</label><input type="number" step="0.05" class="form-control form-control-sm" data-goalie-weight="GA"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Saves (SV)</label><input type="number" step="0.05" class="form-control form-control-sm" data-goalie-weight="SAVES"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Shutouts (SO)</label><input type="number" step="0.05" class="form-control form-control-sm" data-goalie-weight="SO"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="collapse mb-3" id="fpAdvPanel">
-        <div class="card">
-            <div class="card-header py-2 d-flex align-items-center">
-                <strong>Percentile Filters</strong>
-                <small class="text-muted ml-2">Client-side filter — show players with stat percentile at or above each selected threshold.</small>
-                <div class="ml-auto">
-                    <button class="btn btn-sm btn-outline-danger" id="fpAdvClear" type="button">Clear</button>
-                    <button class="btn btn-sm btn-primary" id="fpAdvApply" type="button">Apply</button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Shots</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="shots" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Hits</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="hits" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Blocks</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="blocked" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Goals</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="goals" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Assists</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="assists" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">Points</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="points" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">+/-</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="plusMinus" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">PP Goals</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="powerPlayGoals" placeholder="0-100"></div>
-                    <div class="form-group col-md-3 col-lg-2 mb-2"><label class="small mb-1">PP Points</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="powerPlayPoints" placeholder="0-100"></div>
                 </div>
             </div>
         </div>
@@ -388,6 +396,7 @@
                             <button class="btn btn-sm btn-outline-danger py-0" id="fpClearBtn" type="button">Clear</button>
                         </div>
                     </div>
+                    <div id="fpRosterSummary" class="mt-2" style="display:none;"></div>
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-sm table-hover mb-0" id="fpSideTable">
@@ -416,6 +425,42 @@
     </div>
 </div>
 
+<div class="fp-settings-backdrop" id="fpSettingsBackdrop" aria-hidden="true"></div>
+<aside class="fp-settings-drawer" id="fpSettingsDrawer" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="fpSettingsDrawerTitle">
+    <div class="fp-settings-drawer-header">
+        <h5 id="fpSettingsDrawerTitle">Settings</h5>
+        <button type="button" class="close ml-auto" id="fpSettingsClose" aria-label="Close settings">&times;</button>
+    </div>
+    <div class="fp-settings-drawer-body">
+        {% include 'fantasy/fantasy_league_settings.html' %}
+
+        <div class="fp-settings-pane" id="fpAdvPanel">
+            <div class="card">
+                <div class="card-header py-2 d-flex align-items-center flex-wrap">
+                    <small class="text-muted mb-2 mb-md-0">Client-side filter — show players with stat percentile at or above each selected threshold.</small>
+                    <div class="ml-auto">
+                        <button class="btn btn-sm btn-outline-danger" id="fpAdvClear" type="button">Clear</button>
+                        <button class="btn btn-sm btn-primary" id="fpAdvApply" type="button">Apply</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Shots</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="shots" placeholder="0-100"></div>
+                        <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Hits</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="hits" placeholder="0-100"></div>
+                        <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Blocks</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="blocked" placeholder="0-100"></div>
+                        <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Goals</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="goals" placeholder="0-100"></div>
+                        <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Assists</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="assists" placeholder="0-100"></div>
+                        <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Points</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="points" placeholder="0-100"></div>
+                        <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">+/-</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="plusMinus" placeholder="0-100"></div>
+                        <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">PP Goals</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="powerPlayGoals" placeholder="0-100"></div>
+                        <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">PP Points</label><input type="number" min="0" max="100" step="5" class="form-control form-control-sm" data-pct="powerPlayPoints" placeholder="0-100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>
+
 <div class="toast fp-toast" id="fpToast" role="alert">
     <div class="toast-body" id="fpToastBody"></div>
 </div>
@@ -431,41 +476,6 @@
         highlight:  "highlight_fantasy_player",
         picked:     "picked_fantasy_player",
         drafted:    "drafted_fantasy_player"
-    };
-
-    const DEFAULT_WEIGHTS = { G: 2.1, A: 2, SOG: 0.5, PPP: 1, HIT: 0.25, BLK: 0.25, PLUSMINUS: 0.1 };
-    const DEFAULT_GOALIE_WEIGHTS = { WIN: 5, GA: -1.5, SAVES: 0.3, SO: 2 };
-
-    // const DEFAULT_WEIGHTS = { G: 6, A: 4, SOG: 0.8, PPP: 2, HIT: 0.75, BLK: 1, PLUSMINUS: 0 };
-    // const DEFAULT_GOALIE_WEIGHTS = { WIN: 5, GA: -3, SAVES: 0.6, SO: 1 };
-    const WEIGHTS_STORAGE_KEY = "fp_weights";
-
-    const loadWeights = () => {
-        const skater = { ...DEFAULT_WEIGHTS };
-        const goalie = { ...DEFAULT_GOALIE_WEIGHTS };
-        try {
-            const raw = localStorage.getItem(WEIGHTS_STORAGE_KEY);
-            if (!raw) return { skater, goalie };
-            const saved = JSON.parse(raw) || {};
-            Object.keys(DEFAULT_WEIGHTS).forEach(k => {
-                if (typeof saved[k] === "number" && isFinite(saved[k])) skater[k] = saved[k];
-            });
-            const savedGoalie = saved.goalie || {};
-            Object.keys(DEFAULT_GOALIE_WEIGHTS).forEach(k => {
-                if (typeof savedGoalie[k] === "number" && isFinite(savedGoalie[k])) goalie[k] = savedGoalie[k];
-            });
-        } catch (e) { /* use defaults */ }
-        return { skater, goalie };
-    };
-
-    const loadedWeights = loadWeights();
-    const WEIGHTS = loadedWeights.skater;
-    const GOALIE_WEIGHTS = loadedWeights.goalie;
-
-    const saveWeightsToStorage = () => {
-        try {
-            localStorage.setItem(WEIGHTS_STORAGE_KEY, JSON.stringify({ ...WEIGHTS, goalie: { ...GOALIE_WEIGHTS } }));
-        } catch (e) {}
     };
 
     const SIDE_VIEW_LABELS = {
@@ -592,25 +602,29 @@
     const isGoaliePlayer = (p) => (p.positionCode || "").toUpperCase() === "G";
 
     const fpPoints = (p) => {
+        const weights = window.FantasyLeagueSettings ? FantasyLeagueSettings.getWeights() : null;
+        if (!weights) return 0;
+        const W = weights.skater;
+        const GW = weights.goalie;
         if (isGoaliePlayer(p)) {
             const gs = p.goalieStat || {};
             return (
-                statNum(gs, "wins")         * GOALIE_WEIGHTS.WIN +
-                statNum(gs, "goalsAgainst") * GOALIE_WEIGHTS.GA +
-                statNum(gs, "saves")        * GOALIE_WEIGHTS.SAVES +
-                statNum(gs, "shutouts")     * GOALIE_WEIGHTS.SO
+                statNum(gs, "wins")         * GW.WIN +
+                statNum(gs, "goalsAgainst") * GW.GA +
+                statNum(gs, "saves")        * GW.SAVES +
+                statNum(gs, "shutouts")     * GW.SO
             );
         }
         const s = p.stat || {};
         return (
-            statNum(s, "goals")           * WEIGHTS.G +
-            statNum(s, "assists")         * WEIGHTS.A +
-            statNum(s, "shots")           * WEIGHTS.SOG +
-            statNum(s, "powerPlayPoints") * WEIGHTS.PPP +
-            statNum(s, "powerPlayGoals")  * WEIGHTS.PPP +
-            statNum(s, "hits")            * WEIGHTS.HIT +
-            statNum(s, "blocked")         * WEIGHTS.BLK +
-            statNum(s, "plusMinus")       * WEIGHTS.PLUSMINUS
+            statNum(s, "goals")           * W.G +
+            statNum(s, "assists")         * W.A +
+            statNum(s, "shots")           * W.SOG +
+            statNum(s, "powerPlayPoints") * W.PPP +
+            statNum(s, "powerPlayGoals")  * W.PPP +
+            statNum(s, "hits")            * W.HIT +
+            statNum(s, "blocked")         * W.BLK +
+            statNum(s, "plusMinus")       * W.PLUSMINUS
         );
     };
 
@@ -853,6 +867,7 @@
             return renderSideRow(p, id, i + 1, ids.length, cookies);
         }).join("");
         syncSideReorderColumn();
+        syncRosterSummary();
     };
 
     const syncSidePanelTheme = () => {
@@ -860,6 +875,26 @@
         if (!panel) return;
         panel.classList.toggle("fp-side-myteam", state.sideView === "picked");
         panel.classList.toggle("fp-side-drafted", state.sideView === "drafted");
+        syncRosterSummary();
+    };
+
+    const syncRosterSummary = () => {
+        if (state.sideView !== "picked" || !window.FantasyLeagueSettings) {
+            if (window.FantasyLeagueSettings) FantasyLeagueSettings.hideTeamSummary();
+            return;
+        }
+        const cookies = currentCookies();
+        FantasyLeagueSettings.renderTeamSummary(cookies.picked, playerById());
+    };
+
+    window.fpOnLeagueSettingsChanged = (msg) => {
+        if (state.sideView === "picked") syncRosterSummary();
+        if (msg) toast(msg);
+    };
+
+    window.fpOnWeightsChanged = (msg) => {
+        renderTable();
+        if (msg) toast(msg);
     };
 
     const syncSideReorderColumn = () => {
@@ -1044,38 +1079,6 @@
         if (shouldSwitchTab) flashSidePanel();
     };
 
-    const isWeightsModified = () =>
-        Object.keys(DEFAULT_WEIGHTS).some(k => WEIGHTS[k] !== DEFAULT_WEIGHTS[k]) ||
-        Object.keys(DEFAULT_GOALIE_WEIGHTS).some(k => GOALIE_WEIGHTS[k] !== DEFAULT_GOALIE_WEIGHTS[k]);
-
-    const refreshWeightsBadge = () => {
-        const b = document.getElementById("fpWeightsBadge");
-        b.style.display = isWeightsModified() ? "" : "none";
-    };
-
-    const fillWeightsInputs = () => {
-        document.querySelectorAll("#fpWeightsPanel input[data-weight]").forEach(el => {
-            el.value = WEIGHTS[el.dataset.weight];
-        });
-        document.querySelectorAll("#fpWeightsPanel input[data-goalie-weight]").forEach(el => {
-            el.value = GOALIE_WEIGHTS[el.dataset.goalieWeight];
-        });
-    };
-
-    const applyWeightsFromInputs = () => {
-        document.querySelectorAll("#fpWeightsPanel input[data-weight]").forEach(el => {
-            const k = el.dataset.weight;
-            const v = parseFloat(el.value);
-            WEIGHTS[k] = isFinite(v) ? v : DEFAULT_WEIGHTS[k];
-        });
-        document.querySelectorAll("#fpWeightsPanel input[data-goalie-weight]").forEach(el => {
-            const k = el.dataset.goalieWeight;
-            const v = parseFloat(el.value);
-            GOALIE_WEIGHTS[k] = isFinite(v) ? v : DEFAULT_GOALIE_WEIGHTS[k];
-        });
-        saveWeightsToStorage();
-    };
-
     const refreshAdvBadge = () => {
         const n = Object.keys(state.percentiles).length;
         const b = document.getElementById("fpAdvBadge");
@@ -1137,6 +1140,54 @@
     };
 
     const wireEvents = () => {
+        const drawer = document.getElementById("fpSettingsDrawer");
+        const backdrop = document.getElementById("fpSettingsBackdrop");
+        const drawerTitle = document.getElementById("fpSettingsDrawerTitle");
+        let activePanelId = null;
+
+        const showSettingsPanel = (panelId, title) => {
+            document.querySelectorAll(".fp-settings-pane").forEach(pane => {
+                pane.classList.toggle("fp-active", pane.id === panelId);
+            });
+            if (drawerTitle) drawerTitle.textContent = title || "Settings";
+            activePanelId = panelId;
+        };
+
+        const openSettingsDrawer = (panelId, title) => {
+            if (!drawer || !backdrop) return;
+            showSettingsPanel(panelId, title);
+            drawer.classList.add("fp-open");
+            backdrop.classList.add("fp-open");
+            drawer.setAttribute("aria-hidden", "false");
+            backdrop.setAttribute("aria-hidden", "false");
+            document.body.classList.add("fp-settings-open");
+        };
+
+        const closeSettingsDrawer = () => {
+            if (!drawer || !backdrop) return;
+            drawer.classList.remove("fp-open");
+            backdrop.classList.remove("fp-open");
+            drawer.setAttribute("aria-hidden", "true");
+            backdrop.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("fp-settings-open");
+            activePanelId = null;
+        };
+
+        document.querySelectorAll(".fp-settings-toggle").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const panelId = btn.dataset.fpSettings;
+                const title = btn.dataset.fpSettingsTitle || "Settings";
+                if (drawer && drawer.classList.contains("fp-open") && activePanelId === panelId) {
+                    closeSettingsDrawer();
+                    return;
+                }
+                openSettingsDrawer(panelId, title);
+            });
+        });
+
+        document.getElementById("fpSettingsClose").addEventListener("click", closeSettingsDrawer);
+        if (backdrop) backdrop.addEventListener("click", closeSettingsDrawer);
+
         document.getElementById("fpSearchInput").addEventListener("input", (e) => {
             state.query = e.target.value;
             renderTable();
@@ -1266,31 +1317,12 @@
             });
         });
 
-        document.getElementById("fpWeightsApply").addEventListener("click", () => {
-            applyWeightsFromInputs();
-            refreshWeightsBadge();
-            toast(isWeightsModified() ? "Weights applied" : "Weights at defaults");
-            renderTable();
-        });
-
-        document.getElementById("fpWeightsReset").addEventListener("click", () => {
-            Object.keys(DEFAULT_WEIGHTS).forEach(k => { WEIGHTS[k] = DEFAULT_WEIGHTS[k]; });
-            Object.keys(DEFAULT_GOALIE_WEIGHTS).forEach(k => { GOALIE_WEIGHTS[k] = DEFAULT_GOALIE_WEIGHTS[k]; });
-            try { localStorage.removeItem(WEIGHTS_STORAGE_KEY); } catch (e) {}
-            fillWeightsInputs();
-            refreshWeightsBadge();
-            toast("Weights reset");
-            renderTable();
-        });
-
-        document.querySelectorAll("#fpWeightsPanel input[data-weight], #fpWeightsPanel input[data-goalie-weight]").forEach(el => {
-            el.addEventListener("keydown", (e) => {
-                if (e.key === "Enter") { e.preventDefault(); document.getElementById("fpWeightsApply").click(); }
-            });
-        });
-
         document.addEventListener("keydown", (e) => {
             const tag = (e.target.tagName || "").toLowerCase();
+            if (e.key === "Escape" && drawer && drawer.classList.contains("fp-open")) {
+                closeSettingsDrawer();
+                return;
+            }
             if (e.key === "/" && tag !== "input" && tag !== "textarea") {
                 e.preventDefault();
                 document.getElementById("fpSearchInput").focus();
@@ -1300,8 +1332,6 @@
 
     $(document).ready(() => {
         wireEvents();
-        fillWeightsInputs();
-        refreshWeightsBadge();
         syncSideReorderColumn();
         load();
     });

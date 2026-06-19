@@ -42,8 +42,8 @@
     #fpDraftTable .fp-stat-col { text-align: right; color: #495057; min-width: 2.25rem; padding-left: .5rem; padding-right: .5rem; }
     #fpDraftTable thead th.fp-stat-col { font-size: .8rem; }
     #fpDraftTable .fp-side-draft-col {
-        min-width: 3.25rem;
-        width: 3.25rem;
+        min-width: 4.5rem;
+        width: auto;
         text-align: center;
         padding-left: .5rem;
         padding-right: .65rem;
@@ -52,6 +52,12 @@
         z-index: 1;
         background: #fff;
         box-shadow: -6px 0 8px -6px rgba(0, 0, 0, .12);
+    }
+    .fp-side-actions {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
     }
     #fpDraftTable thead .fp-side-draft-col {
         z-index: 2;
@@ -89,6 +95,22 @@
     .fp-side-draft-btn.is-on:hover {
         background: #d9480f;
         border-color: #c4410d;
+        color: #fff;
+    }
+    .fp-side-picked-btn:hover {
+        border-color: #0056b3;
+        color: #0056b3;
+    }
+    .fp-side-picked-btn.is-on {
+        background: #0056b3;
+        border-color: #004085;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,.12);
+    }
+    .fp-side-picked-btn.is-on:hover {
+        background: #004085;
+        border-color: #003366;
         color: #fff;
     }
     #fpDraftTable tbody tr.fp-side-row-drafted > td { background-color: #fff4e6; }
@@ -146,6 +168,7 @@
                         <button class="btn btn-outline-primary" id="fpImportBtn" type="button">Import</button>
                     </div>
                 </div>
+                <button class="btn btn-sm btn-success" id="fpApplyBtn" type="button" disabled title="Save the imported draftboard to your browser lists">Apply</button>
                 <button class="btn btn-sm btn-outline-secondary" id="fpShareBtn" type="button" disabled title="Save or import a draftboard first">Copy link</button>
                 <input id="fpShareUrl" type="text" class="form-control form-control-sm" readonly style="max-width: 20rem; display: none;" title="Shareable draftboard URL">
             </div>
@@ -166,7 +189,13 @@
                     <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="L" autocomplete="off"> L</label>
                     <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="R" autocomplete="off"> R</label>
                     <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="D" autocomplete="off"> D</label>
-                    <label class="btn btn-sm btn-outline-secondary"><input type="checkbox" data-pos="G" autocomplete="off"> G</label>
+                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="G" autocomplete="off"> G</label>
+                </div>
+
+                <div class="btn-group-toggle" data-toggle="buttons" id="fpHideDraftedToggle">
+                    <label class="btn btn-sm btn-outline-secondary" title="Hide players marked as drafted">
+                        <input type="checkbox" id="fpHideDraftedInput" autocomplete="off"> Hide drafted
+                    </label>
                 </div>
             </div>
         </div>
@@ -199,7 +228,7 @@
                         <th class="fp-stat-col">H</th>
                         <th class="fp-stat-col">B</th>
                         <th class="no-sort fp-list-labels-col" title="Favorites / Watchlist"></th>
-                        <th class="no-sort fp-side-draft-col" title="Mark as drafted"></th>
+                        <th class="no-sort fp-side-draft-col" title="My Team / Drafted"></th>
                     </tr>
                 </thead>
                 <tbody id="fpDraftTableBody"></tbody>
@@ -218,6 +247,7 @@
 
     const COOKIE_DRAFTBOARD = "draftboard_fantasy_player";
     const COOKIE_DRAFTED    = "drafted_fantasy_player";
+    const COOKIE_PICKED     = "picked_fantasy_player";
     const COOKIE_FAVORITE   = "favorite_fantasy_player";
     const COOKIE_WATCHLIST  = "watchlist_fantasy_player";
 
@@ -239,7 +269,9 @@
         positions: new Set(),
         nameQuery: "",
         teamId: "",
-        draftboardId: null
+        hideDrafted: false,
+        draftboardId: null,
+        importedPayload: null
     };
 
     const statValue = (s, key) => s && s[key] && s[key].value;
@@ -282,6 +314,25 @@
         });
     };
 
+    const setApplyUi = () => {
+        const btn = document.getElementById("fpApplyBtn");
+        if (btn) btn.disabled = !state.importedPayload;
+    };
+
+    const applyImportedDraftboard = () => {
+        if (!state.importedPayload) {
+            toast("Import a draftboard first");
+            return;
+        }
+        const id = state.importedPayload.id || state.draftboardId || "draftboard";
+        if (!confirm(`Apply draftboard "${id}"? This will replace your Favorites, Watchlist, Draftboard, and Drafted lists.`)) {
+            return;
+        }
+        applyDraftboardPayload(state.importedPayload);
+        toast(`Applied draftboard ${id}`);
+        renderDraftboard();
+    };
+
     const saveDraftboard = () => {
         const btn = document.getElementById("fpSaveBtn");
         btn.disabled = true;
@@ -313,9 +364,6 @@
             toast("Enter a draftboard ID");
             return;
         }
-        if (!options.skipConfirm && !confirm(`Import draftboard "${draftboardId}"? This will replace your current lists.`)) {
-            return;
-        }
         const btn = document.getElementById("fpImportBtn");
         btn.disabled = true;
         $.ajax({
@@ -323,11 +371,11 @@
             type: "GET",
             dataType: "json",
             success: (data) => {
-                applyDraftboardPayload(data);
+                state.importedPayload = data;
                 setShareUi(data.id || draftboardId);
-                toast(`Imported draftboard ${data.id || draftboardId}`);
+                setApplyUi();
+                toast(`Loaded draftboard ${data.id || draftboardId} — click Apply to save to your lists`);
                 if (typeof options.onSuccess === "function") options.onSuccess(data);
-                else renderDraftboard();
             },
             error: (xhr) => {
                 toast(xhr.status === 404 ? "Draftboard not found" : `Import failed (${xhr.status})`);
@@ -375,8 +423,10 @@
 
     const draftIds = () => cookieList(COOKIE_DRAFTBOARD);
     const draftedIds = () => cookieList(COOKIE_DRAFTED);
+    const pickedIds = () => cookieList(COOKIE_PICKED);
 
     const hasActiveFilters = () =>
+        state.hideDrafted ||
         state.positions.size > 0 ||
         state.nameQuery.trim() !== "" ||
         state.teamId !== "";
@@ -399,8 +449,12 @@
 
     const filteredDraftIds = () => {
         const ids = draftIds();
+        const drafted = draftedIds();
         const byId = playerById();
-        return ids.filter(id => matchesFilters(byId.get(Number(id))));
+        return ids.filter(id => {
+            if (state.hideDrafted && isIn(id, drafted)) return false;
+            return matchesFilters(byId.get(Number(id)));
+        });
     };
 
     const renderListLabels = (id, fav, watch) => {
@@ -416,12 +470,13 @@
             : `<span class="fp-nullish"></span>`;
     };
 
-    const renderSideRow = (p, id, idx, drafted, fav, watch) => {
+    const renderSideRow = (p, id, idx, drafted, picked, fav, watch) => {
         const s = (p && p.stat) || {};
         const statCells = SKATER_STAT_COLS.map(col =>
             `<td class="fp-stat-col">${formatStatCell(s, col)}</td>`
         ).join("");
         const onDrafted = isIn(id, drafted);
+        const onPicked  = isIn(id, picked);
         const rowClasses = onDrafted ? "fp-side-row-drafted" : "";
         const label = (p && p.skaterFullName) || `Player #${id}`;
         const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
@@ -444,7 +499,10 @@
             ${statCells}
             <td class="fp-list-labels-col">${renderListLabels(id, fav, watch)}</td>
             <td class="fp-side-draft-col">
-                <button type="button" class="fp-side-draft-btn ${onDrafted ? "is-on" : ""}" data-side-action="drafted" data-id="${id}" aria-pressed="${onDrafted}" title="${onDrafted ? "Unmark as drafted" : "Mark as drafted"}" aria-label="${onDrafted ? "Unmark as drafted" : "Mark as drafted"}">✔</button>
+                <span class="fp-side-actions">
+                    <button type="button" class="fp-side-draft-btn fp-side-picked-btn ${onPicked ? "is-on" : ""}" data-side-action="picked" data-id="${id}" aria-pressed="${onPicked}" title="${onPicked ? "Remove from My Team" : "Add to My Team"}" aria-label="${onPicked ? "Remove from My Team" : "Add to My Team"}">+</button>
+                    <button type="button" class="fp-side-draft-btn ${onDrafted ? "is-on" : ""}" data-side-action="drafted" data-id="${id}" aria-pressed="${onDrafted}" title="${onDrafted ? "Unmark as drafted" : "Mark as drafted"}" aria-label="${onDrafted ? "Unmark as drafted" : "Mark as drafted"}">✔</button>
+                </span>
             </td>
         </tr>`;
     };
@@ -498,6 +556,7 @@
         const allIds = draftIds();
         const ids = filteredDraftIds();
         const drafted = draftedIds();
+        const picked  = pickedIds();
         const fav     = cookieList(COOKIE_FAVORITE);
         const watch   = cookieList(COOKIE_WATCHLIST);
         const byId  = playerById();
@@ -511,14 +570,17 @@
         }
 
         if (ids.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="${sideColCount()}" class="text-center text-muted small py-4">No players match the current filters.</td></tr>`;
+            const msg = state.hideDrafted && allIds.some(id => isIn(id, drafted))
+                ? "All remaining players are drafted (toggle off Hide drafted to show them)."
+                : "No players match the current filters.";
+            tbody.innerHTML = `<tr><td colspan="${sideColCount()}" class="text-center text-muted small py-4">${msg}</td></tr>`;
             return;
         }
 
         tbody.innerHTML = ids.map((id) => {
             const p = byId.get(Number(id));
             const rank = allIds.indexOf(Number(id)) + 1;
-            return renderSideRow(p, id, rank, drafted, fav, watch);
+            return renderSideRow(p, id, rank, drafted, picked, fav, watch);
         }).join("");
     };
 
@@ -604,15 +666,31 @@
 
     const wireEvents = () => {
         document.getElementById("fpDraftTableBody").addEventListener("click", (e) => {
-            const btn = e.target.closest("[data-side-action='drafted']");
+            const btn = e.target.closest("[data-side-action]");
             if (!btn) return;
+            const action = btn.dataset.sideAction;
+            if (action !== "drafted" && action !== "picked") return;
+
             const id = Number(btn.dataset.id);
-            const wasOn = isIn(id, draftedIds());
             const byId = playerById();
             const name = (byId.get(id) && byId.get(id).skaterFullName) || `Player #${id}`;
-            if (wasOn) removePlayerInCookie(id, COOKIE_DRAFTED);
-            else       savePlayerInCookie(id, COOKIE_DRAFTED);
-            toast(wasOn ? `${name} returned to the pool` : `${name} drafted`);
+
+            if (action === "drafted") {
+                const wasOn = isIn(id, draftedIds());
+                if (wasOn) removePlayerInCookie(id, COOKIE_DRAFTED);
+                else       savePlayerInCookie(id, COOKIE_DRAFTED);
+                toast(wasOn ? `${name} returned to the pool` : `${name} drafted`);
+            } else {
+                const wasOn = isIn(id, pickedIds());
+                if (wasOn) {
+                    removePlayerInCookie(id, COOKIE_PICKED);
+                    toast(`Removed ${name} from My Team`);
+                } else {
+                    savePlayerInCookie(id, COOKIE_PICKED);
+                    if (!isIn(id, draftedIds())) savePlayerInCookie(id, COOKIE_DRAFTED);
+                    toast(`Added ${name} to My Team`);
+                }
+            }
             renderDraftboard();
         });
 
@@ -649,6 +727,11 @@
             renderDraftboard();
         });
 
+        document.getElementById("fpHideDraftedInput").addEventListener("change", (e) => {
+            state.hideDrafted = e.target.checked;
+            renderDraftboard();
+        });
+
         document.addEventListener("keydown", (e) => {
             const tag = (e.target.tagName || "").toLowerCase();
             if (e.key === "/" && tag !== "input" && tag !== "textarea") {
@@ -677,16 +760,18 @@
             }
         });
 
+        document.getElementById("fpApplyBtn").addEventListener("click", applyImportedDraftboard);
+
         document.getElementById("fpShareBtn").addEventListener("click", copyShareUrl);
     };
 
     $(document).ready(() => {
         wireEvents();
         const urlDraftboardId = draftboardIdFromUrl();
+        setApplyUi();
         if (urlDraftboardId) {
             setShareUi(urlDraftboardId);
             importDraftboard(urlDraftboardId, {
-                skipConfirm: true,
                 onSuccess: () => load(),
                 onError: () => load()
             });

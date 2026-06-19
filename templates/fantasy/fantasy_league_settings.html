@@ -1,0 +1,370 @@
+<div class="fp-settings-pane" id="fpLeaguePanel">
+    <div class="card">
+        <div class="card-header py-2 d-flex align-items-center flex-wrap">
+            <small class="text-muted mb-2 mb-md-0">Active roster slot counts for your league. Saved in your browser.</small>
+            <div class="ml-auto">
+                <button class="btn btn-sm btn-outline-secondary" id="fpLeagueReset" type="button">Reset defaults</button>
+                <button class="btn btn-sm btn-primary" id="fpLeagueApply" type="button">Apply</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col-6 col-md-4 mb-2">
+                    <label class="small mb-1">Centers (C)</label>
+                    <input type="number" min="0" max="20" step="1" class="form-control form-control-sm" id="fpLeagueC" data-league-slot="C">
+                </div>
+                <div class="form-group col-6 col-md-4 mb-2">
+                    <label class="small mb-1">Left Wing (LW)</label>
+                    <input type="number" min="0" max="20" step="1" class="form-control form-control-sm" id="fpLeagueLW" data-league-slot="LW">
+                </div>
+                <div class="form-group col-6 col-md-4 mb-2">
+                    <label class="small mb-1">Right Wing (RW)</label>
+                    <input type="number" min="0" max="20" step="1" class="form-control form-control-sm" id="fpLeagueRW" data-league-slot="RW">
+                </div>
+                <div class="form-group col-6 col-md-4 mb-2">
+                    <label class="small mb-1">Defense (D)</label>
+                    <input type="number" min="0" max="20" step="1" class="form-control form-control-sm" id="fpLeagueD" data-league-slot="D">
+                </div>
+                <div class="form-group col-6 col-md-4 mb-2">
+                    <label class="small mb-1">Utility (Util)</label>
+                    <input type="number" min="0" max="20" step="1" class="form-control form-control-sm" id="fpLeagueUtil" data-league-slot="Util">
+                </div>
+                <div class="form-group col-6 col-md-4 mb-2">
+                    <label class="small mb-1">Goalies (G)</label>
+                    <input type="number" min="0" max="10" step="1" class="form-control form-control-sm" id="fpLeagueG" data-league-slot="G">
+                </div>
+                <div class="form-group col-6 col-md-4 mb-2">
+                    <label class="small mb-1">Bench (BN)</label>
+                    <input type="number" min="0" max="20" step="1" class="form-control form-control-sm" id="fpLeagueBN" data-league-slot="BN">
+                </div>
+            </div>
+            <p class="small text-muted mb-0">
+                Total roster size: <strong id="fpLeagueTotal">0</strong> slots
+                <span class="ml-2">(active + bench)</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header py-2 d-flex align-items-center flex-wrap">
+            <small class="text-muted mb-2 mb-md-0">Fantasy point multipliers used for the FP column. Saved in your browser.</small>
+            <div class="ml-auto">
+                <button class="btn btn-sm btn-outline-secondary" id="fpWeightsReset" type="button">Reset defaults</button>
+                <button class="btn btn-sm btn-primary" id="fpWeightsApply" type="button">Apply</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <h6 class="text-muted mb-2">Skaters</h6>
+            <div class="form-row">
+                <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Goals (G)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="G"></div>
+                <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Assists (A)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="A"></div>
+                <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Shots (SOG)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="SOG"></div>
+                <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">PP Points (PPP)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="PPP"></div>
+                <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Hits (HIT)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="HIT"></div>
+                <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Blocks (BLK)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="BLK"></div>
+                <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">+/- (PLUSMINUS)</label><input type="number" step="0.05" class="form-control form-control-sm" data-weight="PLUSMINUS"></div>
+            </div>
+            <hr class="my-2">
+            <h6 class="text-muted mb-2">Goalies</h6>
+            <div class="form-row">
+                <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Wins (WIN)</label><input type="number" step="0.05" class="form-control form-control-sm" data-goalie-weight="WIN"></div>
+                <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Goals Against (GA)</label><input type="number" step="0.05" class="form-control form-control-sm" data-goalie-weight="GA"></div>
+                <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Saves (SV)</label><input type="number" step="0.05" class="form-control form-control-sm" data-goalie-weight="SAVES"></div>
+                <div class="form-group col-6 col-md-4 mb-2"><label class="small mb-1">Shutouts (SO)</label><input type="number" step="0.05" class="form-control form-control-sm" data-goalie-weight="SO"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    const COOKIE_NAME = "fantasy_league_roster_slots";
+    const SLOT_KEYS = ["C", "LW", "RW", "D", "Util", "G", "BN"];
+    const DEFAULTS = { C: 2, LW: 2, RW: 2, D: 4, Util: 2, G: 2, BN: 4 };
+
+    const DEFAULT_WEIGHTS = { G: 2.1, A: 2, SOG: 0.5, PPP: 1, HIT: 0.25, BLK: 0.25, PLUSMINUS: 0.1 };
+    const DEFAULT_GOALIE_WEIGHTS = { WIN: 5, GA: -1.5, SAVES: 0.3, SO: 2 };
+    const WEIGHTS_STORAGE_KEY = "fp_weights";
+
+    const loadWeights = () => {
+        const skater = { ...DEFAULT_WEIGHTS };
+        const goalie = { ...DEFAULT_GOALIE_WEIGHTS };
+        try {
+            const raw = localStorage.getItem(WEIGHTS_STORAGE_KEY);
+            if (!raw) return { skater, goalie };
+            const saved = JSON.parse(raw) || {};
+            Object.keys(DEFAULT_WEIGHTS).forEach(k => {
+                if (typeof saved[k] === "number" && isFinite(saved[k])) skater[k] = saved[k];
+            });
+            const savedGoalie = saved.goalie || {};
+            Object.keys(DEFAULT_GOALIE_WEIGHTS).forEach(k => {
+                if (typeof savedGoalie[k] === "number" && isFinite(savedGoalie[k])) goalie[k] = savedGoalie[k];
+            });
+        } catch (e) { /* use defaults */ }
+        return { skater, goalie };
+    };
+
+    const loadedWeights = loadWeights();
+    let skaterWeights = loadedWeights.skater;
+    let goalieWeights = loadedWeights.goalie;
+
+    const saveWeightsToStorage = () => {
+        try {
+            localStorage.setItem(WEIGHTS_STORAGE_KEY, JSON.stringify({ ...skaterWeights, goalie: { ...goalieWeights } }));
+        } catch (e) {}
+    };
+
+    const isWeightsModified = () =>
+        Object.keys(DEFAULT_WEIGHTS).some(k => skaterWeights[k] !== DEFAULT_WEIGHTS[k]) ||
+        Object.keys(DEFAULT_GOALIE_WEIGHTS).some(k => goalieWeights[k] !== DEFAULT_GOALIE_WEIGHTS[k]);
+
+    const inputFor = (key) => document.querySelector(`#fpLeaguePanel input[data-league-slot="${key}"]`);
+
+    const parseSlotValue = (raw, fallback) => {
+        const n = parseInt(raw, 10);
+        return Number.isFinite(n) && n >= 0 ? n : fallback;
+    };
+
+    const loadFromCookie = () => {
+        const opts = { ...DEFAULTS };
+        try {
+            const raw = getCookie(COOKIE_NAME);
+            if (!raw) return opts;
+            const saved = JSON.parse(raw) || {};
+            SLOT_KEYS.forEach(k => {
+                if (typeof saved[k] === "number" && saved[k] >= 0) opts[k] = saved[k];
+            });
+        } catch (e) { /* use defaults */ }
+        return opts;
+    };
+
+    let leagueOptions = loadFromCookie();
+
+    const saveToCookie = (opts) => {
+        leagueOptions = { ...opts };
+        setCookie(COOKIE_NAME, JSON.stringify(leagueOptions));
+    };
+
+    const totalSlots = (opts) => SLOT_KEYS.reduce((sum, k) => sum + (opts[k] || 0), 0);
+
+    const isModified = () => SLOT_KEYS.some(k => leagueOptions[k] !== DEFAULTS[k]);
+
+    const fillInputs = (opts) => {
+        SLOT_KEYS.forEach(k => {
+            const el = inputFor(k);
+            if (el) el.value = opts[k];
+        });
+        const totalEl = document.getElementById("fpLeagueTotal");
+        if (totalEl) totalEl.textContent = totalSlots(opts);
+    };
+
+    const readInputs = () => {
+        const next = { ...DEFAULTS };
+        SLOT_KEYS.forEach(k => {
+            const el = inputFor(k);
+            next[k] = el ? parseSlotValue(el.value, DEFAULTS[k]) : DEFAULTS[k];
+        });
+        return next;
+    };
+
+    const fillWeightsInputs = () => {
+        document.querySelectorAll("#fpLeaguePanel input[data-weight]").forEach(el => {
+            el.value = skaterWeights[el.dataset.weight];
+        });
+        document.querySelectorAll("#fpLeaguePanel input[data-goalie-weight]").forEach(el => {
+            el.value = goalieWeights[el.dataset.goalieWeight];
+        });
+    };
+
+    const applyWeightsFromInputs = () => {
+        document.querySelectorAll("#fpLeaguePanel input[data-weight]").forEach(el => {
+            const k = el.dataset.weight;
+            const v = parseFloat(el.value);
+            skaterWeights[k] = isFinite(v) ? v : DEFAULT_WEIGHTS[k];
+        });
+        document.querySelectorAll("#fpLeaguePanel input[data-goalie-weight]").forEach(el => {
+            const k = el.dataset.goalieWeight;
+            const v = parseFloat(el.value);
+            goalieWeights[k] = isFinite(v) ? v : DEFAULT_GOALIE_WEIGHTS[k];
+        });
+        saveWeightsToStorage();
+    };
+
+    const refreshBadge = () => {
+        const badge = document.getElementById("fpLeagueBadge");
+        if (!badge) return;
+        badge.style.display = (isModified() || isWeightsModified()) ? "" : "none";
+    };
+
+    const playerEligibility = (p) => {
+        const raw = ((p && (p.yahooEligibility || p.positionCode)) || "").toUpperCase();
+        return {
+            C:    raw.indexOf("C") >= 0,
+            LW:   raw.indexOf("L") >= 0,
+            RW:   raw.indexOf("R") >= 0,
+            D:    raw.indexOf("D") >= 0,
+            G:    raw.indexOf("G") >= 0,
+            Util: raw.indexOf("G") < 0 && raw.length > 0
+        };
+    };
+
+    const assignRosterSlots = (players, opts) => {
+        const limits = {
+            C: opts.C, LW: opts.LW, RW: opts.RW, D: opts.D, Util: opts.Util, G: opts.G, BN: opts.BN
+        };
+        const filled = { C: 0, LW: 0, RW: 0, D: 0, Util: 0, G: 0, BN: 0 };
+        const order = ["G", "C", "LW", "RW", "D", "Util", "BN"];
+
+        players.forEach(p => {
+            const elig = playerEligibility(p);
+            let placed = false;
+            for (let i = 0; i < order.length; i++) {
+                const slot = order[i];
+                if (slot === "BN") {
+                    if (filled.BN < limits.BN) { filled.BN++; placed = true; }
+                    break;
+                }
+                if (slot === "Util") {
+                    if (elig.Util && filled.Util < limits.Util) { filled.Util++; placed = true; break; }
+                    continue;
+                }
+                if (elig[slot] && filled[slot] < limits[slot]) {
+                    filled[slot]++;
+                    placed = true;
+                    break;
+                }
+            }
+            if (!placed) filled._overflow = (filled._overflow || 0) + 1;
+        });
+        return filled;
+    };
+
+    const renderTeamSummary = (playerIds, playerById) => {
+        const container = document.getElementById("fpRosterSummary");
+        if (!container) return;
+
+        const opts = leagueOptions;
+        const players = (playerIds || [])
+            .map(id => playerById.get(Number(id)))
+            .filter(Boolean);
+
+        const filled = assignRosterSlots(players, opts);
+        const activeTotal = opts.C + opts.LW + opts.RW + opts.D + opts.Util + opts.G;
+        const activeFilled = filled.C + filled.LW + filled.RW + filled.D + filled.Util + filled.G;
+        const rosterMax = totalSlots(opts);
+
+        const chip = (label, n, max) => {
+            const over = n > max;
+            const full = n >= max && max > 0;
+            const cls = over ? "danger" : (full ? "secondary" : "light");
+            return `<span class="badge badge-${cls} border mr-1 mb-1">${label} ${n}/${max}</span>`;
+        };
+
+        let html = `<div class="fp-roster-summary small">`;
+        html += `<span class="text-muted mr-2">Roster</span>`;
+        html += chip("C", filled.C, opts.C);
+        html += chip("LW", filled.LW, opts.LW);
+        html += chip("RW", filled.RW, opts.RW);
+        html += chip("D", filled.D, opts.D);
+        html += chip("Util", filled.Util, opts.Util);
+        html += chip("G", filled.G, opts.G);
+        html += chip("BN", filled.BN, opts.BN);
+        html += `<span class="badge badge-primary ml-1 mb-1">${players.length}/${rosterMax}</span>`;
+        if (filled._overflow) {
+            html += `<span class="badge badge-danger ml-1 mb-1">${filled._overflow} over limit</span>`;
+        }
+        html += `<span class="text-muted ml-2">Active ${activeFilled}/${activeTotal}</span>`;
+        html += `</div>`;
+
+        container.innerHTML = html;
+        container.style.display = "";
+    };
+
+    const hideTeamSummary = () => {
+        const container = document.getElementById("fpRosterSummary");
+        if (container) container.style.display = "none";
+    };
+
+    const wireEvents = () => {
+        SLOT_KEYS.forEach(k => {
+            const el = inputFor(k);
+            if (!el) return;
+            el.addEventListener("input", () => {
+                const totalEl = document.getElementById("fpLeagueTotal");
+                if (totalEl) totalEl.textContent = totalSlots(readInputs());
+            });
+            el.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    document.getElementById("fpLeagueApply").click();
+                }
+            });
+        });
+
+        document.getElementById("fpLeagueApply").addEventListener("click", () => {
+            const next = readInputs();
+            saveToCookie(next);
+            fillInputs(next);
+            refreshBadge();
+            if (typeof window.fpOnLeagueSettingsChanged === "function") {
+                window.fpOnLeagueSettingsChanged(isModified() ? "League settings saved" : "League settings at defaults");
+            }
+        });
+
+        document.getElementById("fpLeagueReset").addEventListener("click", () => {
+            saveToCookie({ ...DEFAULTS });
+            fillInputs(DEFAULTS);
+            refreshBadge();
+            if (typeof window.fpOnLeagueSettingsChanged === "function") {
+                window.fpOnLeagueSettingsChanged("League settings reset");
+            }
+        });
+
+        document.getElementById("fpWeightsApply").addEventListener("click", () => {
+            applyWeightsFromInputs();
+            refreshBadge();
+            if (typeof window.fpOnWeightsChanged === "function") {
+                window.fpOnWeightsChanged(isWeightsModified() ? "Weights applied" : "Weights at defaults");
+            }
+        });
+
+        document.getElementById("fpWeightsReset").addEventListener("click", () => {
+            skaterWeights = { ...DEFAULT_WEIGHTS };
+            goalieWeights = { ...DEFAULT_GOALIE_WEIGHTS };
+            try { localStorage.removeItem(WEIGHTS_STORAGE_KEY); } catch (e) {}
+            fillWeightsInputs();
+            refreshBadge();
+            if (typeof window.fpOnWeightsChanged === "function") {
+                window.fpOnWeightsChanged("Weights reset");
+            }
+        });
+
+        document.querySelectorAll("#fpLeaguePanel input[data-weight], #fpLeaguePanel input[data-goalie-weight]").forEach(el => {
+            el.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    document.getElementById("fpWeightsApply").click();
+                }
+            });
+        });
+    };
+
+    window.FantasyLeagueSettings = {
+        get: () => ({ ...leagueOptions }),
+        defaults: () => ({ ...DEFAULTS }),
+        getWeights: () => ({ skater: skaterWeights, goalie: goalieWeights }),
+        renderTeamSummary,
+        hideTeamSummary,
+        refreshBadge
+    };
+
+    $(document).ready(() => {
+        fillInputs(leagueOptions);
+        fillWeightsInputs();
+        refreshBadge();
+        wireEvents();
+    });
+})();
+</script>

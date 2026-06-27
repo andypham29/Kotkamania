@@ -1,5 +1,6 @@
 :root {
-    --site-nav-height: 2.75rem;
+    /* Collapsed header bar height only — do not sync from expanded nav (feedback loop). */
+    --site-nav-bar-height: 2.75rem;
 }
 
 body {
@@ -13,7 +14,7 @@ body {
 }
 
 .site-nav {
-    min-height: var(--site-nav-height);
+    min-height: var(--site-nav-bar-height);
     padding-top: 0;
     padding-bottom: 0;
 }
@@ -67,7 +68,7 @@ body {
     }
 
     .site-nav-wrap .navbar-collapse {
-        max-height: calc(100vh - var(--site-nav-height));
+        max-height: calc(100vh - var(--site-nav-bar-height));
         overflow-y: auto;
     }
 }

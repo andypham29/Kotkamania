@@ -435,125 +435,6 @@
     @media (max-width: 991.98px) {
         .fp-toolbar-end { margin-left: 0; width: 100%; }
     }
-    @media (max-width: 767.98px) {
-        .fp-page {
-            height: auto;
-            min-height: 0;
-            overflow: visible;
-            padding: 0 8px 16px;
-        }
-        .fp-sticky-toolbar {
-            position: sticky;
-            top: var(--site-nav-height);
-            padding: .5rem 0;
-        }
-        .fp-toolbar-row {
-            flex-direction: column;
-            align-items: stretch;
-            gap: .5rem;
-        }
-        .fp-toolbar-head { width: 100%; }
-        .fp-toolbar-title { font-size: 1rem; }
-        .fp-toolbar-search {
-            width: 100%;
-            min-height: 2.25rem;
-        }
-        .fp-toolbar-filters {
-            width: 100%;
-        }
-        .fp-toolbar-filters .btn-sm,
-        .fp-toolbar-actions .btn-sm {
-            min-height: 2.25rem;
-            min-width: 2.25rem;
-        }
-        #fpTeamSelect {
-            flex: 1 1 100%;
-            width: 100% !important;
-            min-height: 2.25rem;
-        }
-        .fp-toolbar-end {
-            justify-content: space-between;
-        }
-        .fp-split-stack { height: auto; min-height: 0; }
-        .fp-split-top, .fp-split-bottom { flex: none; }
-        .fp-split-top .fp-table-wrap {
-            max-height: min(52vh, calc(100dvh - 14rem));
-            min-height: 220px;
-            -webkit-overflow-scrolling: touch;
-        }
-        .fp-side-panel .card-body {
-            max-height: min(38vh, calc(100dvh - 9rem));
-        }
-        .fp-side-table-scroll { -webkit-overflow-scrolling: touch; }
-        #fpTable td, #fpTable th {
-            padding: .35rem .4rem;
-            font-size: .875rem;
-        }
-        #fpTable thead th { font-size: .8rem; }
-        #fpSideTable td, #fpSideTable th {
-            padding: .35rem .4rem;
-            font-size: .875rem;
-        }
-        #fpSideTable thead th { font-size: .8rem; }
-        #fpSideTable .fp-side-name-col { max-width: 9rem; }
-        .fp-mobile-hide { display: none !important; }
-        .fp-list-btn {
-            width: 2.25rem;
-            height: 2.25rem;
-            font-size: .9rem;
-        }
-        #fpTable .fp-lists-col {
-            min-width: 10.5rem;
-            width: 10.5rem;
-        }
-        .fp-reorder-btn,
-        .fp-side-remove-btn {
-            width: 2.25rem;
-            height: 2.25rem;
-            font-size: .9rem;
-        }
-        .pos-chip {
-            font-size: .78rem;
-            min-width: 1.75rem;
-            padding: 2px 8px;
-        }
-        .fp-side-tabs-wrap {
-            width: 100%;
-            margin: 0 0 .35rem;
-        }
-        #fpTabs .nav-link {
-            font-size: .82rem;
-            padding: .4rem .55rem;
-        }
-        .fp-side-header-actions .btn-sm {
-            min-height: 2.25rem;
-        }
-        .fp-toast {
-            left: 1rem;
-            right: 1rem;
-            bottom: 1rem;
-            min-width: 0;
-        }
-        .fp-settings-drawer {
-            width: 100vw;
-            max-width: 100vw;
-        }
-        #fpSideTable .fp-side-remove-col {
-            position: sticky;
-            right: 0;
-            z-index: 1;
-            background: #fff;
-            box-shadow: -6px 0 8px -6px rgba(0, 0, 0, .12);
-        }
-        #fpSideTable thead .fp-side-remove-col {
-            z-index: 2;
-            background: #f8f9fa;
-        }
-        #fpSideTable tbody tr.fp-side-row-picked > td.fp-side-remove-col { background-color: #e7f5ff; }
-        #fpSideTable tbody tr.fp-side-row-picked:hover > td.fp-side-remove-col { background-color: #d0ebff; }
-        #fpSideTable tbody tr.fp-side-row-drafted > td.fp-side-remove-col { background-color: #fff4e6; }
-        #fpSideTable tbody tr.fp-side-row-drafted:hover > td.fp-side-remove-col { background-color: #ffe8cc; }
-    }
 </style>
 
 <div class="fp-page">
@@ -569,7 +450,7 @@
             <input id="fpSearchInput" type="text" class="form-control form-control-sm fp-toolbar-search"
                    placeholder="Search… ( / )" autocomplete="off">
 
-            <div class="fp-toolbar-filters">
+            <div class="fp-toolbar-filters" id="fpToolbarFilters">
                 <div class="btn-group-toggle" data-toggle="buttons" id="fpPositionPills">
                     <label class="btn btn-sm btn-outline-secondary py-0 px-2"><input type="checkbox" data-pos="C" autocomplete="off"> C</label>
                     <label class="btn btn-sm btn-outline-secondary py-0 px-2"><input type="checkbox" data-pos="L" autocomplete="off"> L</label>
@@ -651,7 +532,7 @@
 
         <div class="fp-split-bottom">
             <div class="card fp-side-panel">
-                <div class="card-header bg-white py-2">
+                <div class="card-header bg-white py-2 fp-side-header">
                     <div class="d-flex flex-wrap align-items-center">
                         <ul class="nav nav-tabs card-header-tabs border-0 flex-nowrap mb-0 mr-3" id="fpTabs">
                             <li class="nav-item"><a class="nav-link py-1" href="#" data-view="favorite">★ Favorites <span class="badge badge-secondary ml-1" id="fpTabFav">0</span></a></li>
@@ -843,7 +724,6 @@
         const cls = [
             col.noSort ? "no-sort" : "",
             side ? "fp-stat-col" : "",
-            "fp-mobile-hide"
         ].filter(Boolean).join(" ");
         const sortAttr = col.sortKey ? ` data-sort-key="${col.sortKey}"` : "";
         return `<th${cls ? ` class="${cls}"` : ""}${sortAttr}>${col.label}</th>`;
@@ -856,13 +736,13 @@
             mainHead.innerHTML =
                 `<th class="no-sort">#</th>` +
                 `<th data-sort-key="name">Player</th>` +
-                `<th data-sort-key="team" class="fp-mobile-hide">Team</th>` +
+                `<th data-sort-key="team">Team</th>` +
                 `<th data-sort-key="position">Pos</th>` +
-                `<th data-sort-key="score" class="fp-mobile-hide">Score</th>` +
+                `<th data-sort-key="score">Score</th>` +
                 `<th data-sort-key="fp"${state.sortKey === "fp" ? ` class="${state.sortDesc ? "desc" : "asc"}"` : ""}>FP</th>` +
                 buildStatHeaderCells(cols) +
-                `<th data-sort-key="nhl" class="fp-mobile-hide">NHL</th>` +
-                `<th data-sort-key="espn" class="fp-mobile-hide">ESPN</th>` +
+                `<th data-sort-key="nhl">NHL</th>` +
+                `<th data-sort-key="espn">ESPN</th>` +
                 `<th class="no-sort fp-lists-col"></th>`;
         }
         const sideHead = document.querySelector("#fpSideTable thead tr");
@@ -871,7 +751,7 @@
                 `<th class="no-sort">#</th>` +
                 `<th class="fp-reorder-col no-sort" id="fpSideReorderHead" title="Draftboard order">⇅</th>` +
                 `<th>Player</th>` +
-                `<th class="fp-mobile-hide">Team</th>` +
+                `<th>Team</th>` +
                 `<th>Pos</th>` +
                 `<th class="fp-stat-col">FP</th>` +
                 buildStatHeaderCells(cols.map(col => ({ ...col, sortKey: null, noSort: true })), true) +
@@ -1097,21 +977,24 @@
         const onHighlight   = isIn(p.playerId, cookies.highlight);
         const onPicked      = isIn(p.playerId, cookies.picked);
         const s             = getPlayerStatBag(p);
-        const statCells     = activeStatCols().map(col => `<td class="fp-mobile-hide">${formatStatCell(s, col)}</td>`).join("");
+        const statCells     = activeStatCols().map(col => `<td>${formatStatCell(s, col)}</td>`).join("");
         const rowClasses    = [
             onPicked ? "fp-row-picked" : (onHighlight ? "fp-row-highlight" : "")
         ].filter(Boolean).join(" ");
+        const teamBtn = p.teamName
+            ? `<button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${p.teamId})">${p.teamName}</button>`
+            : "";
 
         return `<tr data-id="${p.playerId}" class="fp-row-clickable ${rowClasses}" title="Click row to highlight">
-            <td>${idx}</td>
-            <td><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${p.playerId})">${p.skaterFullName}</button></td>
-            <td class="fp-mobile-hide"><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${p.teamId})">${p.teamName || ""}</button></td>
-            <td>${positionChip(elig)}</td>
-            <td class="fp-mobile-hide">${ nullish(p.fantasyGrade) }</td>
-            <td><strong>${fp}</strong></td>
+            <td class="fp-col-rank">${idx}</td>
+            <td class="fp-col-name"><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${p.playerId})">${p.skaterFullName}</button></td>
+            <td class="fp-col-team">${teamBtn}</td>
+            <td class="fp-col-pos">${positionChip(elig)}</td>
+            <td class="fp-col-score">${ nullish(p.fantasyGrade) }</td>
+            <td class="fp-col-fp"><strong>${fp}</strong></td>
             ${statCells}
-            <td class="fp-mobile-hide">${ nullish(p.nhlRank) }</td>
-            <td class="fp-mobile-hide">${ nullish(p.avgPick) }</td>
+            <td>${ nullish(p.nhlRank) }</td>
+            <td>${ nullish(p.avgPick) }</td>
             <td class="fp-lists-col">${renderListActions(p, cookies)}</td>
         </tr>`;
     };
@@ -1128,7 +1011,7 @@
     const renderSideRow = (p, id, idx, total, cookies) => {
         const s       = getPlayerStatBag(p);
         const statCells = activeStatCols().map(col =>
-            `<td class="fp-stat-col fp-mobile-hide">${formatStatCell(s, col)}</td>`
+            `<td class="fp-stat-col">${formatStatCell(s, col)}</td>`
         ).join("");
         const onPicked  = isIn(id, cookies.picked);
         const onDrafted = isIn(id, cookies.drafted);
@@ -1138,13 +1021,13 @@
             showRowState && !onPicked && onDrafted ? "fp-side-row-drafted" : ""
         ].filter(Boolean).join(" ");
         const reorderCell = (state.sideView === "draftboard")
-            ? `<td class="fp-reorder-col">
+            ? `<td class="fp-reorder-col fp-col-reorder">
                   <span class="fp-reorder" role="group" aria-label="Reorder">
                       <button type="button" class="fp-reorder-btn" data-side-action="moveup" data-id="${id}" ${idx === 1     ? "disabled" : ""} title="Move up (hold to repeat)" aria-label="Move up">▲</button>
                       <button type="button" class="fp-reorder-btn" data-side-action="movedown" data-id="${id}" ${idx === total ? "disabled" : ""} title="Move down (hold to repeat)" aria-label="Move down">▼</button>
                   </span>
                </td>`
-            : `<td class="fp-reorder-col" style="display:none"></td>`;
+            : `<td class="fp-reorder-col fp-col-reorder" style="display:none"></td>`;
         const label = (p && p.skaterFullName) || `Player #${id}`;
         const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
         const teamId = p && p.teamId;
@@ -1153,14 +1036,14 @@
             ? `<button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${teamId})">${teamName}</button>`
             : `<span class="fp-nullish">—</span>`;
         return `<tr data-side-id="${id}" class="${rowClasses}">
-            <td class="text-muted">${idx}</td>
+            <td class="text-muted fp-col-rank">${idx}</td>
             ${reorderCell}
-            <td class="fp-side-name-col">
+            <td class="fp-side-name-col fp-col-name">
                 <button type="button" class="btn btn-link btn-sm p-0 text-left" data-side-action="open" data-id="${id}" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})">${label}</button>
             </td>
-            <td class="fp-mobile-hide">${teamCell}</td>
-            <td>${positionChip(elig)}</td>
-            <td class="fp-stat-col">${p ? `<strong>${fpPoints(p).toFixed(1)}</strong>` : nullish(null)}</td>
+            <td class="fp-col-team">${teamCell}</td>
+            <td class="fp-col-pos">${positionChip(elig)}</td>
+            <td class="fp-col-fp fp-stat-col">${p ? `<strong>${fpPoints(p).toFixed(1)}</strong>` : nullish(null)}</td>
             ${statCells}
             <td class="fp-side-remove-col">
                 <button type="button" class="fp-side-remove-btn" data-side-action="remove" data-id="${id}" title="Remove from list" aria-label="Remove from list">×</button>
@@ -1187,15 +1070,15 @@
     const renderSideTotals = (totals) => {
         const statCells = activeStatCols().map(col => {
             if (col.format === "gaa" || col.format === "svpct") {
-                return `<td class="fp-stat-col fp-mobile-hide"><span class="fp-nullish">—</span></td>`;
+                return `<td class="fp-stat-col"><span class="fp-nullish">—</span></td>`;
             }
-            return `<td class="fp-stat-col fp-mobile-hide"><strong>${totals[col.key]}</strong></td>`;
+            return `<td class="fp-stat-col"><strong>${totals[col.key]}</strong></td>`;
         }).join("");
         return `<tr>
             <td></td>
             <td class="fp-reorder-col"></td>
             <td class="fp-side-name-col text-right text-muted">Total</td>
-            <td class="fp-mobile-hide"></td>
+            <td></td>
             <td></td>
             <td class="fp-stat-col"><strong>${totals.fp.toFixed(1)}</strong></td>
             ${statCells}

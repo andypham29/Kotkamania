@@ -283,89 +283,37 @@
     .fp-side-remove-btn:hover { border-color: #dc3545; color: #dc3545; }
     .fp-roster-summary { line-height: 1.6; }
     .fp-roster-summary .badge { font-weight: 600; font-size: .72rem; }
+    .fp-reorder {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        margin-right: .35rem;
+        vertical-align: middle;
+    }
+    .fp-reorder-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.65rem;
+        height: 1.65rem;
+        padding: 0;
+        font-size: .72rem;
+        line-height: 1;
+        border-radius: 4px;
+        border: 1px solid #ced4da;
+        background: #fff;
+        color: #495057;
+        cursor: pointer;
+        touch-action: manipulation;
+    }
+    .fp-reorder-btn:disabled {
+        opacity: .35;
+        cursor: not-allowed;
+    }
     .fp-toolbar-search { width: 220px; max-width: 100%; }
     .fp-toolbar-import { width: auto; min-width: 14rem; max-width: 100%; }
     .fp-draftboard-panel .card-body,
     .fp-bottom-panel .card-body { -webkit-overflow-scrolling: touch; }
-    @media (max-width: 767.98px) {
-        .fp-draftboard-wrap {
-            padding-left: .5rem !important;
-            padding-right: .5rem !important;
-        }
-        .fp-draftboard-panel .card-body {
-            max-height: min(52vh, calc(100dvh - 14rem));
-            min-height: 220px;
-        }
-        .fp-bottom-panel .card-body {
-            overflow-x: auto;
-            max-height: min(38vh, calc(100dvh - 9rem));
-        }
-        .fp-page-header h3 { font-size: 1.35rem; }
-        .fp-page-header .fp-drag-hint { display: none; }
-        .fp-toolbar-search,
-        .fp-toolbar-import {
-            width: 100%;
-            min-width: 0;
-            flex: 1 1 100%;
-        }
-        .fp-save-toolbar .btn,
-        .fp-filter-toolbar .btn-sm {
-            min-height: 2.25rem;
-        }
-        .fp-save-toolbar #fpShareUrl {
-            max-width: none !important;
-            width: 100%;
-        }
-        .fp-filter-toolbar .fp-toolbar-league {
-            margin-left: 0 !important;
-            width: 100%;
-            flex: 1 1 100%;
-        }
-        .fp-filter-toolbar .fp-toolbar-league .btn {
-            width: 100%;
-        }
-        #fpDraftTable .fp-side-name-col,
-        #fpBottomTable .fp-side-name-col { max-width: 8.5rem; }
-        #fpDraftTable .fp-side-draft-btn,
-        .fp-side-remove-btn {
-            width: 2.25rem;
-            height: 2.25rem;
-            font-size: .9rem;
-        }
-        #fpDraftTable .fp-drag-handle {
-            padding: 6px 8px;
-            font-size: 1rem;
-        }
-        .fp-side-draft-col { min-width: 5.25rem; }
-        .fp-list-labels-col { min-width: 4.75rem; }
-        .fp-toast {
-            left: 1rem;
-            right: 1rem;
-            bottom: 1rem;
-            min-width: 0;
-        }
-        #fpBottomTabs { flex-wrap: wrap; }
-        #fpBottomTabs .nav-link {
-            font-size: .82rem;
-            padding: .35rem .55rem;
-        }
-        .fp-settings-drawer { width: 100vw; max-width: 100vw; }
-        #fpBottomTable .fp-side-remove-col {
-            position: sticky;
-            right: 0;
-            z-index: 1;
-            background: #fff;
-            box-shadow: -6px 0 8px -6px rgba(0, 0, 0, .12);
-        }
-        #fpBottomTable thead .fp-side-remove-col {
-            z-index: 2;
-            background: #f8f9fa;
-        }
-        .fp-bottom-panel.fp-side-myteam #fpBottomTable tbody tr > td.fp-side-remove-col { background-color: #e7f5ff; }
-        .fp-bottom-panel.fp-side-myteam #fpBottomTable tbody tr:hover > td.fp-side-remove-col { background-color: #d0ebff; }
-        .fp-bottom-panel.fp-side-drafted #fpBottomTable tbody tr > td.fp-side-remove-col { background-color: #fff4e6; }
-        .fp-bottom-panel.fp-side-drafted #fpBottomTable tbody tr:hover > td.fp-side-remove-col { background-color: #ffe8cc; }
-    }
 </style>
 
 <div class="container-fluid py-3 fp-draftboard-wrap">
@@ -401,6 +349,7 @@
             <div class="d-flex flex-wrap align-items-center fp-filter-toolbar" style="gap: .5rem;">
                 <input id="fpSearchInput" type="text" class="form-control form-control-sm fp-toolbar-search" placeholder="Search by name…" autocomplete="off">
 
+                <div class="fp-toolbar-filters-body flex-wrap align-items-center" id="fpToolbarFilters" style="gap: .5rem; display: flex;">
                 <select class="form-control form-control-sm" id="fpTeamSelect" style="width: auto; max-width: 100%;">
                     <option value="">Team: All</option>
                 </select>
@@ -433,6 +382,7 @@
                         League <span class="badge badge-primary" id="fpLeagueBadge" style="display:none;"></span>
                     </button>
                 </div>
+                </div>
             </div>
         </div>
     </div>
@@ -452,19 +402,19 @@
                 <thead class="thead-light">
                     <tr>
                         <th class="no-sort fp-drag-col"></th>
-                        <th class="no-sort d-none d-sm-table-cell">#</th>
+                        <th class="no-sort">#</th>
                         <th>Player</th>
-                        <th class="d-none d-md-table-cell">Team</th>
+                        <th>Team</th>
                         <th>Pos</th>
                         <th class="fp-stat-col">FP</th>
-                        <th class="fp-stat-col d-none d-md-table-cell">GP</th>
+                        <th class="fp-stat-col">GP</th>
                         <th class="fp-stat-col">G</th>
                         <th class="fp-stat-col">A</th>
                         <th class="fp-stat-col">P</th>
-                        <th class="fp-stat-col d-none d-md-table-cell">S</th>
-                        <th class="fp-stat-col d-none d-md-table-cell">H</th>
-                        <th class="fp-stat-col d-none d-md-table-cell">B</th>
-                        <th class="fp-stat-col d-none d-md-table-cell">+/-</th>
+                        <th class="fp-stat-col">S</th>
+                        <th class="fp-stat-col">H</th>
+                        <th class="fp-stat-col">B</th>
+                        <th class="fp-stat-col">+/-</th>
                         <th class="no-sort fp-list-labels-col" title="Favorites / Watchlist"></th>
                         <th class="no-sort fp-side-draft-col" title="My Team / Drafted"></th>
                     </tr>
@@ -493,19 +443,19 @@
             <table class="table table-sm table-hover mb-0" id="fpBottomTable">
                 <thead class="thead-light">
                     <tr>
-                        <th class="no-sort d-none d-sm-table-cell">#</th>
+                        <th class="no-sort">#</th>
                         <th>Player</th>
-                        <th class="d-none d-md-table-cell">Team</th>
+                        <th>Team</th>
                         <th>Pos</th>
                         <th class="fp-stat-col">FP</th>
-                        <th class="fp-stat-col d-none d-md-table-cell">GP</th>
+                        <th class="fp-stat-col">GP</th>
                         <th class="fp-stat-col">G</th>
                         <th class="fp-stat-col">A</th>
                         <th class="fp-stat-col">P</th>
-                        <th class="fp-stat-col d-none d-md-table-cell">S</th>
-                        <th class="fp-stat-col d-none d-md-table-cell">H</th>
-                        <th class="fp-stat-col d-none d-md-table-cell">B</th>
-                        <th class="fp-stat-col d-none d-md-table-cell">+/-</th>
+                        <th class="fp-stat-col">S</th>
+                        <th class="fp-stat-col">H</th>
+                        <th class="fp-stat-col">B</th>
+                        <th class="fp-stat-col">+/-</th>
                         <th class="no-sort fp-side-remove-col"></th>
                     </tr>
                 </thead>
@@ -542,18 +492,17 @@
     const COOKIE_WATCHLIST  = "watchlist_fantasy_player";
 
     const SKATER_STAT_COLS = [
-        { key: "games",   label: "GP", hideSm: true },
+        { key: "games",   label: "GP" },
         { key: "goals",   label: "G" },
         { key: "assists", label: "A" },
         { key: "points",  label: "P" },
-        { key: "shots",   label: "S", hideSm: true },
-        { key: "hits",    label: "H", hideSm: true },
-        { key: "blocked", label: "B", hideSm: true },
-        { key: "plusMinus", label: "+/-", hideSm: true }
+        { key: "shots",   label: "S" },
+        { key: "hits",    label: "H" },
+        { key: "blocked", label: "B" },
+        { key: "plusMinus", label: "+/-" }
     ];
 
-    const statCellClass = (col) =>
-        `fp-stat-col${col.hideSm ? " d-none d-md-table-cell" : ""}`;
+    const statCellClass = () => "fp-stat-col";
 
     const sideColCount = () => 6 + SKATER_STAT_COLS.length + 2;
     const bottomColCount = () => 5 + SKATER_STAT_COLS.length + 1;
@@ -846,6 +795,7 @@
         const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
         const teamId = p && p.teamId;
         const teamName = (p && p.teamName) || "";
+        const fpVal = p ? fpPoints(p).toFixed(1) : null;
         const teamCell = teamId
             ? `<button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${teamId})">${teamName}</button>`
             : `<span class="fp-nullish">—</span>`;
@@ -854,13 +804,13 @@
             : "Remove from My Team";
 
         return `<tr data-bottom-id="${id}">
-            <td class="text-muted d-none d-sm-table-cell">${idx}</td>
-            <td class="fp-side-name-col">
+            <td class="text-muted fp-col-rank">${idx}</td>
+            <td class="fp-side-name-col fp-col-name">
                 <button type="button" class="btn btn-link btn-sm p-0 text-left" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})">${label}</button>
             </td>
-            <td class="d-none d-md-table-cell">${teamCell}</td>
-            <td>${positionChip(elig)}</td>
-            <td class="fp-stat-col">${p ? `<strong>${fpPoints(p).toFixed(1)}</strong>` : nullish(null)}</td>
+            <td class="fp-col-team">${teamCell}</td>
+            <td class="fp-col-pos">${positionChip(elig)}</td>
+            <td class="fp-stat-col fp-col-fp">${p ? `<strong>${fpVal}</strong>` : nullish(null)}</td>
             ${statCells}
             <td class="fp-side-remove-col">
                 <button type="button" class="fp-side-remove-btn" data-bottom-action="remove" data-id="${id}" title="${removeTitle}" aria-label="${removeTitle}">×</button>
@@ -942,7 +892,7 @@
             : "";
     };
 
-    const renderSideRow = (p, id, idx, drafted, picked, fav, watch) => {
+    const renderSideRow = (p, id, idx, drafted, picked, fav, watch, total, allIds) => {
         const s = (p && p.stat) || {};
         const statCells = SKATER_STAT_COLS.map(col =>
             `<td class="${statCellClass(col)}">${formatStatCell(s, col)}</td>`
@@ -965,21 +915,23 @@
         const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
         const teamId = p && p.teamId;
         const teamName = (p && p.teamName) || "";
+        const fpVal = p ? fpPoints(p).toFixed(1) : null;
+        const rank = allIds ? allIds.indexOf(Number(id)) + 1 : idx;
         const teamCell = teamId
             ? `<button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${teamId})">${teamName}</button>`
             : `<span class="fp-nullish">—</span>`;
 
         return `<tr data-side-id="${id}" class="${rowClasses}">
-            <td class="fp-drag-col">
+            <td class="fp-drag-col fp-col-drag">
                 <span class="fp-drag-handle" draggable="true" title="Drag to reorder" aria-label="Drag to reorder">⋮⋮</span>
             </td>
-            <td class="text-muted fp-rank-col d-none d-sm-table-cell">${idx}</td>
-            <td class="fp-side-name-col">
+            <td class="text-muted fp-rank-col fp-col-rank">${rank}</td>
+            <td class="fp-side-name-col fp-col-name">
                 <button type="button" class="btn btn-link btn-sm p-0 text-left" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})">${label}</button>
             </td>
-            <td class="d-none d-md-table-cell">${teamCell}</td>
-            <td>${positionChip(elig)}</td>
-            <td class="fp-stat-col">${p ? `<strong>${fpPoints(p).toFixed(1)}</strong>` : nullish(null)}</td>
+            <td class="fp-col-team">${teamCell}</td>
+            <td class="fp-col-pos">${positionChip(elig)}</td>
+            <td class="fp-stat-col fp-col-fp">${p ? `<strong>${fpVal}</strong>` : nullish(null)}</td>
             ${statCells}
             <td class="fp-list-labels-col">${renderListButtons(id, fav, watch)}</td>
             <td class="fp-side-draft-col">
@@ -994,6 +946,23 @@
     const orderFromDom = () =>
         [...document.querySelectorAll("#fpDraftTableBody tr[data-side-id]")]
             .map(tr => Number(tr.dataset.sideId));
+
+    const draftReorderStep = (playerId, dir) => {
+        const list = draftIds();
+        const pos = list.indexOf(Number(playerId));
+        if (pos < 0) return false;
+        if (dir === "up" && pos > 0) {
+            moveUpPlayerInCookie(playerId, COOKIE_DRAFTBOARD);
+            renderDraftboard();
+            return true;
+        }
+        if (dir === "down" && pos < list.length - 1) {
+            moveDownPlayerInCookie(playerId, COOKIE_DRAFTBOARD);
+            renderDraftboard();
+            return true;
+        }
+        return false;
+    };
 
     const saveDraftOrderFromDom = () => {
         const fullIds = draftIds();
@@ -1067,7 +1036,7 @@
         tbody.innerHTML = ids.map((id) => {
             const p = byId.get(Number(id));
             const rank = allIds.indexOf(Number(id)) + 1;
-            return renderSideRow(p, id, rank, drafted, picked, fav, watch);
+            return renderSideRow(p, id, rank, drafted, picked, fav, watch, ids.length, allIds);
         }).join("");
 
         renderBottomPanel();
@@ -1226,6 +1195,14 @@
         });
 
         document.getElementById("fpDraftTableBody").addEventListener("click", (e) => {
+            const reorderBtn = e.target.closest("[data-side-action='moveup'], [data-side-action='movedown']");
+            if (reorderBtn && !reorderBtn.disabled) {
+                e.preventDefault();
+                const dir = reorderBtn.dataset.sideAction === "moveup" ? "up" : "down";
+                draftReorderStep(Number(reorderBtn.dataset.id), dir);
+                return;
+            }
+
             const btn = e.target.closest("[data-side-action]");
             if (!btn || btn.disabled) return;
             const action = btn.dataset.sideAction;

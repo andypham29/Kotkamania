@@ -96,19 +96,6 @@ body.fp-body-layout .site-nav-wrap {
     flex-shrink: 0;
 }
 
-@media (max-width: 767.98px) {
-    body.fp-body-layout {
-        overflow: auto;
-        height: auto;
-        min-height: 100vh;
-    }
-
-    body.fp-body-layout > div[align="center"] {
-        height: auto;
-        min-height: 100vh;
-    }
-}
-
 table {
     margin: auto;
     z-index: 1;

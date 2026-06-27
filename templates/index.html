@@ -33,7 +33,7 @@
 
     </script>
 </head>
-<body{% if page=="nhl_fantasy" %} class="fp-body-layout"{% endif %}>
+<body{% if page=="nhl_fantasy" %} class="fp-body-layout"{% elif page=="nhl_fantasy_draftboard" %} class="fp-draftboard-layout"{% endif %}>
 <div align="center">
     {% if page=="index" %}
     <div class="header py-3">
@@ -75,7 +75,7 @@
             <td>{% include 'nhl/nhl_index.html' %}</td>
             {% endif %}
             {% if (page=="nhl_fantasy_draftboard") %}
-            <td>{% include 'fantasy/fantasy_draftboard_page.html' %}</td>
+            {% include 'fantasy/fantasy_draftboard_page.html' %}
             {% endif %}
             {% if (page=="nhl_fantasy_streak") %}
             <td>{% include 'nhl/fantasy/streak/fantasy_player_on_streak.html' %}</td>
@@ -93,7 +93,7 @@
         </tr>
     </div>
     {% endif %}
-    {% if page != "nhl_fantasy" %}
+    {% if page != "nhl_fantasy" and page != "nhl_fantasy_draftboard" %}
     <div class="container" style="height: 30px"></div>
     {% endif %}
 </div>

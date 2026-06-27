@@ -18,7 +18,7 @@
     }
     .fp-draftboard-panel .card-body {
         overflow: auto;
-        max-height: calc(100vh - 14rem);
+        max-height: calc(100vh - 10rem);
         min-height: 320px;
     }
     #fpDraftTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 1; white-space: nowrap; font-size: .75rem; }
@@ -283,24 +283,107 @@
     .fp-side-remove-btn:hover { border-color: #dc3545; color: #dc3545; }
     .fp-roster-summary { line-height: 1.6; }
     .fp-roster-summary .badge { font-weight: 600; font-size: .72rem; }
+    .fp-toolbar-search { width: 220px; max-width: 100%; }
+    .fp-toolbar-import { width: auto; min-width: 14rem; max-width: 100%; }
+    .fp-draftboard-panel .card-body,
+    .fp-bottom-panel .card-body { -webkit-overflow-scrolling: touch; }
+    @media (max-width: 767.98px) {
+        .fp-draftboard-wrap {
+            padding-left: .5rem !important;
+            padding-right: .5rem !important;
+        }
+        .fp-draftboard-panel .card-body {
+            max-height: min(52vh, calc(100dvh - 14rem));
+            min-height: 220px;
+        }
+        .fp-bottom-panel .card-body {
+            overflow-x: auto;
+            max-height: min(38vh, calc(100dvh - 9rem));
+        }
+        .fp-page-header h3 { font-size: 1.35rem; }
+        .fp-page-header .fp-drag-hint { display: none; }
+        .fp-toolbar-search,
+        .fp-toolbar-import {
+            width: 100%;
+            min-width: 0;
+            flex: 1 1 100%;
+        }
+        .fp-save-toolbar .btn,
+        .fp-filter-toolbar .btn-sm {
+            min-height: 2.25rem;
+        }
+        .fp-save-toolbar #fpShareUrl {
+            max-width: none !important;
+            width: 100%;
+        }
+        .fp-filter-toolbar .fp-toolbar-league {
+            margin-left: 0 !important;
+            width: 100%;
+            flex: 1 1 100%;
+        }
+        .fp-filter-toolbar .fp-toolbar-league .btn {
+            width: 100%;
+        }
+        #fpDraftTable .fp-side-name-col,
+        #fpBottomTable .fp-side-name-col { max-width: 8.5rem; }
+        #fpDraftTable .fp-side-draft-btn,
+        .fp-side-remove-btn {
+            width: 2.25rem;
+            height: 2.25rem;
+            font-size: .9rem;
+        }
+        #fpDraftTable .fp-drag-handle {
+            padding: 6px 8px;
+            font-size: 1rem;
+        }
+        .fp-side-draft-col { min-width: 5.25rem; }
+        .fp-list-labels-col { min-width: 4.75rem; }
+        .fp-toast {
+            left: 1rem;
+            right: 1rem;
+            bottom: 1rem;
+            min-width: 0;
+        }
+        #fpBottomTabs { flex-wrap: wrap; }
+        #fpBottomTabs .nav-link {
+            font-size: .82rem;
+            padding: .35rem .55rem;
+        }
+        .fp-settings-drawer { width: 100vw; max-width: 100vw; }
+        #fpBottomTable .fp-side-remove-col {
+            position: sticky;
+            right: 0;
+            z-index: 1;
+            background: #fff;
+            box-shadow: -6px 0 8px -6px rgba(0, 0, 0, .12);
+        }
+        #fpBottomTable thead .fp-side-remove-col {
+            z-index: 2;
+            background: #f8f9fa;
+        }
+        .fp-bottom-panel.fp-side-myteam #fpBottomTable tbody tr > td.fp-side-remove-col { background-color: #e7f5ff; }
+        .fp-bottom-panel.fp-side-myteam #fpBottomTable tbody tr:hover > td.fp-side-remove-col { background-color: #d0ebff; }
+        .fp-bottom-panel.fp-side-drafted #fpBottomTable tbody tr > td.fp-side-remove-col { background-color: #fff4e6; }
+        .fp-bottom-panel.fp-side-drafted #fpBottomTable tbody tr:hover > td.fp-side-remove-col { background-color: #ffe8cc; }
+    }
 </style>
 
 <div class="container-fluid py-3 fp-draftboard-wrap">
-    <div class="d-flex flex-wrap align-items-center mb-3">
+    <div class="d-flex flex-wrap align-items-center mb-3 fp-page-header">
         <h3 class="mb-0 mr-3">🗊 Draftboard</h3>
         <small class="text-muted">
             Showing <strong id="fpVisibleCount">0</strong> of <strong id="fpTotalCount">0</strong>
         </small>
-        <small class="text-muted ml-auto">
+        <small class="text-muted ml-auto fp-drag-hint">
             Drag rows to reorder
         </small>
     </div>
 
     <div class="card mb-3">
         <div class="card-body p-2">
-            <div class="d-flex flex-wrap align-items-center" style="gap: .5rem;">
+            <div class="d-flex flex-wrap align-items-center fp-save-toolbar" style="gap: .5rem;">
                 <button class="btn btn-sm btn-primary" id="fpSaveBtn" type="button">Save</button>
-                <div class="input-group input-group-sm" style="width: auto; min-width: 14rem;">
+                <div class="input-group input-group-sm fp-toolbar-import">
                     <input id="fpImportIdInput" type="text" class="form-control" placeholder="Draftboard ID…" autocomplete="off">
                     <div class="input-group-append">
                         <button class="btn btn-outline-primary" id="fpImportBtn" type="button">Import</button>
@@ -315,37 +398,37 @@
 
     <div class="card mb-3">
         <div class="card-body p-2">
-            <div class="d-flex flex-wrap align-items-center" style="gap: .5rem;">
-                <input id="fpSearchInput" type="text" class="form-control form-control-sm" placeholder="Search by name… (press / to focus)" autocomplete="off" style="width: 220px;">
+            <div class="d-flex flex-wrap align-items-center fp-filter-toolbar" style="gap: .5rem;">
+                <input id="fpSearchInput" type="text" class="form-control form-control-sm fp-toolbar-search" placeholder="Search by name…" autocomplete="off">
 
-                <select class="form-control form-control-sm" id="fpTeamSelect" style="width: auto;">
+                <select class="form-control form-control-sm" id="fpTeamSelect" style="width: auto; max-width: 100%;">
                     <option value="">Team: All</option>
                 </select>
 
                 <div class="btn-group-toggle" data-toggle="buttons" id="fpPositionPills">
-                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="C" autocomplete="off"> C</label>
-                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="L" autocomplete="off"> L</label>
-                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="R" autocomplete="off"> R</label>
-                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="D" autocomplete="off"> D</label>
-                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="G" autocomplete="off"> G</label>
+                    <label class="btn btn-sm btn-outline-secondary mr-1 mb-1"><input type="checkbox" data-pos="C" autocomplete="off"> C</label>
+                    <label class="btn btn-sm btn-outline-secondary mr-1 mb-1"><input type="checkbox" data-pos="L" autocomplete="off"> L</label>
+                    <label class="btn btn-sm btn-outline-secondary mr-1 mb-1"><input type="checkbox" data-pos="R" autocomplete="off"> R</label>
+                    <label class="btn btn-sm btn-outline-secondary mr-1 mb-1"><input type="checkbox" data-pos="D" autocomplete="off"> D</label>
+                    <label class="btn btn-sm btn-outline-secondary mr-1 mb-1"><input type="checkbox" data-pos="G" autocomplete="off"> G</label>
                 </div>
 
                 <div class="btn-group-toggle" data-toggle="buttons" id="fpListFilters">
-                    <label class="btn btn-sm btn-outline-warning mr-1" title="Show favorites only">
+                    <label class="btn btn-sm btn-outline-warning mr-1 mb-1" title="Show favorites only">
                         <input type="checkbox" id="fpFilterFavoriteInput" autocomplete="off"> ★
                     </label>
-                    <label class="btn btn-sm btn-outline-info mr-1" title="Show watchlist only">
+                    <label class="btn btn-sm btn-outline-info mr-1 mb-1" title="Show watchlist only">
                         <input type="checkbox" id="fpFilterWatchlistInput" autocomplete="off"> 👁
                     </label>
                 </div>
 
                 <div class="btn-group-toggle" data-toggle="buttons" id="fpHideDraftedToggle">
-                    <label class="btn btn-sm btn-outline-secondary" title="Hide players on My Team or marked as drafted">
+                    <label class="btn btn-sm btn-outline-secondary mb-1" title="Hide players on My Team or marked as drafted">
                         <input type="checkbox" id="fpHideDraftedInput" autocomplete="off"> Hide drafted
                     </label>
                 </div>
 
-                <div class="ml-auto">
+                <div class="ml-auto fp-toolbar-league">
                     <button class="btn btn-sm btn-outline-dark fp-settings-toggle" type="button" data-fp-settings="fpLeaguePanel" data-fp-settings-title="League Settings">
                         League <span class="badge badge-primary" id="fpLeagueBadge" style="display:none;"></span>
                     </button>
@@ -369,18 +452,19 @@
                 <thead class="thead-light">
                     <tr>
                         <th class="no-sort fp-drag-col"></th>
-                        <th class="no-sort">#</th>
+                        <th class="no-sort d-none d-sm-table-cell">#</th>
                         <th>Player</th>
-                        <th>Team</th>
+                        <th class="d-none d-md-table-cell">Team</th>
                         <th>Pos</th>
                         <th class="fp-stat-col">FP</th>
-                        <th class="fp-stat-col">GP</th>
+                        <th class="fp-stat-col d-none d-md-table-cell">GP</th>
                         <th class="fp-stat-col">G</th>
                         <th class="fp-stat-col">A</th>
                         <th class="fp-stat-col">P</th>
-                        <th class="fp-stat-col">S</th>
-                        <th class="fp-stat-col">H</th>
-                        <th class="fp-stat-col">B</th>
+                        <th class="fp-stat-col d-none d-md-table-cell">S</th>
+                        <th class="fp-stat-col d-none d-md-table-cell">H</th>
+                        <th class="fp-stat-col d-none d-md-table-cell">B</th>
+                        <th class="fp-stat-col d-none d-md-table-cell">+/-</th>
                         <th class="no-sort fp-list-labels-col" title="Favorites / Watchlist"></th>
                         <th class="no-sort fp-side-draft-col" title="My Team / Drafted"></th>
                     </tr>
@@ -409,18 +493,19 @@
             <table class="table table-sm table-hover mb-0" id="fpBottomTable">
                 <thead class="thead-light">
                     <tr>
-                        <th class="no-sort">#</th>
+                        <th class="no-sort d-none d-sm-table-cell">#</th>
                         <th>Player</th>
-                        <th>Team</th>
+                        <th class="d-none d-md-table-cell">Team</th>
                         <th>Pos</th>
                         <th class="fp-stat-col">FP</th>
-                        <th class="fp-stat-col">GP</th>
+                        <th class="fp-stat-col d-none d-md-table-cell">GP</th>
                         <th class="fp-stat-col">G</th>
                         <th class="fp-stat-col">A</th>
                         <th class="fp-stat-col">P</th>
-                        <th class="fp-stat-col">S</th>
-                        <th class="fp-stat-col">H</th>
-                        <th class="fp-stat-col">B</th>
+                        <th class="fp-stat-col d-none d-md-table-cell">S</th>
+                        <th class="fp-stat-col d-none d-md-table-cell">H</th>
+                        <th class="fp-stat-col d-none d-md-table-cell">B</th>
+                        <th class="fp-stat-col d-none d-md-table-cell">+/-</th>
                         <th class="no-sort fp-side-remove-col"></th>
                     </tr>
                 </thead>
@@ -457,14 +542,18 @@
     const COOKIE_WATCHLIST  = "watchlist_fantasy_player";
 
     const SKATER_STAT_COLS = [
-        { key: "games",   label: "GP" },
+        { key: "games",   label: "GP", hideSm: true },
         { key: "goals",   label: "G" },
         { key: "assists", label: "A" },
         { key: "points",  label: "P" },
-        { key: "shots",   label: "S" },
-        { key: "hits",    label: "H" },
-        { key: "blocked", label: "B" }
+        { key: "shots",   label: "S", hideSm: true },
+        { key: "hits",    label: "H", hideSm: true },
+        { key: "blocked", label: "B", hideSm: true },
+        { key: "plusMinus", label: "+/-", hideSm: true }
     ];
+
+    const statCellClass = (col) =>
+        `fp-stat-col${col.hideSm ? " d-none d-md-table-cell" : ""}`;
 
     const sideColCount = () => 6 + SKATER_STAT_COLS.length + 2;
     const bottomColCount = () => 5 + SKATER_STAT_COLS.length + 1;
@@ -751,7 +840,7 @@
     const renderBottomRow = (p, id, idx) => {
         const s = (p && p.stat) || {};
         const statCells = SKATER_STAT_COLS.map(col =>
-            `<td class="fp-stat-col">${formatStatCell(s, col)}</td>`
+            `<td class="${statCellClass(col)}">${formatStatCell(s, col)}</td>`
         ).join("");
         const label = (p && p.skaterFullName) || `Player #${id}`;
         const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
@@ -765,11 +854,11 @@
             : "Remove from My Team";
 
         return `<tr data-bottom-id="${id}">
-            <td class="text-muted">${idx}</td>
+            <td class="text-muted d-none d-sm-table-cell">${idx}</td>
             <td class="fp-side-name-col">
                 <button type="button" class="btn btn-link btn-sm p-0 text-left" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})">${label}</button>
             </td>
-            <td>${teamCell}</td>
+            <td class="d-none d-md-table-cell">${teamCell}</td>
             <td>${positionChip(elig)}</td>
             <td class="fp-stat-col">${p ? `<strong>${fpPoints(p).toFixed(1)}</strong>` : nullish(null)}</td>
             ${statCells}
@@ -781,7 +870,7 @@
 
     const renderBottomTotals = (totals) => {
         const statCells = SKATER_STAT_COLS.map(col =>
-            `<td class="fp-stat-col">${totals[col.key]}</td>`
+            `<td class="${statCellClass(col)}">${totals[col.key]}</td>`
         ).join("");
         return `<tr>
             <td colspan="4" class="text-right text-muted">Total</td>
@@ -856,7 +945,7 @@
     const renderSideRow = (p, id, idx, drafted, picked, fav, watch) => {
         const s = (p && p.stat) || {};
         const statCells = SKATER_STAT_COLS.map(col =>
-            `<td class="fp-stat-col">${formatStatCell(s, col)}</td>`
+            `<td class="${statCellClass(col)}">${formatStatCell(s, col)}</td>`
         ).join("");
         const onDrafted = isIn(id, drafted);
         const onPicked  = isIn(id, picked);
@@ -884,11 +973,11 @@
             <td class="fp-drag-col">
                 <span class="fp-drag-handle" draggable="true" title="Drag to reorder" aria-label="Drag to reorder">⋮⋮</span>
             </td>
-            <td class="text-muted fp-rank-col">${idx}</td>
+            <td class="text-muted fp-rank-col d-none d-sm-table-cell">${idx}</td>
             <td class="fp-side-name-col">
                 <button type="button" class="btn btn-link btn-sm p-0 text-left" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})">${label}</button>
             </td>
-            <td>${teamCell}</td>
+            <td class="d-none d-md-table-cell">${teamCell}</td>
             <td>${positionChip(elig)}</td>
             <td class="fp-stat-col">${p ? `<strong>${fpPoints(p).toFixed(1)}</strong>` : nullish(null)}</td>
             ${statCells}

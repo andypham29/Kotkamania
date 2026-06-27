@@ -1,44 +1,74 @@
-<div class="sticky-top">
-    <nav class="navbar navbar-expand-md"
-         style="background-color: white; height: 10%;">
-        <div class="container justify-content-center">
-            <button aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation"
-                    class="navbar-toggler navbar-light"
-                    data-target="#navbarTogglerDemo01" data-toggle="collapse" type="button">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <ul class="nav navbar-nav">
-                    <li><a class="nav-item nav-link" href="/">Home</a></li>
-<!--                    <li><a class="nav-item nav-link" href="/prospects">Prospects</a></li>-->
-<!--                    <li><a class="nav-item nav-link" href="/draftcenter">Draft Center</a></li>-->
-<!--                    <li><a class="nav-item nav-link" href="/draftsimulator">Draft Simulator</a></li>-->
-                    <li><a class="nav-item nav-link" href="/nhl/stats/skaters">NHL</a></li>
-                    <li><a class="nav-item nav-link" href="/nhl/schedule">Schedule</a></li>
-                    <li><a class="nav-item nav-link" href="/nhl/teams">Teams</a></li>
-                    <!--                    <li><a class="nav-item nav-link" href="/nhl/fantasy">NHL Fantasy <span-->
-                    <!--                            class="fantasybadge fantasybadge-primary">new</span></a></li>-->
-                    <!--                    <li>-->
-                    <li><a class="nav-item nav-link" href="/nhl/fantasy"> Fantasy</a></li>
-                </ul>
-                <ul class="nav navbar-nav ml-auto">
-                    <li>
-                        <form action="/nhl/players" class="form-inline ml-auto">
-                            <input aria-label="Search" class="form-control mr-sm-2" name="search"
-                                   placeholder="Search Player"
-                                   required type="search">
-                        </form>
-                    </li>
-                </ul>
-            </div>
+<div class="sticky-top site-nav-wrap">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white site-nav">
+        <a class="navbar-brand site-nav-brand py-1" href="/">KotkaMania</a>
+
+        <button aria-controls="siteNavCollapse" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler site-nav-toggler" data-target="#siteNavCollapse" data-toggle="collapse"
+                type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="siteNavCollapse">
+            <ul class="navbar-nav mr-lg-auto">
+                <li class="nav-item">
+                    <a class="nav-link site-nav-link{% if page=='index' %} active{% endif %}" href="/">Home</a>
+                </li>
+
+                <li class="nav-item dropdown d-none d-lg-block">
+                    <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle site-nav-link{% if page=='nhl_roster' or page=='nhl_stats_skater' %} active{% endif %}"
+                       data-toggle="dropdown" href="#" id="nhlDropdown" role="button">NHL</a>
+                    <div aria-labelledby="nhlDropdown" class="dropdown-menu">
+                        <a class="dropdown-item{% if page=='nhl_roster' %} active{% endif %}" href="/nhl/roster">Roster</a>
+                        <a class="dropdown-item{% if page=='nhl_stats_skater' %} active{% endif %}" href="/nhl/stats/skater">Stats</a>
+                    </div>
+                </li>
+                <li class="nav-item d-lg-none">
+                    <span class="nav-link site-nav-section-label text-muted">NHL</span>
+                </li>
+                <li class="nav-item d-lg-none">
+                    <a class="nav-link site-nav-link site-nav-sublink{% if page=='nhl_roster' %} active{% endif %}" href="/nhl/roster">Roster</a>
+                </li>
+                <li class="nav-item d-lg-none">
+                    <a class="nav-link site-nav-link site-nav-sublink{% if page=='nhl_stats_skater' %} active{% endif %}" href="/nhl/stats/skater">Stats</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link site-nav-link{% if page=='nhl_schedule' %} active{% endif %}" href="/nhl/schedule">Schedule</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link site-nav-link{% if page=='nhl_teams' %} active{% endif %}" href="/nhl/teams">Teams</a>
+                </li>
+
+                <li class="nav-item dropdown d-none d-lg-block">
+                    <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle site-nav-link{% if page=='nhl_fantasy' or page=='nhl_fantasy_draftboard' or page=='nhl_fantasy_streak' %} active{% endif %}"
+                       data-toggle="dropdown" href="#" id="fantasyDropdown" role="button">Fantasy</a>
+                    <div aria-labelledby="fantasyDropdown" class="dropdown-menu">
+                        <a class="dropdown-item{% if page=='nhl_fantasy' %} active{% endif %}" href="/nhl/fantasy">Players</a>
+                        <a class="dropdown-item{% if page=='nhl_fantasy_draftboard' %} active{% endif %}" href="/nhl/fantasy/draftboard">Draftboard</a>
+                        <a class="dropdown-item{% if page=='nhl_fantasy_streak' %} active{% endif %}" href="/nhl/fantasy/streak">Hot Streak</a>
+                    </div>
+                </li>
+                <li class="nav-item d-lg-none">
+                    <span class="nav-link site-nav-section-label text-muted">Fantasy</span>
+                </li>
+                <li class="nav-item d-lg-none">
+                    <a class="nav-link site-nav-link site-nav-sublink{% if page=='nhl_fantasy' %} active{% endif %}" href="/nhl/fantasy">Players</a>
+                </li>
+                <li class="nav-item d-lg-none">
+                    <a class="nav-link site-nav-link site-nav-sublink{% if page=='nhl_fantasy_draftboard' %} active{% endif %}" href="/nhl/fantasy/draftboard">Draftboard</a>
+                </li>
+                <li class="nav-item d-lg-none">
+                    <a class="nav-link site-nav-link site-nav-sublink{% if page=='nhl_fantasy_streak' %} active{% endif %}" href="/nhl/fantasy/streak">Hot Streak</a>
+                </li>
+            </ul>
+
+            <form action="/nhl/players" class="form-inline site-nav-search ml-lg-auto">
+                <input aria-label="Search player" class="form-control form-control-sm" name="search"
+                       placeholder="Search player" required type="search">
+            </form>
         </div>
     </nav>
-    {% if (page=="nhl_roster" or page=="nhl_stats_skater") %}
-    {% include 'nhl/nhl_nav.html' %}
-    {% endif %}
-    {% if (page=="nhl_fantasy" or page=="nhl_fantasy_draftboard" or page=="nhl_fantasy_streak") %}
-    {% include 'fantasy/fantasy_nav.html' %}
-    {% endif %}
+
     {% if (page=="nhl_fantasy_streak") %}
     {% include 'nhl/fantasy/streak/fantasy_hot_streak_menu.html' %}
     {% endif %}
@@ -47,3 +77,29 @@
     {% endif %}
 </div>
 
+<script>
+    (function () {
+        var nav = document.querySelector(".site-nav-wrap");
+        function syncNavHeight() {
+            if (nav) {
+                document.documentElement.style.setProperty("--site-nav-height", nav.offsetHeight + "px");
+            }
+        }
+        syncNavHeight();
+        window.addEventListener("resize", syncNavHeight);
+        if (nav && typeof ResizeObserver !== "undefined") {
+            new ResizeObserver(syncNavHeight).observe(nav);
+        }
+
+        var collapse = document.getElementById("siteNavCollapse");
+        if (!collapse) return;
+        collapse.querySelectorAll("a.nav-link:not(.dropdown-toggle), a.dropdown-item").forEach(function (link) {
+            link.addEventListener("click", function () {
+                if (window.innerWidth < 992 && collapse.classList.contains("show")) {
+                    $(collapse).collapse("hide");
+                }
+            });
+        });
+        $(collapse).on("shown.bs.collapse hidden.bs.collapse", syncNavHeight);
+    })();
+</script>

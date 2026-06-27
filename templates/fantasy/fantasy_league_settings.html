@@ -49,6 +49,7 @@
         <div class="card-header py-2 d-flex align-items-center flex-wrap">
             <small class="text-muted mb-2 mb-md-0">Fantasy point multipliers used for the FP column. Saved in your browser.</small>
             <div class="ml-auto">
+                <button class="btn btn-sm btn-outline-secondary" id="fpWeightsCategories" type="button">Category league</button>
                 <button class="btn btn-sm btn-outline-secondary" id="fpWeightsReset" type="button">Reset defaults</button>
                 <button class="btn btn-sm btn-primary" id="fpWeightsApply" type="button">Apply</button>
             </div>
@@ -86,6 +87,8 @@
 
     const DEFAULT_WEIGHTS = { G: 2.1, A: 2, SOG: 0.5, PPP: 1, HIT: 0.25, BLK: 0.25, PLUSMINUS: 0.1 };
     const DEFAULT_GOALIE_WEIGHTS = { WIN: 5, GA: -1.5, SAVES: 0.3, SO: 2 };
+    const CATEGORIES_WEIGHTS = { G: 1, A: 1, SOG: 1, PPP: 1, HIT: 1, BLK: 1, PLUSMINUS: 0.5 };
+    const CATEGORIES_GOALIE_WEIGHTS = { WIN: 1, GA: -1.5, SAVES: 0.5, SO: 1 };
     const WEIGHTS_STORAGE_KEY = "fp_weights";
 
     const loadWeights = () => {
@@ -327,6 +330,17 @@
             refreshBadge();
             if (typeof window.fpOnWeightsChanged === "function") {
                 window.fpOnWeightsChanged(isWeightsModified() ? "Weights applied" : "Weights at defaults");
+            }
+        });
+
+        document.getElementById("fpWeightsCategories").addEventListener("click", () => {
+            skaterWeights = { ...CATEGORIES_WEIGHTS };
+            goalieWeights = { ...CATEGORIES_GOALIE_WEIGHTS };
+            fillWeightsInputs();
+            saveWeightsToStorage();
+            refreshBadge();
+            if (typeof window.fpOnWeightsChanged === "function") {
+                window.fpOnWeightsChanged("Category league weights applied");
             }
         });
 

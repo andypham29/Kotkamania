@@ -8,7 +8,7 @@
     #fpTable thead th.no-sort { cursor: default; }
     #fpTable thead th.asc::after  { content: " ▲"; color: #007bff; }
     #fpTable thead th.desc::after { content: " ▼"; color: #007bff; }
-    .fp-table-wrap { overflow: auto; height: 100%; }
+    .fp-table-wrap { overflow: auto; height: 100%; -webkit-overflow-scrolling: touch; }
     .pos-chip { display:inline-block; padding:1px 7px; border-radius:10px; font-size:.72rem; font-weight:700; color:#fff; background:#6c757d; min-width:28px; text-align:center; }
     .pos-chip.pos-C { background:#007bff; }
     .pos-chip.pos-L { background:#28a745; }
@@ -73,15 +73,16 @@
     .fp-split-stack {
         display: flex;
         flex-direction: column;
-        height: calc(100vh - 11rem);
-        min-height: 420px;
+        flex: 1 1 auto;
+        min-height: 0;
+        height: auto;
     }
     .fp-split-top {
         flex: 6 1 0;
         min-height: 0;
         display: flex;
         flex-direction: column;
-        margin-bottom: .5rem;
+        margin-bottom: .35rem;
     }
     .fp-split-top > .card { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; margin-bottom: 0; }
     .fp-split-bottom {
@@ -91,8 +92,32 @@
         flex-direction: column;
     }
     .fp-side-panel { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; margin-bottom: 0; }
-    .fp-side-panel .card-body { overflow: auto; flex: 1 1 auto; min-height: 0; }
+    .fp-side-panel .card-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    .fp-side-table-wrap {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+    .fp-side-table-scroll {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .fp-side-totals-wrap {
+        flex-shrink: 0;
+        overflow-x: auto;
+        border-top: 2px solid #dee2e6;
+        background: #f1f3f5;
+    }
     #fpSideTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 1; white-space: nowrap; font-size: .75rem; }
+    #fpSideTable { table-layout: fixed; width: 100%; }
     #fpSideTable td, #fpSideTable th { padding: .2rem .35rem; font-size: .8rem; white-space: nowrap; }
     #fpSideTable .fp-side-name-col { max-width: 12rem; overflow: hidden; text-overflow: ellipsis; }
     #fpSideTable .fp-stat-col { text-align: right; color: #495057; min-width: 2.25rem; padding-left: .5rem; padding-right: .5rem; }
@@ -115,6 +140,35 @@
     }
     #fpSideTable tbody tr > td.fp-side-remove-col { background-color: #fff; }
     #fpSideTable tbody tr:hover > td { background-color: rgba(0, 0, 0, .075); }
+    #fpSideTotalsTable { table-layout: fixed; margin-bottom: 0; border-collapse: collapse; }
+    #fpSideTotalsTable td {
+        background: #f1f3f5;
+        font-weight: 600;
+        padding: .2rem .35rem;
+        font-size: .8rem;
+        white-space: nowrap;
+        box-sizing: border-box;
+    }
+    #fpSideTotalsTable .fp-side-name-col {
+        max-width: 12rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    #fpSideTotalsTable .fp-stat-col {
+        text-align: right;
+        color: #495057;
+        min-width: 2.25rem;
+        padding-left: .5rem;
+        padding-right: .5rem;
+    }
+    #fpSideTotalsTable .fp-side-remove-col {
+        min-width: 2.5rem;
+        width: 2.5rem;
+        text-align: right;
+        padding-left: 1rem;
+        padding-right: .65rem;
+        background: #f1f3f5;
+    }
     .fp-side-remove-btn {
         display: inline-flex;
         align-items: center;
@@ -193,6 +247,16 @@
         box-shadow: 0 1px 3px rgba(0,0,0,.08);
     }
     .fp-list-btn:active { transform: translateY(0); }
+    .fp-list-btn:disabled {
+        opacity: .35;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+    .fp-list-btn:disabled:hover {
+        transform: none;
+        border-color: #dee2e6;
+        box-shadow: none;
+    }
     .fp-list-btn.is-on { color: #fff; font-weight: 700; box-shadow: inset 0 1px 2px rgba(0,0,0,.12); }
     .fp-list-btn.fp-list-favorite.is-on { background: #e0a800; border-color: #d39e00; }
     .fp-list-btn.fp-list-watchlist.is-on { background: #138496; border-color: #117a8b; }
@@ -292,66 +356,264 @@
         padding: 0;
     }
     body.fp-settings-open { overflow: hidden; }
+    .fp-page {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 0;
+        height: auto;
+        overflow: hidden;
+        padding: 0 12px 12px;
+        width: 100%;
+        max-width: 100%;
+    }
+    .fp-sticky-toolbar {
+        flex-shrink: 0;
+        z-index: 1020;
+        background: #fff;
+        border-bottom: 1px solid #dee2e6;
+        padding: .35rem 0;
+    }
+    .fp-toolbar-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: .35rem .5rem;
+    }
+    .fp-toolbar-title {
+        font-size: .9rem;
+        font-weight: 600;
+        white-space: nowrap;
+        margin-right: .15rem;
+    }
+    .fp-toolbar-count {
+        font-size: .75rem;
+        white-space: nowrap;
+    }
+    .fp-toolbar-badges {
+        display: inline-flex;
+        gap: .25rem;
+    }
+    .fp-toolbar-badges .badge { font-size: .7rem; }
+    .fp-toolbar-search { width: 200px; max-width: 100%; }
+    .fp-toolbar-end {
+        display: inline-flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: .35rem;
+        margin-left: auto;
+    }
+    .fp-toolbar-actions {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: .25rem;
+    }
+    .fp-toolbar-head {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        flex-shrink: 0;
+    }
+    .fp-toolbar-filters {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: .35rem;
+    }
+    .fp-side-tabs-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+        margin-right: .5rem;
+    }
+    .fp-side-header-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: .25rem;
+        flex-shrink: 0;
+    }
+    @media (max-width: 991.98px) {
+        .fp-toolbar-end { margin-left: 0; width: 100%; }
+    }
     @media (max-width: 767.98px) {
+        .fp-page {
+            height: auto;
+            min-height: 0;
+            overflow: visible;
+            padding: 0 8px 16px;
+        }
+        .fp-sticky-toolbar {
+            position: sticky;
+            top: var(--site-nav-height);
+            padding: .5rem 0;
+        }
+        .fp-toolbar-row {
+            flex-direction: column;
+            align-items: stretch;
+            gap: .5rem;
+        }
+        .fp-toolbar-head { width: 100%; }
+        .fp-toolbar-title { font-size: 1rem; }
+        .fp-toolbar-search {
+            width: 100%;
+            min-height: 2.25rem;
+        }
+        .fp-toolbar-filters {
+            width: 100%;
+        }
+        .fp-toolbar-filters .btn-sm,
+        .fp-toolbar-actions .btn-sm {
+            min-height: 2.25rem;
+            min-width: 2.25rem;
+        }
+        #fpTeamSelect {
+            flex: 1 1 100%;
+            width: 100% !important;
+            min-height: 2.25rem;
+        }
+        .fp-toolbar-end {
+            justify-content: space-between;
+        }
         .fp-split-stack { height: auto; min-height: 0; }
         .fp-split-top, .fp-split-bottom { flex: none; }
-        .fp-split-top .fp-table-wrap { max-height: 55vh; }
-        .fp-side-panel .card-body { max-height: 28vh; }
+        .fp-split-top .fp-table-wrap {
+            max-height: min(52vh, calc(100dvh - 14rem));
+            min-height: 220px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .fp-side-panel .card-body {
+            max-height: min(38vh, calc(100dvh - 9rem));
+        }
+        .fp-side-table-scroll { -webkit-overflow-scrolling: touch; }
+        #fpTable td, #fpTable th {
+            padding: .35rem .4rem;
+            font-size: .875rem;
+        }
+        #fpTable thead th { font-size: .8rem; }
+        #fpSideTable td, #fpSideTable th {
+            padding: .35rem .4rem;
+            font-size: .875rem;
+        }
+        #fpSideTable thead th { font-size: .8rem; }
+        #fpSideTable .fp-side-name-col { max-width: 9rem; }
+        .fp-mobile-hide { display: none !important; }
+        .fp-list-btn {
+            width: 2.25rem;
+            height: 2.25rem;
+            font-size: .9rem;
+        }
+        #fpTable .fp-lists-col {
+            min-width: 10.5rem;
+            width: 10.5rem;
+        }
+        .fp-reorder-btn,
+        .fp-side-remove-btn {
+            width: 2.25rem;
+            height: 2.25rem;
+            font-size: .9rem;
+        }
+        .pos-chip {
+            font-size: .78rem;
+            min-width: 1.75rem;
+            padding: 2px 8px;
+        }
+        .fp-side-tabs-wrap {
+            width: 100%;
+            margin: 0 0 .35rem;
+        }
+        #fpTabs .nav-link {
+            font-size: .82rem;
+            padding: .4rem .55rem;
+        }
+        .fp-side-header-actions .btn-sm {
+            min-height: 2.25rem;
+        }
+        .fp-toast {
+            left: 1rem;
+            right: 1rem;
+            bottom: 1rem;
+            min-width: 0;
+        }
+        .fp-settings-drawer {
+            width: 100vw;
+            max-width: 100vw;
+        }
+        #fpSideTable .fp-side-remove-col {
+            position: sticky;
+            right: 0;
+            z-index: 1;
+            background: #fff;
+            box-shadow: -6px 0 8px -6px rgba(0, 0, 0, .12);
+        }
+        #fpSideTable thead .fp-side-remove-col {
+            z-index: 2;
+            background: #f8f9fa;
+        }
+        #fpSideTable tbody tr.fp-side-row-picked > td.fp-side-remove-col { background-color: #e7f5ff; }
+        #fpSideTable tbody tr.fp-side-row-picked:hover > td.fp-side-remove-col { background-color: #d0ebff; }
+        #fpSideTable tbody tr.fp-side-row-drafted > td.fp-side-remove-col { background-color: #fff4e6; }
+        #fpSideTable tbody tr.fp-side-row-drafted:hover > td.fp-side-remove-col { background-color: #ffe8cc; }
     }
 </style>
 
-<div class="container-fluid py-3">
-    <div class="d-flex flex-wrap align-items-center mb-3">
-        <h3 class="mb-0 mr-3">Fantasy Players</h3>
-        <a href="/nhl/fantasy/draftboard" class="btn btn-sm btn-outline-success mr-2">🗊 Draftboard</a>
-        <small class="text-muted">
-            Showing <strong id="fpVisibleCount">0</strong> of <strong id="fpTotalCount">0</strong>
-        </small>
-        <small class="text-muted ml-auto">
-            <span class="badge badge-warning">★ <span id="fpFavCount">0</span></span>
-            <span class="badge badge-info">👁 <span id="fpWatchCount">0</span></span>
-            <span class="badge badge-success">✓ <span id="fpDraftCount">0</span></span>
-        </small>
-    </div>
+<div class="fp-page">
+    <div class="fp-sticky-toolbar">
+        <div class="fp-toolbar-row">
+            <div class="fp-toolbar-head">
+                <span class="fp-toolbar-title">Fantasy Players</span>
+                <span class="fp-toolbar-count text-muted">
+                    <span id="fpVisibleCount">0</span>/<span id="fpTotalCount">0</span>
+                </span>
+            </div>
 
-    <div class="card mb-3">
-        <div class="card-body p-2">
-            <div class="d-flex flex-wrap align-items-center" style="gap: .5rem;">
-                <input id="fpSearchInput" type="text" class="form-control form-control-sm" placeholder="Search by name… (press / to focus)" autocomplete="off" style="width: 260px;">
+            <input id="fpSearchInput" type="text" class="form-control form-control-sm fp-toolbar-search"
+                   placeholder="Search… ( / )" autocomplete="off">
 
+            <div class="fp-toolbar-filters">
                 <div class="btn-group-toggle" data-toggle="buttons" id="fpPositionPills">
-                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="C" autocomplete="off"> C</label>
-                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="L" autocomplete="off"> L</label>
-                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="R" autocomplete="off"> R</label>
-                    <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="D" autocomplete="off"> D</label>
-                    <label class="btn btn-sm btn-outline-secondary"><input type="checkbox" data-pos="G" autocomplete="off"> G</label>
+                    <label class="btn btn-sm btn-outline-secondary py-0 px-2"><input type="checkbox" data-pos="C" autocomplete="off"> C</label>
+                    <label class="btn btn-sm btn-outline-secondary py-0 px-2"><input type="checkbox" data-pos="L" autocomplete="off"> L</label>
+                    <label class="btn btn-sm btn-outline-secondary py-0 px-2"><input type="checkbox" data-pos="R" autocomplete="off"> R</label>
+                    <label class="btn btn-sm btn-outline-secondary py-0 px-2"><input type="checkbox" data-pos="D" autocomplete="off"> D</label>
+                    <label class="btn btn-sm btn-outline-secondary py-0 px-2"><input type="checkbox" data-pos="G" autocomplete="off"> G</label>
                 </div>
 
-                <select class="form-control form-control-sm" id="fpSortSelect" style="width: auto;">
-                    <option value="score">Sort: Score</option>
-                    <option value="fp" selected>Sort: Fantasy Points</option>
-                    <option value="nhl">Sort: NHL Rank</option>
-                    <option value="espn">Sort: ESPN Avg Pick</option>
-                    <option value="goals">Sort: Goals</option>
-                    <option value="assists">Sort: Assists</option>
-                    <option value="points">Sort: Points</option>
-                    <option value="name">Sort: Name</option>
-                </select>
+                <div class="btn-group-toggle" data-toggle="buttons" id="fpListFilters">
+                    <label class="btn btn-sm btn-outline-warning py-0 px-2" title="Favorites only">
+                        <input type="checkbox" id="fpFilterFavoriteInput" autocomplete="off"> ★
+                    </label>
+                    <label class="btn btn-sm btn-outline-info py-0 px-2" title="Watchlist only">
+                        <input type="checkbox" id="fpFilterWatchlistInput" autocomplete="off"> 👁
+                    </label>
+                </div>
 
                 <select class="form-control form-control-sm" id="fpTeamSelect" style="width: auto;">
-                    <option value="">Team: All</option>
+                    <option value="">All teams</option>
                 </select>
 
-                <div class="ml-auto">
-                    <button class="btn btn-sm btn-outline-dark fp-settings-toggle" type="button" data-fp-settings="fpAdvPanel" data-fp-settings-title="Advanced Filters">
-                        Advanced <span class="badge badge-primary" id="fpAdvBadge" style="display:none;">0</span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-dark fp-settings-toggle" type="button" data-fp-settings="fpLeaguePanel" data-fp-settings-title="League Settings">
-                        League <span class="badge badge-primary" id="fpLeagueBadge" style="display:none;"></span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-secondary" id="fpCopyBtn" type="button">Copy</button>
+                <div class="btn-group-toggle" data-toggle="buttons" id="fpHideDraftedToggle">
+                    <label class="btn btn-sm btn-outline-secondary py-0 px-2 active" title="Hide drafted / my team">
+                        <input type="checkbox" id="fpHideDraftedInput" autocomplete="off" checked> Hide drafted
+                    </label>
                 </div>
             </div>
+
+            <span class="fp-toolbar-end">
+                <span class="fp-toolbar-badges">
+                    <span class="badge badge-warning">★ <span id="fpFavCount">0</span></span>
+                    <span class="badge badge-info">👁 <span id="fpWatchCount">0</span></span>
+                    <span class="badge badge-success">✓ <span id="fpDraftCount">0</span></span>
+                </span>
+                <span class="fp-toolbar-actions">
+                    <button class="btn btn-sm btn-outline-dark py-0 fp-settings-toggle" type="button" data-fp-settings="fpAdvPanel" data-fp-settings-title="Advanced Filters">
+                        Advanced <span class="badge badge-primary" id="fpAdvBadge" style="display:none;">0</span>
+                    </button>
+                    <button class="btn btn-sm btn-outline-dark py-0 fp-settings-toggle" type="button" data-fp-settings="fpLeaguePanel" data-fp-settings-title="League Settings">
+                        League <span class="badge badge-primary" id="fpLeagueBadge" style="display:none;"></span>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary py-0" id="fpCopyBtn" type="button">Copy</button>
+                </span>
+            </span>
         </div>
     </div>
 
@@ -375,6 +637,7 @@
                                 <th data-sort-key="shots">S</th>
                                 <th data-sort-key="hits">H</th>
                                 <th data-sort-key="blocked">B</th>
+                                <th data-sort-key="plusMinus">+/-</th>
                                 <th data-sort-key="nhl">NHL</th>
                                 <th data-sort-key="espn">ESPN</th>
                                 <th class="no-sort fp-lists-col"></th>
@@ -406,27 +669,36 @@
                     </div>
                     <div id="fpRosterSummary" class="mt-2" style="display:none;"></div>
                 </div>
-                <div class="card-body p-0">
-                    <table class="table table-sm table-hover mb-0" id="fpSideTable">
-                        <thead class="thead-light">
-                            <tr>
-                                <th class="no-sort">#</th>
-                                <th class="fp-reorder-col no-sort" id="fpSideReorderHead" title="Draftboard order">⇅</th>
-                                <th>Player</th>
-                                <th>Team</th>
-                                <th>Pos</th>
-                                <th class="fp-stat-col">GP</th>
-                                <th class="fp-stat-col">G</th>
-                                <th class="fp-stat-col">A</th>
-                                <th class="fp-stat-col">P</th>
-                                <th class="fp-stat-col">S</th>
-                                <th class="fp-stat-col">H</th>
-                                <th class="fp-stat-col">B</th>
-                                <th class="no-sort fp-side-remove-col"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="fpSideTableBody"></tbody>
-                    </table>
+                <div class="card-body p-0 fp-side-table-wrap">
+                    <div class="fp-side-table-scroll">
+                        <table class="table table-sm table-hover mb-0" id="fpSideTable">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="no-sort">#</th>
+                                    <th class="fp-reorder-col no-sort" id="fpSideReorderHead" title="Draftboard order">⇅</th>
+                                    <th>Player</th>
+                                    <th>Team</th>
+                                    <th>Pos</th>
+                                    <th class="fp-stat-col">FP</th>
+                                    <th class="fp-stat-col">GP</th>
+                                    <th class="fp-stat-col">G</th>
+                                    <th class="fp-stat-col">A</th>
+                                    <th class="fp-stat-col">P</th>
+                                    <th class="fp-stat-col">S</th>
+                                    <th class="fp-stat-col">H</th>
+                                    <th class="fp-stat-col">B</th>
+                                    <th class="fp-stat-col">+/-</th>
+                                    <th class="no-sort fp-side-remove-col"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="fpSideTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="fp-side-totals-wrap" id="fpSideTotalsWrap" style="display:none">
+                        <table class="table table-sm mb-0" id="fpSideTotalsTable">
+                            <tbody id="fpSideTableFoot"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -510,7 +782,8 @@
         { key: "points",  sortKey: "points",  label: "P" },
         { key: "shots",   sortKey: "shots",   label: "S" },
         { key: "hits",    sortKey: "hits",    label: "H" },
-        { key: "blocked", sortKey: "blocked", label: "B" }
+        { key: "blocked", sortKey: "blocked", label: "B" },
+        { key: "plusMinus", sortKey: "plusMinus", label: "+/-" }
     ];
 
     const GOALIE_STAT_COLS = [
@@ -522,7 +795,7 @@
         { key: "shutouts",            sortKey: "shutouts", label: "SO" }
     ];
 
-    const SKATER_SORT_KEYS = new Set(["goals", "assists", "points", "shots", "hits", "blocked"]);
+    const SKATER_SORT_KEYS = new Set(["goals", "assists", "points", "shots", "hits", "blocked", "plusMinus"]);
 
     const state = {
         all:         [],
@@ -533,6 +806,9 @@
         sortKey:     "fp",
         sortDesc:    true,
         percentiles: {},
+        hideDrafted: true,
+        filterFavorite: false,
+        filterWatchlist: false,
     };
 
     const statValue = (s, key) => s && s[key] && s[key].value;
@@ -541,7 +817,7 @@
     const isGoalieView   = () => state.positions.size === 1 && state.positions.has("G");
     const activeStatCols = () => isGoalieView() ? GOALIE_STAT_COLS : SKATER_STAT_COLS;
     const mainColCount   = () => 6 + activeStatCols().length + 3;
-    const sideColCount   = () => 5 + activeStatCols().length + 1;
+    const sideColCount   = () => 6 + activeStatCols().length + 1;
 
     const getPlayerStatBag = (p) => {
         if (!p) return {};
@@ -566,7 +842,8 @@
     const buildStatHeaderCells = (cols, side = false) => cols.map(col => {
         const cls = [
             col.noSort ? "no-sort" : "",
-            side ? "fp-stat-col" : ""
+            side ? "fp-stat-col" : "",
+            "fp-mobile-hide"
         ].filter(Boolean).join(" ");
         const sortAttr = col.sortKey ? ` data-sort-key="${col.sortKey}"` : "";
         return `<th${cls ? ` class="${cls}"` : ""}${sortAttr}>${col.label}</th>`;
@@ -579,13 +856,13 @@
             mainHead.innerHTML =
                 `<th class="no-sort">#</th>` +
                 `<th data-sort-key="name">Player</th>` +
-                `<th data-sort-key="team">Team</th>` +
+                `<th data-sort-key="team" class="fp-mobile-hide">Team</th>` +
                 `<th data-sort-key="position">Pos</th>` +
-                `<th data-sort-key="score">Score</th>` +
+                `<th data-sort-key="score" class="fp-mobile-hide">Score</th>` +
                 `<th data-sort-key="fp"${state.sortKey === "fp" ? ` class="${state.sortDesc ? "desc" : "asc"}"` : ""}>FP</th>` +
                 buildStatHeaderCells(cols) +
-                `<th data-sort-key="nhl">NHL</th>` +
-                `<th data-sort-key="espn">ESPN</th>` +
+                `<th data-sort-key="nhl" class="fp-mobile-hide">NHL</th>` +
+                `<th data-sort-key="espn" class="fp-mobile-hide">ESPN</th>` +
                 `<th class="no-sort fp-lists-col"></th>`;
         }
         const sideHead = document.querySelector("#fpSideTable thead tr");
@@ -594,8 +871,9 @@
                 `<th class="no-sort">#</th>` +
                 `<th class="fp-reorder-col no-sort" id="fpSideReorderHead" title="Draftboard order">⇅</th>` +
                 `<th>Player</th>` +
-                `<th>Team</th>` +
+                `<th class="fp-mobile-hide">Team</th>` +
                 `<th>Pos</th>` +
+                `<th class="fp-stat-col">FP</th>` +
                 buildStatHeaderCells(cols.map(col => ({ ...col, sortKey: null, noSort: true })), true) +
                 `<th class="no-sort fp-side-remove-col"></th>`;
         }
@@ -668,6 +946,7 @@
             case "shots":    return statNum(s, "shots");
             case "hits":     return statNum(s, "hits");
             case "blocked":  return statNum(s, "blocked");
+            case "plusMinus": return statNum(s, "plusMinus");
             case "gp":       return statNum(gs, "gamesPlayed");
             case "gaa":      return (gs.goalsAgainstAverage && gs.goalsAgainstAverage.value != null)
                 ? gs.goalsAgainstAverage.value : Infinity;
@@ -727,7 +1006,11 @@
         const q = state.query.trim().toLowerCase();
         let list = state.all.slice();
 
-        list = list.filter(p => !isIn(p.playerId, cookies.drafted));
+        if (state.hideDrafted) {
+            list = list.filter(p =>
+                !isIn(p.playerId, cookies.drafted) && !isIn(p.playerId, cookies.picked)
+            );
+        }
 
         if (state.positions.size > 0) {
             list = list.filter(p => {
@@ -740,6 +1023,13 @@
 
         if (state.teamId) {
             list = list.filter(p => String(p.teamId) === state.teamId);
+        }
+
+        if (state.filterFavorite) {
+            list = list.filter(p => isIn(p.playerId, cookies.fav));
+        }
+        if (state.filterWatchlist) {
+            list = list.filter(p => isIn(p.playerId, cookies.watch));
         }
 
         const pctKeys = Object.keys(state.percentiles);
@@ -773,13 +1063,30 @@
 
     const renderListActions = (p, cookies) => {
         const id = p.playerId;
+        const onPicked  = isIn(id, cookies.picked);
+        const onDrafted = isIn(id, cookies.drafted);
         const buttons = LIST_ACTIONS.map(({ action, icon, label }) => {
             const on = listActionOn(action, id, cookies);
-            const verb = on ? "Remove from" : "Add to";
+            let disabled = false;
+            let title;
+            if (action === "picked") {
+                disabled = !on && onDrafted;
+                title = on
+                    ? "Remove from My Team"
+                    : (onDrafted ? "Already drafted" : "Add to My Team");
+            } else if (action === "drafted") {
+                disabled = !on && onPicked;
+                title = on
+                    ? "Unmark as drafted"
+                    : (onPicked ? "Already on My Team" : "Mark as drafted");
+            } else {
+                title = `${on ? "Remove from" : "Add to"} ${label}`;
+            }
+            const disabledAttr = disabled ? " disabled" : "";
             return `<button type="button" class="fp-list-btn fp-list-${action} ${on ? "is-on" : ""}"
                 data-action="${action}" data-id="${id}"
                 aria-pressed="${on}" aria-label="${label}"
-                title="${verb} ${label}">${icon}</button>`;
+                title="${title}"${disabledAttr}>${icon}</button>`;
         }).join("");
         return `<div class="fp-list-actions" role="group" aria-label="Player lists">${buttons}</div>`;
     };
@@ -790,7 +1097,7 @@
         const onHighlight   = isIn(p.playerId, cookies.highlight);
         const onPicked      = isIn(p.playerId, cookies.picked);
         const s             = getPlayerStatBag(p);
-        const statCells     = activeStatCols().map(col => `<td>${formatStatCell(s, col)}</td>`).join("");
+        const statCells     = activeStatCols().map(col => `<td class="fp-mobile-hide">${formatStatCell(s, col)}</td>`).join("");
         const rowClasses    = [
             onPicked ? "fp-row-picked" : (onHighlight ? "fp-row-highlight" : "")
         ].filter(Boolean).join(" ");
@@ -798,24 +1105,30 @@
         return `<tr data-id="${p.playerId}" class="fp-row-clickable ${rowClasses}" title="Click row to highlight">
             <td>${idx}</td>
             <td><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${p.playerId})">${p.skaterFullName}</button></td>
-            <td><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${p.teamId})">${p.teamName || ""}</button></td>
+            <td class="fp-mobile-hide"><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${p.teamId})">${p.teamName || ""}</button></td>
             <td>${positionChip(elig)}</td>
-            <td>${ nullish(p.fantasyGrade) }</td>
+            <td class="fp-mobile-hide">${ nullish(p.fantasyGrade) }</td>
             <td><strong>${fp}</strong></td>
             ${statCells}
-            <td>${ nullish(p.nhlRank) }</td>
-            <td>${ nullish(p.avgPick) }</td>
+            <td class="fp-mobile-hide">${ nullish(p.nhlRank) }</td>
+            <td class="fp-mobile-hide">${ nullish(p.avgPick) }</td>
             <td class="fp-lists-col">${renderListActions(p, cookies)}</td>
         </tr>`;
     };
 
-    const renderEmpty = () =>
-        `<tr><td colspan="${mainColCount()}" class="text-center text-muted py-5">No players match the current filters.</td></tr>`;
+    const renderEmpty = (cookies) => {
+        const msg = state.hideDrafted && state.all.some(p =>
+            isIn(p.playerId, cookies.drafted) || isIn(p.playerId, cookies.picked)
+        )
+            ? "All remaining players are on My Team or drafted (toggle off Hide drafted to show them)."
+            : "No players match the current filters.";
+        return `<tr><td colspan="${mainColCount()}" class="text-center text-muted py-5">${msg}</td></tr>`;
+    };
 
     const renderSideRow = (p, id, idx, total, cookies) => {
         const s       = getPlayerStatBag(p);
         const statCells = activeStatCols().map(col =>
-            `<td class="fp-stat-col">${formatStatCell(s, col)}</td>`
+            `<td class="fp-stat-col fp-mobile-hide">${formatStatCell(s, col)}</td>`
         ).join("");
         const onPicked  = isIn(id, cookies.picked);
         const onDrafted = isIn(id, cookies.drafted);
@@ -845,13 +1158,99 @@
             <td class="fp-side-name-col">
                 <button type="button" class="btn btn-link btn-sm p-0 text-left" data-side-action="open" data-id="${id}" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})">${label}</button>
             </td>
-            <td>${teamCell}</td>
+            <td class="fp-mobile-hide">${teamCell}</td>
             <td>${positionChip(elig)}</td>
+            <td class="fp-stat-col">${p ? `<strong>${fpPoints(p).toFixed(1)}</strong>` : nullish(null)}</td>
             ${statCells}
             <td class="fp-side-remove-col">
                 <button type="button" class="fp-side-remove-btn" data-side-action="remove" data-id="${id}" title="Remove from list" aria-label="Remove from list">×</button>
             </td>
         </tr>`;
+    };
+
+    const sumTeamStats = (players) => {
+        const cols = activeStatCols();
+        const totals = { fp: 0 };
+        cols.forEach(col => { totals[col.key] = 0; });
+        players.forEach(p => {
+            if (!p) return;
+            totals.fp += fpPoints(p);
+            const s = getPlayerStatBag(p);
+            cols.forEach(col => {
+                if (col.format === "gaa" || col.format === "svpct") return;
+                totals[col.key] += statNum(s, col.key);
+            });
+        });
+        return totals;
+    };
+
+    const renderSideTotals = (totals) => {
+        const statCells = activeStatCols().map(col => {
+            if (col.format === "gaa" || col.format === "svpct") {
+                return `<td class="fp-stat-col fp-mobile-hide"><span class="fp-nullish">—</span></td>`;
+            }
+            return `<td class="fp-stat-col fp-mobile-hide"><strong>${totals[col.key]}</strong></td>`;
+        }).join("");
+        return `<tr>
+            <td></td>
+            <td class="fp-reorder-col"></td>
+            <td class="fp-side-name-col text-right text-muted">Total</td>
+            <td class="fp-mobile-hide"></td>
+            <td></td>
+            <td class="fp-stat-col"><strong>${totals.fp.toFixed(1)}</strong></td>
+            ${statCells}
+            <td class="fp-side-remove-col"></td>
+        </tr>`;
+    };
+
+    const syncSideColumnWidths = () => {
+        const mainTable   = document.getElementById("fpSideTable");
+        const totalsTable = document.getElementById("fpSideTotalsTable");
+        const wrap        = document.getElementById("fpSideTotalsWrap");
+        if (!mainTable || !totalsTable || !wrap || wrap.style.display === "none") return;
+
+        const mainThs   = mainTable.querySelectorAll("thead th");
+        const totalTds  = totalsTable.querySelectorAll("tbody tr td");
+        if (!mainThs.length || mainThs.length !== totalTds.length) return;
+
+        let colgroup = totalsTable.querySelector("colgroup");
+        if (!colgroup) {
+            colgroup = document.createElement("colgroup");
+            totalsTable.insertBefore(colgroup, totalsTable.firstChild);
+        }
+        colgroup.innerHTML = "";
+
+        mainThs.forEach((th, i) => {
+            const w = th.getBoundingClientRect().width;
+            const col = document.createElement("col");
+            col.style.width = `${w}px`;
+            colgroup.appendChild(col);
+            totalTds[i].style.width = `${w}px`;
+        });
+
+        totalsTable.style.width = `${mainTable.getBoundingClientRect().width}px`;
+    };
+
+    const syncSideTotals = (cookies) => {
+        const tbody = document.getElementById("fpSideTableFoot");
+        const wrap  = document.getElementById("fpSideTotalsWrap");
+        if (!tbody || !wrap) return;
+        if (state.sideView !== "picked") {
+            tbody.innerHTML = "";
+            wrap.style.display = "none";
+            return;
+        }
+        const ids = sideListIds(cookies);
+        if (!ids.length) {
+            tbody.innerHTML = "";
+            wrap.style.display = "none";
+            return;
+        }
+        const players = ids.map(id => playerById().get(Number(id))).filter(Boolean);
+        tbody.innerHTML = renderSideTotals(sumTeamStats(players));
+        wrap.style.display = "";
+        syncSideReorderColumn();
+        requestAnimationFrame(syncSideColumnWidths);
     };
 
     const renderSideList = (cookies) => {
@@ -874,6 +1273,7 @@
         if (ids.length === 0) {
             tbody.innerHTML = `<tr><td colspan="${sideColCount()}" class="text-center text-muted small py-3">${emptyMsgs[state.sideView] || "List is empty."}</td></tr>`;
             syncSideReorderColumn();
+            syncSideTotals(cookies);
             return;
         }
 
@@ -883,6 +1283,7 @@
         }).join("");
         syncSideReorderColumn();
         syncRosterSummary();
+        syncSideTotals(cookies);
     };
 
     const syncSidePanelTheme = () => {
@@ -903,12 +1304,16 @@
     };
 
     window.fpOnLeagueSettingsChanged = (msg) => {
-        if (state.sideView === "picked") syncRosterSummary();
+        if (state.sideView === "picked") {
+            syncRosterSummary();
+            syncSideTotals(currentCookies());
+        }
         if (msg) toast(msg);
     };
 
     window.fpOnWeightsChanged = (msg) => {
         renderTable();
+        if (state.sideView === "picked") syncSideTotals(currentCookies());
         if (msg) toast(msg);
     };
 
@@ -916,7 +1321,7 @@
         const show = state.sideView === "draftboard";
         const head = document.getElementById("fpSideReorderHead");
         if (head) head.style.display = show ? "" : "none";
-        document.querySelectorAll("#fpSideTable .fp-reorder-col").forEach(el => {
+        document.querySelectorAll("#fpSideTable .fp-reorder-col, #fpSideTotalsTable .fp-reorder-col").forEach(el => {
             el.style.display = show ? "" : "none";
         });
     };
@@ -989,7 +1394,7 @@
         const visible = filteredPlayers(cookies);
 
         tbody.innerHTML = visible.length === 0
-            ? renderEmpty()
+            ? renderEmpty(cookies)
             : visible.map((p, i) => renderRow(p, i + 1, visible.length, cookies)).join("");
 
         document.getElementById("fpVisibleCount").textContent = visible.length;
@@ -1060,6 +1465,9 @@
         const name    = (p && p.skaterFullName) || "Player";
         const label   = SIDE_VIEW_LABELS[action] || action;
 
+        if (!wasOn && action === "picked" && listActionOn("drafted", id, cookies)) return;
+        if (!wasOn && action === "drafted" && listActionOn("picked", id, cookies)) return;
+
         if (wasOn) removePlayerInCookie(Number(id), COOKIES[action]);
         else       savePlayerInCookie(Number(id), COOKIES[action]);
 
@@ -1070,7 +1478,12 @@
         if (shouldSwitchTab) switchSideView(action);
 
         if (action === "drafted" || action === "picked") {
-            renderTable();
+            if (state.hideDrafted) {
+                renderTable();
+            } else {
+                updatePlayerListButtons(id, updated);
+                renderSideList(updated);
+            }
             pulseListButton(btn);
             if (action === "drafted") {
                 toast(wasOn ? `${name} returned to the pool` : `${name} drafted`);
@@ -1085,6 +1498,11 @@
 
         if (action !== "highlight") {
             renderSideList(updated);
+        }
+
+        if ((action === "favorite" && state.filterFavorite) ||
+            (action === "watchlist" && state.filterWatchlist)) {
+            renderTable();
         }
 
         pulseListButton(btn);
@@ -1244,7 +1662,7 @@
 
         wireDraftReorderHold();
 
-        document.getElementById("fpSortSelect").addEventListener("change", (e) => {
+        document.getElementById("fpSortSelect")?.addEventListener("change", (e) => {
             state.sortKey  = e.target.value;
             state.sortDesc = (state.sortKey !== "name");
             renderTable();
@@ -1252,6 +1670,21 @@
 
         document.getElementById("fpTeamSelect").addEventListener("change", (e) => {
             state.teamId = e.target.value;
+            renderTable();
+        });
+
+        document.getElementById("fpHideDraftedInput").addEventListener("change", (e) => {
+            state.hideDrafted = e.target.checked;
+            renderTable();
+        });
+
+        document.getElementById("fpFilterFavoriteInput").addEventListener("change", (e) => {
+            state.filterFavorite = e.target.checked;
+            renderTable();
+        });
+
+        document.getElementById("fpFilterWatchlistInput").addEventListener("change", (e) => {
+            state.filterWatchlist = e.target.checked;
             renderTable();
         });
 
@@ -1270,6 +1703,7 @@
             const btn = e.target.closest(".fp-list-btn[data-action]");
             if (btn) {
                 e.stopPropagation();
+                if (btn.disabled) return;
                 handleListAction(Number(btn.dataset.id), btn.dataset.action, btn);
                 return;
             }
@@ -1328,6 +1762,20 @@
             el.addEventListener("keydown", (e) => {
                 if (e.key === "Enter") { e.preventDefault(); document.getElementById("fpAdvApply").click(); }
             });
+        });
+
+        const sideScroll = document.querySelector(".fp-side-table-scroll");
+        const totalsWrap = document.getElementById("fpSideTotalsWrap");
+        if (sideScroll && totalsWrap) {
+            sideScroll.addEventListener("scroll", () => {
+                totalsWrap.scrollLeft = sideScroll.scrollLeft;
+            }, { passive: true });
+        }
+
+        let sideWidthRaf = null;
+        window.addEventListener("resize", () => {
+            if (sideWidthRaf) cancelAnimationFrame(sideWidthRaf);
+            sideWidthRaf = requestAnimationFrame(syncSideColumnWidths);
         });
 
         document.addEventListener("keydown", (e) => {

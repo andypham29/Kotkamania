@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>KotkaMania</title>
 
@@ -32,7 +33,7 @@
 
     </script>
 </head>
-<body>
+<body{% if page=="nhl_fantasy" %} class="fp-body-layout"{% endif %}>
 <div align="center">
     {% if page=="index" %}
     <div class="header py-3">
@@ -50,6 +51,9 @@
     {% endif %}
     {% include 'nav.html' %}
 
+    {% if (page=="nhl_fantasy") %}
+    {% include 'fantasy/fantasy_page.html' %}
+    {% else %}
     <div class="container-fluid">
         <tr>
             {% if page=="index" %}
@@ -70,9 +74,6 @@
             {% if (page=="nhl_roster" or page=="nhl_stats_skater") %}
             <td>{% include 'nhl/nhl_index.html' %}</td>
             {% endif %}
-            {% if (page=="nhl_fantasy") %}
-            <td>{% include 'fantasy/fantasy_page.html' %}</td>
-            {% endif %}
             {% if (page=="nhl_fantasy_draftboard") %}
             <td>{% include 'fantasy/fantasy_draftboard_page.html' %}</td>
             {% endif %}
@@ -91,7 +92,10 @@
             {% endif %}
         </tr>
     </div>
+    {% endif %}
+    {% if page != "nhl_fantasy" %}
     <div class="container" style="height: 30px"></div>
+    {% endif %}
 </div>
 </body>
 </html>

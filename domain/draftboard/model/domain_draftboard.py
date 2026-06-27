@@ -14,7 +14,6 @@ class DomainDraftboard:
     favorites: list[str] = field(default_factory=list)
     watchlist: list[str] = field(default_factory=list)
     draftboard: list[str] = field(default_factory=list)
-    drafted: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {
@@ -22,7 +21,6 @@ class DomainDraftboard:
             "favorites": self.favorites,
             "watchlist": self.watchlist,
             "draftboard": self.draftboard,
-            "drafted": self.drafted,
         }
 
     @classmethod
@@ -31,6 +29,5 @@ class DomainDraftboard:
             id=data.get("id"),
             favorites=_as_str_list(data.get("favorites")),
             watchlist=_as_str_list(data.get("watchlist")),
-            draftboard=_as_str_list(data.get("draftboard")),
-            drafted=_as_str_list(data.get("drafted")),
+            draftboard=_as_str_list(data.get("draftboard"))
         )

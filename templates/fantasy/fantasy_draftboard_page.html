@@ -587,7 +587,7 @@
     const isIn = (id, list) => list.indexOf(Number(id)) >= 0;
 
     const shareUrlFor = (id) =>
-        `${window.location.origin}/nhl/fantasy/draftboard?draftboardId=${encodeURIComponent(id)}`;
+        `${window.location.origin}/nhl/fantasy?draftboardId=${encodeURIComponent(id)}`;
 
     const setShareUi = (id) => {
         state.draftboardId = id;

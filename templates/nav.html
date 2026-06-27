@@ -40,11 +40,10 @@
 <!--                </li>-->
 
                 <li class="nav-item dropdown d-none d-lg-block">
-                    <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle site-nav-link{% if page=='nhl_fantasy' or page=='nhl_fantasy_draftboard' or page=='nhl_fantasy_streak' %} active{% endif %}"
+                    <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle site-nav-link{% if page=='nhl_fantasy' or page=='nhl_fantasy_streak' %} active{% endif %}"
                        data-toggle="dropdown" href="#" id="fantasyDropdown" role="button">Fantasy</a>
                     <div aria-labelledby="fantasyDropdown" class="dropdown-menu">
                         <a class="dropdown-item{% if page=='nhl_fantasy' %} active{% endif %}" href="/nhl/fantasy">Players</a>
-                        <a class="dropdown-item{% if page=='nhl_fantasy_draftboard' %} active{% endif %}" href="/nhl/fantasy/draftboard">Draftboard</a>
                         <a class="dropdown-item{% if page=='nhl_fantasy_streak' %} active{% endif %}" href="/nhl/fantasy/streak">Hot Streak</a>
                     </div>
                 </li>
@@ -53,9 +52,6 @@
                 </li>
                 <li class="nav-item d-lg-none">
                     <a class="nav-link site-nav-link site-nav-sublink{% if page=='nhl_fantasy' %} active{% endif %}" href="/nhl/fantasy">Players</a>
-                </li>
-                <li class="nav-item d-lg-none">
-                    <a class="nav-link site-nav-link site-nav-sublink{% if page=='nhl_fantasy_draftboard' %} active{% endif %}" href="/nhl/fantasy/draftboard">Draftboard</a>
                 </li>
                 <li class="nav-item d-lg-none">
                     <a class="nav-link site-nav-link site-nav-sublink{% if page=='nhl_fantasy_streak' %} active{% endif %}" href="/nhl/fantasy/streak">Hot Streak</a>

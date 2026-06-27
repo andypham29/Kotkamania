@@ -238,13 +238,41 @@
             background-color: #e7f5ff;
         }
         #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-drafted .fp-mobile-entry {
-            background-color: #fff3e0;
+            background-color: #fff4e6;
         }
         #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-picked .fp-mobile-entry {
             background-color: #e7f5ff;
         }
         #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-highlight .fp-mobile-entry {
             background-color: #cbe1f4;
+        }
+        /* Uniform highlight: stats row inherits parent entry background */
+        #fpTable tbody tr.fp-mobile-entry-row.fp-row-highlight .fp-mobile-stats-grid,
+        #fpTable tbody tr.fp-mobile-entry-row.fp-row-highlight .fp-m-stat-tile,
+        #fpTable tbody tr.fp-mobile-entry-row.fp-row-picked .fp-mobile-stats-grid,
+        #fpTable tbody tr.fp-mobile-entry-row.fp-row-picked .fp-m-stat-tile,
+        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-drafted .fp-mobile-stats-grid,
+        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-drafted .fp-m-stat-tile,
+        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-picked .fp-mobile-stats-grid,
+        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-picked .fp-m-stat-tile,
+        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-highlight .fp-mobile-stats-grid,
+        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-highlight .fp-m-stat-tile {
+            background-color: transparent;
+            border-top-color: rgba(0, 0, 0, .06);
+        }
+        #fpTable tbody tr.fp-mobile-entry-row.fp-row-highlight .fp-m-stat-tile[data-sort-key]:active,
+        #fpTable tbody tr.fp-mobile-entry-row.fp-row-picked .fp-m-stat-tile[data-sort-key]:active,
+        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-drafted .fp-m-stat-tile[data-sort-key]:active,
+        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-picked .fp-m-stat-tile[data-sort-key]:active,
+        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-highlight .fp-m-stat-tile[data-sort-key]:active {
+            background-color: rgba(0, 0, 0, .04);
+        }
+        #fpTable tbody tr.fp-mobile-entry-row.fp-row-highlight .fp-m-stat-tile.fp-m-stat-sorted,
+        #fpTable tbody tr.fp-mobile-entry-row.fp-row-picked .fp-m-stat-tile.fp-m-stat-sorted,
+        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-drafted .fp-m-stat-tile.fp-m-stat-sorted,
+        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-picked .fp-m-stat-tile.fp-m-stat-sorted,
+        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-highlight .fp-m-stat-tile.fp-m-stat-sorted {
+            background-color: rgba(0, 123, 255, .08);
         }
     }
     @media (max-width: 399.98px) {
@@ -779,10 +807,39 @@
     @media (max-width: 991.98px) {
         .fp-toolbar-end { margin-left: 0; width: 100%; }
     }
+    .fp-share-toolbar {
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: .5rem;
+        margin-bottom: .35rem;
+    }
+    .fp-share-toolbar .fp-toolbar-import {
+        width: auto;
+        min-width: 9rem;
+        max-width: 100%;
+        flex: 1 1 9rem;
+    }
+    @media (max-width: 767.98px) {
+        .fp-share-toolbar .btn { min-height: 2rem; }
+    }
 </style>
 
 <div class="fp-page">
     <div class="fp-sticky-toolbar">
+        <div class="fp-share-toolbar" id="fpShareToolbar">
+            <div class="d-flex flex-wrap align-items-center" style="gap: .35rem;">
+                <button class="btn btn-sm btn-primary py-0" id="fpSaveBtn" type="button" title="Save lists to a shareable draftboard">Save</button>
+                <div class="input-group input-group-sm fp-toolbar-import">
+                    <input id="fpImportIdInput" type="text" class="form-control py-0" placeholder="Draftboard ID…" autocomplete="off">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary py-0" id="fpImportBtn" type="button">Import</button>
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-success py-0" id="fpApplyBtn" type="button" disabled title="Save the imported draftboard to your browser lists">Apply</button>
+                <button class="btn btn-sm btn-outline-secondary py-0" id="fpShareBtn" type="button" disabled title="Copy shareable link">Share</button>
+                <button class="btn btn-sm btn-outline-warning py-0" id="fpUseLocalBtn" type="button" style="display: none;" title="Stop viewing the shared draftboard and use your saved lists">Use local</button>
+                <input id="fpShareUrl" type="hidden" readonly>
+            </div>
+        </div>
         <div class="fp-toolbar-row">
             <div class="fp-toolbar-head">
                 <span class="fp-toolbar-title">Fantasy Players</span>
@@ -836,6 +893,7 @@
                     <button class="btn btn-sm btn-outline-dark py-0 fp-settings-toggle" type="button" data-fp-settings="fpLeaguePanel" data-fp-settings-title="League Settings">
                         League <span class="badge badge-primary" id="fpLeagueBadge" style="display:none;"></span>
                     </button>
+                    <button class="btn btn-sm btn-outline-success py-0" id="fpDraftboardSortBtn" type="button" title="Sort main list to match draftboard order">🗊 Draftboard</button>
                     <button class="btn btn-sm btn-outline-secondary py-0" id="fpCopyBtn" type="button">Copy</button>
                 </span>
             </span>
@@ -898,7 +956,7 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th class="no-sort fp-mobile-head-spacer">#</th>
-                                    <th class="fp-reorder-col no-sort fp-mobile-head-spacer" id="fpSideReorderHead" title="Draftboard order">⇅</th>
+                                    <th class="fp-reorder-col no-sort fp-mobile-head-spacer" id="fpSideReorderHead" title="Draftboard">⇅</th>
                                     <th class="fp-mobile-head-spacer">Player</th>
                                     <th class="fp-stat-col">FP</th>
                                     <th class="fp-stat-col">GP</th>
@@ -1030,6 +1088,8 @@
         hideDrafted: true,
         filterFavorite: false,
         filterWatchlist: false,
+        draftboardId: null,
+        importedPayload: null,
     };
 
     const statValue = (s, key) => s && s[key] && s[key].value;
@@ -1194,6 +1254,144 @@
         `<td class="fp-player-cell">${playerCardInner(p, id, opts)}</td>`;
 
     const cookieList = (name) => getPlayersInCookie(name).map(Number);
+    const cookieListAsStr = (name) => getPlayersInCookie(name).map(String);
+
+    const shareUrlFor = (id) =>
+        `${window.location.origin}/nhl/fantasy?draftboardId=${encodeURIComponent(id)}`;
+
+    const hasSharedDraftboard = () => !!(state.draftboardId || state.importedPayload);
+
+    const syncShareToolbarUi = () => {
+        const localBtn = document.getElementById("fpUseLocalBtn");
+        if (localBtn) localBtn.style.display = hasSharedDraftboard() ? "" : "none";
+        setApplyUi();
+    };
+
+    const setShareUi = (id) => {
+        state.draftboardId = id;
+        const shareInput = document.getElementById("fpShareUrl");
+        const importInput = document.getElementById("fpImportIdInput");
+        const shareBtn = document.getElementById("fpShareBtn");
+        if (!id) {
+            if (shareInput) shareInput.value = "";
+            if (shareBtn) shareBtn.disabled = true;
+            if (importInput) importInput.value = "";
+            history.replaceState(null, "", window.location.pathname);
+            syncShareToolbarUi();
+            return;
+        }
+        const url = shareUrlFor(id);
+        if (shareInput) shareInput.value = url;
+        if (shareBtn) shareBtn.disabled = false;
+        if (importInput) importInput.value = id;
+        history.replaceState(null, "", `?draftboardId=${encodeURIComponent(id)}`);
+        syncShareToolbarUi();
+    };
+
+    const clearSharedDraftboard = () => {
+        if (!hasSharedDraftboard()) {
+            toast("No shared draftboard loaded");
+            return;
+        }
+        state.importedPayload = null;
+        state.draftboardId = null;
+        setShareUi(null);
+        toast("Using your local lists");
+        renderTable();
+    };
+
+    const applyDraftboardPayload = (data) => {
+        [
+            { key: "favorites", cookie: COOKIES.favorite },
+            { key: "watchlist", cookie: COOKIES.watchlist },
+            { key: "draftboard", cookie: COOKIES.draftboard }
+        ].forEach(({ key, cookie }) => {
+            const ids = Array.isArray(data[key]) ? data[key].map(Number).filter(Boolean) : [];
+            setPlayersOrderInCookie(ids, cookie);
+        });
+    };
+
+    const setApplyUi = () => {
+        const btn = document.getElementById("fpApplyBtn");
+        if (btn) btn.disabled = !state.importedPayload;
+    };
+
+    const applyImportedDraftboard = () => {
+        if (!state.importedPayload) {
+            toast("Import a draftboard first");
+            return;
+        }
+        const id = state.importedPayload.id || state.draftboardId || "draftboard";
+        if (!confirm(`Apply draftboard "${id}"? This will replace your Favorites, Watchlist, and Draftboard lists.`)) {
+            return;
+        }
+        applyDraftboardPayload(state.importedPayload);
+        state.importedPayload = null;
+        setShareUi(state.draftboardId);
+        toast(`Applied draftboard ${id}`);
+        renderTable();
+    };
+
+    const saveDraftboard = () => {
+        const btn = document.getElementById("fpSaveBtn");
+        btn.disabled = true;
+        $.ajax({
+            url: "/draftboards",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                favorites: cookieListAsStr(COOKIES.favorite),
+                watchlist: cookieListAsStr(COOKIES.watchlist),
+                draftboard: cookieListAsStr(COOKIES.draftboard)
+            }),
+            success: (resp) => {
+                setShareUi(resp.id);
+                toast(`Draftboard saved (${resp.id})`);
+                renderTable();
+            },
+            error: (xhr) => {
+                toast(`Save failed (${xhr.status})`);
+            },
+            complete: () => { btn.disabled = false; }
+        });
+    };
+
+    const importDraftboard = (id, options = {}) => {
+        const draftboardId = (id || "").trim();
+        if (!draftboardId) {
+            toast("Enter a draftboard ID");
+            return;
+        }
+        const btn = document.getElementById("fpImportBtn");
+        btn.disabled = true;
+        $.ajax({
+            url: `/draftboards/${encodeURIComponent(draftboardId)}`,
+            type: "GET",
+            dataType: "json",
+            success: (data) => {
+                state.importedPayload = data;
+                setShareUi(data.id || draftboardId);
+                setApplyUi();
+                toast(`Loaded draftboard ${data.id || draftboardId} — click Apply to save to your lists`);
+                if (typeof options.onSuccess === "function") options.onSuccess(data);
+            },
+            error: (xhr) => {
+                toast(xhr.status === 404 ? "Draftboard not found" : `Import failed (${xhr.status})`);
+                if (typeof options.onError === "function") options.onError(xhr);
+            },
+            complete: () => { btn.disabled = false; }
+        });
+    };
+
+    const copyShareUrl = () => {
+        const url = document.getElementById("fpShareUrl").value;
+        if (!url) { toast("Save or import a draftboard first"); return; }
+        navigator.clipboard.writeText(url)
+            .then(() => toast("Share link copied"))
+            .catch(() => toast("Copy failed"));
+    };
+
+    const draftboardIdFromUrl = () => new URLSearchParams(window.location.search).get("draftboardId");
     const isIn = (id, list) => list.indexOf(Number(id)) >= 0;
 
     const toast = (msg) => {
@@ -1233,7 +1431,23 @@
         }
     };
 
+    const compareDraftboard = (a, b, draftOrder) => {
+        const ai = draftOrder.indexOf(Number(a.playerId));
+        const bi = draftOrder.indexOf(Number(b.playerId));
+        const aOn = ai >= 0;
+        const bOn = bi >= 0;
+        if (aOn && bOn) return ai - bi;
+        if (aOn) return -1;
+        if (bOn) return 1;
+        const fpDiff = fpPoints(b) - fpPoints(a);
+        if (fpDiff !== 0) return fpDiff;
+        return (a.playerId || 0) - (b.playerId || 0);
+    };
+
     const compare = (a, b) => {
+        if (state.sortKey === "draftboard") {
+            return compareDraftboard(a, b, currentCookies().draft);
+        }
         const av = sortValue(a, state.sortKey);
         const bv = sortValue(b, state.sortKey);
         if (typeof av === "string" || typeof bv === "string") {
@@ -1703,11 +1917,26 @@
             th.classList.remove("asc", "desc");
             if (th.dataset.sortKey === state.sortKey) th.classList.add(state.sortDesc ? "desc" : "asc");
         });
+        syncDraftboardSortBtn();
+    };
+
+    const syncDraftboardSortBtn = () => {
+        const btn = document.getElementById("fpDraftboardSortBtn");
+        if (!btn) return;
+        btn.classList.toggle("active", state.sortKey === "draftboard");
+        btn.setAttribute("aria-pressed", state.sortKey === "draftboard" ? "true" : "false");
     };
 
     const applyTableSort = (key) => {
-        if (state.sortKey === key) state.sortDesc = !state.sortDesc;
-        else { state.sortKey = key; state.sortDesc = (key !== "name"); }
+        if (key === "draftboard") {
+            state.sortKey = key;
+            state.sortDesc = false;
+        } else if (state.sortKey === key) {
+            state.sortDesc = !state.sortDesc;
+        } else {
+            state.sortKey = key;
+            state.sortDesc = (key !== "name");
+        }
         const sortSel = document.getElementById("fpSortSelect");
         if (sortSel && sortSel.querySelector(`option[value="${key}"]`)) sortSel.value = key;
         renderTable();
@@ -2036,6 +2265,20 @@
             handleListAction(Number(row.dataset.id), "highlight", null);
         });
 
+        document.getElementById("fpDraftboardSortBtn").addEventListener("click", () => {
+            if (state.sortKey === "draftboard") {
+                applyTableSort("fp");
+                return;
+            }
+            const draftOrder = currentCookies().draft;
+            if (!draftOrder.length) {
+                toast("Draftboard is empty");
+                return;
+            }
+            applyTableSort("draftboard");
+            toast("Sorted by draftboard order");
+        });
+
         document.getElementById("fpCopyBtn").addEventListener("click", () => {
             const names = filteredPlayers(currentCookies()).map(p => p.skaterFullName).join("\n");
             if (!names) { toast("Nothing to copy"); return; }
@@ -2112,13 +2355,41 @@
                 document.getElementById("fpSearchInput").focus();
             }
         });
+
+        document.getElementById("fpSaveBtn").addEventListener("click", saveDraftboard);
+
+        document.getElementById("fpImportBtn").addEventListener("click", () => {
+            importDraftboard(document.getElementById("fpImportIdInput").value);
+        });
+
+        document.getElementById("fpImportIdInput").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                importDraftboard(e.target.value);
+            }
+        });
+
+        document.getElementById("fpApplyBtn").addEventListener("click", applyImportedDraftboard);
+        document.getElementById("fpShareBtn").addEventListener("click", copyShareUrl);
+        document.getElementById("fpUseLocalBtn").addEventListener("click", clearSharedDraftboard);
     };
 
     $(document).ready(() => {
         wireEvents();
         syncSideTabState(state.sideView);
         syncSideReorderColumn();
-        load();
+        syncShareToolbarUi();
+        const urlDraftboardId = draftboardIdFromUrl();
+        if (urlDraftboardId) {
+            switchSideView("draftboard");
+            setShareUi(urlDraftboardId);
+            importDraftboard(urlDraftboardId, {
+                onSuccess: () => load(),
+                onError: () => load()
+            });
+        } else {
+            load();
+        }
     });
 })();
 </script>

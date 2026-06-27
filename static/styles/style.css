@@ -96,6 +96,15 @@ body.fp-body-layout .site-nav-wrap {
     flex-shrink: 0;
 }
 
+body.fp-body-layout table#fpTable,
+body.fp-body-layout table#fpSideTable,
+body.fp-body-layout table#fpSideTotalsTable,
+body.fp-draftboard-layout table#fpDraftTable,
+body.fp-draftboard-layout table#fpBottomTable {
+    margin: 0;
+    width: 100%;
+}
+
 table {
     margin: auto;
     z-index: 1;

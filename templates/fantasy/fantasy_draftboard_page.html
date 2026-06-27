@@ -12,8 +12,23 @@
     .pos-chip.pos-R { background:#dc3545; }
     .pos-chip.pos-D { background:#6f42c1; }
     .pos-chip.pos-G { background:#ffc107; color:#212529; }
+    .team-chip {
+        display: inline-block;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .03em;
+        background: #e9ecef;
+        color: #495057;
+        border: none;
+        line-height: 1.4;
+        cursor: pointer;
+        vertical-align: middle;
+    }
+    .team-chip:hover { background: #dee2e6; color: #212529; }
     .fp-draftboard-wrap {
-        max-width: 960px;
+        max-width: 100%;
         margin: 0 auto;
     }
     .fp-draftboard-panel .card-body {
@@ -21,9 +36,25 @@
         max-height: calc(100vh - 10rem);
         min-height: 320px;
     }
-    #fpDraftTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 1; white-space: nowrap; font-size: .75rem; }
-    #fpDraftTable td, #fpDraftTable th { padding: .2rem .35rem; font-size: .8rem; white-space: nowrap; }
-    #fpDraftTable .fp-drag-col { width: 2.5rem; padding-right: 0; color: #adb5bd; }
+    #fpDraftTable { width: 100%; margin: 0; table-layout: fixed; }
+    #fpDraftTable th,
+    #fpDraftTable td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #fpDraftTable .fp-col-name .btn-link,
+    #fpDraftTable .fp-side-name-col .btn-link {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        text-align: left;
+    }
+    #fpDraftTable .fp-col-rank { text-align: center; color: #adb5bd; }
+    #fpDraftTable .fp-col-team,
+    #fpDraftTable .fp-col-pos { text-align: center; }
+    #fpDraftTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 1; white-space: nowrap; padding: .45rem .35rem; font-size: .78rem; vertical-align: middle; }
+    #fpDraftTable tbody td { padding: .4rem .35rem; font-size: .82rem; line-height: 1.35; vertical-align: middle; }
+    #fpDraftTable tbody tr { border-bottom: 1px solid #f1f3f5; }
+    #fpDraftTable .fp-drag-col { width: 2.75rem; padding: .5rem .35rem .5rem .5rem; color: #adb5bd; }
     #fpDraftTable .fp-drag-handle {
         cursor: grab;
         user-select: none;
@@ -38,30 +69,32 @@
     #fpDraftTable .fp-drag-handle:active { cursor: grabbing; }
     #fpDraftTable tbody tr.fp-dragging { opacity: .45; }
     #fpDraftTable tbody tr.fp-drag-over > td { box-shadow: inset 0 2px 0 #007bff; }
-    #fpDraftTable .fp-side-name-col { max-width: 14rem; overflow: hidden; text-overflow: ellipsis; }
-    #fpDraftTable .fp-stat-col { text-align: right; color: #495057; min-width: 2.25rem; padding-left: .5rem; padding-right: .5rem; }
-    #fpDraftTable thead th.fp-stat-col { font-size: .8rem; }
-    #fpDraftTable .fp-side-draft-col {
-        min-width: 4.5rem;
-        width: auto;
+    #fpDraftTable .fp-stat-col { text-align: right; color: #495057; font-variant-numeric: tabular-nums; }
+    #fpDraftTable thead th.fp-stat-col { font-size: .8rem; text-align: right; }
+    #fpDraftTable .fp-list-labels-col {
+        width: 5.5rem;
         text-align: center;
-        padding-left: .5rem;
-        padding-right: .65rem;
-        position: sticky;
-        right: 0;
-        z-index: 1;
-        background: #fff;
-        box-shadow: -6px 0 8px -6px rgba(0, 0, 0, .12);
+        padding: .5rem .5rem;
+        border-left: 1px solid #e9ecef;
+    }
+    #fpDraftTable .fp-side-draft-col {
+        width: 5.5rem;
+        text-align: center;
+        padding: .5rem .75rem;
+        white-space: nowrap;
+        border-left: 1px solid #e9ecef;
     }
     .fp-side-actions {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 3px;
+        gap: 5px;
     }
-    #fpDraftTable thead .fp-side-draft-col {
-        z-index: 2;
-        background: #f8f9fa;
+    .fp-list-labels {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
     }
     #fpDraftTable tbody tr > td.fp-side-draft-col { background-color: #fff; }
     #fpDraftTable tbody tr:hover > td { background-color: rgba(0, 0, 0, .075); }
@@ -141,18 +174,6 @@
     #fpDraftTable tbody tr.fp-side-row-drafted:hover > td { background-color: #ffe8cc; }
     #fpDraftTable tbody tr.fp-side-row-drafted > td.fp-side-draft-col { background-color: #fff4e6; }
     #fpDraftTable tbody tr.fp-side-row-drafted:hover > td.fp-side-draft-col { background-color: #ffe8cc; }
-    #fpDraftTable .fp-list-labels-col {
-        min-width: 4.5rem;
-        text-align: center;
-        padding-left: .35rem;
-        padding-right: .35rem;
-    }
-    .fp-list-labels {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 3px;
-    }
     .fp-side-favorite-btn:hover {
         border-color: #d39e00;
         color: #d39e00;
@@ -254,17 +275,32 @@
     .fp-bottom-panel.fp-side-drafted .card-header { border-top: 3px solid #e8590c; }
     #fpBottomTabs .nav-link[data-view="picked"].active { color: #339af0; border-color: #339af0 #339af0 #fff; font-weight: 600; }
     #fpBottomTabs .nav-link[data-view="drafted"].active { color: #e8590c; border-color: #e8590c #e8590c #fff; font-weight: 600; }
-    #fpBottomTable thead th { white-space: nowrap; font-size: .75rem; }
-    #fpBottomTable td, #fpBottomTable th { padding: .2rem .35rem; font-size: .8rem; white-space: nowrap; }
-    #fpBottomTable .fp-side-name-col { max-width: 14rem; overflow: hidden; text-overflow: ellipsis; }
-    #fpBottomTable .fp-stat-col { text-align: right; color: #495057; min-width: 2.25rem; padding-left: .5rem; padding-right: .5rem; }
-    #fpBottomTable thead th.fp-stat-col { font-size: .8rem; }
+    #fpBottomTable { width: 100%; margin: 0; table-layout: fixed; }
+    #fpBottomTable th,
+    #fpBottomTable td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #fpBottomTable .fp-col-name .btn-link,
+    #fpBottomTable .fp-side-name-col .btn-link {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        text-align: left;
+    }
+    #fpBottomTable .fp-col-rank { text-align: center; color: #adb5bd; }
+    #fpBottomTable .fp-col-team,
+    #fpBottomTable .fp-col-pos { text-align: center; }
+    #fpBottomTable thead th { white-space: nowrap; padding: .45rem .35rem; font-size: .78rem; vertical-align: middle; }
+    #fpBottomTable tbody td { padding: .4rem .35rem; font-size: .82rem; line-height: 1.35; vertical-align: middle; }
+    #fpBottomTable tbody tr { border-bottom: 1px solid #f1f3f5; }
+    #fpBottomTable .fp-stat-col { text-align: right; color: #495057; font-variant-numeric: tabular-nums; }
+    #fpBottomTable thead th.fp-stat-col { font-size: .8rem; text-align: right; }
     .fp-bottom-panel.fp-side-myteam #fpBottomTable tbody tr > td { background-color: #e7f5ff; }
     .fp-bottom-panel.fp-side-myteam #fpBottomTable tbody tr:hover > td { background-color: #d0ebff; }
     .fp-bottom-panel.fp-side-drafted #fpBottomTable tbody tr > td { background-color: #fff4e6; }
     .fp-bottom-panel.fp-side-drafted #fpBottomTable tbody tr:hover > td { background-color: #ffe8cc; }
-    #fpBottomTable tfoot td { background: #f1f3f5; font-weight: 600; border-top: 2px solid #dee2e6; }
-    #fpBottomTable .fp-side-remove-col { width: 2rem; text-align: center; }
+    #fpBottomTable tfoot td { background: #f1f3f5; font-weight: 600; border-top: 2px solid #dee2e6; padding: .5rem .5rem; font-size: .82rem; vertical-align: middle; }
+    #fpBottomTable .fp-side-remove-col { width: 2.75rem; text-align: center; padding: .5rem .75rem; white-space: nowrap; border-left: 1px solid #e9ecef; }
     .fp-side-remove-btn {
         display: inline-flex;
         align-items: center;
@@ -313,7 +349,10 @@
     .fp-toolbar-search { width: 220px; max-width: 100%; }
     .fp-toolbar-import { width: auto; min-width: 14rem; max-width: 100%; }
     .fp-draftboard-panel .card-body,
-    .fp-bottom-panel .card-body { -webkit-overflow-scrolling: touch; }
+    .fp-bottom-panel .card-body {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 </style>
 
 <div class="container-fluid py-3 fp-draftboard-wrap">
@@ -403,7 +442,7 @@
                     <tr>
                         <th class="no-sort fp-drag-col"></th>
                         <th class="no-sort">#</th>
-                        <th>Player</th>
+                        <th class="fp-col-name">Player</th>
                         <th>Team</th>
                         <th>Pos</th>
                         <th class="fp-stat-col">FP</th>
@@ -444,7 +483,7 @@
                 <thead class="thead-light">
                     <tr>
                         <th class="no-sort">#</th>
-                        <th>Player</th>
+                        <th class="fp-col-name">Player</th>
                         <th>Team</th>
                         <th>Pos</th>
                         <th class="fp-stat-col">FP</th>
@@ -675,6 +714,11 @@
         return `<span class="pos-chip ${known ? "pos-" + c : ""}">${c || "?"}</span>`;
     };
 
+    const teamChip = (p) => {
+        if (!p || !p.teamName) return `<span class="fp-nullish">—</span>`;
+        return `<button type="button" class="team-chip" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${p.teamId})">${p.teamName}</button>`;
+    };
+
     const formatStatCell = (s, col) => nullish(statValue(s, col.key));
 
     const isGoaliePlayer = (p) => (p.positionCode || "").toUpperCase() === "G";
@@ -793,12 +837,7 @@
         ).join("");
         const label = (p && p.skaterFullName) || `Player #${id}`;
         const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
-        const teamId = p && p.teamId;
-        const teamName = (p && p.teamName) || "";
         const fpVal = p ? fpPoints(p).toFixed(1) : null;
-        const teamCell = teamId
-            ? `<button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${teamId})">${teamName}</button>`
-            : `<span class="fp-nullish">—</span>`;
         const removeTitle = state.bottomView === "drafted"
             ? "Return to pool"
             : "Remove from My Team";
@@ -808,7 +847,7 @@
             <td class="fp-side-name-col fp-col-name">
                 <button type="button" class="btn btn-link btn-sm p-0 text-left" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})">${label}</button>
             </td>
-            <td class="fp-col-team">${teamCell}</td>
+            <td class="fp-col-team">${p ? teamChip(p) : `<span class="fp-nullish">—</span>`}</td>
             <td class="fp-col-pos">${positionChip(elig)}</td>
             <td class="fp-stat-col fp-col-fp">${p ? `<strong>${fpVal}</strong>` : nullish(null)}</td>
             ${statCells}
@@ -913,13 +952,8 @@
         ].filter(Boolean).join(" ");
         const label = (p && p.skaterFullName) || `Player #${id}`;
         const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
-        const teamId = p && p.teamId;
-        const teamName = (p && p.teamName) || "";
         const fpVal = p ? fpPoints(p).toFixed(1) : null;
         const rank = allIds ? allIds.indexOf(Number(id)) + 1 : idx;
-        const teamCell = teamId
-            ? `<button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${teamId})">${teamName}</button>`
-            : `<span class="fp-nullish">—</span>`;
 
         return `<tr data-side-id="${id}" class="${rowClasses}">
             <td class="fp-drag-col fp-col-drag">
@@ -929,7 +963,7 @@
             <td class="fp-side-name-col fp-col-name">
                 <button type="button" class="btn btn-link btn-sm p-0 text-left" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})">${label}</button>
             </td>
-            <td class="fp-col-team">${teamCell}</td>
+            <td class="fp-col-team">${p ? teamChip(p) : `<span class="fp-nullish">—</span>`}</td>
             <td class="fp-col-pos">${positionChip(elig)}</td>
             <td class="fp-stat-col fp-col-fp">${p ? `<strong>${fpVal}</strong>` : nullish(null)}</td>
             ${statCells}

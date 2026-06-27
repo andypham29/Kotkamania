@@ -4,17 +4,59 @@
 
 <style>
     /* Minimal additions — everything else comes from Bootstrap 4.5. */
-    #fpTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 2; cursor: pointer; user-select: none; white-space: nowrap; }
+    #fpTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 2; cursor: pointer; user-select: none; white-space: nowrap; padding: .45rem .5rem; font-size: .78rem; vertical-align: middle; }
     #fpTable thead th.no-sort { cursor: default; }
     #fpTable thead th.asc::after  { content: " ▲"; color: #007bff; }
     #fpTable thead th.desc::after { content: " ▼"; color: #007bff; }
-    .fp-table-wrap { overflow: auto; height: 100%; -webkit-overflow-scrolling: touch; }
+    #fpTable { width: 100%; margin: 0; table-layout: fixed; }
+    #fpTable th,
+    #fpTable td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #fpTable .fp-col-name .btn-link,
+    #fpTable .fp-side-name-col .btn-link {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        text-align: left;
+    }
+    #fpTable .fp-col-rank { text-align: center; color: #adb5bd; }
+    #fpTable .fp-col-team,
+    #fpTable .fp-col-pos { text-align: center; }
+    #fpTable .fp-col-score,
+    #fpTable .fp-col-fp,
+    #fpTable .fp-stat-col {
+        text-align: right;
+        color: #495057;
+        font-variant-numeric: tabular-nums;
+    }
+    #fpTable thead th.fp-stat-col,
+    #fpTable thead th[data-sort-key="score"],
+    #fpTable thead th[data-sort-key="fp"] { text-align: right; }
+    #fpTable tbody td { padding: .4rem .35rem; font-size: .82rem; line-height: 1.35; vertical-align: middle; }
+    #fpTable tbody tr { border-bottom: 1px solid #f1f3f5; }
+    .fp-table-wrap { overflow: auto; height: 100%; width: 100%; -webkit-overflow-scrolling: touch; }
     .pos-chip { display:inline-block; padding:1px 7px; border-radius:10px; font-size:.72rem; font-weight:700; color:#fff; background:#6c757d; min-width:28px; text-align:center; }
     .pos-chip.pos-C { background:#007bff; }
     .pos-chip.pos-L { background:#28a745; }
     .pos-chip.pos-R { background:#dc3545; }
     .pos-chip.pos-D { background:#6f42c1; }
     .pos-chip.pos-G { background:#ffc107; color:#212529; }
+    .team-chip {
+        display: inline-block;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .03em;
+        background: #e9ecef;
+        color: #495057;
+        border: none;
+        line-height: 1.4;
+        cursor: pointer;
+        vertical-align: middle;
+    }
+    .team-chip:hover { background: #dee2e6; color: #212529; }
     .fp-nullish { color:#adb5bd; font-style:italic; }
     .fp-toast { position:fixed; bottom:1.5rem; right:1.5rem; z-index:1080; min-width:200px; display:none; }
     .fp-toast.show { display:block; }
@@ -69,12 +111,12 @@
         cursor: not-allowed;
         box-shadow: none;
     }
-    #fpSideTable .fp-reorder-col { width: 3.5rem; padding-left: .25rem; padding-right: 0; }
     .fp-split-stack {
         display: flex;
         flex-direction: column;
         flex: 1 1 auto;
         min-height: 0;
+        width: 100%;
         height: auto;
     }
     .fp-split-top {
@@ -84,14 +126,14 @@
         flex-direction: column;
         margin-bottom: .35rem;
     }
-    .fp-split-top > .card { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; margin-bottom: 0; }
+    .fp-split-top > .card { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; flex-direction: column; margin-bottom: 0; }
     .fp-split-bottom {
         flex: 4 1 0;
         min-height: 0;
         display: flex;
         flex-direction: column;
     }
-    .fp-side-panel { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; margin-bottom: 0; }
+    .fp-side-panel { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; flex-direction: column; margin-bottom: 0; }
     .fp-side-panel .card-body {
         flex: 1 1 auto;
         min-height: 0;
@@ -107,6 +149,7 @@
     .fp-side-table-scroll {
         flex: 1 1 auto;
         min-height: 0;
+        width: 100%;
         overflow: auto;
         -webkit-overflow-scrolling: touch;
     }
@@ -116,58 +159,62 @@
         border-top: 2px solid #dee2e6;
         background: #f1f3f5;
     }
-    #fpSideTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 1; white-space: nowrap; font-size: .75rem; }
-    #fpSideTable { table-layout: fixed; width: 100%; }
-    #fpSideTable td, #fpSideTable th { padding: .2rem .35rem; font-size: .8rem; white-space: nowrap; }
-    #fpSideTable .fp-side-name-col { max-width: 12rem; overflow: hidden; text-overflow: ellipsis; }
-    #fpSideTable .fp-stat-col { text-align: right; color: #495057; min-width: 2.25rem; padding-left: .5rem; padding-right: .5rem; }
-    #fpSideTable thead th.fp-stat-col { font-size: .8rem; }
-    #fpSideTable .fp-side-remove-col {
-        min-width: 2.5rem;
-        width: 2.5rem;
-        text-align: right;
-        padding-left: 1rem;
-        padding-right: .65rem;
-        position: sticky;
-        right: 0;
-        z-index: 1;
-        background: #fff;
-        box-shadow: -6px 0 8px -6px rgba(0, 0, 0, .12);
+    #fpSideTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 1; white-space: nowrap; padding: .45rem .5rem; font-size: .78rem; vertical-align: middle; }
+    #fpSideTable { width: 100%; margin: 0; table-layout: fixed; }
+    #fpSideTable th,
+    #fpSideTable td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #fpSideTable .fp-col-name .btn-link,
+    #fpSideTable .fp-side-name-col .btn-link {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        text-align: left;
     }
-    #fpSideTable thead .fp-side-remove-col {
-        z-index: 2;
-        background: #f8f9fa;
+    #fpSideTable .fp-col-rank { text-align: center; color: #adb5bd; }
+    #fpSideTable .fp-col-team,
+    #fpSideTable .fp-col-pos { text-align: center; }
+    #fpSideTable tbody td { padding: .4rem .35rem; font-size: .82rem; line-height: 1.35; vertical-align: middle; }
+    #fpSideTable tbody tr { border-bottom: 1px solid #f1f3f5; }
+    #fpSideTable .fp-stat-col { text-align: right; color: #495057; font-variant-numeric: tabular-nums; }
+    #fpSideTable thead th.fp-stat-col { font-size: .8rem; text-align: right; }
+    #fpSideTable .fp-reorder-col { width: 3.75rem; padding: .5rem .35rem .5rem .5rem; }
+    #fpSideTable .fp-side-remove-col {
+        width: 2.75rem;
+        text-align: center;
+        padding: .5rem .75rem;
+        white-space: nowrap;
+        border-left: 1px solid #e9ecef;
     }
     #fpSideTable tbody tr > td.fp-side-remove-col { background-color: #fff; }
     #fpSideTable tbody tr:hover > td { background-color: rgba(0, 0, 0, .075); }
-    #fpSideTotalsTable { table-layout: fixed; margin-bottom: 0; border-collapse: collapse; }
+    #fpSideTotalsTable { width: 100%; margin: 0; margin-bottom: 0; border-collapse: collapse; table-layout: fixed; }
+    #fpSideTotalsTable .fp-reorder-col { width: 3.75rem; }
+    #fpSideTotalsTable .fp-side-remove-col { width: 2.75rem; }
     #fpSideTotalsTable td {
         background: #f1f3f5;
         font-weight: 600;
-        padding: .2rem .35rem;
-        font-size: .8rem;
+        padding: .5rem .5rem;
+        font-size: .82rem;
+        line-height: 1.35;
         white-space: nowrap;
         box-sizing: border-box;
-    }
-    #fpSideTotalsTable .fp-side-name-col {
-        max-width: 12rem;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        vertical-align: middle;
     }
     #fpSideTotalsTable .fp-stat-col {
         text-align: right;
         color: #495057;
-        min-width: 2.25rem;
+        min-width: 2.5rem;
         padding-left: .5rem;
         padding-right: .5rem;
     }
     #fpSideTotalsTable .fp-side-remove-col {
-        min-width: 2.5rem;
-        width: 2.5rem;
-        text-align: right;
-        padding-left: 1rem;
-        padding-right: .65rem;
+        min-width: 2.75rem;
+        text-align: center;
+        padding: .5rem .75rem;
         background: #f1f3f5;
+        border-left: 1px solid #e9ecef;
     }
     .fp-side-remove-btn {
         display: inline-flex;
@@ -191,24 +238,15 @@
         color: #fff;
     }
     #fpTable .fp-lists-col {
-        min-width: 9rem;
-        width: 9rem;
+        width: 10rem;
         text-align: right;
-        padding-left: 1.25rem;
-        padding-right: .65rem;
-        position: sticky;
-        right: 0;
-        z-index: 1;
-        background: #fff;
-        box-shadow: -6px 0 8px -6px rgba(0, 0, 0, .12);
-    }
-    #fpTable thead .fp-lists-col {
-        z-index: 3;
-        background: #f8f9fa;
+        padding: .4rem .5rem;
+        white-space: nowrap;
+        border-left: 1px solid #e9ecef;
     }
     .fp-list-hdr {
         display: inline-flex;
-        gap: 3px;
+        gap: 4px;
         font-size: .7rem;
         opacity: .55;
         letter-spacing: .02em;
@@ -219,7 +257,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: flex-end;
-        gap: 3px;
+        gap: 5px;
         flex-wrap: nowrap;
         width: 100%;
         margin-left: auto;
@@ -506,21 +544,21 @@
                         <thead class="thead-light">
                             <tr>
                                 <th class="no-sort">#</th>
-                                <th data-sort-key="name">Player</th>
+                                <th data-sort-key="name" class="fp-col-name">Player</th>
                                 <th data-sort-key="team">Team</th>
                                 <th data-sort-key="position">Pos</th>
-                                <th data-sort-key="score">Score</th>
-                                <th data-sort-key="fp" class="desc">FP</th>
-                                <th class="no-sort">GP</th>
-                                <th data-sort-key="goals">G</th>
-                                <th data-sort-key="assists">A</th>
-                                <th data-sort-key="points">P</th>
-                                <th data-sort-key="shots">S</th>
-                                <th data-sort-key="hits">H</th>
-                                <th data-sort-key="blocked">B</th>
-                                <th data-sort-key="plusMinus">+/-</th>
-                                <th data-sort-key="nhl">NHL</th>
-                                <th data-sort-key="espn">ESPN</th>
+                                <th data-sort-key="score" class="fp-stat-col">Score</th>
+                                <th data-sort-key="fp" class="desc fp-stat-col">FP</th>
+                                <th class="no-sort fp-stat-col">GP</th>
+                                <th data-sort-key="goals" class="fp-stat-col">G</th>
+                                <th data-sort-key="assists" class="fp-stat-col">A</th>
+                                <th data-sort-key="points" class="fp-stat-col">P</th>
+                                <th data-sort-key="shots" class="fp-stat-col">S</th>
+                                <th data-sort-key="hits" class="fp-stat-col">H</th>
+                                <th data-sort-key="blocked" class="fp-stat-col">B</th>
+                                <th data-sort-key="plusMinus" class="fp-stat-col">+/-</th>
+                                <th data-sort-key="nhl" class="fp-stat-col">NHL</th>
+                                <th data-sort-key="espn" class="fp-stat-col">ESPN</th>
                                 <th class="no-sort fp-lists-col"></th>
                             </tr>
                         </thead>
@@ -557,7 +595,7 @@
                                 <tr>
                                     <th class="no-sort">#</th>
                                     <th class="fp-reorder-col no-sort" id="fpSideReorderHead" title="Draftboard order">⇅</th>
-                                    <th>Player</th>
+                                    <th class="fp-col-name">Player</th>
                                     <th>Team</th>
                                     <th>Pos</th>
                                     <th class="fp-stat-col">FP</th>
@@ -722,11 +760,11 @@
 
     const buildStatHeaderCells = (cols, side = false) => cols.map(col => {
         const cls = [
+            "fp-stat-col",
             col.noSort ? "no-sort" : "",
-            side ? "fp-stat-col" : "",
         ].filter(Boolean).join(" ");
         const sortAttr = col.sortKey ? ` data-sort-key="${col.sortKey}"` : "";
-        return `<th${cls ? ` class="${cls}"` : ""}${sortAttr}>${col.label}</th>`;
+        return `<th class="${cls}"${sortAttr}>${col.label}</th>`;
     }).join("");
 
     const syncStatHeaders = () => {
@@ -735,14 +773,14 @@
         if (mainHead) {
             mainHead.innerHTML =
                 `<th class="no-sort">#</th>` +
-                `<th data-sort-key="name">Player</th>` +
+                `<th data-sort-key="name" class="fp-col-name">Player</th>` +
                 `<th data-sort-key="team">Team</th>` +
                 `<th data-sort-key="position">Pos</th>` +
-                `<th data-sort-key="score">Score</th>` +
-                `<th data-sort-key="fp"${state.sortKey === "fp" ? ` class="${state.sortDesc ? "desc" : "asc"}"` : ""}>FP</th>` +
+                `<th data-sort-key="score" class="fp-stat-col">Score</th>` +
+                `<th data-sort-key="fp"${state.sortKey === "fp" ? ` class="fp-stat-col ${state.sortDesc ? "desc" : "asc"}"` : ` class="fp-stat-col"`}>FP</th>` +
                 buildStatHeaderCells(cols) +
-                `<th data-sort-key="nhl">NHL</th>` +
-                `<th data-sort-key="espn">ESPN</th>` +
+                `<th data-sort-key="nhl" class="fp-stat-col">NHL</th>` +
+                `<th data-sort-key="espn" class="fp-stat-col">ESPN</th>` +
                 `<th class="no-sort fp-lists-col"></th>`;
         }
         const sideHead = document.querySelector("#fpSideTable thead tr");
@@ -750,7 +788,7 @@
             sideHead.innerHTML =
                 `<th class="no-sort">#</th>` +
                 `<th class="fp-reorder-col no-sort" id="fpSideReorderHead" title="Draftboard order">⇅</th>` +
-                `<th>Player</th>` +
+                `<th class="fp-col-name">Player</th>` +
                 `<th>Team</th>` +
                 `<th>Pos</th>` +
                 `<th class="fp-stat-col">FP</th>` +
@@ -798,6 +836,11 @@
         const c = (code || "").toUpperCase().split(",")[0];
         const known = ['C','L','R','D','G'].indexOf(c) >= 0;
         return `<span class="pos-chip ${known ? 'pos-' + c : ''}">${c || "?"}</span>`;
+    };
+
+    const teamChip = (p) => {
+        if (!p || !p.teamName) return `<span class="fp-nullish">—</span>`;
+        return `<button type="button" class="team-chip" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${p.teamId})">${p.teamName}</button>`;
     };
 
     const cookieList = (name) => getPlayersInCookie(name).map(Number);
@@ -977,24 +1020,21 @@
         const onHighlight   = isIn(p.playerId, cookies.highlight);
         const onPicked      = isIn(p.playerId, cookies.picked);
         const s             = getPlayerStatBag(p);
-        const statCells     = activeStatCols().map(col => `<td>${formatStatCell(s, col)}</td>`).join("");
+        const statCells     = activeStatCols().map(col => `<td class="fp-stat-col">${formatStatCell(s, col)}</td>`).join("");
         const rowClasses    = [
             onPicked ? "fp-row-picked" : (onHighlight ? "fp-row-highlight" : "")
         ].filter(Boolean).join(" ");
-        const teamBtn = p.teamName
-            ? `<button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${p.teamId})">${p.teamName}</button>`
-            : "";
 
         return `<tr data-id="${p.playerId}" class="fp-row-clickable ${rowClasses}" title="Click row to highlight">
             <td class="fp-col-rank">${idx}</td>
             <td class="fp-col-name"><button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${p.playerId})">${p.skaterFullName}</button></td>
-            <td class="fp-col-team">${teamBtn}</td>
+            <td class="fp-col-team">${teamChip(p)}</td>
             <td class="fp-col-pos">${positionChip(elig)}</td>
             <td class="fp-col-score">${ nullish(p.fantasyGrade) }</td>
             <td class="fp-col-fp"><strong>${fp}</strong></td>
             ${statCells}
-            <td>${ nullish(p.nhlRank) }</td>
-            <td>${ nullish(p.avgPick) }</td>
+            <td class="fp-stat-col">${ nullish(p.nhlRank) }</td>
+            <td class="fp-stat-col">${ nullish(p.avgPick) }</td>
             <td class="fp-lists-col">${renderListActions(p, cookies)}</td>
         </tr>`;
     };
@@ -1030,18 +1070,13 @@
             : `<td class="fp-reorder-col fp-col-reorder" style="display:none"></td>`;
         const label = (p && p.skaterFullName) || `Player #${id}`;
         const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
-        const teamId = p && p.teamId;
-        const teamName = (p && p.teamName) || "";
-        const teamCell = teamId
-            ? `<button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${teamId})">${teamName}</button>`
-            : `<span class="fp-nullish">—</span>`;
         return `<tr data-side-id="${id}" class="${rowClasses}">
             <td class="text-muted fp-col-rank">${idx}</td>
             ${reorderCell}
             <td class="fp-side-name-col fp-col-name">
                 <button type="button" class="btn btn-link btn-sm p-0 text-left" data-side-action="open" data-id="${id}" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})">${label}</button>
             </td>
-            <td class="fp-col-team">${teamCell}</td>
+            <td class="fp-col-team">${p ? teamChip(p) : `<span class="fp-nullish">—</span>`}</td>
             <td class="fp-col-pos">${positionChip(elig)}</td>
             <td class="fp-col-fp fp-stat-col">${p ? `<strong>${fpPoints(p).toFixed(1)}</strong>` : nullish(null)}</td>
             ${statCells}

@@ -630,21 +630,151 @@
         align-items: center;
         gap: .35rem;
     }
+    .fp-side-header-inner {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: .5rem;
+        width: 100%;
+        min-width: 0;
+    }
     .fp-side-tabs-wrap {
+        flex: 1 1 auto;
+        min-width: 0;
         overflow-x: auto;
+        overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
-        max-width: 100%;
-        margin-right: .5rem;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+    }
+    .fp-side-tabs-wrap::-webkit-scrollbar { display: none; }
+    #fpTabs.fp-side-tabs {
+        flex-wrap: nowrap;
+        border-bottom: none;
+    }
+    #fpTabs .nav-link {
+        display: inline-flex;
+        align-items: center;
+        gap: .25rem;
+        white-space: nowrap;
+        touch-action: manipulation;
+    }
+    #fpTabs .fp-tab-badge {
+        font-size: .68rem;
+        font-weight: 600;
     }
     .fp-side-header-actions {
         display: inline-flex;
         align-items: center;
-        gap: .25rem;
+        gap: .35rem;
         flex-shrink: 0;
     }
+    .fp-side-header-actions .btn {
+        touch-action: manipulation;
+    }
+    @media (min-width: 768px) {
+        #fpTabs .fp-tab-text { margin-left: .2rem; }
+    }
     @media (max-width: 767.98px) {
-        .fp-split-top .fp-table-wrap { max-height: 55vh; }
-        .fp-side-table-scroll { max-height: 28vh; }
+        .fp-page { padding: 0 6px 8px; }
+        .fp-sticky-toolbar { padding: .25rem 0 .35rem; }
+        .fp-toolbar-row {
+            flex-direction: column;
+            align-items: stretch;
+            gap: .4rem;
+        }
+        .fp-toolbar-search {
+            width: 100%;
+            order: 2;
+        }
+        .fp-toolbar-filters {
+            order: 3;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
+            max-width: 100%;
+            padding-bottom: 2px;
+            scrollbar-width: none;
+        }
+        .fp-toolbar-filters::-webkit-scrollbar { display: none; }
+        .fp-toolbar-filters > * { flex-shrink: 0; }
+        .fp-toolbar-end {
+            order: 4;
+            width: 100%;
+            justify-content: space-between;
+        }
+        .fp-toolbar-badges { display: none; }
+        .fp-toolbar-actions .btn {
+            min-height: 2rem;
+            padding: .25rem .6rem;
+        }
+        .fp-split-top .fp-table-wrap { max-height: 52vh; }
+        .fp-side-table-scroll { max-height: 32vh; }
+        .fp-side-header {
+            padding-left: .5rem !important;
+            padding-right: .5rem !important;
+        }
+        .fp-side-tabs-wrap {
+            min-width: 0;
+        }
+        #fpTabs.fp-side-tabs {
+            display: flex;
+            gap: .35rem;
+            padding-bottom: 1px;
+        }
+        #fpTabs .nav-item { flex-shrink: 0; margin-bottom: 0; }
+        #fpTabs .nav-link {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: .1rem;
+            min-width: 3.1rem;
+            min-height: 2.75rem;
+            padding: .35rem .5rem !important;
+            border: 1px solid #dee2e6 !important;
+            border-radius: 8px !important;
+            background: #f8f9fa;
+            font-size: 1rem;
+            line-height: 1.1;
+            color: #495057;
+        }
+        #fpTabs .nav-link.active {
+            background: #e7f1ff;
+            border-color: #007bff !important;
+            color: #0056b3;
+            font-weight: 600;
+            box-shadow: inset 0 0 0 1px rgba(0, 123, 255, .15);
+        }
+        #fpTabs .nav-link[data-view="picked"].active {
+            color: #339af0;
+            border-color: #339af0 !important;
+            background: #e7f5ff;
+        }
+        #fpTabs .nav-link[data-view="drafted"].active {
+            color: #e8590c;
+            border-color: #e8590c !important;
+            background: #fff4e6;
+        }
+        #fpTabs .fp-tab-text { display: none; }
+        #fpTabs .fp-tab-badge {
+            margin-left: 0 !important;
+            font-size: .6rem;
+            padding: .1em .4em;
+        }
+        .fp-side-header-actions .btn {
+            min-height: 2.25rem;
+            min-width: 3.25rem;
+            padding: .35rem .75rem;
+            font-size: .82rem;
+        }
+        .fp-toast {
+            left: .75rem;
+            right: .75rem;
+            bottom: .75rem;
+            min-width: 0;
+        }
     }
     @media (max-width: 991.98px) {
         .fp-toolbar-end { margin-left: 0; width: 100%; }
@@ -745,17 +875,17 @@
         <div class="fp-split-bottom">
             <div class="card fp-side-panel">
                 <div class="card-header bg-white py-2 fp-side-header">
-                    <div class="d-flex flex-wrap align-items-center">
-                        <ul class="nav nav-tabs card-header-tabs border-0 flex-nowrap mb-0 mr-3" id="fpTabs">
-                            <li class="nav-item"><a class="nav-link py-1" href="#" data-view="favorite">★ Favorites <span class="badge badge-secondary ml-1" id="fpTabFav">0</span></a></li>
-                            <li class="nav-item"><a class="nav-link py-1" href="#" data-view="watchlist">👁 Watchlist <span class="badge badge-secondary ml-1" id="fpTabWatch">0</span></a></li>
-                            <li class="nav-item"><a class="nav-link active py-1" href="#" data-view="draftboard">🗊 Draftboard <span class="badge badge-secondary ml-1" id="fpTabDraft">0</span></a></li>
-                            <li class="nav-item"><a class="nav-link py-1" href="#" data-view="picked">＋ My Team <span class="badge badge-secondary ml-1" id="fpTabPicked">0</span></a></li>
-                            <li class="nav-item"><a class="nav-link py-1" href="#" data-view="drafted">✔ Drafted <span class="badge badge-secondary ml-1" id="fpTabDrafted">0</span></a></li>
-                        </ul>
-                        <strong class="small mb-0" id="fpSideTitle">Draftboard</strong>
-                        <span class="text-muted small ml-2">(<span id="fpSideCount">0</span>)</span>
-                        <div class="ml-auto">
+                    <div class="fp-side-header-inner">
+                        <div class="fp-side-tabs-wrap">
+                            <ul class="nav nav-tabs card-header-tabs border-0 flex-nowrap mb-0 fp-side-tabs" id="fpTabs" role="tablist">
+                                <li class="nav-item"><a class="nav-link py-1" href="#" data-view="favorite" role="tab" aria-label="Favorites"><span class="fp-tab-icon" aria-hidden="true">★</span><span class="fp-tab-text">Favorites</span><span class="badge badge-secondary fp-tab-badge" id="fpTabFav">0</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-1" href="#" data-view="watchlist" role="tab" aria-label="Watchlist"><span class="fp-tab-icon" aria-hidden="true">👁</span><span class="fp-tab-text">Watchlist</span><span class="badge badge-secondary fp-tab-badge" id="fpTabWatch">0</span></a></li>
+                                <li class="nav-item"><a class="nav-link active py-1" href="#" data-view="draftboard" role="tab" aria-label="Draftboard"><span class="fp-tab-icon" aria-hidden="true">🗊</span><span class="fp-tab-text">Draftboard</span><span class="badge badge-secondary fp-tab-badge" id="fpTabDraft">0</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-1" href="#" data-view="picked" role="tab" aria-label="My Team"><span class="fp-tab-icon" aria-hidden="true">＋</span><span class="fp-tab-text">My Team</span><span class="badge badge-secondary fp-tab-badge" id="fpTabPicked">0</span></a></li>
+                                <li class="nav-item"><a class="nav-link py-1" href="#" data-view="drafted" role="tab" aria-label="Drafted"><span class="fp-tab-icon" aria-hidden="true">✔</span><span class="fp-tab-text">Drafted</span><span class="badge badge-secondary fp-tab-badge" id="fpTabDrafted">0</span></a></li>
+                            </ul>
+                        </div>
+                        <div class="fp-side-header-actions">
                             <button class="btn btn-sm btn-outline-secondary py-0" id="fpSideCopyBtn" type="button" title="Copy names">Copy</button>
                             <button class="btn btn-sm btn-outline-danger py-0" id="fpClearBtn" type="button">Clear</button>
                         </div>
@@ -1427,7 +1557,6 @@
         const tbody   = document.getElementById("fpSideTableBody");
         const ids     = sideListIds(cookies);
         const byId    = playerById();
-        const title   = SIDE_VIEW_LABELS[state.sideView] || "Saved list";
         const emptyMsgs = {
             favorite:   "No favorites yet. Click ★ on a player in the table.",
             watchlist:  "Watchlist is empty. Click 👁 on a player.",
@@ -1436,8 +1565,6 @@
             drafted:    "No drafted players yet. Click ✔ on a player in the table."
         };
 
-        document.getElementById("fpSideTitle").textContent = title;
-        document.getElementById("fpSideCount").textContent = ids.length;
         syncSidePanelTheme();
 
         if (ids.length === 0) {
@@ -1597,13 +1724,25 @@
         document.getElementById("fpTabDrafted").textContent = cookies.drafted.length;
     };
 
+    const syncSideTabState = (view) => {
+        let activeLink = null;
+        document.querySelectorAll("#fpTabs .nav-link").forEach(a => {
+            const on = a.dataset.view === view;
+            a.classList.toggle("active", on);
+            a.setAttribute("aria-selected", on ? "true" : "false");
+            if (on) activeLink = a;
+        });
+        if (activeLink) {
+            requestAnimationFrame(() => {
+                activeLink.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+            });
+        }
+    };
+
     const switchSideView = (view) => {
         if (!SIDE_VIEW_LABELS[view]) return;
         state.sideView = view;
-        document.querySelectorAll("#fpTabs .nav-link").forEach(a => {
-            a.classList.toggle("active", a.dataset.view === view);
-        });
-        document.getElementById("fpSideTitle").textContent = SIDE_VIEW_LABELS[view];
+        syncSideTabState(view);
         syncSidePanelTheme();
         syncSideReorderColumn();
     };
@@ -1977,6 +2116,7 @@
 
     $(document).ready(() => {
         wireEvents();
+        syncSideTabState(state.sideView);
         syncSideReorderColumn();
         load();
     });

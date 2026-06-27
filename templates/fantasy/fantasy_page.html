@@ -23,6 +23,10 @@
     #fpTable tbody tr:hover > td { background-color: rgba(0, 0, 0, .075); }
     #fpTable tbody tr.fp-row-highlight > td { background-color: #cbe1f4; }
     #fpTable tbody tr.fp-row-highlight:hover > td { background-color: #bcdff8; }
+    #fpTable tbody tr.fp-row-picked > td { background-color: #e7f5ff; }
+    #fpTable tbody tr.fp-row-picked:hover > td { background-color: #d0ebff; }
+    #fpTable tbody tr.fp-row-picked > td.fp-lists-col { background-color: #e7f5ff; }
+    #fpTable tbody tr.fp-row-picked:hover > td.fp-lists-col { background-color: #d0ebff; }
     .fp-reorder {
         display: inline-flex;
         flex-direction: row;
@@ -193,12 +197,16 @@
     .fp-list-btn.fp-list-favorite.is-on { background: #e0a800; border-color: #d39e00; }
     .fp-list-btn.fp-list-watchlist.is-on { background: #138496; border-color: #117a8b; }
     .fp-list-btn.fp-list-draftboard.is-on { background: #218838; border-color: #1e7e34; }
-    .fp-list-btn.fp-list-picked.is-on { background: #0056b3; border-color: #004085; }
+    .fp-list-btn.fp-list-picked.is-on { background: #74c0fc; border-color: #339af0; }
     .fp-list-btn.fp-list-drafted.is-on { background: #e8590c; border-color: #d9480f; }
-    #fpTabs .nav-link[data-view="picked"].active { color: #0056b3; border-color: #0056b3 #0056b3 #fff; font-weight: 600; }
+    #fpTabs .nav-link[data-view="picked"].active { color: #339af0; border-color: #339af0 #339af0 #fff; font-weight: 600; }
     #fpTabs .nav-link[data-view="drafted"].active { color: #e8590c; border-color: #e8590c #e8590c #fff; font-weight: 600; }
-    .fp-side-panel.fp-side-myteam .card-header { border-top: 3px solid #0056b3; }
+    .fp-side-panel.fp-side-myteam .card-header { border-top: 3px solid #74c0fc; }
     .fp-side-panel.fp-side-drafted .card-header { border-top: 3px solid #e8590c; }
+    #fpSideTable tbody tr.fp-side-row-picked > td { background-color: #e7f5ff; }
+    #fpSideTable tbody tr.fp-side-row-picked:hover > td { background-color: #d0ebff; }
+    #fpSideTable tbody tr.fp-side-row-picked > td.fp-side-remove-col { background-color: #e7f5ff; }
+    #fpSideTable tbody tr.fp-side-row-picked:hover > td.fp-side-remove-col { background-color: #d0ebff; }
     #fpSideTable tbody tr.fp-side-row-drafted > td { background-color: #fff4e6; }
     #fpSideTable tbody tr.fp-side-row-drafted:hover > td { background-color: #ffe8cc; }
     #fpSideTable tbody tr.fp-side-row-drafted > td.fp-side-remove-col { background-color: #fff4e6; }
@@ -780,9 +788,12 @@
         const fp            = fpPoints(p).toFixed(1);
         const elig          = (p.yahooEligibility || p.positionCode || "");
         const onHighlight   = isIn(p.playerId, cookies.highlight);
+        const onPicked      = isIn(p.playerId, cookies.picked);
         const s             = getPlayerStatBag(p);
         const statCells     = activeStatCols().map(col => `<td>${formatStatCell(s, col)}</td>`).join("");
-        const rowClasses    = [onHighlight ? "fp-row-highlight" : ""].filter(Boolean).join(" ");
+        const rowClasses    = [
+            onPicked ? "fp-row-picked" : (onHighlight ? "fp-row-highlight" : "")
+        ].filter(Boolean).join(" ");
 
         return `<tr data-id="${p.playerId}" class="fp-row-clickable ${rowClasses}" title="Click row to highlight">
             <td>${idx}</td>
@@ -806,9 +817,13 @@
         const statCells = activeStatCols().map(col =>
             `<td class="fp-stat-col">${formatStatCell(s, col)}</td>`
         ).join("");
+        const onPicked  = isIn(id, cookies.picked);
         const onDrafted = isIn(id, cookies.drafted);
-        const rowClasses = (onDrafted && state.sideView !== "picked" && state.sideView !== "drafted")
-            ? "fp-side-row-drafted" : "";
+        const showRowState = state.sideView !== "picked" && state.sideView !== "drafted";
+        const rowClasses = [
+            showRowState && onPicked ? "fp-side-row-picked" : "",
+            showRowState && !onPicked && onDrafted ? "fp-side-row-drafted" : ""
+        ].filter(Boolean).join(" ");
         const reorderCell = (state.sideView === "draftboard")
             ? `<td class="fp-reorder-col">
                   <span class="fp-reorder" role="group" aria-label="Reorder">
@@ -1025,7 +1040,9 @@
         if (!row || !p) return;
         const cell = row.querySelector(".fp-lists-col");
         if (cell) cell.innerHTML = renderListActions(p, cookies);
-        row.classList.toggle("fp-row-highlight", listActionOn("highlight", playerId, cookies));
+        const onPicked = listActionOn("picked", playerId, cookies);
+        row.classList.toggle("fp-row-picked", onPicked);
+        row.classList.toggle("fp-row-highlight", !onPicked && listActionOn("highlight", playerId, cookies));
     };
 
     const pulseListButton = (btn) => {
@@ -1045,10 +1062,6 @@
 
         if (wasOn) removePlayerInCookie(Number(id), COOKIES[action]);
         else       savePlayerInCookie(Number(id), COOKIES[action]);
-
-        if (action === "picked" && !wasOn && !listActionOn("drafted", id, cookies)) {
-            savePlayerInCookie(Number(id), COOKIES.drafted);
-        }
 
         const updated = currentCookies();
         refreshListCounts(updated);

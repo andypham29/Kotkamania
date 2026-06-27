@@ -98,27 +98,51 @@
         color: #fff;
     }
     .fp-side-picked-btn:hover {
-        border-color: #0056b3;
-        color: #0056b3;
+        border-color: #339af0;
+        color: #339af0;
     }
     .fp-side-picked-btn.is-on {
-        background: #0056b3;
-        border-color: #004085;
+        background: #74c0fc;
+        border-color: #339af0;
         color: #fff;
         font-weight: 700;
         box-shadow: inset 0 1px 2px rgba(0,0,0,.12);
     }
     .fp-side-picked-btn.is-on:hover {
-        background: #004085;
-        border-color: #003366;
+        background: #339af0;
+        border-color: #228be6;
         color: #fff;
     }
+    .fp-side-draft-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+    .fp-side-draft-btn:disabled:hover {
+        border-color: #dee2e6;
+        color: #6c757d;
+        background: #fff;
+    }
+    .fp-side-picked-btn.is-on:disabled:hover {
+        background: #74c0fc;
+        border-color: #339af0;
+        color: #fff;
+    }
+    .fp-side-draft-btn.is-on:disabled:hover {
+        background: #e8590c;
+        border-color: #d9480f;
+        color: #fff;
+    }
+    #fpDraftTable tbody tr.fp-side-row-picked > td { background-color: #e7f5ff; }
+    #fpDraftTable tbody tr.fp-side-row-picked:hover > td { background-color: #d0ebff; }
+    #fpDraftTable tbody tr.fp-side-row-picked > td.fp-side-draft-col { background-color: #e7f5ff; }
+    #fpDraftTable tbody tr.fp-side-row-picked:hover > td.fp-side-draft-col { background-color: #d0ebff; }
     #fpDraftTable tbody tr.fp-side-row-drafted > td { background-color: #fff4e6; }
     #fpDraftTable tbody tr.fp-side-row-drafted:hover > td { background-color: #ffe8cc; }
     #fpDraftTable tbody tr.fp-side-row-drafted > td.fp-side-draft-col { background-color: #fff4e6; }
     #fpDraftTable tbody tr.fp-side-row-drafted:hover > td.fp-side-draft-col { background-color: #ffe8cc; }
     #fpDraftTable .fp-list-labels-col {
-        min-width: 3.5rem;
+        min-width: 4.5rem;
         text-align: center;
         padding-left: .35rem;
         padding-right: .35rem;
@@ -129,22 +153,38 @@
         justify-content: center;
         gap: 3px;
     }
-    .fp-list-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 1.65rem;
-        height: 1.65rem;
-        font-size: .78rem;
-        line-height: 1;
-        border-radius: 5px;
-        border: 1px solid #dee2e6;
+    .fp-side-favorite-btn:hover {
+        border-color: #d39e00;
+        color: #d39e00;
+    }
+    .fp-side-favorite-btn.is-on {
+        background: #e0a800;
+        border-color: #d39e00;
         color: #fff;
         font-weight: 700;
         box-shadow: inset 0 1px 2px rgba(0,0,0,.12);
     }
-    .fp-list-badge.fp-list-favorite { background: #e0a800; border-color: #d39e00; }
-    .fp-list-badge.fp-list-watchlist { background: #138496; border-color: #117a8b; }
+    .fp-side-favorite-btn.is-on:hover {
+        background: #d39e00;
+        border-color: #c69500;
+        color: #fff;
+    }
+    .fp-side-watchlist-btn:hover {
+        border-color: #117a8b;
+        color: #117a8b;
+    }
+    .fp-side-watchlist-btn.is-on {
+        background: #138496;
+        border-color: #117a8b;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,.12);
+    }
+    .fp-side-watchlist-btn.is-on:hover {
+        background: #117a8b;
+        border-color: #0f6674;
+        color: #fff;
+    }
 </style>
 
 <div class="container-fluid py-3 fp-draftboard-wrap">
@@ -192,8 +232,17 @@
                     <label class="btn btn-sm btn-outline-secondary mr-1"><input type="checkbox" data-pos="G" autocomplete="off"> G</label>
                 </div>
 
+                <div class="btn-group-toggle" data-toggle="buttons" id="fpListFilters">
+                    <label class="btn btn-sm btn-outline-warning mr-1" title="Show favorites only">
+                        <input type="checkbox" id="fpFilterFavoriteInput" autocomplete="off"> ★
+                    </label>
+                    <label class="btn btn-sm btn-outline-info mr-1" title="Show watchlist only">
+                        <input type="checkbox" id="fpFilterWatchlistInput" autocomplete="off"> 👁
+                    </label>
+                </div>
+
                 <div class="btn-group-toggle" data-toggle="buttons" id="fpHideDraftedToggle">
-                    <label class="btn btn-sm btn-outline-secondary" title="Hide players marked as drafted">
+                    <label class="btn btn-sm btn-outline-secondary" title="Hide players on My Team or marked as drafted">
                         <input type="checkbox" id="fpHideDraftedInput" autocomplete="off"> Hide drafted
                     </label>
                 </div>
@@ -270,6 +319,8 @@
         nameQuery: "",
         teamId: "",
         hideDrafted: false,
+        filterFavorite: false,
+        filterWatchlist: false,
         draftboardId: null,
         importedPayload: null
     };
@@ -427,6 +478,8 @@
 
     const hasActiveFilters = () =>
         state.hideDrafted ||
+        state.filterFavorite ||
+        state.filterWatchlist ||
         state.positions.size > 0 ||
         state.nameQuery.trim() !== "" ||
         state.teamId !== "";
@@ -450,24 +503,27 @@
     const filteredDraftIds = () => {
         const ids = draftIds();
         const drafted = draftedIds();
+        const picked = pickedIds();
+        const fav = cookieList(COOKIE_FAVORITE);
+        const watch = cookieList(COOKIE_WATCHLIST);
         const byId = playerById();
         return ids.filter(id => {
-            if (state.hideDrafted && isIn(id, drafted)) return false;
+            if (state.hideDrafted && (isIn(id, drafted) || isIn(id, picked))) return false;
+            if (state.filterFavorite && !isIn(id, fav)) return false;
+            if (state.filterWatchlist && !isIn(id, watch)) return false;
             return matchesFilters(byId.get(Number(id)));
         });
     };
 
-    const renderListLabels = (id, fav, watch) => {
-        const parts = [];
-        if (isIn(id, fav)) {
-            parts.push('<span class="fp-list-badge fp-list-favorite" title="On Favorites">★</span>');
-        }
-        if (isIn(id, watch)) {
-            parts.push('<span class="fp-list-badge fp-list-watchlist" title="On Watchlist">👁</span>');
-        }
-        return parts.length
-            ? `<span class="fp-list-labels">${parts.join("")}</span>`
-            : `<span class="fp-nullish"></span>`;
+    const renderListButtons = (id, fav, watch) => {
+        const onFavorite  = isIn(id, fav);
+        const onWatchlist = isIn(id, watch);
+        const favTitle = onFavorite ? "Remove from Favorites" : "Add to Favorites";
+        const watchTitle = onWatchlist ? "Remove from Watchlist" : "Add to Watchlist";
+        return `<span class="fp-list-labels">
+            <button type="button" class="fp-side-draft-btn fp-side-favorite-btn ${onFavorite ? "is-on" : ""}" data-side-action="favorite" data-id="${id}" aria-pressed="${onFavorite}" title="${favTitle}" aria-label="${favTitle}">★</button>
+            <button type="button" class="fp-side-draft-btn fp-side-watchlist-btn ${onWatchlist ? "is-on" : ""}" data-side-action="watchlist" data-id="${id}" aria-pressed="${onWatchlist}" title="${watchTitle}" aria-label="${watchTitle}">👁</button>
+        </span>`;
     };
 
     const renderSideRow = (p, id, idx, drafted, picked, fav, watch) => {
@@ -477,7 +533,18 @@
         ).join("");
         const onDrafted = isIn(id, drafted);
         const onPicked  = isIn(id, picked);
-        const rowClasses = onDrafted ? "fp-side-row-drafted" : "";
+        const pickedDisabled = onDrafted;
+        const draftDisabled  = onPicked;
+        const pickedTitle = onPicked
+            ? "Remove from My Team"
+            : (onDrafted ? "Already drafted" : "Add to My Team");
+        const draftTitle = onDrafted
+            ? "Unmark as drafted"
+            : (onPicked ? "Already on My Team" : "Mark as drafted");
+        const rowClasses = [
+            onPicked ? "fp-side-row-picked" : "",
+            !onPicked && onDrafted ? "fp-side-row-drafted" : ""
+        ].filter(Boolean).join(" ");
         const label = (p && p.skaterFullName) || `Player #${id}`;
         const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
         const teamId = p && p.teamId;
@@ -497,11 +564,11 @@
             <td>${teamCell}</td>
             <td>${positionChip(elig)}</td>
             ${statCells}
-            <td class="fp-list-labels-col">${renderListLabels(id, fav, watch)}</td>
+            <td class="fp-list-labels-col">${renderListButtons(id, fav, watch)}</td>
             <td class="fp-side-draft-col">
                 <span class="fp-side-actions">
-                    <button type="button" class="fp-side-draft-btn fp-side-picked-btn ${onPicked ? "is-on" : ""}" data-side-action="picked" data-id="${id}" aria-pressed="${onPicked}" title="${onPicked ? "Remove from My Team" : "Add to My Team"}" aria-label="${onPicked ? "Remove from My Team" : "Add to My Team"}">+</button>
-                    <button type="button" class="fp-side-draft-btn ${onDrafted ? "is-on" : ""}" data-side-action="drafted" data-id="${id}" aria-pressed="${onDrafted}" title="${onDrafted ? "Unmark as drafted" : "Mark as drafted"}" aria-label="${onDrafted ? "Unmark as drafted" : "Mark as drafted"}">✔</button>
+                    <button type="button" class="fp-side-draft-btn fp-side-picked-btn ${onPicked ? "is-on" : ""}" data-side-action="picked" data-id="${id}" aria-pressed="${onPicked}" ${pickedDisabled ? "disabled" : ""} title="${pickedTitle}" aria-label="${pickedTitle}">+</button>
+                    <button type="button" class="fp-side-draft-btn ${onDrafted ? "is-on" : ""}" data-side-action="drafted" data-id="${id}" aria-pressed="${onDrafted}" ${draftDisabled ? "disabled" : ""} title="${draftTitle}" aria-label="${draftTitle}">✔</button>
                 </span>
             </td>
         </tr>`;
@@ -570,8 +637,9 @@
         }
 
         if (ids.length === 0) {
-            const msg = state.hideDrafted && allIds.some(id => isIn(id, drafted))
-                ? "All remaining players are drafted (toggle off Hide drafted to show them)."
+            const picked = pickedIds();
+            const msg = state.hideDrafted && allIds.some(id => isIn(id, drafted) || isIn(id, picked))
+                ? "All remaining players are on My Team or drafted (toggle off Hide drafted to show them)."
                 : "No players match the current filters.";
             tbody.innerHTML = `<tr><td colspan="${sideColCount()}" class="text-center text-muted small py-4">${msg}</td></tr>`;
             return;
@@ -667,15 +735,25 @@
     const wireEvents = () => {
         document.getElementById("fpDraftTableBody").addEventListener("click", (e) => {
             const btn = e.target.closest("[data-side-action]");
-            if (!btn) return;
+            if (!btn || btn.disabled) return;
             const action = btn.dataset.sideAction;
-            if (action !== "drafted" && action !== "picked") return;
+            if (action !== "drafted" && action !== "picked" && action !== "favorite" && action !== "watchlist") return;
 
             const id = Number(btn.dataset.id);
             const byId = playerById();
             const name = (byId.get(id) && byId.get(id).skaterFullName) || `Player #${id}`;
 
-            if (action === "drafted") {
+            if (action === "favorite") {
+                const wasOn = isIn(id, cookieList(COOKIE_FAVORITE));
+                if (wasOn) removePlayerInCookie(id, COOKIE_FAVORITE);
+                else       savePlayerInCookie(id, COOKIE_FAVORITE);
+                toast(wasOn ? `Removed ${name} from Favorites` : `Added ${name} to Favorites`);
+            } else if (action === "watchlist") {
+                const wasOn = isIn(id, cookieList(COOKIE_WATCHLIST));
+                if (wasOn) removePlayerInCookie(id, COOKIE_WATCHLIST);
+                else       savePlayerInCookie(id, COOKIE_WATCHLIST);
+                toast(wasOn ? `Removed ${name} from Watchlist` : `Added ${name} to Watchlist`);
+            } else if (action === "drafted") {
                 const wasOn = isIn(id, draftedIds());
                 if (wasOn) removePlayerInCookie(id, COOKIE_DRAFTED);
                 else       savePlayerInCookie(id, COOKIE_DRAFTED);
@@ -687,7 +765,6 @@
                     toast(`Removed ${name} from My Team`);
                 } else {
                     savePlayerInCookie(id, COOKIE_PICKED);
-                    if (!isIn(id, draftedIds())) savePlayerInCookie(id, COOKIE_DRAFTED);
                     toast(`Added ${name} to My Team`);
                 }
             }
@@ -724,6 +801,16 @@
             const pos = input.dataset.pos;
             if (input.checked) state.positions.add(pos);
             else               state.positions.delete(pos);
+            renderDraftboard();
+        });
+
+        document.getElementById("fpFilterFavoriteInput").addEventListener("change", (e) => {
+            state.filterFavorite = e.target.checked;
+            renderDraftboard();
+        });
+
+        document.getElementById("fpFilterWatchlistInput").addEventListener("change", (e) => {
+            state.filterWatchlist = e.target.checked;
             renderDraftboard();
         });
 

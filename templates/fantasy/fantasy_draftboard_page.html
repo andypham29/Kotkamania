@@ -250,6 +250,39 @@
         padding: 0;
     }
     body.fp-settings-open { overflow: hidden; }
+    .fp-bottom-panel.fp-side-myteam .card-header { border-top: 3px solid #74c0fc; }
+    .fp-bottom-panel.fp-side-drafted .card-header { border-top: 3px solid #e8590c; }
+    #fpBottomTabs .nav-link[data-view="picked"].active { color: #339af0; border-color: #339af0 #339af0 #fff; font-weight: 600; }
+    #fpBottomTabs .nav-link[data-view="drafted"].active { color: #e8590c; border-color: #e8590c #e8590c #fff; font-weight: 600; }
+    #fpBottomTable thead th { white-space: nowrap; font-size: .75rem; }
+    #fpBottomTable td, #fpBottomTable th { padding: .2rem .35rem; font-size: .8rem; white-space: nowrap; }
+    #fpBottomTable .fp-side-name-col { max-width: 14rem; overflow: hidden; text-overflow: ellipsis; }
+    #fpBottomTable .fp-stat-col { text-align: right; color: #495057; min-width: 2.25rem; padding-left: .5rem; padding-right: .5rem; }
+    #fpBottomTable thead th.fp-stat-col { font-size: .8rem; }
+    .fp-bottom-panel.fp-side-myteam #fpBottomTable tbody tr > td { background-color: #e7f5ff; }
+    .fp-bottom-panel.fp-side-myteam #fpBottomTable tbody tr:hover > td { background-color: #d0ebff; }
+    .fp-bottom-panel.fp-side-drafted #fpBottomTable tbody tr > td { background-color: #fff4e6; }
+    .fp-bottom-panel.fp-side-drafted #fpBottomTable tbody tr:hover > td { background-color: #ffe8cc; }
+    #fpBottomTable tfoot td { background: #f1f3f5; font-weight: 600; border-top: 2px solid #dee2e6; }
+    #fpBottomTable .fp-side-remove-col { width: 2rem; text-align: center; }
+    .fp-side-remove-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.65rem;
+        height: 1.65rem;
+        padding: 0;
+        font-size: 1rem;
+        line-height: 1;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+        background: #fff;
+        color: #6c757d;
+        cursor: pointer;
+    }
+    .fp-side-remove-btn:hover { border-color: #dc3545; color: #dc3545; }
+    .fp-roster-summary { line-height: 1.6; }
+    .fp-roster-summary .badge { font-weight: 600; font-size: .72rem; }
 </style>
 
 <div class="container-fluid py-3 fp-draftboard-wrap">
@@ -321,7 +354,7 @@
         </div>
     </div>
 
-    <div class="card fp-draftboard-panel">
+    <div class="card mb-3 fp-draftboard-panel">
         <div class="card-header bg-white py-2">
             <div class="d-flex flex-wrap align-items-center">
                 <strong class="small mb-0">Draftboard</strong>
@@ -353,6 +386,46 @@
                     </tr>
                 </thead>
                 <tbody id="fpDraftTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card fp-bottom-panel fp-side-myteam" id="fpBottomPanel">
+        <div class="card-header bg-white py-2">
+            <div class="d-flex flex-wrap align-items-center">
+                <ul class="nav nav-tabs card-header-tabs border-0 flex-nowrap mb-0 mr-3" id="fpBottomTabs">
+                    <li class="nav-item"><a class="nav-link active py-1" href="#" data-view="picked">+ My Team <span class="badge badge-secondary ml-1" id="fpTabPicked">0</span></a></li>
+                    <li class="nav-item"><a class="nav-link py-1" href="#" data-view="drafted">✔ Drafted <span class="badge badge-secondary ml-1" id="fpTabDrafted">0</span></a></li>
+                </ul>
+                <strong class="small mb-0" id="fpBottomTitle">My Team</strong>
+                <span class="text-muted small ml-2">(<span id="fpBottomCount">0</span>)</span>
+                <div class="ml-auto">
+                    <button class="btn btn-sm btn-outline-danger py-0" id="fpBottomClearBtn" type="button">Clear</button>
+                </div>
+            </div>
+            <div id="fpRosterSummary" class="mt-2" style="display:none;"></div>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-sm table-hover mb-0" id="fpBottomTable">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="no-sort">#</th>
+                        <th>Player</th>
+                        <th>Team</th>
+                        <th>Pos</th>
+                        <th class="fp-stat-col">FP</th>
+                        <th class="fp-stat-col">GP</th>
+                        <th class="fp-stat-col">G</th>
+                        <th class="fp-stat-col">A</th>
+                        <th class="fp-stat-col">P</th>
+                        <th class="fp-stat-col">S</th>
+                        <th class="fp-stat-col">H</th>
+                        <th class="fp-stat-col">B</th>
+                        <th class="no-sort fp-side-remove-col"></th>
+                    </tr>
+                </thead>
+                <tbody id="fpBottomTableBody"></tbody>
+                <tfoot id="fpBottomTableFoot"></tfoot>
             </table>
         </div>
     </div>
@@ -394,6 +467,17 @@
     ];
 
     const sideColCount = () => 6 + SKATER_STAT_COLS.length + 2;
+    const bottomColCount = () => 5 + SKATER_STAT_COLS.length + 1;
+
+    const BOTTOM_VIEW_LABELS = {
+        picked:  "My Team",
+        drafted: "Drafted"
+    };
+
+    const BOTTOM_EMPTY_MSGS = {
+        picked:  "My Team is empty. Click + on a player in the draftboard.",
+        drafted: "No drafted players yet. Click ✔ on a player in the draftboard."
+    };
 
     const state = {
         all: [],
@@ -405,7 +489,8 @@
         filterFavorite: false,
         filterWatchlist: false,
         draftboardId: null,
-        importedPayload: null
+        importedPayload: null,
+        bottomView: "picked"
     };
 
     const statValue = (s, key) => s && s[key] && s[key].value;
@@ -529,6 +614,7 @@
     const draftboardIdFromUrl = () => new URLSearchParams(window.location.search).get("draftboardId");
 
     window.fpOnLeagueSettingsChanged = (msg) => {
+        syncBottomSummary();
         if (msg) toast(msg);
     };
 
@@ -646,6 +732,127 @@
         </span>`;
     };
 
+    const sumTeamStats = (players) => {
+        const totals = { fp: 0, games: 0, goals: 0, assists: 0, points: 0, shots: 0, hits: 0, blocked: 0 };
+        players.forEach(p => {
+            if (!p) return;
+            totals.fp += fpPoints(p);
+            const s = p.stat || {};
+            SKATER_STAT_COLS.forEach(col => {
+                totals[col.key] += statNum(s, col.key);
+            });
+        });
+        return totals;
+    };
+
+    const bottomListIds = () => state.bottomView === "drafted" ? draftedIds() : pickedIds();
+    const bottomCookie = () => state.bottomView === "drafted" ? COOKIE_DRAFTED : COOKIE_PICKED;
+
+    const renderBottomRow = (p, id, idx) => {
+        const s = (p && p.stat) || {};
+        const statCells = SKATER_STAT_COLS.map(col =>
+            `<td class="fp-stat-col">${formatStatCell(s, col)}</td>`
+        ).join("");
+        const label = (p && p.skaterFullName) || `Player #${id}`;
+        const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
+        const teamId = p && p.teamId;
+        const teamName = (p && p.teamName) || "";
+        const teamCell = teamId
+            ? `<button class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#team-modal" onclick="loadTeamModal(${teamId})">${teamName}</button>`
+            : `<span class="fp-nullish">—</span>`;
+        const removeTitle = state.bottomView === "drafted"
+            ? "Return to pool"
+            : "Remove from My Team";
+
+        return `<tr data-bottom-id="${id}">
+            <td class="text-muted">${idx}</td>
+            <td class="fp-side-name-col">
+                <button type="button" class="btn btn-link btn-sm p-0 text-left" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})">${label}</button>
+            </td>
+            <td>${teamCell}</td>
+            <td>${positionChip(elig)}</td>
+            <td class="fp-stat-col">${p ? `<strong>${fpPoints(p).toFixed(1)}</strong>` : nullish(null)}</td>
+            ${statCells}
+            <td class="fp-side-remove-col">
+                <button type="button" class="fp-side-remove-btn" data-bottom-action="remove" data-id="${id}" title="${removeTitle}" aria-label="${removeTitle}">×</button>
+            </td>
+        </tr>`;
+    };
+
+    const renderBottomTotals = (totals) => {
+        const statCells = SKATER_STAT_COLS.map(col =>
+            `<td class="fp-stat-col">${totals[col.key]}</td>`
+        ).join("");
+        return `<tr>
+            <td colspan="4" class="text-right text-muted">Total</td>
+            <td class="fp-stat-col"><strong>${totals.fp.toFixed(1)}</strong></td>
+            ${statCells}
+            <td></td>
+        </tr>`;
+    };
+
+    const syncBottomSummary = () => {
+        const summary = document.getElementById("fpRosterSummary");
+        if (!summary) return;
+        if (state.bottomView !== "picked" || !window.FantasyLeagueSettings) {
+            if (window.FantasyLeagueSettings) FantasyLeagueSettings.hideTeamSummary();
+            else summary.style.display = "none";
+            return;
+        }
+        const ids = pickedIds();
+        if (!ids.length) {
+            FantasyLeagueSettings.hideTeamSummary();
+            return;
+        }
+        FantasyLeagueSettings.renderTeamSummary(ids, playerById());
+    };
+
+    const syncBottomPanelTheme = () => {
+        const panel = document.getElementById("fpBottomPanel");
+        if (!panel) return;
+        panel.classList.toggle("fp-side-myteam", state.bottomView === "picked");
+        panel.classList.toggle("fp-side-drafted", state.bottomView === "drafted");
+    };
+
+    const updateBottomTabCounts = () => {
+        document.getElementById("fpTabPicked").textContent = pickedIds().length;
+        document.getElementById("fpTabDrafted").textContent = draftedIds().length;
+    };
+
+    const setBottomView = (view) => {
+        if (view !== "picked" && view !== "drafted") return;
+        state.bottomView = view;
+        document.querySelectorAll("#fpBottomTabs .nav-link").forEach(a => {
+            a.classList.toggle("active", a.dataset.view === view);
+        });
+        document.getElementById("fpBottomTitle").textContent = BOTTOM_VIEW_LABELS[view];
+        syncBottomPanelTheme();
+        renderBottomPanel();
+    };
+
+    const renderBottomPanel = () => {
+        const tbody = document.getElementById("fpBottomTableBody");
+        const tfoot = document.getElementById("fpBottomTableFoot");
+        const ids = bottomListIds();
+        const byId = playerById();
+        const players = ids.map(id => byId.get(Number(id))).filter(Boolean);
+
+        updateBottomTabCounts();
+        document.getElementById("fpBottomCount").textContent = ids.length;
+        syncBottomSummary();
+
+        if (ids.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="${bottomColCount()}" class="text-center text-muted small py-3">${BOTTOM_EMPTY_MSGS[state.bottomView]}</td></tr>`;
+            tfoot.innerHTML = "";
+            return;
+        }
+
+        tbody.innerHTML = ids.map((id, i) => renderBottomRow(byId.get(Number(id)), id, i + 1)).join("");
+        tfoot.innerHTML = state.bottomView === "picked"
+            ? renderBottomTotals(sumTeamStats(players))
+            : "";
+    };
+
     const renderSideRow = (p, id, idx, drafted, picked, fav, watch) => {
         const s = (p && p.stat) || {};
         const statCells = SKATER_STAT_COLS.map(col =>
@@ -754,6 +961,7 @@
 
         if (allIds.length === 0) {
             tbody.innerHTML = `<tr><td colspan="${sideColCount()}" class="text-center text-muted small py-4">Draftboard is empty. Add players on <a href="/nhl/fantasy">Fantasy Home</a>.</td></tr>`;
+            renderBottomPanel();
             return;
         }
 
@@ -763,6 +971,7 @@
                 ? "All remaining players are on My Team or drafted (toggle off Hide drafted to show them)."
                 : "No players match the current filters.";
             tbody.innerHTML = `<tr><td colspan="${sideColCount()}" class="text-center text-muted small py-4">${msg}</td></tr>`;
+            renderBottomPanel();
             return;
         }
 
@@ -771,6 +980,8 @@
             const rank = allIds.indexOf(Number(id)) + 1;
             return renderSideRow(p, id, rank, drafted, picked, fav, watch);
         }).join("");
+
+        renderBottomPanel();
     };
 
     const wireDragAndDrop = () => {
@@ -902,6 +1113,29 @@
         document.getElementById("fpSettingsClose").addEventListener("click", closeSettingsDrawer);
         if (backdrop) backdrop.addEventListener("click", closeSettingsDrawer);
 
+        document.getElementById("fpBottomTabs").addEventListener("click", (e) => {
+            const tab = e.target.closest("#fpBottomTabs .nav-link[data-view]");
+            if (!tab) return;
+            e.preventDefault();
+            setBottomView(tab.dataset.view);
+        });
+
+        document.getElementById("fpBottomTableBody").addEventListener("click", (e) => {
+            const btn = e.target.closest("[data-bottom-action]");
+            if (!btn) return;
+            if (btn.dataset.bottomAction !== "remove") return;
+
+            const id = Number(btn.dataset.id);
+            const byId = playerById();
+            const name = (byId.get(id) && byId.get(id).skaterFullName) || `Player #${id}`;
+            const cookie = bottomCookie();
+            removePlayerInCookie(id, cookie);
+            toast(state.bottomView === "drafted"
+                ? `${name} returned to the pool`
+                : `Removed ${name} from My Team`);
+            renderDraftboard();
+        });
+
         document.getElementById("fpDraftTableBody").addEventListener("click", (e) => {
             const btn = e.target.closest("[data-side-action]");
             if (!btn || btn.disabled) return;
@@ -998,6 +1232,19 @@
                 e.preventDefault();
                 document.getElementById("fpSearchInput").focus();
             }
+        });
+
+        document.getElementById("fpBottomClearBtn").addEventListener("click", () => {
+            const label = BOTTOM_VIEW_LABELS[state.bottomView];
+            const ids = bottomListIds();
+            if (!ids.length) {
+                toast(`${label} is already empty`);
+                return;
+            }
+            if (!confirm(`Clear your entire ${label}? This cannot be undone.`)) return;
+            setCookie(bottomCookie(), "");
+            toast(`${label} cleared`);
+            renderDraftboard();
         });
 
         document.getElementById("fpClearBtn").addEventListener("click", () => {

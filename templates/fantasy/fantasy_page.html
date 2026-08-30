@@ -140,8 +140,8 @@
         color: #fff;
     }
     #fpTable .fp-lists-col {
-        min-width: 3rem;
-        width: 3rem;
+        min-width: 10.5rem;
+        width: 10.5rem;
         text-align: right;
         padding-left: .5rem;
         padding-right: .5rem;
@@ -173,6 +173,12 @@
         position: relative;
         display: inline-flex;
         align-items: center;
+        justify-content: flex-end;
+        width: 100%;
+    }
+    /* Desktop: hide the ellipsis; keep the 5-button group in the cell. */
+    .fp-list-btn.fp-list-more-btn {
+        display: none;
     }
     .fp-list-more-btn {
         position: relative;
@@ -200,23 +206,18 @@
         color: #212529;
     }
     .fp-list-more-menu {
-        display: none;
-        position: absolute;
-        right: calc(100% + 3px);
-        top: 50%;
-        transform: translateY(-50%);
+        display: inline-flex;
+        position: static;
+        transform: none;
         align-items: center;
         gap: 3px;
         padding: 3px;
         background: #fff;
         border: 1px solid #dee2e6;
         border-radius: 6px;
-        box-shadow: 0 4px 14px rgba(33, 37, 41, .16);
+        box-shadow: none;
         z-index: 5;
         white-space: nowrap;
-    }
-    .fp-list-more.is-open .fp-list-more-menu {
-        display: inline-flex;
     }
     .fp-list-btn {
         display: inline-flex;
@@ -524,6 +525,25 @@
         .fp-toolbar-actions .btn {
             min-height: 2rem;
             padding: .25rem .6rem;
+        }
+        /* Mobile: collapse the 5-button group behind the ellipsis popover. */
+        #fpTable .fp-lists-col {
+            min-width: 3rem;
+            width: 3rem;
+        }
+        .fp-list-btn.fp-list-more-btn {
+            display: inline-flex;
+        }
+        .fp-list-more-menu {
+            display: none;
+            position: absolute;
+            right: calc(100% + 3px);
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 4px 14px rgba(33, 37, 41, .16);
+        }
+        .fp-list-more.is-open .fp-list-more-menu {
+            display: inline-flex;
         }
         #fpCopyBtn { display: none; }
         .fp-share-toggle {
@@ -2311,6 +2331,7 @@
         let sideWidthRaf = null;
         const onViewportChange = () => {
             syncSearchPlaceholder();
+            if (!isMobileLayout()) closeAllListMore();
             if (isMobileLayout() && drawerState() === "expanded") {
                 clearDrawerHeight();
             }

@@ -1845,15 +1845,6 @@
         input.placeholder = isMobileLayout() ? "Search player" : "Search… ( / )";
     };
 
-    const flashSidePanel = () => {
-        const panel = document.querySelector(".fp-side-panel");
-        if (!panel) return;
-        panel.classList.remove("fp-flash");
-        void panel.offsetWidth;
-        panel.classList.add("fp-flash");
-        panel.addEventListener("animationend", () => panel.classList.remove("fp-flash"), { once: true });
-    };
-
     const updatePlayerListButtons = (playerId, cookies) => {
         const p = playerById().get(Number(playerId));
         if (!p) return;
@@ -1892,12 +1883,6 @@
         const updated = currentCookies();
         refreshListCounts(updated);
 
-        const shouldSwitchTab = !wasOn && action !== "highlight" && SIDE_VIEW_LABELS[action];
-        if (shouldSwitchTab) {
-            switchSideView(action);
-            setListsOpen(true);
-        }
-
         if (action === "drafted" || action === "picked") {
             if (state.hideDrafted) {
                 renderTable();
@@ -1911,7 +1896,6 @@
             } else {
                 toast(wasOn ? `Removed ${name} from ${label}` : `Added ${name} to ${label}`);
             }
-            if (shouldSwitchTab) flashSidePanel();
             return;
         }
 
@@ -1928,7 +1912,6 @@
 
         pulseListButton(btn);
         toast(wasOn ? `Removed ${name} from ${label}` : `Added ${name} to ${label}`);
-        if (shouldSwitchTab) flashSidePanel();
     };
 
     const refreshAdvBadge = () => {

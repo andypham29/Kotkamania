@@ -1,0 +1,74 @@
+<div class="fp-saved-drawer-scrim" id="fpSavedDrawerScrim" aria-hidden="true"></div>
+<section class="fp-split-bottom fp-saved-drawer" id="fpSavedDrawer"
+         data-drawer-state="compact" data-side-view="draftboard" aria-label="Saved player lists">
+    <div class="card fp-side-panel">
+        <div class="fp-drawer-grip-row">
+            <button class="fp-drawer-grip" id="fpDrawerHandle" type="button"
+                    aria-controls="fpSavedDrawerContent" aria-expanded="false"
+                    title="Drag or press to resize saved lists">
+                <span class="fp-drawer-grip-bar" aria-hidden="true"></span>
+                <span class="sr-only">Resize saved player lists drawer</span>
+            </button>
+        </div>
+        <div class="card-header bg-white fp-side-header">
+            <div class="fp-side-header-inner">
+                <div class="fp-side-tabs-wrap">
+                    <ul class="nav nav-tabs card-header-tabs border-0 flex-nowrap mb-0 fp-side-tabs" id="fpTabs" role="tablist">
+                        <li class="nav-item"><a class="nav-link py-1" href="#" data-view="favorite" role="tab" aria-selected="false" aria-label="Favorites"><span class="fp-tab-icon" aria-hidden="true">★</span><span class="fp-tab-text">Favorites</span><span class="badge badge-secondary fp-tab-badge" id="fpTabFav">0</span></a></li>
+                        <li class="nav-item"><a class="nav-link py-1" href="#" data-view="watchlist" role="tab" aria-selected="false" aria-label="Watchlist"><span class="fp-tab-icon" aria-hidden="true">👁</span><span class="fp-tab-text">Watchlist</span><span class="badge badge-secondary fp-tab-badge" id="fpTabWatch">0</span></a></li>
+                        <li class="nav-item"><a class="nav-link active py-1" href="#" data-view="draftboard" role="tab" aria-selected="true" aria-label="Draftboard"><span class="fp-tab-icon" aria-hidden="true">🗊</span><span class="fp-tab-text">Draftboard</span><span class="badge badge-secondary fp-tab-badge" id="fpTabDraft">0</span></a></li>
+                        <li class="nav-item"><a class="nav-link py-1" href="#" data-view="picked" role="tab" aria-selected="false" aria-label="My Team"><span class="fp-tab-icon" aria-hidden="true">＋</span><span class="fp-tab-text">My Team</span><span class="badge badge-secondary fp-tab-badge" id="fpTabPicked">0</span></a></li>
+                        <li class="nav-item"><a class="nav-link py-1" href="#" data-view="drafted" role="tab" aria-selected="false" aria-label="Drafted"><span class="fp-tab-icon" aria-hidden="true">✔</span><span class="fp-tab-text">Drafted</span><span class="badge badge-secondary fp-tab-badge" id="fpTabDrafted">0</span></a></li>
+                    </ul>
+                </div>
+                <div class="fp-side-header-actions">
+                    <button class="btn btn-sm btn-outline-secondary fp-drawer-state-btn" id="fpDrawerCollapseBtn" type="button" title="Collapse saved lists" aria-label="Collapse saved lists">▾</button>
+                    <button class="btn btn-sm btn-outline-secondary fp-drawer-state-btn" id="fpDrawerExpandBtn" type="button" title="Expand saved lists" aria-label="Expand saved lists">▴</button>
+                </div>
+            </div>
+            <div class="fp-side-title-row" id="fpSideTitleRow">
+                <h2 class="fp-side-list-title" id="fpSideListTitle">Draftboard</h2>
+                <div class="fp-side-title-actions">
+                    <button class="btn btn-sm btn-outline-secondary fp-side-list-tool" id="fpSideCopyBtn" type="button" title="Copy names">Copy</button>
+                    <button class="btn btn-sm btn-link text-muted fp-side-list-tool fp-clear-list-btn" id="fpClearBtn" type="button">Clear</button>
+                </div>
+            </div>
+            <div id="fpRosterSummary" class="mt-2" style="display:none;"></div>
+        </div>
+        <div class="card-body p-0 fp-side-table-wrap" id="fpSavedDrawerContent">
+            <div class="fp-side-empty" id="fpSideEmpty" hidden>
+                <span class="fp-empty-list-icon" id="fpSideEmptyIcon" aria-hidden="true"></span>
+                <strong class="fp-side-empty-title" id="fpSideEmptyTitle"></strong>
+                <p class="fp-side-empty-copy" id="fpSideEmptyCopy"></p>
+                <button class="btn btn-sm btn-outline-primary" id="fpSideEmptyCta" type="button">Add from player list</button>
+            </div>
+            <div class="fp-side-table-scroll">
+                <table class="table table-sm table-hover mb-0" id="fpSideTable">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="no-sort">#</th>
+                            <th class="fp-reorder-col no-sort" id="fpSideReorderHead" title="Draftboard">⇅</th>
+                            <th>Player</th>
+                            <th class="fp-stat-col">FP</th>
+                            <th class="fp-stat-col">GP</th>
+                            <th class="fp-stat-col">G</th>
+                            <th class="fp-stat-col">A</th>
+                            <th class="fp-stat-col">P</th>
+                            <th class="fp-stat-col">S</th>
+                            <th class="fp-stat-col">H</th>
+                            <th class="fp-stat-col">B</th>
+                            <th class="fp-stat-col">+/-</th>
+                            <th class="no-sort fp-side-remove-col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="fpSideTableBody"></tbody>
+                </table>
+            </div>
+            <div class="fp-side-totals-wrap" id="fpSideTotalsWrap" style="display:none">
+                <table class="table table-sm mb-0" id="fpSideTotalsTable">
+                    <tbody id="fpSideTableFoot"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

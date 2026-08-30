@@ -15,49 +15,17 @@
     .pos-chip.pos-R { background:#dc3545; }
     .pos-chip.pos-D { background:#6f42c1; }
     .pos-chip.pos-G { background:#ffc107; color:#212529; }
-    .fp-player-cell {
-        min-width: 10rem;
-        max-width: 14rem;
+    .fp-player-cell { white-space: nowrap; vertical-align: middle; }
+    .fp-player-name-btn {
+        font-weight: 600;
+        white-space: nowrap;
+        max-width: 11rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
         vertical-align: middle;
-        white-space: normal !important;
     }
-    .fp-player-card {
-        display: flex;
-        flex-direction: column;
-        gap: .2rem;
-        line-height: 1.25;
-    }
-    .fp-player-card-name {
-        font-weight: 600;
-        font-size: .875rem;
-    }
-    .fp-player-card-name .fp-player-name-btn {
-        font-weight: 600;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 100%;
-        display: block;
-    }
-    .fp-player-card-meta {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: .35rem;
-    }
-    .fp-player-card-meta .pos-chip {
-        font-size: .65rem;
-        padding: 0 5px;
-        min-width: 22px;
-    }
-    .fp-player-card-team {
-        font-size: .72rem;
-        color: #6c757d;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 9rem;
-    }
+    .fp-pos-cell, .fp-team-cell { white-space: nowrap; vertical-align: middle; }
     .fp-nullish { color:#adb5bd; font-style:italic; }
     #fpTable tbody tr.fp-row-clickable { cursor: pointer; }
     #fpTable tbody tr > td.fp-lists-col { background-color: #fff; }
@@ -68,235 +36,17 @@
     #fpTable tbody tr.fp-row-picked:hover > td { background-color: #d0ebff; }
     #fpTable tbody tr.fp-row-picked > td.fp-lists-col { background-color: #e7f5ff; }
     #fpTable tbody tr.fp-row-picked:hover > td.fp-lists-col { background-color: #d0ebff; }
-
-    /* Mobile player cards: header (player + actions) → stats row */
-    .fp-mobile-entry {
-        border-bottom: 1px solid #dee2e6;
-        background: #fff;
-        width: 100%;
-        min-width: 0;
-        max-width: 100%;
-        box-sizing: border-box;
-    }
-    .fp-mobile-header {
-        display: flex;
-        align-items: center;
-        gap: .35rem;
-        padding: .45rem .5rem;
-        min-width: 0;
-    }
-    .fp-mobile-rank {
-        flex-shrink: 0;
-        width: 1.35rem;
-        color: #868e96;
-        font-size: .72rem;
-        font-weight: 600;
-        text-align: center;
-    }
-    .fp-mobile-player-card {
-        flex: 1 1 auto;
-        min-width: 0;
-        overflow: hidden;
-        cursor: pointer;
-    }
-    .fp-mobile-player-card .fp-player-card-name {
-        font-size: .88rem;
-    }
-    .fp-mobile-player-card .fp-player-card-meta {
-        gap: .25rem;
-    }
-    .fp-mobile-action-bar {
-        flex: 0 0 auto;
-        padding: 0;
-        min-width: 0;
-    }
-    .fp-mobile-action-bar .fp-list-actions {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: .2rem;
-        width: auto;
-        margin: 0;
-    }
-    .fp-mobile-action-bar .fp-list-btn {
-        flex: 0 0 2rem;
-        width: 2rem;
-        min-width: 2rem;
-        height: 2rem;
-        font-size: .82rem;
-        border-radius: 6px;
-        padding: 0;
-    }
-    .fp-mobile-side-tools {
-        display: flex;
-        align-items: center;
-        gap: .35rem;
-        flex-shrink: 0;
-    }
-    .fp-mobile-side-tools .fp-side-remove-btn {
-        width: 2rem;
-        height: 2rem;
-        font-size: 1.1rem;
-    }
-    .fp-mobile-stats-grid {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        gap: 1px;
-        background: #e9ecef;
-        border-top: 1px solid #e9ecef;
-    }
-    .fp-m-stat-tile {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        flex: 0 0 3.35rem;
-        min-width: 3.35rem;
-        padding: .38rem .25rem;
-        background: #fff;
-        min-height: 2.65rem;
-        line-height: 1.15;
-        text-align: center;
-    }
-    .fp-m-stat-tile[data-sort-key] {
-        cursor: pointer;
-        touch-action: manipulation;
-    }
-    .fp-m-stat-tile[data-sort-key]:active {
-        background: #f1f3f5;
-    }
-    .fp-m-stat-tile.fp-m-stat-sorted {
-        background: #e7f1ff;
-        box-shadow: inset 0 0 0 1px #007bff;
-    }
-    .fp-m-stat-tile.fp-m-stat-emphasis .fp-m-stat-val {
-        color: #0056b3;
-    }
-    .fp-m-stat-label {
-        font-size: .58rem;
-        text-transform: uppercase;
-        font-weight: 700;
-        color: #868e96;
-        letter-spacing: .03em;
-    }
-    .fp-m-stat-val {
-        font-size: .8rem;
-        color: #212529;
-        margin-top: .12rem;
-        white-space: nowrap;
-    }
-    .fp-m-stat-tile.fp-m-stat-sorted .fp-m-stat-label::after {
-        color: #007bff;
-        font-size: .55rem;
-    }
-    .fp-m-stat-tile.fp-m-stat-sorted.asc .fp-m-stat-label::after  { content: " ▲"; }
-    .fp-m-stat-tile.fp-m-stat-sorted.desc .fp-m-stat-label::after { content: " ▼"; }
-    .fp-mobile-entry-row > td {
-        padding: 0 !important;
-        border-top: none;
-    }
     @media (max-width: 767.98px) {
         .fp-table-wrap,
         .fp-side-table-scroll {
-            overflow-x: hidden;
+            overflow-x: auto;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
-        #fpTable,
-        #fpSideTable {
-            display: block;
-            width: 100%;
-            table-layout: fixed;
+        #fpTable td, #fpTable th,
+        #fpSideTable td, #fpSideTable th {
+            white-space: nowrap;
         }
-        #fpTable tbody,
-        #fpSideTable tbody {
-            display: block;
-            width: 100%;
-        }
-        .fp-mobile-entry-row {
-            display: block !important;
-            width: 100%;
-        }
-        .fp-mobile-entry-row > td {
-            display: block;
-            width: 100% !important;
-            max-width: 100%;
-            box-sizing: border-box;
-        }
-        #fpTable thead,
-        #fpSideTable thead { display: none; }
-        .fp-row-desktop { display: none !important; }
-        #fpTable tbody tr.fp-mobile-entry-row.fp-row-highlight .fp-mobile-entry {
-            background-color: #cbe1f4;
-        }
-        #fpTable tbody tr.fp-mobile-entry-row.fp-row-picked .fp-mobile-entry {
-            background-color: #e7f5ff;
-        }
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-drafted .fp-mobile-entry {
-            background-color: #fff4e6;
-        }
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-picked .fp-mobile-entry {
-            background-color: #e7f5ff;
-        }
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-highlight .fp-mobile-entry {
-            background-color: #cbe1f4;
-        }
-        /* Uniform highlight: stats row inherits parent entry background */
-        #fpTable tbody tr.fp-mobile-entry-row.fp-row-highlight .fp-mobile-stats-grid,
-        #fpTable tbody tr.fp-mobile-entry-row.fp-row-highlight .fp-m-stat-tile,
-        #fpTable tbody tr.fp-mobile-entry-row.fp-row-picked .fp-mobile-stats-grid,
-        #fpTable tbody tr.fp-mobile-entry-row.fp-row-picked .fp-m-stat-tile,
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-drafted .fp-mobile-stats-grid,
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-drafted .fp-m-stat-tile,
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-picked .fp-mobile-stats-grid,
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-picked .fp-m-stat-tile,
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-highlight .fp-mobile-stats-grid,
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-highlight .fp-m-stat-tile {
-            background-color: transparent;
-            border-top-color: rgba(0, 0, 0, .06);
-        }
-        #fpTable tbody tr.fp-mobile-entry-row.fp-row-highlight .fp-m-stat-tile[data-sort-key]:active,
-        #fpTable tbody tr.fp-mobile-entry-row.fp-row-picked .fp-m-stat-tile[data-sort-key]:active,
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-drafted .fp-m-stat-tile[data-sort-key]:active,
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-picked .fp-m-stat-tile[data-sort-key]:active,
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-highlight .fp-m-stat-tile[data-sort-key]:active {
-            background-color: rgba(0, 0, 0, .04);
-        }
-        #fpTable tbody tr.fp-mobile-entry-row.fp-row-highlight .fp-m-stat-tile.fp-m-stat-sorted,
-        #fpTable tbody tr.fp-mobile-entry-row.fp-row-picked .fp-m-stat-tile.fp-m-stat-sorted,
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-drafted .fp-m-stat-tile.fp-m-stat-sorted,
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-picked .fp-m-stat-tile.fp-m-stat-sorted,
-        #fpSideTable tbody tr.fp-mobile-entry-row.fp-side-row-highlight .fp-m-stat-tile.fp-m-stat-sorted {
-            background-color: rgba(0, 123, 255, .08);
-        }
-    }
-    @media (max-width: 399.98px) {
-        .fp-mobile-header {
-            padding: .4rem .35rem;
-            gap: .25rem;
-        }
-        .fp-mobile-action-bar .fp-list-btn {
-            flex-basis: 1.85rem;
-            width: 1.85rem;
-            min-width: 1.85rem;
-            height: 1.85rem;
-            font-size: .78rem;
-        }
-        .fp-mobile-player-card .fp-player-card-name {
-            font-size: .82rem;
-        }
-        .fp-m-stat-tile {
-            flex-basis: 3rem;
-            min-width: 3rem;
-        }
-    }
-    @media (min-width: 768px) {
-        .fp-mobile-entry-row { display: none !important; }
     }
 
     .fp-reorder {
@@ -344,7 +94,7 @@
     #fpSideTable .fp-reorder-col { width: 3.5rem; padding-left: .25rem; padding-right: 0; }
     #fpSideTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 1; white-space: nowrap; font-size: .75rem; }
     #fpSideTable td, #fpSideTable th { padding: .2rem .35rem; font-size: .8rem; white-space: nowrap; }
-    #fpSideTable .fp-side-name-col { max-width: 12rem; overflow: hidden; text-overflow: ellipsis; }
+    #fpSideTable .fp-player-cell { max-width: 12rem; overflow: hidden; text-overflow: ellipsis; }
     #fpSideTable .fp-stat-col { text-align: right; color: #495057; min-width: 2.25rem; padding-left: .5rem; padding-right: .5rem; }
     #fpSideTable thead th.fp-stat-col { font-size: .8rem; }
     #fpSideTable .fp-side-remove-col {
@@ -602,8 +352,17 @@
         height: auto;
         overflow: hidden;
         padding: 0 12px 12px;
+        padding-left: max(12px, env(safe-area-inset-left));
+        padding-right: max(12px, env(safe-area-inset-right));
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
         width: 100%;
         max-width: 100%;
+    }
+    .fp-share-toggle,
+    .fp-lists-toggle,
+    .fp-toolbar-sort,
+    .fp-sort-dir {
+        display: none;
     }
     .fp-sticky-toolbar {
         flex-shrink: 0;
@@ -611,6 +370,11 @@
         background: #fff;
         border-bottom: 1px solid #dee2e6;
         padding: .35rem 0;
+        display: flex;
+        flex-direction: column;
+    }
+    @media (min-width: 768px) {
+        .fp-share-toolbar { order: -1; }
     }
     .fp-toolbar-row {
         display: flex;
@@ -704,12 +468,41 @@
         #fpTabs .fp-tab-text { margin-left: .2rem; }
     }
     @media (max-width: 767.98px) {
-        .fp-page { padding: 0 6px 8px; }
+        .fp-page {
+            padding: 0 6px 8px;
+            padding-left: max(6px, env(safe-area-inset-left));
+            padding-right: max(6px, env(safe-area-inset-right));
+            padding-bottom: max(8px, env(safe-area-inset-bottom));
+        }
         .fp-sticky-toolbar { padding: .25rem 0 .35rem; }
         .fp-toolbar-row {
             flex-direction: column;
             align-items: stretch;
             gap: .4rem;
+        }
+        .fp-toolbar-head {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+        }
+        .fp-toolbar-title { display: none; }
+        .fp-toolbar-sort {
+            display: inline-block;
+            width: auto;
+            min-width: 7.25rem;
+            max-width: 11rem;
+            margin-left: auto;
+        }
+        .fp-sort-dir {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 2rem;
+            min-height: 2rem;
+            padding: 0;
+            font-size: .7rem;
+            line-height: 1;
         }
         .fp-toolbar-search {
             width: 100%;
@@ -738,8 +531,61 @@
             min-height: 2rem;
             padding: .25rem .6rem;
         }
-        .fp-split-top .fp-table-wrap { max-height: 52vh; }
-        .fp-side-table-scroll { max-height: 32vh; }
+        #fpCopyBtn { display: none; }
+        .fp-share-toggle {
+            display: inline-flex;
+            align-items: center;
+            min-height: 2rem;
+        }
+        .fp-share-toggle.active {
+            background: #e7f1ff;
+            border-color: #007bff;
+            color: #0056b3;
+        }
+        .fp-share-toolbar:not(.fp-share-open) {
+            display: none;
+        }
+        .fp-split-top .fp-table-wrap,
+        .fp-side-table-scroll {
+            max-height: none;
+        }
+        .fp-split-stack:not(.fp-lists-open) .fp-split-top {
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+        .fp-split-stack:not(.fp-lists-open) .fp-split-bottom {
+            flex: 0 0 auto;
+        }
+        .fp-split-stack:not(.fp-lists-open) .fp-side-table-wrap,
+        .fp-split-stack:not(.fp-lists-open) #fpRosterSummary {
+            display: none !important;
+        }
+        .fp-split-stack:not(.fp-lists-open) .fp-side-header-actions .fp-side-list-tool {
+            display: none;
+        }
+        .fp-split-stack.fp-lists-open .fp-split-top {
+            flex: 1 1 0;
+            min-height: 0;
+        }
+        .fp-split-stack.fp-lists-open .fp-split-bottom {
+            flex: 0 0 42%;
+            max-height: 46%;
+            min-height: 10rem;
+        }
+        .fp-lists-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 2.25rem;
+            min-height: 2.25rem;
+            padding: .25rem .4rem;
+            font-size: .85rem;
+        }
+        .fp-split-stack.fp-lists-open .fp-lists-toggle {
+            background: #e7f1ff;
+            border-color: #007bff;
+            color: #0056b3;
+        }
         .fp-side-header {
             padding-left: .5rem !important;
             padding-right: .5rem !important;
@@ -812,6 +658,13 @@
         padding-bottom: .5rem;
         margin-bottom: .35rem;
     }
+    .fp-share-toolbar-body {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: .35rem;
+        width: 100%;
+    }
     .fp-share-toolbar .fp-toolbar-import {
         width: auto;
         min-width: 9rem;
@@ -819,37 +672,29 @@
         flex: 1 1 9rem;
     }
     @media (max-width: 767.98px) {
+        .fp-share-toolbar { padding-bottom: .35rem; margin-bottom: .2rem; }
         .fp-share-toolbar .btn { min-height: 2rem; }
+        .fp-settings-drawer {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
     }
 </style>
 
 <div class="fp-page">
     <div class="fp-sticky-toolbar">
-        <div class="fp-share-toolbar" id="fpShareToolbar">
-            <div class="d-flex flex-wrap align-items-center" style="gap: .35rem;">
-                <button class="btn btn-sm btn-primary py-0" id="fpSaveBtn" type="button" title="Save lists to a shareable draftboard">Save</button>
-                <div class="input-group input-group-sm fp-toolbar-import">
-                    <input id="fpImportIdInput" type="text" class="form-control py-0" placeholder="Draftboard ID…" autocomplete="off">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-primary py-0" id="fpImportBtn" type="button">Import</button>
-                    </div>
-                </div>
-                <button class="btn btn-sm btn-success py-0" id="fpApplyBtn" type="button" disabled title="Save the imported draftboard to your browser lists">Apply</button>
-                <button class="btn btn-sm btn-outline-secondary py-0" id="fpShareBtn" type="button" disabled title="Copy shareable link">Share</button>
-                <button class="btn btn-sm btn-outline-warning py-0" id="fpUseLocalBtn" type="button" style="display: none;" title="Stop viewing the shared draftboard and use your saved lists">Use local</button>
-                <input id="fpShareUrl" type="hidden" readonly>
-            </div>
-        </div>
         <div class="fp-toolbar-row">
             <div class="fp-toolbar-head">
                 <span class="fp-toolbar-title">Fantasy Players</span>
                 <span class="fp-toolbar-count text-muted">
                     <span id="fpVisibleCount">0</span>/<span id="fpTotalCount">0</span>
                 </span>
+                <select id="fpSortSelect" class="form-control form-control-sm fp-toolbar-sort" aria-label="Sort players"></select>
+                <button class="btn btn-sm btn-outline-secondary fp-sort-dir" id="fpSortDirBtn" type="button" title="Toggle sort direction" aria-label="Toggle sort direction">▼</button>
             </div>
 
             <input id="fpSearchInput" type="text" class="form-control form-control-sm fp-toolbar-search"
-                   placeholder="Search… ( / )" autocomplete="off">
+                   placeholder="Search player" autocomplete="off">
 
             <div class="fp-toolbar-filters" id="fpToolbarFilters">
                 <div class="btn-group-toggle" data-toggle="buttons" id="fpPositionPills">
@@ -887,16 +732,34 @@
                     <span class="badge badge-success">✓ <span id="fpDraftCount">0</span></span>
                 </span>
                 <span class="fp-toolbar-actions">
+                    <button class="btn btn-sm btn-outline-secondary py-0 fp-share-toggle" id="fpShareToggle" type="button" aria-expanded="false" aria-controls="fpShareToolbarBody">
+                        Share
+                    </button>
                     <button class="btn btn-sm btn-outline-dark py-0 fp-settings-toggle" type="button" data-fp-settings="fpAdvPanel" data-fp-settings-title="Advanced Filters">
                         Advanced <span class="badge badge-primary" id="fpAdvBadge" style="display:none;">0</span>
                     </button>
                     <button class="btn btn-sm btn-outline-dark py-0 fp-settings-toggle" type="button" data-fp-settings="fpLeaguePanel" data-fp-settings-title="League Settings">
                         League <span class="badge badge-primary" id="fpLeagueBadge" style="display:none;"></span>
                     </button>
-                    <button class="btn btn-sm btn-outline-success py-0" id="fpDraftboardSortBtn" type="button" title="Sort main list to match draftboard order">🗊 Draftboard</button>
+                    <button class="btn btn-sm btn-outline-success py-0" id="fpDraftboardSortBtn" type="button" title="Sort main list to match draftboard order">🗊 <span class="d-none d-md-inline">Draftboard</span></button>
                     <button class="btn btn-sm btn-outline-secondary py-0" id="fpCopyBtn" type="button">Copy</button>
                 </span>
             </span>
+        </div>
+        <div class="fp-share-toolbar" id="fpShareToolbar">
+            <div class="fp-share-toolbar-body" id="fpShareToolbarBody">
+                <button class="btn btn-sm btn-primary py-0" id="fpSaveBtn" type="button" title="Save lists to a shareable draftboard">Save</button>
+                <div class="input-group input-group-sm fp-toolbar-import">
+                    <input id="fpImportIdInput" type="text" class="form-control py-0" placeholder="Draftboard ID…" autocomplete="off">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary py-0" id="fpImportBtn" type="button">Import</button>
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-success py-0" id="fpApplyBtn" type="button" disabled title="Save the imported draftboard to your browser lists">Apply</button>
+                <button class="btn btn-sm btn-outline-secondary py-0" id="fpShareBtn" type="button" disabled title="Copy shareable link">Share</button>
+                <button class="btn btn-sm btn-outline-warning py-0" id="fpUseLocalBtn" type="button" style="display: none;" title="Stop viewing the shared draftboard and use your saved lists">Use local</button>
+                <input id="fpShareUrl" type="hidden" readonly>
+            </div>
         </div>
     </div>
 
@@ -907,8 +770,10 @@
                     <table class="table table-sm table-hover mb-0" id="fpTable">
                         <thead class="thead-light">
                             <tr>
-                                <th class="no-sort fp-mobile-head-spacer">#</th>
-                                <th class="fp-mobile-head-spacer" data-sort-key="name">Player</th>
+                                <th class="no-sort">#</th>
+                                <th data-sort-key="name">Player</th>
+                                <th class="no-sort">Pos</th>
+                                <th class="no-sort">Team</th>
                                 <th data-sort-key="score">Score</th>
                                 <th data-sort-key="fp" class="desc">FP</th>
                                 <th class="no-sort">GP</th>
@@ -921,7 +786,7 @@
                                 <th data-sort-key="plusMinus">+/-</th>
                                 <th data-sort-key="nhl">NHL</th>
                                 <th data-sort-key="espn">ESPN</th>
-                                <th class="no-sort fp-lists-col fp-mobile-head-spacer"></th>
+                                <th class="no-sort fp-lists-col"></th>
                             </tr>
                         </thead>
                         <tbody id="fpTableBody"></tbody>
@@ -944,8 +809,9 @@
                             </ul>
                         </div>
                         <div class="fp-side-header-actions">
-                            <button class="btn btn-sm btn-outline-secondary py-0" id="fpSideCopyBtn" type="button" title="Copy names">Copy</button>
-                            <button class="btn btn-sm btn-outline-danger py-0" id="fpClearBtn" type="button">Clear</button>
+                            <button class="btn btn-sm btn-outline-secondary py-0 fp-lists-toggle" id="fpListsToggle" type="button" aria-expanded="false" title="Show or hide lists" aria-label="Show or hide lists">▴</button>
+                            <button class="btn btn-sm btn-outline-secondary py-0 fp-side-list-tool" id="fpSideCopyBtn" type="button" title="Copy names">Copy</button>
+                            <button class="btn btn-sm btn-outline-danger py-0 fp-side-list-tool" id="fpClearBtn" type="button">Clear</button>
                         </div>
                     </div>
                     <div id="fpRosterSummary" class="mt-2" style="display:none;"></div>
@@ -955,9 +821,9 @@
                         <table class="table table-sm table-hover mb-0" id="fpSideTable">
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="no-sort fp-mobile-head-spacer">#</th>
-                                    <th class="fp-reorder-col no-sort fp-mobile-head-spacer" id="fpSideReorderHead" title="Draftboard">⇅</th>
-                                    <th class="fp-mobile-head-spacer">Player</th>
+                                    <th class="no-sort">#</th>
+                                    <th class="fp-reorder-col no-sort" id="fpSideReorderHead" title="Draftboard">⇅</th>
+                                    <th>Player</th>
                                     <th class="fp-stat-col">FP</th>
                                     <th class="fp-stat-col">GP</th>
                                     <th class="fp-stat-col">G</th>
@@ -967,7 +833,7 @@
                                     <th class="fp-stat-col">H</th>
                                     <th class="fp-stat-col">B</th>
                                     <th class="fp-stat-col">+/-</th>
-                                    <th class="no-sort fp-side-remove-col fp-mobile-head-spacer"></th>
+                                    <th class="no-sort fp-side-remove-col"></th>
                                 </tr>
                             </thead>
                             <tbody id="fpSideTableBody"></tbody>
@@ -1075,6 +941,8 @@
     ];
 
     const SKATER_SORT_KEYS = new Set(["goals", "assists", "points", "shots", "hits", "blocked", "plusMinus"]);
+    const MOBILE_MQ = window.matchMedia("(max-width: 767.98px)");
+    const isMobileLayout = () => MOBILE_MQ.matches;
 
     const state = {
         all:         [],
@@ -1097,8 +965,8 @@
 
     const isGoalieView   = () => state.positions.size === 1 && state.positions.has("G");
     const activeStatCols = () => isGoalieView() ? GOALIE_STAT_COLS : SKATER_STAT_COLS;
-    const mainColCount   = () => 4 + activeStatCols().length + 3;
-    const sideColCount   = () => 4 + activeStatCols().length + 1;
+    const mainColCount   = () => 9 + activeStatCols().length;
+    const sideColCount   = () => 5 + activeStatCols().length;
 
     const getPlayerStatBag = (p) => {
         if (!p) return {};
@@ -1134,68 +1002,68 @@
         const mainHead = document.querySelector("#fpTable thead tr");
         if (mainHead) {
             mainHead.innerHTML =
-                `<th class="no-sort fp-mobile-head-spacer">#</th>` +
-                `<th class="fp-mobile-head-spacer" data-sort-key="name">Player</th>` +
+                `<th class="no-sort">#</th>` +
+                `<th data-sort-key="name">Player</th>` +
+                `<th class="no-sort">Pos</th>` +
+                `<th class="no-sort">Team</th>` +
                 `<th data-sort-key="score">Score</th>` +
                 `<th data-sort-key="fp"${state.sortKey === "fp" ? ` class="${state.sortDesc ? "desc" : "asc"}"` : ""}>FP</th>` +
                 buildStatHeaderCells(cols) +
                 `<th data-sort-key="nhl">NHL</th>` +
                 `<th data-sort-key="espn">ESPN</th>` +
-                `<th class="no-sort fp-lists-col fp-mobile-head-spacer"></th>`;
+                `<th class="no-sort fp-lists-col"></th>`;
         }
         const sideHead = document.querySelector("#fpSideTable thead tr");
         if (sideHead) {
             sideHead.innerHTML =
-                `<th class="no-sort fp-mobile-head-spacer">#</th>` +
-                `<th class="fp-reorder-col no-sort fp-mobile-head-spacer" id="fpSideReorderHead" title="Draftboard order">⇅</th>` +
-                `<th class="fp-mobile-head-spacer">Player</th>` +
+                `<th class="no-sort">#</th>` +
+                `<th class="fp-reorder-col no-sort" id="fpSideReorderHead" title="Draftboard order">⇅</th>` +
+                `<th>Player</th>` +
                 `<th class="fp-stat-col">FP</th>` +
                 buildStatHeaderCells(cols.map(col => ({ ...col, sortKey: null, noSort: true })), true) +
-                `<th class="no-sort fp-side-remove-col fp-mobile-head-spacer"></th>`;
+                `<th class="no-sort fp-side-remove-col"></th>`;
         }
         if (isGoalieView() && SKATER_SORT_KEYS.has(state.sortKey)) {
             state.sortKey = "score";
             state.sortDesc = true;
-            const sortSel = document.getElementById("fpSortSelect");
-            if (sortSel) sortSel.value = "score";
         }
+        syncSortSelect();
     };
 
-    const mobileStatSortClass = (sortKey) => {
-        if (!sortKey || state.sortKey !== sortKey) return "";
-        return ` fp-m-stat-sorted ${state.sortDesc ? "desc" : "asc"}`;
+    const sortSelectOptions = () => {
+        const stats = activeStatCols()
+            .filter(col => col.sortKey)
+            .map(col => ({ value: col.sortKey, label: col.label }));
+        return [
+            { value: "fp", label: "Fantasy pts" },
+            { value: "score", label: "Score" },
+            { value: "name", label: "Name" },
+            ...stats,
+            { value: "nhl", label: "NHL rank" },
+            { value: "espn", label: "ESPN rank" },
+            { value: "draftboard", label: "Draftboard" }
+        ];
     };
 
-    const renderMobileStatGrid = (items) =>
-        items.map(item => {
-            const sortAttr = item.sortKey ? ` data-sort-key="${item.sortKey}"` : "";
-            const sortCls  = mobileStatSortClass(item.sortKey);
-            const emphCls  = item.emphasize ? " fp-m-stat-emphasis" : "";
-            return `<div class="fp-m-stat-tile${sortCls}${emphCls}"${sortAttr}>
-                <span class="fp-m-stat-label">${item.label}</span>
-                <span class="fp-m-stat-val">${item.value}</span>
-            </div>`;
-        }).join("");
+    const syncSortDirBtn = () => {
+        const btn = document.getElementById("fpSortDirBtn");
+        if (!btn) return;
+        btn.textContent = state.sortDesc ? "▼" : "▲";
+        btn.title = state.sortDesc ? "Sorted high to low — tap to reverse" : "Sorted low to high — tap to reverse";
+        btn.setAttribute("aria-label", btn.title);
+    };
 
-    const mobileMainStatItems = (p, s, fp) => [
-        { label: "Score", value: nullish(p.fantasyGrade), sortKey: "score" },
-        { label: "FP", value: `<strong>${fp}</strong>`, sortKey: "fp", emphasize: true },
-        ...activeStatCols().map(col => ({
-            label: col.label,
-            value: formatStatCell(s, col),
-            sortKey: col.sortKey || null
-        })),
-        { label: "NHL", value: nullish(p.nhlRank), sortKey: "nhl" },
-        { label: "ESPN", value: nullish(p.avgPick), sortKey: "espn" }
-    ];
-
-    const mobileSideStatItems = (p, s) => [
-        { label: "FP", value: p ? `<strong>${fpPoints(p).toFixed(1)}</strong>` : nullish(null), emphasize: true },
-        ...activeStatCols().map(col => ({
-            label: col.label,
-            value: formatStatCell(s, col)
-        }))
-    ];
+    const syncSortSelect = () => {
+        const sel = document.getElementById("fpSortSelect");
+        if (!sel) return;
+        const opts = sortSelectOptions();
+        sel.innerHTML = opts.map(o => `<option value="${o.value}">${o.label}</option>`).join("");
+        if (![...sel.options].some(o => o.value === state.sortKey)) {
+            sel.insertAdjacentHTML("beforeend", `<option value="${state.sortKey}">${state.sortKey}</option>`);
+        }
+        sel.value = state.sortKey;
+        syncSortDirBtn();
+    };
 
     const isGoaliePlayer = (p) => (p.positionCode || "").toUpperCase() === "G";
 
@@ -1232,26 +1100,23 @@
         return `<span class="pos-chip ${known ? 'pos-' + c : ''}">${c || "?"}</span>`;
     };
 
-    const playerCardInner = (p, id, opts = {}) => {
+    const playerNameCell = (p, id, opts = {}) => {
         const label = (p && p.skaterFullName) || `Player #${id}`;
-        const elig  = p ? (p.yahooEligibility || p.positionCode || "") : "";
-        const teamHtml = p && p.teamName
-            ? `<button type="button" class="btn btn-link btn-sm p-0 fp-player-card-team" data-toggle="modal" data-target="#team-modal" onclick="event.stopPropagation(); loadTeamModal(${p.teamId})">${p.teamName}</button>`
-            : `<span class="fp-player-card-team">${nullish(null)}</span>`;
         const sideAttrs = opts.side ? ` data-side-action="open" data-id="${id}"` : "";
-        return `<div class="fp-player-card">
-                <div class="fp-player-card-name">
-                    <button type="button" class="btn btn-link btn-sm p-0 text-left fp-player-name-btn" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})"${sideAttrs}>${label}</button>
-                </div>
-                <div class="fp-player-card-meta">
-                    ${positionChip(elig)}
-                    ${teamHtml}
-                </div>
-            </div>`;
+        return `<td class="fp-player-cell"><button type="button" class="btn btn-link btn-sm p-0 text-left fp-player-name-btn" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})"${sideAttrs}>${label}</button></td>`;
     };
 
-    const playerCardCell = (p, id, opts = {}) =>
-        `<td class="fp-player-cell">${playerCardInner(p, id, opts)}</td>`;
+    const posCell = (p) => {
+        const elig = p ? (p.yahooEligibility || p.positionCode || "") : "";
+        return `<td class="fp-pos-cell">${positionChip(elig)}</td>`;
+    };
+
+    const teamCell = (p) => {
+        if (p && p.teamName) {
+            return `<td class="fp-team-cell"><button type="button" class="btn btn-link btn-sm p-0" data-toggle="modal" data-target="#team-modal" onclick="event.stopPropagation(); loadTeamModal(${p.teamId})">${p.teamName}</button></td>`;
+        }
+        return `<td class="fp-team-cell">${nullish(null)}</td>`;
+    };
 
     const cookieList = (name) => getPlayersInCookie(name).map(Number);
     const cookieListAsStr = (name) => getPlayersInCookie(name).map(String);
@@ -1265,6 +1130,7 @@
         const localBtn = document.getElementById("fpUseLocalBtn");
         if (localBtn) localBtn.style.display = hasSharedDraftboard() ? "" : "none";
         setApplyUi();
+        if (hasSharedDraftboard() && isMobileLayout()) setShareOpen(true);
     };
 
     const setShareUi = (id) => {
@@ -1578,68 +1444,28 @@
         return `<div class="fp-list-actions" role="group" aria-label="Player lists">${buttons}</div>`;
     };
 
-    const renderMobileMainEntry = (p, idx, cookies, rowClasses, s, fp) =>
-        `<tr data-id="${p.playerId}" class="fp-mobile-entry-row fp-row-clickable ${rowClasses}">
-            <td colspan="${mainColCount()}">
-                <div class="fp-mobile-entry">
-                    <div class="fp-mobile-header">
-                        <span class="fp-mobile-rank">${idx}</span>
-                        <div class="fp-mobile-player-card" title="Tap to highlight">${playerCardInner(p, p.playerId)}</div>
-                        <div class="fp-mobile-action-bar">${renderListActions(p, cookies)}</div>
-                    </div>
-                    <div class="fp-mobile-stats-grid">${renderMobileStatGrid(mobileMainStatItems(p, s, fp))}</div>
-                </div>
-            </td>
-        </tr>`;
-
-    const renderMobileSideReorder = (id, idx, total) => {
-        if (state.sideView !== "draftboard") return "";
-        return `<div class="fp-reorder-col">
-                  <span class="fp-reorder" role="group" aria-label="Reorder">
-                      <button type="button" class="fp-reorder-btn" data-side-action="moveup" data-id="${id}" ${idx === 1     ? "disabled" : ""} title="Move up (hold to repeat)" aria-label="Move up">▲</button>
-                      <button type="button" class="fp-reorder-btn" data-side-action="movedown" data-id="${id}" ${idx === total ? "disabled" : ""} title="Move down (hold to repeat)" aria-label="Move down">▼</button>
-                  </span>
-               </div>`;
-    };
-
-    const renderMobileSideEntry = (p, id, idx, total, cookies, rowClasses, s) =>
-        `<tr data-side-id="${id}" data-id="${id}" class="fp-mobile-entry-row ${rowClasses}">
-            <td colspan="${sideColCount()}">
-                <div class="fp-mobile-entry">
-                    <div class="fp-mobile-header">
-                        <span class="fp-mobile-rank">${idx}</span>
-                        <div class="fp-mobile-player-card">${playerCardInner(p, id, { side: true })}</div>
-                        <div class="fp-mobile-side-tools">
-                            ${renderMobileSideReorder(id, idx, total)}
-                            <button type="button" class="fp-side-remove-btn" data-side-action="remove" data-id="${id}" title="Remove from list" aria-label="Remove from list">×</button>
-                        </div>
-                    </div>
-                    <div class="fp-mobile-stats-grid">${renderMobileStatGrid(mobileSideStatItems(p, s))}</div>
-                </div>
-            </td>
-        </tr>`;
-
     const renderRow = (p, idx, total, cookies) => {
         const fp            = fpPoints(p).toFixed(1);
         const onHighlight   = isIn(p.playerId, cookies.highlight);
         const onPicked      = isIn(p.playerId, cookies.picked);
         const s             = getPlayerStatBag(p);
-        const statCells     = activeStatCols().map(col => `<td class="fp-stat-desktop">${formatStatCell(s, col)}</td>`).join("");
+        const statCells     = activeStatCols().map(col => `<td>${formatStatCell(s, col)}</td>`).join("");
         const rowClasses    = [
             onPicked ? "fp-row-picked" : (onHighlight ? "fp-row-highlight" : "")
         ].filter(Boolean).join(" ");
 
-        return `<tr data-id="${p.playerId}" class="fp-row-main fp-row-desktop fp-row-clickable ${rowClasses}" title="Click row to highlight">
+        return `<tr data-id="${p.playerId}" class="fp-row-main fp-row-clickable ${rowClasses}" title="Click row to highlight">
             <td class="fp-rank-cell">${idx}</td>
-            ${playerCardCell(p, p.playerId)}
-            <td class="fp-stat-desktop">${ nullish(p.fantasyGrade) }</td>
-            <td class="fp-stat-desktop"><strong>${fp}</strong></td>
+            ${playerNameCell(p, p.playerId)}
+            ${posCell(p)}
+            ${teamCell(p)}
+            <td>${ nullish(p.fantasyGrade) }</td>
+            <td><strong>${fp}</strong></td>
             ${statCells}
-            <td class="fp-stat-desktop">${ nullish(p.nhlRank) }</td>
-            <td class="fp-stat-desktop">${ nullish(p.avgPick) }</td>
+            <td>${ nullish(p.nhlRank) }</td>
+            <td>${ nullish(p.avgPick) }</td>
             <td class="fp-lists-col">${renderListActions(p, cookies)}</td>
-        </tr>
-        ${renderMobileMainEntry(p, idx, cookies, rowClasses, s, fp)}`;
+        </tr>`;
     };
 
     const renderEmpty = (cookies) => {
@@ -1654,7 +1480,7 @@
     const renderSideRow = (p, id, idx, total, cookies) => {
         const s       = getPlayerStatBag(p);
         const statCells = activeStatCols().map(col =>
-            `<td class="fp-stat-col fp-stat-desktop">${formatStatCell(s, col)}</td>`
+            `<td class="fp-stat-col">${formatStatCell(s, col)}</td>`
         ).join("");
         const onPicked  = isIn(id, cookies.picked);
         const onDrafted = isIn(id, cookies.drafted);
@@ -1671,17 +1497,16 @@
                   </span>
                </td>`
             : `<td class="fp-reorder-col" style="display:none"></td>`;
-        return `<tr data-side-id="${id}" data-id="${id}" class="fp-row-main fp-row-desktop ${rowClasses}">
+        return `<tr data-side-id="${id}" data-id="${id}" class="fp-row-main ${rowClasses}">
             <td class="text-muted fp-rank-cell">${idx}</td>
             ${reorderCell}
-            ${playerCardCell(p, id, { side: true })}
-            <td class="fp-stat-col fp-stat-desktop">${p ? `<strong>${fpPoints(p).toFixed(1)}</strong>` : nullish(null)}</td>
+            ${playerNameCell(p, id, { side: true })}
+            <td class="fp-stat-col">${p ? `<strong>${fpPoints(p).toFixed(1)}</strong>` : nullish(null)}</td>
             ${statCells}
             <td class="fp-side-remove-col">
                 <button type="button" class="fp-side-remove-btn" data-side-action="remove" data-id="${id}" title="Remove from list" aria-label="Remove from list">×</button>
             </td>
-        </tr>
-        ${renderMobileSideEntry(p, id, idx, total, cookies, rowClasses, s)}`;
+        </tr>`;
     };
 
     const sumTeamStats = (players) => {
@@ -1937,8 +1762,6 @@
             state.sortKey = key;
             state.sortDesc = (key !== "name");
         }
-        const sortSel = document.getElementById("fpSortSelect");
-        if (sortSel && sortSel.querySelector(`option[value="${key}"]`)) sortSel.value = key;
         renderTable();
     };
 
@@ -1976,6 +1799,41 @@
         syncSideReorderColumn();
     };
 
+    const setListsOpen = (open) => {
+        const stack = document.querySelector(".fp-split-stack");
+        const toggle = document.getElementById("fpListsToggle");
+        if (!stack) return;
+        stack.classList.toggle("fp-lists-open", !!open);
+        if (toggle) {
+            toggle.setAttribute("aria-expanded", open ? "true" : "false");
+            toggle.textContent = open ? "▾" : "▴";
+            toggle.title = open ? "Hide lists" : "Show lists";
+            toggle.setAttribute("aria-label", toggle.title);
+        }
+        if (open) requestAnimationFrame(syncSideColumnWidths);
+    };
+
+    const isListsOpen = () => {
+        const stack = document.querySelector(".fp-split-stack");
+        return !!(stack && stack.classList.contains("fp-lists-open"));
+    };
+
+    const setShareOpen = (open) => {
+        const bar = document.getElementById("fpShareToolbar");
+        const toggle = document.getElementById("fpShareToggle");
+        if (bar) bar.classList.toggle("fp-share-open", !!open);
+        if (toggle) {
+            toggle.setAttribute("aria-expanded", open ? "true" : "false");
+            toggle.classList.toggle("active", !!open);
+        }
+    };
+
+    const syncSearchPlaceholder = () => {
+        const input = document.getElementById("fpSearchInput");
+        if (!input) return;
+        input.placeholder = isMobileLayout() ? "Search player" : "Search… ( / )";
+    };
+
     const flashSidePanel = () => {
         const panel = document.querySelector(".fp-side-panel");
         if (!panel) return;
@@ -1989,7 +1847,7 @@
         const p = playerById().get(Number(playerId));
         if (!p) return;
         document.querySelectorAll(
-            `#fpTableBody tr[data-id="${playerId}"] .fp-mobile-action-bar`
+            `#fpTableBody tr[data-id="${playerId}"] .fp-lists-col`
         ).forEach(bar => { bar.innerHTML = renderListActions(p, cookies); });
         const onPicked = listActionOn("picked", playerId, cookies);
         const onHighlight = !onPicked && listActionOn("highlight", playerId, cookies);
@@ -2024,7 +1882,10 @@
         refreshListCounts(updated);
 
         const shouldSwitchTab = !wasOn && action !== "highlight" && SIDE_VIEW_LABELS[action];
-        if (shouldSwitchTab) switchSideView(action);
+        if (shouldSwitchTab) {
+            switchSideView(action);
+            if (isMobileLayout()) setListsOpen(true);
+        }
 
         if (action === "drafted" || action === "picked") {
             if (state.hideDrafted) {
@@ -2186,7 +2047,13 @@
             const link = e.target.closest("a.nav-link");
             if (!link) return;
             e.preventDefault();
-            switchSideView(link.dataset.view);
+            const view = link.dataset.view;
+            if (isMobileLayout() && view === state.sideView && isListsOpen()) {
+                setListsOpen(false);
+                return;
+            }
+            switchSideView(view);
+            if (isMobileLayout()) setListsOpen(true);
             renderTable();
         });
 
@@ -2212,9 +2079,24 @@
         wireDraftReorderHold();
 
         document.getElementById("fpSortSelect")?.addEventListener("change", (e) => {
-            state.sortKey  = e.target.value;
-            state.sortDesc = (state.sortKey !== "name");
+            const key = e.target.value;
+            state.sortKey = key;
+            state.sortDesc = (key === "draftboard") ? false : (key !== "name");
             renderTable();
+        });
+
+        document.getElementById("fpSortDirBtn")?.addEventListener("click", () => {
+            state.sortDesc = !state.sortDesc;
+            renderTable();
+        });
+
+        document.getElementById("fpShareToggle")?.addEventListener("click", () => {
+            const bar = document.getElementById("fpShareToolbar");
+            setShareOpen(!(bar && bar.classList.contains("fp-share-open")));
+        });
+
+        document.getElementById("fpListsToggle")?.addEventListener("click", () => {
+            setListsOpen(!isListsOpen());
         });
 
         document.getElementById("fpTeamSelect").addEventListener("change", (e) => {
@@ -2244,12 +2126,6 @@
         });
 
         document.getElementById("fpTableBody").addEventListener("click", (e) => {
-            const sortTile = e.target.closest(".fp-mobile-stats-grid [data-sort-key]");
-            if (sortTile) {
-                e.stopPropagation();
-                applyTableSort(sortTile.dataset.sortKey);
-                return;
-            }
             const btn = e.target.closest(".fp-list-btn[data-action]");
             if (btn) {
                 e.stopPropagation();
@@ -2258,8 +2134,6 @@
                 return;
             }
             if (e.target.closest("button, a")) return;
-            if (e.target.closest(".fp-mobile-action-bar, .fp-mobile-stats-grid, .fp-mobile-side-tools")) return;
-            if (!e.target.closest(".fp-mobile-player-card")) return;
             const row = e.target.closest("tr[data-id]");
             if (!row) return;
             handleListAction(Number(row.dataset.id), "highlight", null);
@@ -2339,10 +2213,15 @@
         }
 
         let sideWidthRaf = null;
-        window.addEventListener("resize", () => {
+        const onViewportChange = () => {
+            syncSearchPlaceholder();
+            if (!isMobileLayout()) setListsOpen(true);
             if (sideWidthRaf) cancelAnimationFrame(sideWidthRaf);
             sideWidthRaf = requestAnimationFrame(syncSideColumnWidths);
-        });
+        };
+        window.addEventListener("resize", onViewportChange);
+        if (MOBILE_MQ.addEventListener) MOBILE_MQ.addEventListener("change", onViewportChange);
+        else if (MOBILE_MQ.addListener) MOBILE_MQ.addListener(onViewportChange);
 
         document.addEventListener("keydown", (e) => {
             const tag = (e.target.tagName || "").toLowerCase();
@@ -2379,10 +2258,14 @@
         syncSideTabState(state.sideView);
         syncSideReorderColumn();
         syncShareToolbarUi();
+        syncSearchPlaceholder();
+        syncSortSelect();
+        setListsOpen(!isMobileLayout());
         const urlDraftboardId = draftboardIdFromUrl();
         if (urlDraftboardId) {
             switchSideView("draftboard");
             setShareUi(urlDraftboardId);
+            setShareOpen(true);
             importDraftboard(urlDraftboardId, {
                 onSuccess: () => load(),
                 onError: () => load()

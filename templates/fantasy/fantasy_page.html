@@ -203,10 +203,6 @@
     .fp-list-btn.fp-list-draftboard.is-on { background: #218838; border-color: #1e7e34; }
     .fp-list-btn.fp-list-picked.is-on { background: #74c0fc; border-color: #339af0; }
     .fp-list-btn.fp-list-drafted.is-on { background: #e8590c; border-color: #d9480f; }
-    #fpTabs .nav-link[data-view="picked"].active { color: #339af0; border-color: #339af0 #339af0 #fff; font-weight: 600; }
-    #fpTabs .nav-link[data-view="drafted"].active { color: #e8590c; border-color: #e8590c #e8590c #fff; font-weight: 600; }
-    .fp-side-panel.fp-side-myteam .card-header { border-top: 3px solid #74c0fc; }
-    .fp-side-panel.fp-side-drafted .card-header { border-top: 3px solid #e8590c; }
     #fpSideTable tbody tr.fp-side-row-picked > td { background-color: #e7f5ff; }
     #fpSideTable tbody tr.fp-side-row-picked:hover > td { background-color: #d0ebff; }
     #fpSideTable tbody tr.fp-side-row-picked > td.fp-side-remove-col { background-color: #e7f5ff; }
@@ -224,24 +220,13 @@
     }
     .fp-toast { position:fixed; bottom:1.5rem; right:1.5rem; z-index:1080; min-width:200px; display:none; }
     .fp-toast.show { display:block; }
-    .fp-split-stack {
-        display: flex;
-        flex-direction: column;
-        flex: 1 1 auto;
-        min-height: 0;
-        width: 100%;
-        height: auto;
-    }
     .fp-split-top {
-        flex: 6 1 0;
-        min-height: 0;
         display: flex;
         flex-direction: column;
         margin-bottom: .35rem;
     }
     .fp-split-top > .card { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; flex-direction: column; margin-bottom: 0; }
     .fp-split-bottom {
-        flex: 4 1 0;
         min-height: 0;
         display: flex;
         flex-direction: column;
@@ -422,51 +407,6 @@
         align-items: center;
         gap: .35rem;
     }
-    .fp-side-header-inner {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: .5rem;
-        width: 100%;
-        min-width: 0;
-    }
-    .fp-side-tabs-wrap {
-        flex: 1 1 auto;
-        min-width: 0;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-        scrollbar-width: none;
-    }
-    .fp-side-tabs-wrap::-webkit-scrollbar { display: none; }
-    #fpTabs.fp-side-tabs {
-        flex-wrap: nowrap;
-        border-bottom: none;
-    }
-    #fpTabs .nav-link {
-        display: inline-flex;
-        align-items: center;
-        gap: .25rem;
-        white-space: nowrap;
-        touch-action: manipulation;
-    }
-    #fpTabs .fp-tab-badge {
-        font-size: .68rem;
-        font-weight: 600;
-    }
-    .fp-side-header-actions {
-        display: inline-flex;
-        align-items: center;
-        gap: .35rem;
-        flex-shrink: 0;
-    }
-    .fp-side-header-actions .btn {
-        touch-action: manipulation;
-    }
-    @media (min-width: 768px) {
-        #fpTabs .fp-tab-text { margin-left: .2rem; }
-    }
     @media (max-width: 767.98px) {
         .fp-page {
             padding: 0 6px 8px;
@@ -549,104 +489,9 @@
         .fp-side-table-scroll {
             max-height: none;
         }
-        .fp-split-stack:not(.fp-lists-open) .fp-split-top {
-            flex: 1 1 auto;
-            min-height: 0;
-        }
-        .fp-split-stack:not(.fp-lists-open) .fp-split-bottom {
-            flex: 0 0 auto;
-        }
-        .fp-split-stack:not(.fp-lists-open) .fp-side-table-wrap,
-        .fp-split-stack:not(.fp-lists-open) #fpRosterSummary {
-            display: none !important;
-        }
-        .fp-split-stack:not(.fp-lists-open) .fp-side-header-actions .fp-side-list-tool {
-            display: none;
-        }
-        .fp-split-stack.fp-lists-open .fp-split-top {
-            flex: 1 1 0;
-            min-height: 0;
-        }
-        .fp-split-stack.fp-lists-open .fp-split-bottom {
-            flex: 0 0 42%;
-            max-height: 46%;
-            min-height: 10rem;
-        }
-        .fp-lists-toggle {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 2.25rem;
-            min-height: 2.25rem;
-            padding: .25rem .4rem;
-            font-size: .85rem;
-        }
-        .fp-split-stack.fp-lists-open .fp-lists-toggle {
-            background: #e7f1ff;
-            border-color: #007bff;
-            color: #0056b3;
-        }
-        .fp-side-header {
-            padding-left: .5rem !important;
-            padding-right: .5rem !important;
-        }
-        .fp-side-tabs-wrap {
-            min-width: 0;
-        }
-        #fpTabs.fp-side-tabs {
-            display: flex;
-            gap: .35rem;
-            padding-bottom: 1px;
-        }
-        #fpTabs .nav-item { flex-shrink: 0; margin-bottom: 0; }
-        #fpTabs .nav-link {
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: .1rem;
-            min-width: 3.1rem;
-            min-height: 2.75rem;
-            padding: .35rem .5rem !important;
-            border: 1px solid #dee2e6 !important;
-            border-radius: 8px !important;
-            background: #f8f9fa;
-            font-size: 1rem;
-            line-height: 1.1;
-            color: #495057;
-        }
-        #fpTabs .nav-link.active {
-            background: #e7f1ff;
-            border-color: #007bff !important;
-            color: #0056b3;
-            font-weight: 600;
-            box-shadow: inset 0 0 0 1px rgba(0, 123, 255, .15);
-        }
-        #fpTabs .nav-link[data-view="picked"].active {
-            color: #339af0;
-            border-color: #339af0 !important;
-            background: #e7f5ff;
-        }
-        #fpTabs .nav-link[data-view="drafted"].active {
-            color: #e8590c;
-            border-color: #e8590c !important;
-            background: #fff4e6;
-        }
-        #fpTabs .fp-tab-text { display: none; }
-        #fpTabs .fp-tab-badge {
-            margin-left: 0 !important;
-            font-size: .6rem;
-            padding: .1em .4em;
-        }
-        .fp-side-header-actions .btn {
-            min-height: 2.25rem;
-            min-width: 3.25rem;
-            padding: .35rem .75rem;
-            font-size: .82rem;
-        }
         .fp-toast {
             left: .75rem;
             right: .75rem;
-            bottom: .75rem;
             min-width: 0;
         }
     }
@@ -680,6 +525,7 @@
         }
     }
 </style>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/fantasy-saved-lists.css') }}">
 
 <div class="fp-page">
     <div class="fp-sticky-toolbar">
@@ -795,58 +641,7 @@
             </div>
         </div>
 
-        <div class="fp-split-bottom">
-            <div class="card fp-side-panel">
-                <div class="card-header bg-white py-2 fp-side-header">
-                    <div class="fp-side-header-inner">
-                        <div class="fp-side-tabs-wrap">
-                            <ul class="nav nav-tabs card-header-tabs border-0 flex-nowrap mb-0 fp-side-tabs" id="fpTabs" role="tablist">
-                                <li class="nav-item"><a class="nav-link py-1" href="#" data-view="favorite" role="tab" aria-label="Favorites"><span class="fp-tab-icon" aria-hidden="true">★</span><span class="fp-tab-text">Favorites</span><span class="badge badge-secondary fp-tab-badge" id="fpTabFav">0</span></a></li>
-                                <li class="nav-item"><a class="nav-link py-1" href="#" data-view="watchlist" role="tab" aria-label="Watchlist"><span class="fp-tab-icon" aria-hidden="true">👁</span><span class="fp-tab-text">Watchlist</span><span class="badge badge-secondary fp-tab-badge" id="fpTabWatch">0</span></a></li>
-                                <li class="nav-item"><a class="nav-link active py-1" href="#" data-view="draftboard" role="tab" aria-label="Draftboard"><span class="fp-tab-icon" aria-hidden="true">🗊</span><span class="fp-tab-text">Draftboard</span><span class="badge badge-secondary fp-tab-badge" id="fpTabDraft">0</span></a></li>
-                                <li class="nav-item"><a class="nav-link py-1" href="#" data-view="picked" role="tab" aria-label="My Team"><span class="fp-tab-icon" aria-hidden="true">＋</span><span class="fp-tab-text">My Team</span><span class="badge badge-secondary fp-tab-badge" id="fpTabPicked">0</span></a></li>
-                                <li class="nav-item"><a class="nav-link py-1" href="#" data-view="drafted" role="tab" aria-label="Drafted"><span class="fp-tab-icon" aria-hidden="true">✔</span><span class="fp-tab-text">Drafted</span><span class="badge badge-secondary fp-tab-badge" id="fpTabDrafted">0</span></a></li>
-                            </ul>
-                        </div>
-                        <div class="fp-side-header-actions">
-                            <button class="btn btn-sm btn-outline-secondary py-0 fp-lists-toggle" id="fpListsToggle" type="button" aria-expanded="false" title="Show or hide lists" aria-label="Show or hide lists">▴</button>
-                            <button class="btn btn-sm btn-outline-secondary py-0 fp-side-list-tool" id="fpSideCopyBtn" type="button" title="Copy names">Copy</button>
-                            <button class="btn btn-sm btn-outline-danger py-0 fp-side-list-tool" id="fpClearBtn" type="button">Clear</button>
-                        </div>
-                    </div>
-                    <div id="fpRosterSummary" class="mt-2" style="display:none;"></div>
-                </div>
-                <div class="card-body p-0 fp-side-table-wrap">
-                    <div class="fp-side-table-scroll">
-                        <table class="table table-sm table-hover mb-0" id="fpSideTable">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th class="no-sort">#</th>
-                                    <th class="fp-reorder-col no-sort" id="fpSideReorderHead" title="Draftboard">⇅</th>
-                                    <th>Player</th>
-                                    <th class="fp-stat-col">FP</th>
-                                    <th class="fp-stat-col">GP</th>
-                                    <th class="fp-stat-col">G</th>
-                                    <th class="fp-stat-col">A</th>
-                                    <th class="fp-stat-col">P</th>
-                                    <th class="fp-stat-col">S</th>
-                                    <th class="fp-stat-col">H</th>
-                                    <th class="fp-stat-col">B</th>
-                                    <th class="fp-stat-col">+/-</th>
-                                    <th class="no-sort fp-side-remove-col"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="fpSideTableBody"></tbody>
-                        </table>
-                    </div>
-                    <div class="fp-side-totals-wrap" id="fpSideTotalsWrap" style="display:none">
-                        <table class="table table-sm mb-0" id="fpSideTotalsTable">
-                            <tbody id="fpSideTableFoot"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% include 'fantasy/_saved_lists_drawer.html' %}
     </div>
 </div>
 
@@ -1104,6 +899,23 @@
         const label = (p && p.skaterFullName) || `Player #${id}`;
         const sideAttrs = opts.side ? ` data-side-action="open" data-id="${id}"` : "";
         return `<td class="fp-player-cell"><button type="button" class="btn btn-link btn-sm p-0 text-left fp-player-name-btn" data-toggle="modal" data-target="#player-modal" onclick="loadPlayerModal(${id})"${sideAttrs}>${label}</button></td>`;
+    };
+
+    const sidePlayerCell = (p, id) => {
+        const label = (p && p.skaterFullName) || `Player #${id}`;
+        const eligibility = p ? (p.yahooEligibility || p.positionCode || "") : "";
+        const team = (p && p.teamName) || "Team unavailable";
+        return `<td class="fp-player-cell fp-side-player">
+            <div class="fp-side-player-main">
+                <button type="button" class="btn btn-link btn-sm p-0 text-left fp-player-name-btn"
+                        data-toggle="modal" data-target="#player-modal"
+                        data-side-action="open" data-id="${id}">${label}</button>
+            </div>
+            <div class="fp-side-player-meta">
+                ${positionChip(eligibility)}
+                <span class="fp-side-team" title="${team}">${team}</span>
+            </div>
+        </td>`;
     };
 
     const posCell = (p) => {
@@ -1500,7 +1312,7 @@
         return `<tr data-side-id="${id}" data-id="${id}" class="fp-row-main ${rowClasses}">
             <td class="text-muted fp-rank-cell">${idx}</td>
             ${reorderCell}
-            ${playerNameCell(p, id, { side: true })}
+            ${sidePlayerCell(p, id)}
             <td class="fp-stat-col">${p ? `<strong>${fpPoints(p).toFixed(1)}</strong>` : nullish(null)}</td>
             ${statCells}
             <td class="fp-side-remove-col">
@@ -1594,25 +1406,43 @@
 
     const renderSideList = (cookies) => {
         const tbody   = document.getElementById("fpSideTableBody");
+        const wrap    = document.getElementById("fpSavedDrawerContent");
+        const emptyEl = document.getElementById("fpSideEmpty");
+        const table   = document.getElementById("fpSideTable");
         const ids     = sideListIds(cookies);
         const byId    = playerById();
-        const emptyMsgs = {
-            favorite:   "No favorites yet. Click ★ on a player in the table.",
-            watchlist:  "Watchlist is empty. Click 👁 on a player.",
-            draftboard: "Draftboard is empty. Click 🗊 on a player.",
-            picked:     "My Team is empty. Click ＋ on a player.",
-            drafted:    "No drafted players yet. Click ✔ on a player in the table."
+        const emptyStates = {
+            favorite:   ["★", "No favorites yet", "Use ★ beside a player to keep your top options close."],
+            watchlist:  ["👁", "Your watchlist is empty", "Use 👁 to save players you want to monitor."],
+            draftboard: ["🗊", "Build your draftboard", "Add players with 🗊, then hold the arrows to reorder them."],
+            picked:     ["＋", "My Team has no players", "Use ＋ to add your selections and see roster totals."],
+            drafted:    ["✔", "No players marked drafted", "Use ✔ to remove selected players from the available pool."]
         };
 
         syncSidePanelTheme();
+        syncSideListTitle();
+        syncSideListActions(ids.length);
 
         if (ids.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="${sideColCount()}" class="text-center text-muted small py-3">${emptyMsgs[state.sideView] || "List is empty."}</td></tr>`;
+            const empty = emptyStates[state.sideView] || ["", "List is empty", "Add a player from the main table."];
+            const icon = document.getElementById("fpSideEmptyIcon");
+            const title = document.getElementById("fpSideEmptyTitle");
+            const copy = document.getElementById("fpSideEmptyCopy");
+            if (icon) icon.textContent = empty[0];
+            if (title) title.textContent = empty[1];
+            if (copy) copy.textContent = empty[2];
+            if (emptyEl) emptyEl.hidden = false;
+            if (wrap) wrap.classList.add("fp-side-is-empty");
+            if (table) table.setAttribute("aria-hidden", "true");
+            if (tbody) tbody.innerHTML = "";
             syncSideReorderColumn();
             syncSideTotals(cookies);
             return;
         }
 
+        if (emptyEl) emptyEl.hidden = true;
+        if (wrap) wrap.classList.remove("fp-side-is-empty");
+        if (table) table.removeAttribute("aria-hidden");
         tbody.innerHTML = ids.map((id, i) => {
             const p = byId.get(Number(id));
             return renderSideRow(p, id, i + 1, ids.length, cookies);
@@ -1622,9 +1452,35 @@
         syncSideTotals(cookies);
     };
 
+    const syncSideListTitle = () => {
+        const el = document.getElementById("fpSideListTitle");
+        if (el) el.textContent = SIDE_VIEW_LABELS[state.sideView] || "List";
+        const drawer = document.getElementById("fpSavedDrawer");
+        if (drawer) drawer.dataset.sideView = state.sideView;
+    };
+
+    const syncSideListActions = (count) => {
+        const label = SIDE_VIEW_LABELS[state.sideView] || "list";
+        const copy = document.getElementById("fpSideCopyBtn");
+        const clear = document.getElementById("fpClearBtn");
+        if (copy) {
+            copy.disabled = count === 0;
+            copy.title = `Copy ${label} names`;
+            copy.setAttribute("aria-label", copy.title);
+        }
+        if (clear) {
+            clear.disabled = count === 0;
+            clear.title = `Clear ${label}`;
+            clear.setAttribute("aria-label", clear.title);
+        }
+    };
+
     const syncSidePanelTheme = () => {
         const panel = document.querySelector(".fp-side-panel");
         if (!panel) return;
+        panel.classList.toggle("fp-side-favorite", state.sideView === "favorite");
+        panel.classList.toggle("fp-side-watchlist", state.sideView === "watchlist");
+        panel.classList.toggle("fp-side-draftboard", state.sideView === "draftboard");
         panel.classList.toggle("fp-side-myteam", state.sideView === "picked");
         panel.classList.toggle("fp-side-drafted", state.sideView === "drafted");
         syncRosterSummary();
@@ -1636,6 +1492,10 @@
             return;
         }
         const cookies = currentCookies();
+        if (!cookies.picked.length) {
+            FantasyLeagueSettings.hideTeamSummary();
+            return;
+        }
         FantasyLeagueSettings.renderTeamSummary(cookies.picked, playerById());
     };
 
@@ -1795,27 +1655,178 @@
         if (!SIDE_VIEW_LABELS[view]) return;
         state.sideView = view;
         syncSideTabState(view);
+        syncSideListTitle();
         syncSidePanelTheme();
         syncSideReorderColumn();
     };
 
-    const setListsOpen = (open) => {
+    const DRAWER_STATES = ["compact", "expanded"];
+
+    const drawerState = () => {
+        const drawer = document.getElementById("fpSavedDrawer");
+        const raw = drawer && drawer.dataset.drawerState;
+        if (raw === "collapsed") return "compact";
+        return DRAWER_STATES.includes(raw) ? raw : "compact";
+    };
+
+    const defaultExpandedHeight = () => {
+        const row = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+        return Math.round(row * (2.35 * 4 + 7.25));
+    };
+
+    const drawerMinHeight = () => {
+        const drawer = document.getElementById("fpSavedDrawer");
+        if (!drawer) return defaultExpandedHeight();
+        const styles = getComputedStyle(drawer);
+        const parsed = parseFloat(styles.getPropertyValue("--fp-drawer-expanded-min"));
+        return Number.isFinite(parsed) && parsed > 0 ? parsed : defaultExpandedHeight();
+    };
+
+    const drawerMaxHeight = () => {
         const stack = document.querySelector(".fp-split-stack");
-        const toggle = document.getElementById("fpListsToggle");
-        if (!stack) return;
-        stack.classList.toggle("fp-lists-open", !!open);
-        if (toggle) {
-            toggle.setAttribute("aria-expanded", open ? "true" : "false");
-            toggle.textContent = open ? "▾" : "▴";
-            toggle.title = open ? "Hide lists" : "Show lists";
-            toggle.setAttribute("aria-label", toggle.title);
+        const stackH = stack ? stack.clientHeight : window.innerHeight;
+        return Math.max(drawerMinHeight(), Math.round(stackH * 0.9));
+    };
+
+    const applyDrawerHeight = (px) => {
+        const drawer = document.getElementById("fpSavedDrawer");
+        if (!drawer) return;
+        const clamped = Math.max(drawerMinHeight(), Math.min(drawerMaxHeight(), Math.round(px)));
+        drawer.style.setProperty("--fp-drawer-h", `${clamped}px`);
+        return clamped;
+    };
+
+    const clearDrawerHeight = () => {
+        const drawer = document.getElementById("fpSavedDrawer");
+        if (drawer) drawer.style.removeProperty("--fp-drawer-h");
+    };
+
+    const setDrawerState = (next) => {
+        if (next === "collapsed") next = "compact";
+        if (!DRAWER_STATES.includes(next)) return;
+        const drawer = document.getElementById("fpSavedDrawer");
+        const handle = document.getElementById("fpDrawerHandle");
+        const collapseBtn = document.getElementById("fpDrawerCollapseBtn");
+        const expandBtn = document.getElementById("fpDrawerExpandBtn");
+        const scrim = document.getElementById("fpSavedDrawerScrim");
+        const stack = document.querySelector(".fp-split-stack");
+        if (!drawer) return;
+
+        drawer.dataset.drawerState = next;
+        const open = next === "expanded";
+        if (stack) stack.classList.toggle("fp-lists-open", open);
+        if (handle) {
+            handle.setAttribute("aria-expanded", open ? "true" : "false");
+            handle.setAttribute("aria-label", open
+                ? "Saved player lists expanded. Drag to resize, or press to collapse."
+                : "Saved player lists collapsed. Drag or press to expand.");
+        }
+        if (collapseBtn) collapseBtn.disabled = !open;
+        if (expandBtn) expandBtn.disabled = open;
+        if (scrim) {
+            const showScrim = isMobileLayout() && open;
+            scrim.classList.toggle("fp-open", showScrim);
+            scrim.setAttribute("aria-hidden", showScrim ? "false" : "true");
+        }
+        if (!open || isMobileLayout()) clearDrawerHeight();
+        else if (!drawer.style.getPropertyValue("--fp-drawer-h")) {
+            applyDrawerHeight(defaultExpandedHeight());
         }
         if (open) requestAnimationFrame(syncSideColumnWidths);
     };
 
-    const isListsOpen = () => {
-        const stack = document.querySelector(".fp-split-stack");
-        return !!(stack && stack.classList.contains("fp-lists-open"));
+    const setListsOpen = (open) => {
+        setDrawerState(open ? "expanded" : "compact");
+    };
+
+    const isListsOpen = () => drawerState() === "expanded";
+
+    const wireSavedDrawer = () => {
+        const drawer = document.getElementById("fpSavedDrawer");
+        const handle = document.getElementById("fpDrawerHandle");
+        const collapseBtn = document.getElementById("fpDrawerCollapseBtn");
+        const expandBtn = document.getElementById("fpDrawerExpandBtn");
+        const scrim = document.getElementById("fpSavedDrawerScrim");
+        const emptyCta = document.getElementById("fpSideEmptyCta");
+        if (!handle || !drawer) return;
+
+        let dragStartY = null;
+        let dragStartH = 0;
+        let dragged = false;
+
+        handle.addEventListener("pointerdown", (e) => {
+            dragStartY = e.clientY;
+            dragStartH = drawer.getBoundingClientRect().height;
+            dragged = false;
+            handle.setPointerCapture(e.pointerId);
+            document.body.classList.add("fp-drawer-dragging");
+        });
+        handle.addEventListener("pointermove", (e) => {
+            if (dragStartY == null) return;
+            const delta = dragStartY - e.clientY;
+            if (Math.abs(e.clientY - dragStartY) > 8) dragged = true;
+            if (isMobileLayout()) return;
+            if (drawerState() === "compact") {
+                if (delta > 28) {
+                    setDrawerState("expanded");
+                    dragStartH = drawerMinHeight();
+                } else {
+                    return;
+                }
+            }
+            applyDrawerHeight(dragStartH + delta);
+        });
+        const finishDrag = (e) => {
+            if (dragStartY == null) return;
+            const delta = dragStartY - e.clientY;
+            dragStartY = null;
+            document.body.classList.remove("fp-drawer-dragging");
+            if (isMobileLayout()) {
+                if (Math.abs(delta) < 36) return;
+                setDrawerState(delta > 0 ? "expanded" : "compact");
+                return;
+            }
+            if (drawerState() === "expanded") {
+                const h = drawer.getBoundingClientRect().height;
+                if (h <= drawerMinHeight() + 12 && delta < 0) setDrawerState("compact");
+            }
+        };
+        handle.addEventListener("pointerup", finishDrag);
+        handle.addEventListener("pointercancel", () => {
+            dragStartY = null;
+            document.body.classList.remove("fp-drawer-dragging");
+        });
+        handle.addEventListener("click", () => {
+            if (dragged) {
+                dragged = false;
+                return;
+            }
+            setDrawerState(drawerState() === "expanded" ? "compact" : "expanded");
+        });
+        handle.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowUp") {
+                e.preventDefault();
+                setDrawerState("expanded");
+            } else if (e.key === "ArrowDown" || e.key === "Home") {
+                e.preventDefault();
+                setDrawerState("compact");
+            } else if (e.key === "End") {
+                e.preventDefault();
+                setDrawerState("expanded");
+                if (!isMobileLayout()) applyDrawerHeight(drawerMaxHeight());
+            }
+        });
+        collapseBtn?.addEventListener("click", () => setDrawerState("compact"));
+        expandBtn?.addEventListener("click", () => setDrawerState("expanded"));
+        scrim?.addEventListener("click", () => setDrawerState("compact"));
+        emptyCta?.addEventListener("click", () => {
+            if (isMobileLayout()) setDrawerState("compact");
+            const input = document.getElementById("fpSearchInput");
+            if (input) {
+                input.focus();
+                input.scrollIntoView({ block: "nearest" });
+            }
+        });
     };
 
     const setShareOpen = (open) => {
@@ -1884,7 +1895,7 @@
         const shouldSwitchTab = !wasOn && action !== "highlight" && SIDE_VIEW_LABELS[action];
         if (shouldSwitchTab) {
             switchSideView(action);
-            if (isMobileLayout()) setListsOpen(true);
+            setListsOpen(true);
         }
 
         if (action === "drafted" || action === "picked") {
@@ -2053,7 +2064,7 @@
                 return;
             }
             switchSideView(view);
-            if (isMobileLayout()) setListsOpen(true);
+            setListsOpen(true);
             renderTable();
         });
 
@@ -2077,6 +2088,7 @@
         });
 
         wireDraftReorderHold();
+        wireSavedDrawer();
 
         document.getElementById("fpSortSelect")?.addEventListener("change", (e) => {
             const key = e.target.value;
@@ -2093,10 +2105,6 @@
         document.getElementById("fpShareToggle")?.addEventListener("click", () => {
             const bar = document.getElementById("fpShareToolbar");
             setShareOpen(!(bar && bar.classList.contains("fp-share-open")));
-        });
-
-        document.getElementById("fpListsToggle")?.addEventListener("click", () => {
-            setListsOpen(!isListsOpen());
         });
 
         document.getElementById("fpTeamSelect").addEventListener("change", (e) => {
@@ -2215,7 +2223,9 @@
         let sideWidthRaf = null;
         const onViewportChange = () => {
             syncSearchPlaceholder();
-            if (!isMobileLayout()) setListsOpen(true);
+            if (isMobileLayout() && drawerState() === "expanded") {
+                clearDrawerHeight();
+            }
             if (sideWidthRaf) cancelAnimationFrame(sideWidthRaf);
             sideWidthRaf = requestAnimationFrame(syncSideColumnWidths);
         };
@@ -2227,6 +2237,10 @@
             const tag = (e.target.tagName || "").toLowerCase();
             if (e.key === "Escape" && drawer && drawer.classList.contains("fp-open")) {
                 closeSettingsDrawer();
+                return;
+            }
+            if (e.key === "Escape" && isMobileLayout() && isListsOpen()) {
+                setDrawerState("compact");
                 return;
             }
             if (e.key === "/" && tag !== "input" && tag !== "textarea") {
@@ -2256,11 +2270,12 @@
     $(document).ready(() => {
         wireEvents();
         syncSideTabState(state.sideView);
+        syncSideListTitle();
         syncSideReorderColumn();
         syncShareToolbarUi();
         syncSearchPlaceholder();
         syncSortSelect();
-        setListsOpen(!isMobileLayout());
+        setDrawerState("compact");
         const urlDraftboardId = draftboardIdFromUrl();
         if (urlDraftboardId) {
             switchSideView("draftboard");

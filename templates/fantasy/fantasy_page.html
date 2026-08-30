@@ -2059,7 +2059,7 @@
             if (!link) return;
             e.preventDefault();
             const view = link.dataset.view;
-            if (isMobileLayout() && view === state.sideView && isListsOpen()) {
+            if (view === state.sideView && isListsOpen()) {
                 setListsOpen(false);
                 return;
             }

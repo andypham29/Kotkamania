@@ -700,6 +700,8 @@
                                 <th data-sort-key="goals">G</th>
                                 <th data-sort-key="assists">A</th>
                                 <th data-sort-key="points">P</th>
+                                <th data-sort-key="powerPlayGoals">PPG</th>
+                                <th data-sort-key="powerPlayPoints">PPP</th>
                                 <th data-sort-key="shots">S</th>
                                 <th data-sort-key="hits">H</th>
                                 <th data-sort-key="blocked">B</th>
@@ -794,6 +796,8 @@
         { key: "goals",   sortKey: "goals",   label: "G" },
         { key: "assists", sortKey: "assists", label: "A" },
         { key: "points",  sortKey: "points",  label: "P" },
+        { key: "powerPlayGoals", sortKey: "powerPlayGoals", label: "PPG" },
+        { key: "powerPlayPoints", sortKey: "powerPlayPoints", label: "PPP" },
         { key: "shots",   sortKey: "shots",   label: "S" },
         { key: "hits",    sortKey: "hits",    label: "H" },
         { key: "blocked", sortKey: "blocked", label: "B" },
@@ -809,7 +813,7 @@
         { key: "shutouts",            sortKey: "shutouts", label: "SO" }
     ];
 
-    const SKATER_SORT_KEYS = new Set(["goals", "assists", "points", "shots", "hits", "blocked", "plusMinus"]);
+    const SKATER_SORT_KEYS = new Set(["goals", "assists", "points", "shots", "hits", "blocked", "plusMinus", "powerPlayGoals", "powerPlayPoints"]);
     const MOBILE_MQ = window.matchMedia("(max-width: 767.98px)");
     const isMobileLayout = () => MOBILE_MQ.matches;
 
@@ -1170,6 +1174,8 @@
             case "hits":     return statNum(s, "hits");
             case "blocked":  return statNum(s, "blocked");
             case "plusMinus": return statNum(s, "plusMinus");
+            case "powerPlayGoals":  return statNum(s, "powerPlayGoals");
+            case "powerPlayPoints": return statNum(s, "powerPlayPoints");
             case "gp":       return statNum(gs, "gamesPlayed");
             case "gaa":      return (gs.goalsAgainstAverage && gs.goalsAgainstAverage.value != null)
                 ? gs.goalsAgainstAverage.value : Infinity;

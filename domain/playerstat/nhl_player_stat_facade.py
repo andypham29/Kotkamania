@@ -12,6 +12,8 @@ class NhlPlayerStatFacade:
     from multiple NHL API services: Realtime, Summary, and TimeOnIce.
     """
 
+    _LEAGUE_WIDE_PAGE_CAP = 2000
+
     def __init__(self,
                  realtime_service: Optional[NHLSkaterRealtimeService] = None,
                  summary_service: Optional[NHLSkaterSummaryService] = None,
@@ -82,6 +84,22 @@ class NhlPlayerStatFacade:
         summary_players   = self.summary_service.getPlayersPerTeam(franchise_id,   seasonId=season_id)
         timeonice_players = self.timeonice_service.getPlayersPerTeam(franchise_id, seasonId=season_id)
 
+        return self._combine_player_data(realtime_players, summary_players, timeonice_players, season_id)
+
+    def get_all_players(self, season_id: int) -> List[PlayerStat]:
+        """
+        League-wide combined season totals (no franchise filter).
+        Multi-team players are already one combined row from the NHL APIs.
+        """
+        realtime_players = self._fetch_paged(
+            self.realtime_service.getAllPlayers, season_id, total=self._LEAGUE_WIDE_PAGE_CAP
+        )
+        summary_players = self._fetch_paged(
+            self.summary_service.getAllPlayers, season_id, total=self._LEAGUE_WIDE_PAGE_CAP
+        )
+        timeonice_players = self._fetch_paged(
+            self.timeonice_service.getAllPlayers, season_id, total=self._LEAGUE_WIDE_PAGE_CAP
+        )
         return self._combine_player_data(realtime_players, summary_players, timeonice_players, season_id)
 
     def _get_realtime_data(self, player_id: int, season_id: int):

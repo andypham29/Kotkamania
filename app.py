@@ -230,4 +230,4 @@ app.register_blueprint(draftboard_bp)
 
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
-    app.run(debug=True)
+    app.run(debug=True, port=3000)

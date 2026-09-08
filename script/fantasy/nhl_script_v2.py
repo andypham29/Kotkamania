@@ -1,5 +1,3 @@
-from typing import List
-
 import script
 from application.goaliegrade.fantasy_goalie_grader_service import FantasyGoalieGraderService
 from application.goaliestats.goalie_stat_facade import GoalieStatFacade
@@ -9,11 +7,9 @@ from domain.fantasygrade.fantasy_forward_grader_service import FantasyForwardGra
 from domain.fantasyplayer.fantasy_player_service import FantasyPlayerService
 from domain.fantasyplayer.model.fantasy_nhl_player import FantasyPlayerUpdateQuery
 from domain.playerstatpercentile.nhl_player_stat_percentile_calculator import NhlPlayerStatPercentileCalculator
-from infra.spi.sqlite.playerstat.model.nhl_player_stat import PlayerStat
 from domain.playerstat.nhl_player_stat_cache_service import NhlPlayerStatCacheService
 from domain.playerstat.nhl_player_stat_facade import NhlPlayerStatFacade
 from infra.spi.nhlapi.nhl_team_roster_provider import NhlTeamRosterProvider
-from infra.spi.nhlapi.nhl_team_service import NhlTeamService
 from infra.spi.sqlite.fantasyplayer.fantasy_player_repository import FantasyPlayerRepository
 from infra.spi.sqlite.playerstatpercentile.nhl_player_stat_repository import NhlPlayerStatPercentileRepository
 from server.commons.helper.nhl_season_converter import NhlYearConverter
@@ -44,28 +40,20 @@ class MasterScript:
 
 
 class NhlScriptV2:
-    """Script to refresh player stats team-by-team and bulk-save into the SQLite cache."""
+    """Script to refresh league-wide combined player stats and bulk-save into the SQLite cache."""
     def __init__(self):
-        self.nhl_team_service = NhlTeamService()
         self.stat_facade = NhlPlayerStatFacade()
         self.cache_service = NhlPlayerStatCacheService()
         self.fantasy_grader = FantasyPlayerGraderScript()
         self.fantasy_player_repository = FantasyPlayerRepository()
         self.nhl_team_roster_provider = NhlTeamRosterProvider()
 
-    def get_players_stat_from_franchise(self, franchise_id: int, season_id: int) -> List[PlayerStat]:
-        return self.stat_facade.get_all_players_from_franchise(franchise_id, season_id)
-
     def save_all_players(self, season_id: int = None) -> int:
         season_id = season_id or NhlYearConverter.get_current_season()
-        total = 0
-        for team in self.nhl_team_service.getAllTeams():
-            stats = self.get_players_stat_from_franchise(team.franchiseId, season_id)
-            written = self.cache_service.save_stats(stats)
-            print(f"[{team.triCode}] saved {written} player stats")
-            total += written
-        print(f"\nDone. Total stats saved: {total}")
-        return total
+        stats = self.stat_facade.get_all_players(season_id)
+        written = self.cache_service.save_stats(stats)
+        print(f"Saved {written} player stats for season {season_id}")
+        return written
 
     def save_player_grade_for_all_players(self):
 
@@ -179,7 +167,7 @@ class GoalieScript:
     print("Done grading all goalie stats.")
 
 if __name__ == '__main__':
-    # NhlScriptV2().get_all_players()
+    NhlScriptV2().save_all_players()
     # NhlScriptV2().get_all_players("20242025")
     # NhlScriptV2().get_all_players("20232024")
     # NhlScriptV2().get_all_players("20222023")
@@ -189,4 +177,4 @@ if __name__ == '__main__':
     # script.run()
     # script.run_score()
     # script.run_percentile()
-    script.run_goalie()
+    # script.run_goalie()

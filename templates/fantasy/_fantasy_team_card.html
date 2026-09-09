@@ -1,0 +1,213 @@
+<script>
+    function ftEscape(value) {
+        return String(value == null ? "" : value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+    }
+
+    function ftIsEmpty(value) {
+        return value === null || value === undefined || value === "";
+    }
+
+    function ftDash(value) {
+        return ftIsEmpty(value) ? "—" : value;
+    }
+
+    function ftNum(value, digits) {
+        if (ftIsEmpty(value)) return "—";
+        const n = Number(value);
+        if (!isFinite(n)) return "—";
+        return digits == null ? String(n) : n.toFixed(digits);
+    }
+
+    function ftPct(value, digits) {
+        if (ftIsEmpty(value)) return "—";
+        const n = Number(value);
+        if (!isFinite(n)) return "—";
+        const pct = Math.abs(n) <= 1 ? n * 100 : n;
+        return pct.toFixed(digits == null ? 1 : digits) + "%";
+    }
+
+    function ftSavePct(value) {
+        if (ftIsEmpty(value)) return "—";
+        const n = Number(value);
+        if (!isFinite(n)) return "—";
+        return n.toFixed(3);
+    }
+
+    function ftPlusMinus(value) {
+        if (ftIsEmpty(value)) return "—";
+        const n = Number(value);
+        if (!isFinite(n)) return "—";
+        return n > 0 ? "+" + n : String(n);
+    }
+
+    function ftRecord(nhl) {
+        if (!nhl) return "—";
+        if (ftIsEmpty(nhl.wins) && ftIsEmpty(nhl.losses) && ftIsEmpty(nhl.otLosses)) return "—";
+        return ftDash(nhl.wins) + "-" + ftDash(nhl.losses) + "-" + ftDash(nhl.otLosses);
+    }
+
+    function ftJoinMeta(parts) {
+        return parts.filter(function(part) { return part; }).join(" · ");
+    }
+
+    function ftStat(label, value) {
+        return '<div class="ft-stat">' +
+            '<span class="ft-stat-label">' + ftEscape(label) + "</span>" +
+            '<span class="ft-stat-value">' + ftEscape(value) + "</span>" +
+            "</div>";
+    }
+
+    function ftPosChip(code) {
+        const pos = String(code || "").toUpperCase();
+        if (!pos) return "";
+        const klass = "ft-pos-chip pos-" + pos.replace(/[^A-Z]/g, "");
+        return '<span class="' + klass + '">' + ftEscape(pos) + "</span>";
+    }
+
+    function ftPlayerLink(player) {
+        if (!player) return '<span class="ft-muted">—</span>';
+        const id = player.playerId || player.id;
+        const name = ftEscape(player.skaterFullName || "—");
+        if (typeof loadPlayerModal === "function" && id) {
+            return '<button type="button" class="btn btn-link btn-sm p-0 ft-player-btn" data-toggle="modal" data-target="#player-modal" onclick="event.stopPropagation(); loadPlayerModal(' + id + ')">' + name + "</button>";
+        }
+        if (id) {
+            return '<a href="/nhl/players/' + encodeURIComponent(id) + '">' + name + "</a>";
+        }
+        return name;
+    }
+
+    function ftBestItem(role, player) {
+        const pos = player ? (player.positionCode || "") : "";
+        const grade = player && !ftIsEmpty(player.fantasyGrade)
+            ? '<span class="ft-grade-pill">' + ftEscape(player.fantasyGrade) + "</span>"
+            : "";
+        return '<div class="ft-best-item">' +
+            '<span class="ft-best-role">' + ftEscape(role) + "</span>" +
+            '<div class="ft-best-line">' +
+            ftPosChip(pos) +
+            ftPlayerLink(player) +
+            grade +
+            "</div></div>";
+    }
+
+    function renderFantasyTeamCard(team) {
+        team = team || {};
+        const nhl = team.nhl || {};
+        const skater = team.stat || {};
+        const goalie = team.goalieStat || {};
+        const best = team.best || {};
+        const name = nhl.fullName || team.abbreviation || "Team";
+        const meta = ftJoinMeta([
+            team.abbreviation,
+            nhl.conference,
+            nhl.division,
+            ftIsEmpty(nhl.leagueRank) ? "" : "#" + nhl.leagueRank,
+            nhl.streak
+        ]);
+        const record = ftRecord(nhl);
+        const pts = ftIsEmpty(nhl.points) ? "" : ftDash(nhl.points) + " pts";
+        const logo = nhl.logoUrl
+            ? '<img class="ft-logo" src="' + ftEscape(nhl.logoUrl) + '" alt="' + ftEscape(name) + ' logo">'
+            : '<div class="ft-logo-fallback">' + ftEscape((team.abbreviation || "?").slice(0, 3)) + "</div>";
+        const avg = ftIsEmpty(team.avgFantasyGrade) ? "—" : team.avgFantasyGrade;
+        const max = ftIsEmpty(team.maxFantasyGrade) ? "—" : team.maxFantasyGrade;
+        const roster = ftJoinMeta([
+            ftIsEmpty(team.skaterCount) ? "" : team.skaterCount + " skaters",
+            ftIsEmpty(team.goalieCount) ? "" : team.goalieCount + " G"
+        ]);
+
+        return '<div class="ft-card">' +
+            '<div class="ft-card-header">' +
+            logo +
+            '<div class="ft-header-text">' +
+            '<div class="ft-name">' + ftEscape(name) + "</div>" +
+            (meta ? '<div class="ft-meta">' + ftEscape(meta) + "</div>" : "") +
+            '<div class="ft-record">' + ftEscape(record) + (pts ? " · " + ftEscape(pts) : "") + "</div>" +
+            (roster ? '<div class="ft-meta">' + ftEscape(roster) + "</div>" : "") +
+            "</div>" +
+            '<div class="ft-grades">' +
+            '<span class="badge badge-dark">avg ' + ftEscape(avg) + "</span>" +
+            '<span class="badge badge-secondary">max ' + ftEscape(max) + "</span>" +
+            "</div></div>" +
+            '<div class="ft-section-label">NHL</div>' +
+            '<div class="ft-strip">' +
+            ftStat("GF/GP", ftNum(nhl.goalsForPerGame, 2)) +
+            ftStat("GA/GP", ftNum(nhl.goalsAgainstPerGame, 2)) +
+            ftStat("PP%", ftPct(nhl.powerPlayPct)) +
+            ftStat("PK%", ftPct(nhl.penaltyKillPct)) +
+            "</div>" +
+            '<div class="ft-section-label">Skaters</div>' +
+            '<div class="ft-strip">' +
+            ftStat("G", ftNum(skater.goals)) +
+            ftStat("A", ftNum(skater.assists)) +
+            ftStat("P", ftNum(skater.points)) +
+            ftStat("+/-", ftPlusMinus(skater.plusMinus)) +
+            ftStat("PPP", ftNum(skater.powerPlayPoints)) +
+            ftStat("Hits", ftNum(skater.hits)) +
+            ftStat("Blk", ftNum(skater.blocked)) +
+            "</div>" +
+            '<div class="ft-section-label">Goalies</div>' +
+            '<div class="ft-strip">' +
+            ftStat("W-L-OT", ftRecord(goalie)) +
+            ftStat("SV%", ftSavePct(goalie.savePct)) +
+            ftStat("SO", ftNum(goalie.shutouts)) +
+            "</div>" +
+            '<div class="ft-section-label">Best</div>' +
+            '<div class="ft-best">' +
+            ftBestItem("Overall", best.overall) +
+            ftBestItem("Forward", best.forward) +
+            ftBestItem("Defense", best.defense) +
+            ftBestItem("Goalie", best.goalie) +
+            "</div></div>";
+    }
+
+    function loadTeamModal(teamId) {
+        const $modal = $("#team-modal");
+        const $host = $("#fantasy-team-card-host");
+        const $title = $("#fantasy-team-modal-title");
+        $title.text("");
+        $host.html('<div class="text-muted text-center py-4">Loading…</div>');
+        if ($modal.parent()[0] !== document.body) {
+            $modal.appendTo(document.body);
+        }
+        $modal.modal("show");
+        $.ajax({
+            url: "/api/nhl/fantasy/teams/" + encodeURIComponent(teamId),
+            crossDomain: true,
+            dataType: "json",
+            error: function() {
+                $host.html('<div class="text-danger text-center py-4">Team not found.</div>');
+            },
+            success: function(team) {
+                const nhl = team && team.nhl;
+                $title.text((nhl && nhl.fullName) || (team && team.abbreviation) || "Team");
+                $host.html(renderFantasyTeamCard(team));
+            },
+            type: "GET"
+        });
+    }
+</script>
+
+<div class="modal fade" id="team-modal" role="dialog" aria-labelledby="fantasy-team-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="fantasy-team-modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="fantasy-team-card-host"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

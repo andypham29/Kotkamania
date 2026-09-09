@@ -14,6 +14,7 @@
             integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/fantasy-team-card.css') }}">
 
     <!--            Global site tag (gtag.js) - Google Analytics-->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179485039-1"></script>
@@ -51,10 +52,10 @@
     {% include 'fantasy/fantasy_page.html' %}
     {% else %}
     <div class="container-fluid">
-        <tr>
             {% if page=="index" %}
-<!--            <td>{% include 'news/news.html' %}</td>-->
+            {% include 'fantasy/fantasy_teams_home.html' %}
             {% endif %}
+        <tr>
             {% if page=="draft_simulator" %}
             <td>{% include 'draftsimulator/draft_simulator.html' %}</td>
             {% endif %}

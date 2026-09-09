@@ -5,6 +5,7 @@ from flask import Flask, request, render_template, make_response, redirect
 
 from domain.draftboard.draftboard_service import DraftboardService
 from domain.fantasyplayer.fantasy_player_facade import DomainFantasyPlayerFacade
+from domain.nhlteam.fantasy_team_facade import FantasyTeamFacade
 from domain.fantasyplayer.fantasy_player_service import FantasyPlayerService
 from domain.gamelog.gamelog_service import GameLogService
 from domain.goaliestat.model.domain_goalie_stat import DomainGoalieStat
@@ -214,6 +215,18 @@ def getNhlFantasyPlayers():
     """Return fantasy players with percentiles calculated from their stat values."""
     response = DomainFantasyPlayerFacade().getAllFantasySkaters()
     return makeHttpResponse(response)
+
+@app.route('/api/nhl/fantasy/teams')
+def getNhlFantasyTeams():
+    response = FantasyTeamFacade().getAllFantasyTeams()
+    return makeHttpResponse(response)
+
+@app.route('/api/nhl/fantasy/teams/<int:team_id>')
+def getNhlFantasyTeam(team_id):
+    team = FantasyTeamFacade().getFantasyTeam(team_id)
+    if team is None:
+        return make_response("Team not found.", 404)
+    return makeHttpResponse(team)
 
 @app.route('/api/nhl/fantasy/streak')
 def getNhlFantasyPlayerStreaks():

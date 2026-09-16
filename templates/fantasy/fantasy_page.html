@@ -633,6 +633,7 @@
                         <input type="checkbox" id="fpFilterWatchlistInput" autocomplete="off"> 👁
                     </label>
                 </div>
+                <button class="btn btn-sm btn-outline-success py-0 px-2" id="fpFilterDraftboardSortBtn" type="button" title="Sort main list to match draftboard order" aria-label="Sort by draftboard order" aria-pressed="false">🗊</button>
 
                 <select class="form-control form-control-sm" id="fpTeamSelect" style="width: auto;">
                     <option value="">All teams</option>
@@ -661,7 +662,7 @@
                     <button class="btn btn-sm btn-outline-dark py-0 fp-settings-toggle" type="button" data-fp-settings="fpLeaguePanel" data-fp-settings-title="League Settings">
                         League <span class="badge badge-primary" id="fpLeagueBadge" style="display:none;"></span>
                     </button>
-                    <button class="btn btn-sm btn-outline-success py-0" id="fpDraftboardSortBtn" type="button" title="Sort main list to match draftboard order">🗊 <span class="d-none d-md-inline">Draftboard</span></button>
+                    <a class="btn btn-sm btn-outline-success py-0" id="fpDraftboardSortBtn" href="/nhl/fantasy/draftboard" title="Open draftboard">🗊 <span class="d-none d-md-inline">Draftboard</span></a>
                     <button class="btn btn-sm btn-outline-secondary py-0" id="fpCopyBtn" type="button">Copy</button>
                 </span>
             </span>
@@ -1724,7 +1725,7 @@
     };
 
     const syncDraftboardSortBtn = () => {
-        const btn = document.getElementById("fpDraftboardSortBtn");
+        const btn = document.getElementById("fpFilterDraftboardSortBtn");
         if (!btn) return;
         btn.classList.toggle("active", state.sortKey === "draftboard");
         btn.setAttribute("aria-pressed", state.sortKey === "draftboard" ? "true" : "false");
@@ -2261,7 +2262,7 @@
             closeAllListMore();
         });
 
-        document.getElementById("fpDraftboardSortBtn").addEventListener("click", () => {
+        document.getElementById("fpFilterDraftboardSortBtn").addEventListener("click", () => {
             if (state.sortKey === "draftboard") {
                 applyTableSort("fp");
                 return;

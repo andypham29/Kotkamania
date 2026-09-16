@@ -362,7 +362,6 @@
     }
     body.fp-settings-open { overflow: hidden; }
     .fp-toolbar-search { width: 220px; max-width: 100%; }
-    .fp-toolbar-import { width: auto; min-width: 14rem; max-width: 100%; }
     @media (max-width: 767.98px) {
         .fp-draftboard-panel .card-body { max-height: 55vh; min-height: 0; }
         .fp-bottom-panel .card-body { max-height: 28vh; min-height: 0; }
@@ -378,23 +377,6 @@
         <small class="text-muted ml-auto fp-drag-hint">
             Drag rows to reorder
         </small>
-    </div>
-
-    <div class="card mb-3">
-        <div class="card-body p-2">
-            <div class="d-flex flex-wrap align-items-center fp-save-toolbar" style="gap: .5rem;">
-                <button class="btn btn-sm btn-primary" id="fpSaveBtn" type="button">Save</button>
-                <div class="input-group input-group-sm fp-toolbar-import">
-                    <input id="fpImportIdInput" type="text" class="form-control" placeholder="Draftboard ID…" autocomplete="off">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-primary" id="fpImportBtn" type="button">Import</button>
-                    </div>
-                </div>
-                <button class="btn btn-sm btn-success" id="fpApplyBtn" type="button" disabled title="Save the imported draftboard to your browser lists">Apply</button>
-                <button class="btn btn-sm btn-outline-secondary" id="fpShareBtn" type="button" disabled title="Save or import a draftboard first">Copy link</button>
-                <input id="fpShareUrl" type="text" class="form-control form-control-sm" readonly style="max-width: 20rem; display: none;" title="Shareable draftboard URL">
-            </div>
-        </div>
     </div>
 
     <div class="card mb-3">
@@ -575,130 +557,13 @@
         hideDrafted: false,
         filterFavorite: false,
         filterWatchlist: false,
-        draftboardId: null,
-        importedPayload: null,
         bottomView: "picked"
     };
 
     const statValue = (s, key) => s && s[key] && s[key].value;
     const statNum   = (s, key) => statValue(s, key) || 0;
     const cookieList = (name) => getPlayersInCookie(name).map(Number);
-    const cookieListAsStr = (name) => getPlayersInCookie(name).map(String);
     const isIn = (id, list) => list.indexOf(Number(id)) >= 0;
-
-    const shareUrlFor = (id) =>
-        `${window.location.origin}/nhl/fantasy?draftboardId=${encodeURIComponent(id)}`;
-
-    const setShareUi = (id) => {
-        state.draftboardId = id;
-        const shareInput = document.getElementById("fpShareUrl");
-        const importInput = document.getElementById("fpImportIdInput");
-        const shareBtn = document.getElementById("fpShareBtn");
-        if (!id) {
-            shareInput.style.display = "none";
-            shareInput.value = "";
-            shareBtn.disabled = true;
-            return;
-        }
-        const url = shareUrlFor(id);
-        shareInput.value = url;
-        shareInput.style.display = "";
-        shareBtn.disabled = false;
-        if (importInput) importInput.value = id;
-        history.replaceState(null, "", `?draftboardId=${encodeURIComponent(id)}`);
-    };
-
-    const applyDraftboardPayload = (data) => {
-        const lists = [
-            { key: "favorites", cookie: COOKIE_FAVORITE },
-            { key: "watchlist", cookie: COOKIE_WATCHLIST },
-            { key: "draftboard", cookie: COOKIE_DRAFTBOARD }
-        ];
-        lists.forEach(({ key, cookie }) => {
-            const ids = Array.isArray(data[key]) ? data[key].map(Number).filter(Boolean) : [];
-            setPlayersOrderInCookie(ids, cookie);
-        });
-    };
-
-    const setApplyUi = () => {
-        const btn = document.getElementById("fpApplyBtn");
-        if (btn) btn.disabled = !state.importedPayload;
-    };
-
-    const applyImportedDraftboard = () => {
-        if (!state.importedPayload) {
-            toast("Import a draftboard first");
-            return;
-        }
-        const id = state.importedPayload.id || state.draftboardId || "draftboard";
-        if (!confirm(`Apply draftboard "${id}"? This will replace your Favorites, Watchlist, and Draftboard lists.`)) {
-            return;
-        }
-        applyDraftboardPayload(state.importedPayload);
-        toast(`Applied draftboard ${id}`);
-        renderDraftboard();
-    };
-
-    const saveDraftboard = () => {
-        const btn = document.getElementById("fpSaveBtn");
-        btn.disabled = true;
-        $.ajax({
-            url: "/draftboards",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-                favorites: cookieListAsStr(COOKIE_FAVORITE),
-                watchlist: cookieListAsStr(COOKIE_WATCHLIST),
-                draftboard: cookieListAsStr(COOKIE_DRAFTBOARD)
-            }),
-            success: (resp) => {
-                setShareUi(resp.id);
-                toast(`Draftboard saved (${resp.id})`);
-                renderDraftboard();
-            },
-            error: (xhr) => {
-                toast(`Save failed (${xhr.status})`);
-            },
-            complete: () => { btn.disabled = false; }
-        });
-    };
-
-    const importDraftboard = (id, options = {}) => {
-        const draftboardId = (id || "").trim();
-        if (!draftboardId) {
-            toast("Enter a draftboard ID");
-            return;
-        }
-        const btn = document.getElementById("fpImportBtn");
-        btn.disabled = true;
-        $.ajax({
-            url: `/draftboards/${encodeURIComponent(draftboardId)}`,
-            type: "GET",
-            dataType: "json",
-            success: (data) => {
-                state.importedPayload = data;
-                setShareUi(data.id || draftboardId);
-                setApplyUi();
-                toast(`Loaded draftboard ${data.id || draftboardId} — click Apply to save to your lists`);
-                if (typeof options.onSuccess === "function") options.onSuccess(data);
-            },
-            error: (xhr) => {
-                toast(xhr.status === 404 ? "Draftboard not found" : `Import failed (${xhr.status})`);
-                if (typeof options.onError === "function") options.onError(xhr);
-            },
-            complete: () => { btn.disabled = false; }
-        });
-    };
-
-    const copyShareUrl = () => {
-        const url = document.getElementById("fpShareUrl").value;
-        if (!url) { toast("Save or import a draftboard first"); return; }
-        navigator.clipboard.writeText(url)
-            .then(() => toast("Share link copied"))
-            .catch(() => toast("Copy failed"));
-    };
-
-    const draftboardIdFromUrl = () => new URLSearchParams(window.location.search).get("draftboardId");
 
     window.fpOnLeagueSettingsChanged = (msg) => {
         syncBottomSummary();
@@ -785,6 +650,8 @@
     const invalidatePlayerMap = () => { playerById._map = null; };
 
     const draftIds = () => cookieList(COOKIE_DRAFTBOARD);
+    const favoriteIds = () => cookieList(COOKIE_FAVORITE);
+    const watchlistIds = () => cookieList(COOKIE_WATCHLIST);
     const draftedIds = () => cookieList(COOKIE_DRAFTED);
     const pickedIds = () => cookieList(COOKIE_PICKED);
 
@@ -816,8 +683,8 @@
         const ids = draftIds();
         const drafted = draftedIds();
         const picked = pickedIds();
-        const fav = cookieList(COOKIE_FAVORITE);
-        const watch = cookieList(COOKIE_WATCHLIST);
+        const fav = favoriteIds();
+        const watch = watchlistIds();
         const byId = playerById();
         return ids.filter(id => {
             if (state.hideDrafted && (isIn(id, drafted) || isIn(id, picked))) return false;
@@ -1055,8 +922,8 @@
         const ids = filteredDraftIds();
         const drafted = draftedIds();
         const picked  = pickedIds();
-        const fav     = cookieList(COOKIE_FAVORITE);
-        const watch   = cookieList(COOKIE_WATCHLIST);
+        const fav     = favoriteIds();
+        const watch   = watchlistIds();
         const byId  = playerById();
 
         document.getElementById("fpVisibleCount").textContent = ids.length;
@@ -1258,12 +1125,12 @@
             const name = (byId.get(id) && byId.get(id).skaterFullName) || `Player #${id}`;
 
             if (action === "favorite") {
-                const wasOn = isIn(id, cookieList(COOKIE_FAVORITE));
+                const wasOn = isIn(id, favoriteIds());
                 if (wasOn) removePlayerInCookie(id, COOKIE_FAVORITE);
                 else       savePlayerInCookie(id, COOKIE_FAVORITE);
                 toast(wasOn ? `Removed ${name} from Favorites` : `Added ${name} to Favorites`);
             } else if (action === "watchlist") {
-                const wasOn = isIn(id, cookieList(COOKIE_WATCHLIST));
+                const wasOn = isIn(id, watchlistIds());
                 if (wasOn) removePlayerInCookie(id, COOKIE_WATCHLIST);
                 else       savePlayerInCookie(id, COOKIE_WATCHLIST);
                 toast(wasOn ? `Removed ${name} from Watchlist` : `Added ${name} to Watchlist`);
@@ -1364,38 +1231,11 @@
             toast("Draftboard cleared");
             renderDraftboard();
         });
-
-        document.getElementById("fpSaveBtn").addEventListener("click", saveDraftboard);
-
-        document.getElementById("fpImportBtn").addEventListener("click", () => {
-            importDraftboard(document.getElementById("fpImportIdInput").value);
-        });
-
-        document.getElementById("fpImportIdInput").addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                importDraftboard(e.target.value);
-            }
-        });
-
-        document.getElementById("fpApplyBtn").addEventListener("click", applyImportedDraftboard);
-
-        document.getElementById("fpShareBtn").addEventListener("click", copyShareUrl);
     };
 
     $(document).ready(() => {
         wireEvents();
-        const urlDraftboardId = draftboardIdFromUrl();
-        setApplyUi();
-        if (urlDraftboardId) {
-            setShareUi(urlDraftboardId);
-            importDraftboard(urlDraftboardId, {
-                onSuccess: () => load(),
-                onError: () => load()
-            });
-        } else {
-            load();
-        }
+        load();
     });
 })();
 </script>

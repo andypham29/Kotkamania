@@ -1,7 +1,6 @@
 import json
-from urllib.parse import urlencode
 
-from flask import Flask, request, render_template, make_response, redirect
+from flask import Flask, request, render_template, make_response
 
 from domain.draftboard.draftboard_service import DraftboardService
 from domain.fantasyplayer.fantasy_player_facade import DomainFantasyPlayerFacade
@@ -91,10 +90,7 @@ def nhl_fantasy_streak():
 
 @app.route('/nhl/fantasy/draftboard')
 def nhl_fantasy_draftboard():
-    draftboard_id = request.args.get('draftboardId')
-    if draftboard_id:
-        return redirect('/nhl/fantasy?' + urlencode({'draftboardId': draftboard_id}), code=302)
-    return redirect('/nhl/fantasy', code=302)
+    return render_template("index.html", page="nhl_fantasy_draftboard")
 
 
 @app.route('/nhl/players')

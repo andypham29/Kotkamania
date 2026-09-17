@@ -4,8 +4,85 @@
     padding: .5rem .75rem 1.5rem;
 }
 
-.ft-home-grid .ft-home-col {
-    margin-bottom: .85rem;
+.ft-home-table-wrap {
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: .4rem;
+}
+
+.ft-home-table {
+    font-size: .8rem;
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+.ft-home-table th,
+.ft-home-table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: .4rem .45rem;
+}
+
+.ft-home-table thead th {
+    font-size: .68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: #6c757d;
+    border-top: 0;
+    cursor: pointer;
+    user-select: none;
+    background: #fff;
+}
+
+.ft-home-table thead th.asc::after,
+.ft-home-table thead th.desc::after {
+    content: " ▲";
+    font-size: .6rem;
+    color: #212529;
+}
+
+.ft-home-table thead th.desc::after {
+    content: " ▼";
+}
+
+.ft-home-table .ft-team-col {
+    text-align: left;
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 1;
+    min-width: 11.5rem;
+}
+
+.ft-home-table thead .ft-team-col {
+    z-index: 2;
+}
+
+.ft-home-table tbody tr:hover .ft-team-col {
+    background: #f8f9fa;
+}
+
+.ft-team-open {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-weight: 600;
+    color: #212529;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.ft-team-open:hover {
+    text-decoration: underline;
+}
+
+.ft-table-logo {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    flex: 0 0 22px;
 }
 
 .ft-card {

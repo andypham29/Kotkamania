@@ -55,26 +55,37 @@
             "</div>";
     }
 
-    function ftNhlStats(nhl) {
-        nhl = nhl || {};
+    function ftNhlColumns() {
         return [
-            ["GP", ftNum(nhl.gamesPlayed)],
-            ["W", ftNum(nhl.wins)],
-            ["L", ftNum(nhl.losses)],
-            ["OTL", ftNum(nhl.otLosses)],
-            ["PTS", ftNum(nhl.points)],
-            ["P%", ftPointPct(nhl.pointPct)],
-            ["GF", ftNum(nhl.goalsFor)],
-            ["GA", ftNum(nhl.goalsAgainst)],
-            ["GF/GP", ftNum(nhl.goalsForPerGame, 2)],
-            ["GA/GP", ftNum(nhl.goalsAgainstPerGame, 2)],
-            ["PP%", ftPct(nhl.powerPlayPct)],
-            ["PK%", ftPct(nhl.penaltyKillPct)],
-            ["FO%", ftPct(nhl.faceoffWinPct)],
-            ["SF/GP", ftNum(nhl.shotsForPerGame, 2)],
-            ["SA/GP", ftNum(nhl.shotsAgainstPerGame, 2)]
-        ].map(function (item) {
-            return ftStat(item[0], item[1]);
+            { key: "gamesPlayed", label: "GP", kind: "int" },
+            { key: "wins", label: "W", kind: "int" },
+            { key: "losses", label: "L", kind: "int" },
+            { key: "otLosses", label: "OTL", kind: "int" },
+            { key: "points", label: "PTS", kind: "int" },
+            { key: "pointPct", label: "P%", kind: "pointPct" },
+            { key: "goalsFor", label: "GF", kind: "int" },
+            { key: "goalsAgainst", label: "GA", kind: "int" },
+            { key: "goalsForPerGame", label: "GF/GP", kind: "perGame" },
+            { key: "goalsAgainstPerGame", label: "GA/GP", kind: "perGame" },
+            { key: "powerPlayPct", label: "PP%", kind: "pct" },
+            { key: "penaltyKillPct", label: "PK%", kind: "pct" },
+            { key: "faceoffWinPct", label: "FO%", kind: "pct" },
+            { key: "shotsForPerGame", label: "SF/GP", kind: "perGame" },
+            { key: "shotsAgainstPerGame", label: "SA/GP", kind: "perGame" }
+        ];
+    }
+
+    function ftFormatNhlStat(nhl, col) {
+        const value = nhl ? nhl[col.key] : null;
+        if (col.kind === "pct") return ftPct(value);
+        if (col.kind === "pointPct") return ftPointPct(value);
+        if (col.kind === "perGame") return ftNum(value, 2);
+        return ftNum(value);
+    }
+
+    function ftNhlStats(nhl) {
+        return ftNhlColumns().map(function (col) {
+            return ftStat(col.label, ftFormatNhlStat(nhl, col));
         }).join("");
     }
 

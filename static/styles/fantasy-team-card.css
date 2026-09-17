@@ -108,6 +108,22 @@
     border-bottom: 1px solid #f1f3f5;
 }
 
+.ft-nhl-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.ft-nhl-grid .ft-stat {
+    flex: none;
+    min-width: 0;
+    padding: .28rem .06rem .35rem;
+}
+
+.ft-nhl-grid .ft-stat-label {
+    letter-spacing: 0;
+    white-space: nowrap;
+}
+
 .ft-stat {
     flex: 1 1 14%;
     min-width: 3.15rem;

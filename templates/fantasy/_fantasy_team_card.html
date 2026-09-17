@@ -30,6 +30,14 @@
         return pct.toFixed(digits == null ? 1 : digits) + "%";
     }
 
+    function ftPointPct(value) {
+        if (ftIsEmpty(value)) return "—";
+        const n = Number(value);
+        if (!isFinite(n)) return "—";
+        const pct = Math.abs(n) <= 1 ? n : n / 100;
+        return pct.toFixed(3);
+    }
+
     function ftSavePct(value) {
         if (ftIsEmpty(value)) return "—";
         const n = Number(value);
@@ -59,6 +67,29 @@
             '<span class="ft-stat-label">' + ftEscape(label) + "</span>" +
             '<span class="ft-stat-value">' + ftEscape(value) + "</span>" +
             "</div>";
+    }
+
+    function ftNhlStats(nhl) {
+        nhl = nhl || {};
+        return [
+            ["GP", ftNum(nhl.gamesPlayed)],
+            ["W", ftNum(nhl.wins)],
+            ["L", ftNum(nhl.losses)],
+            ["OTL", ftNum(nhl.otLosses)],
+            ["PTS", ftNum(nhl.points)],
+            ["P%", ftPointPct(nhl.pointPct)],
+            ["GF", ftNum(nhl.goalsFor)],
+            ["GA", ftNum(nhl.goalsAgainst)],
+            ["GF/GP", ftNum(nhl.goalsForPerGame, 2)],
+            ["GA/GP", ftNum(nhl.goalsAgainstPerGame, 2)],
+            ["PP%", ftPct(nhl.powerPlayPct)],
+            ["PK%", ftPct(nhl.penaltyKillPct)],
+            ["FO%", ftPct(nhl.faceoffWinPct)],
+            ["SF/GP", ftNum(nhl.shotsForPerGame, 2)],
+            ["SA/GP", ftNum(nhl.shotsAgainstPerGame, 2)]
+        ].map(function (item) {
+            return ftStat(item[0], item[1]);
+        }).join("");
     }
 
     function ftPosChip(code) {
@@ -135,11 +166,8 @@
             '<span class="badge badge-secondary">max ' + ftEscape(max) + "</span>" +
             "</div></div>" +
             '<div class="ft-section-label">NHL</div>' +
-            '<div class="ft-strip">' +
-            ftStat("GF/GP", ftNum(nhl.goalsForPerGame, 2)) +
-            ftStat("GA/GP", ftNum(nhl.goalsAgainstPerGame, 2)) +
-            ftStat("PP%", ftPct(nhl.powerPlayPct)) +
-            ftStat("PK%", ftPct(nhl.penaltyKillPct)) +
+            '<div class="ft-strip ft-nhl-grid">' +
+            ftNhlStats(nhl) +
             "</div>" +
             '<div class="ft-section-label">Skaters</div>' +
             '<div class="ft-strip">' +

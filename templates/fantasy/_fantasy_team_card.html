@@ -38,20 +38,6 @@
         return pct.toFixed(3);
     }
 
-    function ftSavePct(value) {
-        if (ftIsEmpty(value)) return "—";
-        const n = Number(value);
-        if (!isFinite(n)) return "—";
-        return n.toFixed(3);
-    }
-
-    function ftPlusMinus(value) {
-        if (ftIsEmpty(value)) return "—";
-        const n = Number(value);
-        if (!isFinite(n)) return "—";
-        return n > 0 ? "+" + n : String(n);
-    }
-
     function ftRecord(nhl) {
         if (!nhl) return "—";
         if (ftIsEmpty(nhl.wins) && ftIsEmpty(nhl.losses) && ftIsEmpty(nhl.otLosses)) return "—";
@@ -129,8 +115,6 @@
     function renderFantasyTeamCard(team) {
         team = team || {};
         const nhl = team.nhl || {};
-        const skater = team.stat || {};
-        const goalie = team.goalieStat || {};
         const best = team.best || {};
         const name = nhl.fullName || team.abbreviation || "Team";
         const meta = ftJoinMeta([
@@ -168,22 +152,6 @@
             '<div class="ft-section-label">NHL</div>' +
             '<div class="ft-strip ft-nhl-grid">' +
             ftNhlStats(nhl) +
-            "</div>" +
-            '<div class="ft-section-label">Skaters</div>' +
-            '<div class="ft-strip">' +
-            ftStat("G", ftNum(skater.goals)) +
-            ftStat("A", ftNum(skater.assists)) +
-            ftStat("P", ftNum(skater.points)) +
-            ftStat("+/-", ftPlusMinus(skater.plusMinus)) +
-            ftStat("PPP", ftNum(skater.powerPlayPoints)) +
-            ftStat("Hits", ftNum(skater.hits)) +
-            ftStat("Blk", ftNum(skater.blocked)) +
-            "</div>" +
-            '<div class="ft-section-label">Goalies</div>' +
-            '<div class="ft-strip">' +
-            ftStat("W-L-OT", ftRecord(goalie)) +
-            ftStat("SV%", ftSavePct(goalie.savePct)) +
-            ftStat("SO", ftNum(goalie.shutouts)) +
             "</div>" +
             '<div class="ft-section-label">Best</div>' +
             '<div class="ft-best">' +

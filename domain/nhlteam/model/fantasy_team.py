@@ -1,46 +1,11 @@
 from dataclasses import dataclass, replace
 from typing import Iterable
 
-from domain.fantasyplayer.model.fantasy_nhl_player import FantasyNhlPlayer, StatValue
+from domain.fantasyplayer.model.fantasy_nhl_player import FantasyNhlPlayer
 from infra.spi.nhlapi.nhlteam.model.nhl_team_standing import TeamStanding
 from infra.spi.nhlapi.nhlteam.model.nhl_team_summary import TeamSummary
 
 _FORWARD_CODES = frozenset({"C", "L", "R"})
-_SKATER_STAT_FIELDS = (
-    "games",
-    "goals",
-    "assists",
-    "points",
-    "plusMinus",
-    "powerPlayGoals",
-    "powerPlayPoints",
-    "shots",
-    "hits",
-    "blocked",
-)
-_GOALIE_STAT_FIELDS = (
-    "gamesPlayed",
-    "wins",
-    "losses",
-    "otLosses",
-    "saves",
-    "goalsAgainst",
-    "shutouts",
-)
-
-
-def _stat_number(container, field_name: str) -> float:
-    if container is None:
-        return 0
-    raw = getattr(container, field_name, None)
-    if raw is None:
-        return 0
-    if isinstance(raw, StatValue):
-        raw = raw.value
-    try:
-        return float(raw or 0)
-    except (TypeError, ValueError):
-        return 0
 
 
 def _grade(player: FantasyNhlPlayer) -> float | None:
@@ -148,54 +113,6 @@ class FantasyTeamNhlStat:
 
 
 @dataclass
-class FantasyTeamSkaterStat:
-    games: int = 0
-    goals: int = 0
-    assists: int = 0
-    points: int = 0
-    plusMinus: int = 0
-    powerPlayGoals: int = 0
-    powerPlayPoints: int = 0
-    shots: int = 0
-    hits: int = 0
-    blocked: int = 0
-
-    @classmethod
-    def from_players(cls, players: Iterable[FantasyNhlPlayer]) -> "FantasyTeamSkaterStat":
-        totals = {name: 0 for name in _SKATER_STAT_FIELDS}
-        for player in players:
-            if _is_goalie(player):
-                continue
-            for name in _SKATER_STAT_FIELDS:
-                totals[name] += int(_stat_number(player.stat, name))
-        return cls(**totals)
-
-
-@dataclass
-class FantasyTeamGoalieStat:
-    gamesPlayed: int = 0
-    wins: int = 0
-    losses: int = 0
-    otLosses: int = 0
-    saves: int = 0
-    goalsAgainst: int = 0
-    shutouts: int = 0
-    savePct: float | None = None
-
-    @classmethod
-    def from_players(cls, players: Iterable[FantasyNhlPlayer]) -> "FantasyTeamGoalieStat":
-        totals = {name: 0 for name in _GOALIE_STAT_FIELDS}
-        for player in players:
-            if not _is_goalie(player):
-                continue
-            for name in _GOALIE_STAT_FIELDS:
-                totals[name] += int(_stat_number(player.goalieStat, name))
-        shots_against = totals["saves"] + totals["goalsAgainst"]
-        save_pct = round(totals["saves"] / shots_against, 3) if shots_against else None
-        return cls(**totals, savePct=save_pct)
-
-
-@dataclass
 class FantasyTeamBestPlayers:
     overall: FantasyNhlPlayer | None = None
     forward: FantasyNhlPlayer | None = None
@@ -222,8 +139,6 @@ class FantasyTeam:
     avgFantasyGrade: float | None
     maxFantasyGrade: float | None
     nhl: FantasyTeamNhlStat | None
-    stat: FantasyTeamSkaterStat
-    goalieStat: FantasyTeamGoalieStat
     best: FantasyTeamBestPlayers
 
     @classmethod
@@ -248,7 +163,5 @@ class FantasyTeam:
             avgFantasyGrade=round(sum(grades) / len(grades), 2) if grades else None,
             maxFantasyGrade=round(max(grades), 2) if grades else None,
             nhl=nhl,
-            stat=FantasyTeamSkaterStat.from_players(skaters),
-            goalieStat=FantasyTeamGoalieStat.from_players(goalies),
             best=FantasyTeamBestPlayers.from_players(players),
         )

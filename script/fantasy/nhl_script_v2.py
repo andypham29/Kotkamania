@@ -55,6 +55,25 @@ class NhlScriptV2:
         print(f"Saved {written} player stats for season {season_id}")
         return written
 
+    def update_rosters(self, season_id: int = None):
+        season_id = season_id or NhlYearConverter.get_current_season()
+
+        for team_id in NhlTeamConverter.get_all_teamIds():
+            try:
+                print(f"Updating roster for team: {team_id}")
+                players = self.nhl_team_roster_provider.get_roster_all_player_infos(team_id, season_id)
+            except Exception as e:
+                print(f"Skip team: {team_id} because of: {str(e)}")
+                continue
+
+            team_name = NhlTeamConverter.get_abbreviation_by_teamId(team_id)
+            for player in players:
+                fantasy_player = player.to_fantasy_player()
+                fantasy_player.teamId = team_id
+                fantasy_player.teamName = team_name
+                self.fantasy_player_repository.upsertRosterPlayer(fantasy_player)
+                print(f"[{team_name}] Upserted roster player: {fantasy_player.skaterFullName}")
+
     def save_player_grade_for_all_players(self):
 
         roster_map = {}
@@ -167,7 +186,8 @@ class GoalieScript:
     print("Done grading all goalie stats.")
 
 if __name__ == '__main__':
-    NhlScriptV2().save_all_players()
+    NhlScriptV2().update_rosters()
+    # NhlScriptV2().save_all_players()
     # NhlScriptV2().get_all_players("20242025")
     # NhlScriptV2().get_all_players("20232024")
     # NhlScriptV2().get_all_players("20222023")

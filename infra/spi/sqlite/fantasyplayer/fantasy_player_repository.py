@@ -66,6 +66,32 @@ class FantasyPlayerRepository:
         finally:
             session.close()
 
+    def upsertRosterPlayer(self, fantasy_skater):
+        """Insert a roster player, or update only team/identity fields if they already exist."""
+        session = self._get_session()
+        try:
+            orm_record = session.query(FantasyNhlPlayerORM).filter_by(
+                playerId=fantasy_skater.playerId
+            ).first()
+
+            if orm_record:
+                orm_record.skaterFullName = fantasy_skater.skaterFullName
+                orm_record.positionCode = fantasy_skater.positionCode
+                orm_record.teamId = fantasy_skater.teamId
+                orm_record.teamName = fantasy_skater.teamName
+            else:
+                orm_record = FantasyNhlPlayerORM(
+                    playerId=fantasy_skater.playerId,
+                    skaterFullName=fantasy_skater.skaterFullName,
+                    positionCode=fantasy_skater.positionCode,
+                    teamId=fantasy_skater.teamId,
+                    teamName=fantasy_skater.teamName,
+                )
+                session.add(orm_record)
+
+            session.commit()
+        finally:
+            session.close()
 
     def getFantasySkaterById(self, playerId):
         """Get fantasy skater by player ID"""
